@@ -19,6 +19,7 @@ dependencies:
   ionicons: ^0.2.2
   flutter_gap: ^1.2.0
   flutter_credit_card: ^4.1.0
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:

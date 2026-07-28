@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/header.dart';
@@ -29,17 +30,14 @@ class _AddCardState extends State<AddCard> {
         appBar: CustemAppbar(isBlackk: false),
 
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                ///page title
                 Header(title: "Payment method".toUpperCase()),
-                Gap(13),
+                Gap(13.h),
 
-                //master card
                 CreditCardWidget(
-                  //Logic part
                   cardNumber: cardNumber,
                   expiryDate: expiryDate,
                   cardHolderName: cardName,
@@ -47,11 +45,9 @@ class _AddCardState extends State<AddCard> {
                   showBackView: isShow,
                   isHolderNameVisible: true,
                   onCreditCardWidgetChange: (v) {},
-                  //color part
                   cardBgColor: Colors.grey.shade800,
                 ),
 
-                //form
                 CreditCardForm(
                   formKey: key,
                   cardNumber: cardNumber,
@@ -61,8 +57,7 @@ class _AddCardState extends State<AddCard> {
                   onCreditCardModelChange: onCreditCardModelChange,
                 ),
 
-                //buttom
-                Gap(90),
+                Gap(90.h),
 
                 Button(
                   isSvgg: true,
@@ -75,12 +70,11 @@ class _AddCardState extends State<AddCard> {
                         'date ': expiryDate,
                         'cvv': cvvCode,
                       };
-                      //maybe problem
                       Navigator.pop(context, data);
                     }
                   },
                 ),
-                Gap(70),
+                Gap(70.h),
               ],
             ),
           ),

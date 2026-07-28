@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
@@ -15,7 +16,6 @@ class AddAddress extends StatefulWidget {
   State<AddAddress> createState() => _AddAddressState();
 }
 
-// variable
 class _AddAddressState extends State<AddAddress> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -39,7 +39,6 @@ class _AddAddressState extends State<AddAddress> {
     super.dispose();
   }
 
-  //save the old data
   @override
   void initState() {
     super.initState();
@@ -61,11 +60,10 @@ class _AddAddressState extends State<AddAddress> {
       appBar: CustemAppbar(isBlackk: false),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: Column(
             children: [
               Header(title: "Add Shipping Address"),
-              //input data
               Form(
                 key: _formkey,
                 child: SingleChildScrollView(
@@ -79,7 +77,7 @@ class _AddAddressState extends State<AddAddress> {
                               controller: firstNameController,
                             ),
                           ),
-                          Gap(20),
+                          Gap(20.w),
                           Expanded(
                             child: CustemTextField(
                               hint: "Last Name",
@@ -89,16 +87,16 @@ class _AddAddressState extends State<AddAddress> {
                         ],
                       ),
 
-                      Gap(30),
+                      Gap(30.h),
                       CustemTextField(
                         hint: "Address",
                         controller: addressController,
                       ),
 
-                      Gap(30),
+                      Gap(30.h),
                       CustemTextField(hint: "City", controller: cityController),
 
-                      Gap(30),
+                      Gap(30.h),
                       Row(
                         children: [
                           Expanded(
@@ -107,7 +105,7 @@ class _AddAddressState extends State<AddAddress> {
                               controller: stateController,
                             ),
                           ),
-                          Gap(30),
+                          Gap(30.w),
                           Expanded(
                             child: CustemTextField(
                               hint: "ZIP Code",
@@ -117,7 +115,7 @@ class _AddAddressState extends State<AddAddress> {
                         ],
                       ),
 
-                      Gap(30),
+                      Gap(30.h),
                       CustemTextField(
                         hint: "Phone Number",
                         controller: phoneController,
@@ -127,8 +125,7 @@ class _AddAddressState extends State<AddAddress> {
                 ),
               ),
 
-              Gap(210),
-              // add data and save
+              Gap(210.h),
               Button(
                 isSvgg: false,
                 title: "Add now".toUpperCase(),
@@ -150,7 +147,7 @@ class _AddAddressState extends State<AddAddress> {
                   }
                 },
               ),
-              Gap(70),
+              Gap(70.h),
             ],
           ),
         ),

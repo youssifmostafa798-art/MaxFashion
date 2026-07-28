@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_text.dart';
@@ -19,36 +20,34 @@ class Home extends StatelessWidget {
       appBar: CustemAppbar(isBlackk: true),
       body: Stack(
         children: [
-          /// texts
           Positioned(
-            top: 10,
+            top: 10.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/10.svg"),
           ),
           Positioned(
-            top: 40,
+            top: 40.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/October.svg"),
           ),
           Positioned(
-            top: 85,
+            top: 85.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/Collection.svg"),
           ),
-          //scroll
           SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Column(
                     children: [
-                      Gap(120),
+                      Gap(120.h),
                       Image.asset("assets/cover/cover1.png"),
-                      Gap(20),
+                      Gap(20.h),
                       GridView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
@@ -57,7 +56,7 @@ class Home extends StatelessWidget {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 0,
-                          crossAxisSpacing: 15,
+                          crossAxisSpacing: 15.w,
                           childAspectRatio: 0.50,
                         ),
                         itemBuilder: (context, index) {
@@ -73,13 +72,13 @@ class Home extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Image.asset(item.image),
-                                Gap(10),
+                                Gap(10.h),
                                 CustemText(text: item.name),
                                 CustemText(
                                   text: item.descrp,
                                   color: Colors.grey,
                                 ),
-                                Gap(9),
+                                Gap(9.h),
                                 CustemText(
                                   text: "\$ ${item.price.toString()}",
                                   color: Color(0xffDD8560),
@@ -90,32 +89,32 @@ class Home extends StatelessWidget {
                           );
                         },
                       ),
-                      Gap(5),
+                      Gap(5.h),
                       CustemText(
                         text: "You may also like".toUpperCase(),
                         size: 20,
                       ),
-                      Gap(10),
-                      Image.asset("assets/svgs/line.png", width: 190),
-                      Gap(40),
+                      Gap(10.h),
+                      Image.asset("assets/svgs/line.png", width: 190.w),
+                      Gap(40.h),
                       SizedBox(
-                        height: 500,
+                        height: 500.h,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: CoverModel.covers.length,
                           itemBuilder: (context, index) {
                             final item = CoverModel.covers[index];
                             return Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(8.0.w),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.asset(
                                     item.image,
-                                    height: 350,
+                                    height: 350.h,
                                     fit: BoxFit.cover,
                                   ),
-                                  Gap(10),
+                                  Gap(10.h),
                                   CustemText(text: item.name.toUpperCase()),
                                 ],
                               ),
@@ -124,7 +123,7 @@ class Home extends StatelessWidget {
                         ),
                       ),
                       about(),
-                      Gap(20),
+                      Gap(20.h),
                     ],
                   ),
                 ),
@@ -132,7 +131,7 @@ class Home extends StatelessWidget {
                   width: double.infinity,
                   color: Colors.grey.shade400,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 15, top: 10),
+                    padding: EdgeInsets.only(bottom: 15.h, top: 10.h),
                     child: Center(
                       child: CustemText(
                         height: 2.5,
@@ -157,23 +156,23 @@ Widget about() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Ionicons.logo_twitter, color: Colors.white),
-          Gap(30),
+          Gap(30.w),
           Icon(Ionicons.logo_instagram, color: Colors.white),
-          Gap(30),
+          Gap(30.w),
           Icon(Ionicons.logo_facebook, color: Colors.white),
         ],
       ),
-      Gap(20),
-      Image.asset("assets/svgs/line.png", width: 190),
-      Gap(20),
+      Gap(20.h),
+      Image.asset("assets/svgs/line.png", width: 190.w),
+      Gap(20.h),
       CustemText(
         height: 2.5,
         text:
             "support@openui.design \n       +60 825 876 \n08:00 - 22:00 - Everyday",
       ),
-      Gap(20),
-      Image.asset("assets/svgs/line.png", width: 190),
-      Gap(20),
+      Gap(20.h),
+      Image.asset("assets/svgs/line.png", width: 190.w),
+      Gap(20.h),
       CustemText(height: 2.5, text: "About   Contact    Blog"),
     ],
   );

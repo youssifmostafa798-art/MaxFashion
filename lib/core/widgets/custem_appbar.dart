@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 
 class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -8,32 +9,29 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isBlackk;
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => Size.fromHeight(70.h);
 
   @override
   Widget build(BuildContext context) {
     bool isBlack = isBlackk;
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(8.w),
       child: AppBar(
         centerTitle: true,
-        leadingWidth: 30,
+        leadingWidth: 30.w,
         backgroundColor: isBlack ? AppColors.primary : Colors.white,
 
-        // ✅ Menu Button
         leading: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {
-              // افتحي Drawer أو Menu هنا
-            },
-            borderRadius: BorderRadius.circular(20),
+            onTap: () {},
+            borderRadius: BorderRadius.circular(20.r),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0.w),
               child: SvgPicture.asset(
                 'assets/svgs/Menu.svg',
-                width: 24,
+                width: 24.w,
                 colorFilter: ColorFilter.mode(
                   isBlack ? Colors.white : AppColors.primary,
                   BlendMode.srcIn,
@@ -43,7 +41,6 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
 
-        // ✅ Logo (مش زرار – زي ما هو)
         title: SvgPicture.asset(
           'assets/logo/logo-bg.svg',
           colorFilter: ColorFilter.mode(
@@ -53,14 +50,13 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         actions: [
-          // ✅ Search Button
           Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: () {},
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.w),
                 child: SvgPicture.asset(
                   'assets/svgs/Search.svg',
                   colorFilter: ColorFilter.mode(
@@ -71,16 +67,15 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          const Gap(20),
+          Gap(20.w),
 
-          // ✅ Cart Button
           Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: () {},
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.w),
                 child: SvgPicture.asset(
                   'assets/svgs/shopping bag.svg',
                   colorFilter: ColorFilter.mode(

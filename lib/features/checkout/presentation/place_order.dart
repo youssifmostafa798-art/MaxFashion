@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/card_widget.dart';
 
 import 'package:max/core/widgets/custem_appbar.dart';
@@ -35,7 +36,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
   dynamic _savedAddress;
   dynamic savedCard;
 
-  //function new address
   void _openAddress() async {
     final addressData = await Navigator.push(
       context,
@@ -48,7 +48,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
     }
   }
 
-  //function edit address
   void editAddress() async {
     final newAddress = await Navigator.push(
       context,
@@ -59,9 +58,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     });
   }
 
-  //function of visaaCard Data
   void _openCard() async {
-    //maybe problem
     final cardData = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => AddCard()),
@@ -78,7 +75,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
     return Scaffold(
       appBar: CustemAppbar(isBlackk: false),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,9 +89,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     color: const Color.fromARGB(255, 170, 169, 169),
                     size: 15,
                   ),
-            Gap(15),
+            Gap(15.h),
 
-            //address info
             _savedAddress != null
                 ? GestureDetector(
                     onTap: () {
@@ -106,8 +102,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Gap(20),
-                            //Name (First & Last)
+                            Gap(20.h),
                             CustemText(
                               text:
                                   "${_savedAddress['first'] + _savedAddress['last']}",
@@ -115,8 +110,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               color: AppColors.primary,
                               size: 20,
                             ),
-                            Gap(8),
-                            //address & city
+                            Gap(8.h),
                             CustemText(
                               text:
                                   "${_savedAddress['city'] + _savedAddress['address']}",
@@ -124,8 +118,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               color: const Color.fromARGB(255, 170, 169, 169),
                               size: 15,
                             ),
-                            Gap(5),
-                            //State & ZIP Code
+                            Gap(5.h),
                             CustemText(
                               text:
                                   "${_savedAddress['state'] + _savedAddress['zip']}",
@@ -133,8 +126,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               color: const Color.fromARGB(255, 170, 169, 169),
                               size: 15,
                             ),
-                            Gap(5),
-                            //Numberphone
+                            Gap(5.h),
                             CustemText(
                               text: "${_savedAddress['phone']}",
 
@@ -165,16 +157,15 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     ),
                   )
                 : SizedBox.shrink(),
-            Gap(15),
+            Gap(15.h),
 
-            //Shipping Method
             savedCard != null && _savedAddress != null
                 ? SizedBox.shrink()
                 : CustemText(
                     text: "Shipping Method".toUpperCase(),
                     color: const Color.fromARGB(255, 111, 111, 111),
                   ),
-            Gap(10),
+            Gap(10.h),
             savedCard != null && _savedAddress != null
                 ? SizedBox.shrink()
                 : custemContanair(
@@ -182,27 +173,27 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     Icons.arrow_drop_down,
                     true,
                   ),
-            Gap(20),
+            Gap(20.h),
             savedCard != null && _savedAddress != null
                 ? SizedBox.shrink()
                 : CustemText(
                     text: "Payment method".toUpperCase(),
                     color: const Color.fromARGB(255, 111, 111, 111),
                   ),
-            Gap(10),
+            Gap(10.h),
 
             savedCard != null
                 ? Column(
                     children: [
                       Divider(),
-                      Gap(10),
+                      Gap(10.h),
                       Row(
                         children: [
                           SvgPicture.asset(
                             "assets/svgs/Mastercard.svg",
-                            width: 40,
+                            width: 40.w,
                           ),
-                          Gap(10),
+                          Gap(10.w),
                           Expanded(
                             child: CustemText(
                               text:
@@ -217,7 +208,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           ),
                         ],
                       ),
-                      Gap(10),
+                      Gap(10.h),
                       Divider(),
                     ],
                   )
@@ -231,8 +222,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                       false,
                     ),
                   ),
-            Gap(30),
-            //model
+            Gap(30.h),
             savedCard != null && _savedAddress != null
                 ? CardWidget(
                     products: widget.product,
@@ -241,7 +231,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     onChanged: (qty) {},
                   )
                 : SizedBox.shrink(),
-            //Ending
             Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +242,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 ),
               ],
             ),
-            Gap(20),
+            Gap(20.h),
             Button(
               isSvgg: true,
               title: "Place order".toUpperCase(),
@@ -265,10 +254,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     return Dialog(
                       child: Container(
                         color: Colors.white,
-                        height: 520,
+                        height: 520.h,
                         width: double.infinity,
                         child: Padding(
-                          padding: const EdgeInsets.all(15),
+                          padding: EdgeInsets.all(15.w),
                           child: Column(
                             children: [
                               Align(
@@ -280,48 +269,48 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   child: Icon(CupertinoIcons.clear),
                                 ),
                               ),
-                              Gap(20),
+                              Gap(20.h),
                               CustemText(
                                 text: "Payment success".toUpperCase(),
                                 spacing: 2,
                                 color: Colors.black,
                                 size: 19,
                               ),
-                              Gap(40),
+                              Gap(40.h),
                               SvgPicture.asset("assets/pop/done.svg"),
-                              Gap(40),
+                              Gap(40.h),
                               CustemText(
                                 text: "Your payment was success",
                                 size: 18,
                                 color: Colors.black,
                               ),
-                              Gap(10),
+                              Gap(10.h),
                               CustemText(
                                 text: "Payment ID 15263541",
                                 size: 18,
                                 color: Colors.black,
                               ),
-                              Gap(20),
+                              Gap(20.h),
                               Image.asset(
                                 'assets/svgs/line.png',
-                                width: 150,
-                                height: 15,
+                                width: 150.w,
+                                height: 15.h,
                                 color: Colors.black,
                               ),
-                              Gap(20),
+                              Gap(20.h),
                               CustemText(
                                 text: "Rate your purchase",
 
                                 color: Colors.black,
                               ),
-                              Gap(20),
+                              Gap(20.h),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset("assets/pop/emogi1.svg"),
-                                  Gap(20),
+                                  Gap(20.w),
                                   SvgPicture.asset("assets/pop/emogi2.svg"),
-                                  Gap(20),
+                                  Gap(20.w),
                                   SvgPicture.asset("assets/pop/emogi3.svg"),
                                 ],
                               ),
@@ -340,7 +329,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                       },
                                     ),
                                   ),
-                                  Gap(20),
+                                  Gap(20.w),
                                   Expanded(
                                     child: Button(
                                       isSvgg: false,
@@ -362,7 +351,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 );
               },
             ),
-            Gap(60),
+            Gap(60.h),
           ],
         ),
       ),
@@ -372,10 +361,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
 Widget custemContanair(String text, IconData iconData, bool isFree) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
     decoration: BoxDecoration(
       color: Colors.grey.shade200,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(20.r),
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

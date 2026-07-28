@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/card_widget.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
@@ -26,7 +27,7 @@ class _CheckoutState extends State<Checkout> {
     return Scaffold(
       appBar: CustemAppbar(isBlackk: false),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -45,7 +46,7 @@ class _CheckoutState extends State<Checkout> {
               ),
 
               promo(),
-              Gap(190),
+              Gap(50.h),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,7 +62,7 @@ class _CheckoutState extends State<Checkout> {
                   ),
                 ],
               ),
-              Gap(15),
+              Gap(15.h),
               Button(
                 isSvgg: true,
                 title: "Checkout",
@@ -92,30 +93,30 @@ class _CheckoutState extends State<Checkout> {
 Widget promo() {
   return Column(
     children: [
-      Gap(20),
+      Gap(20.h),
       Divider(),
-      Gap(20),
+      Gap(20.h),
       Row(
         children: [
-          SvgPicture.asset("assets/svgs/promo.svg", width: 28),
-          Gap(20),
+          SvgPicture.asset("assets/svgs/promo.svg", width: 28.w),
+          Gap(20.w),
           CustemText(text: "ADD Promo Code", color: AppColors.primary),
         ],
       ),
-      Gap(20),
+      Gap(20.h),
       Divider(),
-      Gap(20),
+      Gap(20.h),
       Row(
         children: [
-          SvgPicture.asset("assets/svgs/delivery.svg", width: 25),
-          Gap(20),
+          SvgPicture.asset("assets/svgs/delivery.svg", width: 25.w),
+          Gap(20.w),
           CustemText(text: "Delivery", color: AppColors.primary),
           Spacer(),
           CustemText(text: "FREE", color: AppColors.primary),
-          Gap(5),
+          Gap(5.w),
         ],
       ),
-      Gap(10),
+      Gap(10.h),
       Divider(),
     ],
   );
