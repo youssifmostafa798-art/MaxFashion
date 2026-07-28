@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
-import 'package:max/Compenents/card_widget.dart';
-import 'package:max/Compenents/custem_appbar.dart';
-import 'package:max/Compenents/custem_bottom.dart';
-import 'package:max/Compenents/custem_text.dart';
-import 'package:max/Models/product_model.dart';
-import 'package:max/Pages/place_order.dart';
-import 'package:max/core/colors.dart';
-import 'package:max/core/header.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:max/core/widgets/card_widget.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/data/models/product_model.dart';
+import 'package:max/features/checkout/presentation/place_order.dart';
+import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/widgets/header.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key, required this.products});

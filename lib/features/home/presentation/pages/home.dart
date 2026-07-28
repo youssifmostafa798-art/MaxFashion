@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_gap/flutter_gap.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:max/Compenents/custem_appbar.dart';
-import 'package:max/Compenents/custem_text.dart';
-import 'package:max/Models/cover_model.dart';
-import 'package:max/Models/product_model.dart';
-import 'package:max/Pages/checkout.dart';
-import 'package:max/core/colors.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/data/models/cover_model.dart';
+import 'package:max/data/models/product_model.dart';
+import 'package:max/features/checkout/presentation/checkout.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

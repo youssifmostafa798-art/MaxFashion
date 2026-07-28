@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:max/core/colors.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustemAppbar({super.key, required this.isBlackk});

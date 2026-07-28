@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
-import 'package:max/Compenents/custem_text.dart';
-import 'package:max/core/colors.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class Button extends StatelessWidget {
   const Button({

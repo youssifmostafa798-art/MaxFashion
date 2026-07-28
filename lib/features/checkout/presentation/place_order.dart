@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:max/Compenents/card_widget.dart';
+import 'package:max/core/widgets/card_widget.dart';
 
-import 'package:max/Compenents/custem_appbar.dart';
-import 'package:max/Compenents/custem_bottom.dart';
-import 'package:max/Compenents/custem_text.dart';
-import 'package:max/Models/product_model.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/data/models/product_model.dart';
 
-import 'package:max/Pages/add_address.dart';
-import 'package:max/Pages/add_card.dart';
+import 'package:max/features/checkout/presentation/add_address.dart';
+import 'package:max/features/checkout/presentation/add_card.dart';
 
-import 'package:max/core/colors.dart';
-import 'package:max/core/header.dart';
+import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/widgets/header.dart';
 
 class PlaceOrder extends StatefulWidget {
   const PlaceOrder({

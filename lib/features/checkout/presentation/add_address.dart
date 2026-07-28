@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_gap/flutter_gap.dart';
 
-import 'package:max/Compenents/custem_appbar.dart';
-import 'package:max/Compenents/custem_bottom.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_bottom.dart';
 
-import 'package:max/Compenents/custem_text_field.dart';
+import 'package:max/core/widgets/custem_text_field.dart';
 
-import 'package:max/core/header.dart';
+import 'package:max/core/widgets/header.dart';
 
 class AddAddress extends StatefulWidget {
   const AddAddress({super.key, this.editData});

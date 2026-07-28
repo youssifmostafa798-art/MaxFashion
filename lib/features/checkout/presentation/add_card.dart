@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/Compenents/custem_appbar.dart';
-import 'package:max/Compenents/custem_bottom.dart';
-import 'package:max/core/header.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/header.dart';
 
 class AddCard extends StatefulWidget {
   const AddCard({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/Compenents/custem_text.dart';
-import 'package:max/core/colors.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class Header extends StatelessWidget {
   const Header({super.key, required this.title});
