@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:max/Compenents/custem_text.dart';
+import 'package:max/Models/product_model.dart';
+import 'package:max/core/colors.dart';
+
+class CardWidget extends StatefulWidget {
+  const CardWidget({
+    super.key,
+    required this.products,
+    required this.onChanged,
+    required this.enableQty,
+    required this.qty,
+  });
+
+  final ProductModel products;
+  final Function(int) onChanged;
+  final bool enableQty;
+  final int qty;
+
+  @override
+  State<CardWidget> createState() => _CardWidgetState();
+}
+
+class _CardWidgetState extends State<CardWidget> {
+  late int number;
+  @override
+  void initState() {
+    number = 1;
+    number = widget.qty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Image.asset(widget.products.image, width: 120, fit: BoxFit.cover),
+        Gap(10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Gap(10),
+            CustemText(
+              text: widget.products.name.toUpperCase(),
+              spacing: 5,
+              color: AppColors.primary,
+            ),
+            Gap(10),
+            SizedBox(
+              width: size.width * 0.6,
+              child: CustemText(
+                text: widget.products.descrp,
+                size: 15,
+                color: AppColors.primary,
+              ),
+            ),
+            Gap(15),
+            CustemText(
+              text: "\$ ${widget.products.price}",
+              size: 16,
+              weight: FontWeight.bold,
+              color: const Color(0xffDD8560),
+            ),
+            Gap(20),
+            if (widget.enableQty)
+              Row(
+                children: [
+                  qty(() {
+                    setState(() {
+                      if (number > 1) number--;
+                      widget.onChanged(number);
+                    });
+                  }, 'assets/svgs/min.svg'),
+                  Gap(15),
+                  CustemText(
+                    text: number.toString(),
+                    size: 15,
+                    weight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                  Gap(15),
+                  qty(() {
+                    setState(() {
+                      number++;
+                      widget.onChanged(number);
+                    });
+                  }, 'assets/svgs/plus.svg'),
+                ],
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+Widget qty(VoidCallback onTapp, String svg) {
+  return GestureDetector(
+    onTap: onTapp,
+    child: Container(
+      padding: EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.grey.shade400, width: 1),
+      ),
+      child: SvgPicture.asset(svg),
+    ),
+  );
+}

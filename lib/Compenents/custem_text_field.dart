@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+
+class CustemTextField extends StatelessWidget {
+  final String hint;
+  final TextEditingController? controller;
+
+  const CustemTextField({super.key, required this.hint, this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      validator: (v) => "Please Fill The Field",
+      cursorColor: Colors.black,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey.shade400),
+
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2),
+        ),
+
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.black, width: 1.5),
+        ),
+      ),
+    );
+  }
+}
