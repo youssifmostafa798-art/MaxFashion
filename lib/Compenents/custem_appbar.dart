@@ -34,7 +34,10 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
               child: SvgPicture.asset(
                 'assets/svgs/Menu.svg',
                 width: 24,
-                color: isBlack ? Colors.white : AppColors.primary,
+                colorFilter: ColorFilter.mode(
+                  isBlack ? Colors.white : AppColors.primary,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),
@@ -43,7 +46,10 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
         // ✅ Logo (مش زرار – زي ما هو)
         title: SvgPicture.asset(
           'assets/logo/logo-bg.svg',
-          color: isBlack ? Colors.white : AppColors.primary,
+          colorFilter: ColorFilter.mode(
+            isBlack ? Colors.white : AppColors.primary,
+            BlendMode.srcIn,
+          ),
         ),
 
         actions: [
@@ -51,15 +57,16 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
-                print("Search clicked");
-              },
+              onTap: () {},
               borderRadius: BorderRadius.circular(20),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset(
                   'assets/svgs/Search.svg',
-                  color: isBlack ? Colors.white : AppColors.primary,
+                  colorFilter: ColorFilter.mode(
+                    isBlack ? Colors.white : AppColors.primary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
@@ -70,16 +77,16 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {
-                print("Cart clicked");
-                // Navigator.push to Cart page
-              },
+              onTap: () {},
               borderRadius: BorderRadius.circular(20),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset(
                   'assets/svgs/shopping bag.svg',
-                  color: isBlack ? Colors.white : AppColors.primary,
+                  colorFilter: ColorFilter.mode(
+                    isBlack ? Colors.white : AppColors.primary,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
