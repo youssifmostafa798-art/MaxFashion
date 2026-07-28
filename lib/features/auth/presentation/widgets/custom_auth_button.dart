@@ -25,7 +25,7 @@ class CustomAuthButton extends StatelessWidget {
         width: double.infinity,
         height: 52.h,
         decoration: BoxDecoration(
-          color: isOutlined ? AppColors.transparent : AppColors.primary,
+          color: isOutlined ? AppColors.primary : AppColors.primary,
           borderRadius: BorderRadius.circular(8.r),
           border: isOutlined
               ? Border.all(color: AppColors.grey400, width: 1.w)
@@ -39,7 +39,7 @@ class CustomAuthButton extends StatelessWidget {
                   child: CircularProgressIndicator(
                     strokeWidth: 2.w,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      isOutlined ? AppColors.primary : AppColors.white,
+                      isOutlined ? AppColors.white : AppColors.white,
                     ),
                   ),
                 )
@@ -49,7 +49,7 @@ class CustomAuthButton extends StatelessWidget {
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
-                    color: isOutlined ? AppColors.primary : AppColors.white,
+                    color: isOutlined ? AppColors.white : AppColors.white,
                   ),
                 ),
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/features/auth/presentation/pages/signup_page.dart';
+import 'package:max/core/router/app_router.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_text_field.dart';
 
@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onLogin() {
     if (_formKey.currentState!.validate()) {
       // TODO: Supabase login integration
+      Navigator.pushReplacementNamed(context, AppRouter.home);
     }
   }
 
@@ -141,10 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                   text: 'Sign Up',
                   isOutlined: true,
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SignupPage()),
-                    );
+                    Navigator.pushReplacementNamed(context, AppRouter.signup);
                   },
                 ),
                 SizedBox(height: 40.h),

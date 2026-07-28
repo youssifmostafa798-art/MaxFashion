@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/features/auth/presentation/pages/login_page.dart';
-import 'package:max/features/auth/presentation/pages/signup_page.dart';
+import 'package:max/core/router/app_router.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 
 class AuthPage extends StatelessWidget {
@@ -11,62 +10,46 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+
             children: [
               const Spacer(flex: 3),
-              Text(
-                'MAX',
-                style: TextStyle(
-                  fontSize: 48.sp,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 12,
-                  color: AppColors.white,
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                'FASHION',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: 6,
-                  color: AppColors.grey500,
-                ),
-              ),
+              Image.asset('assets/logo/logo.png', width: 120.w, height: 120.w),
               const Spacer(flex: 3),
               CustomAuthButton(
-                text: 'Sign Up',
+                text: 'Create Account',
                 isOutlined: true,
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignupPage()),
-                  );
+                  Navigator.pushNamed(context, AppRouter.signup);
                 },
               ),
               SizedBox(height: 16.h),
               CustomAuthButton(
-                text: 'Login',
+                text: 'Already have account',
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginPage()),
-                  );
+                  Navigator.pushNamed(context, AppRouter.login);
                 },
               ),
               SizedBox(height: 32.h),
-              Text(
-                'Continue as Guest',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey500,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.grey500,
+              GestureDetector(
+                onTap: () {
+                  // TODO: Supabase guest session
+                  Navigator.pushReplacementNamed(context, AppRouter.home);
+                },
+                child: Text(
+                  'Continue as Guest',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey500,
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.grey500,
+                  ),
                 ),
               ),
               SizedBox(height: 40.h),
