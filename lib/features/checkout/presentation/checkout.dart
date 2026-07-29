@@ -25,7 +25,7 @@ class _CheckoutState extends State<Checkout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustemAppbar(isBlackk: false),
+      appBar: CustemAppbar(isBlackk: false, showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(
@@ -130,7 +130,7 @@ class _CheckoutState extends State<Checkout> {
                                     Expanded(
                                       child: Button(
                                         isSvgg: false,
-                                        title: "View\nCart".toUpperCase(),
+                                        title: "View\nCart",
                                         onTap: () {
                                           Navigator.pop(context);
                                           Navigator.pushReplacementNamed(
@@ -145,8 +145,7 @@ class _CheckoutState extends State<Checkout> {
                                     Expanded(
                                       child: Button(
                                         isSvgg: false,
-                                        title: "Continue\nShopping"
-                                            .toUpperCase(),
+                                        title: "Shop\nMore",
                                         onTap: () {
                                           Navigator.pop(context);
                                           Navigator.pop(context);

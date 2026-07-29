@@ -9,12 +9,16 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.isBlackk,
     this.showBackButton = true,
+    this.showSearchBar = false,
   });
   final bool isBlackk;
   final bool showBackButton;
+  final bool showSearchBar;
+
+  double get _height => showSearchBar ? 120.h : 60.h;
 
   @override
-  Size get preferredSize => Size.fromHeight(120.h);
+  Size get preferredSize => Size.fromHeight(_height);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
     final bool canPop = showBackButton && Navigator.canPop(context);
 
     return AppBar(
-      toolbarHeight: 120.h,
+      toolbarHeight: _height,
       backgroundColor: isBlack ? AppColors.primary : Colors.white,
       automaticallyImplyLeading: false,
       leading: const SizedBox.shrink(),
@@ -60,11 +64,13 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
           ),
-          SizedBox(height: 12.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: _buildSearchBar(),
-          ),
+          if (showSearchBar) ...[
+            SizedBox(height: 12.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: _buildSearchBar(),
+            ),
+          ],
         ],
       ),
     );

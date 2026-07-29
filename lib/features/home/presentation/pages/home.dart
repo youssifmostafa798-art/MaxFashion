@@ -17,7 +17,11 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      appBar: CustemAppbar(isBlackk: true, showBackButton: false),
+      appBar: CustemAppbar(
+        isBlackk: true,
+        showBackButton: false,
+        showSearchBar: true,
+      ),
       body: Stack(
         children: [
           Positioned(

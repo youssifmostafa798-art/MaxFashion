@@ -73,7 +73,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustemAppbar(isBlackk: false),
+      appBar: CustemAppbar(isBlackk: false, showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: Column(
@@ -323,7 +323,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                       isSvgg: false,
                                       title: "Submit".toUpperCase(),
                                       onTap: () {
-                                        Navigator.pop(context);
                                         Navigator.pop(context);
                                         Navigator.pop(context);
                                       },

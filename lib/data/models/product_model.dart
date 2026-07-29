@@ -23,13 +23,13 @@ class ProductModel {
       descrp: 'reversible angora cardigan',
     ),
     ProductModel(
-      name: "stalesteel ring",
+      name: "stalesteel\nring",
       image: 'assets/product/product3.png',
       price: 40,
       descrp: 'reversible angora cardigan',
     ),
     ProductModel(
-      name: "Gold-plated ring",
+      name: "Gold-plated\nring",
       image: 'assets/product/product4.png',
       price: 100,
       descrp: 'reversible angora cardigan',
