@@ -35,7 +35,7 @@ class ProductModel {
       descrp: 'reversible angora cardigan',
     ),
     ProductModel(
-      name: "Gold-plated ring",
+      name: "Gold-plated\nring",
       image: 'assets/product/product5.png',
       price: 80,
       descrp: 'reversible angora cardigan',

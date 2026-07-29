@@ -17,23 +17,23 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      appBar: CustemAppbar(isBlackk: true),
+      appBar: CustemAppbar(isBlackk: true, showBackButton: false),
       body: Stack(
         children: [
           Positioned(
-            top: 10.h,
+            top: 0.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/10.svg"),
           ),
           Positioned(
-            top: 40.h,
+            top: 30.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/October.svg"),
           ),
           Positioned(
-            top: 85.h,
+            top: 75.h,
             left: 0,
             right: 0,
             child: SvgPicture.asset("assets/texts/Collection.svg"),
@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Column(
                     children: [
-                      Gap(120.h),
+                      Gap(100.h),
                       Image.asset("assets/cover/cover1.png"),
                       Gap(20.h),
                       GridView.builder(

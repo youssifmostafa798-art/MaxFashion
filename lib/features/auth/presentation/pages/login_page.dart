@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onLogin() {
     if (_formKey.currentState!.validate()) {
       // TODO: Supabase login integration
-      Navigator.pushReplacementNamed(context, AppRouter.home);
+      Navigator.pushReplacementNamed(context, AppRouter.main);
     }
   }
 

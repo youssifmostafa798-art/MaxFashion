@@ -34,10 +34,13 @@ class Button extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               isSvg
-                  ? SvgPicture.asset("assets/svgs/shopping bag.svg", width: 20.w)
+                  ? SvgPicture.asset(
+                      "assets/svgs/shopping bag.svg",
+                      width: 20.w,
+                    )
                   : SizedBox.shrink(),
               Gap(10.w),
-              CustemText(text: title.toUpperCase(), size: 18),
+              CustemText(text: title.toUpperCase(), size: 15),
             ],
           ),
         ),

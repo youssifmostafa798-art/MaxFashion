@@ -39,7 +39,7 @@ class AuthPage extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   // TODO: Supabase guest session
-                  Navigator.pushReplacementNamed(context, AppRouter.home);
+                  Navigator.pushReplacementNamed(context, AppRouter.main);
                 },
                 child: Text(
                   'Continue as Guest',

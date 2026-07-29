@@ -29,7 +29,7 @@ class _SignupPageState extends State<SignupPage> {
   void _onSignup() {
     if (_formKey.currentState!.validate()) {
       // TODO: Supabase signup integration
-      Navigator.pushReplacementNamed(context, AppRouter.home);
+      Navigator.pushReplacementNamed(context, AppRouter.main);
     }
   }
 
