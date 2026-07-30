@@ -1,79 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/features/cart/presentation/widgets/cart_item_card.dart';
-
+import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/cart_provider.dart';
 import '../../../../core/widgets/custem_bottom.dart';
-import '../../../../data/models/product_model.dart';
 import '../../../checkout/presentation/place_order.dart';
+import '../../../main/presentation/pages/main_screen.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends ConsumerWidget {
   const CartPage({super.key, this.products});
-  final ProductModel? products;
+
+  final dynamic products;
 
   @override
-  State<CartPage> createState() => _CartPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartItems = ref.watch(cartProvider);
+    final cartNotifier = ref.read(cartProvider.notifier);
+    final subtotal = cartNotifier.subtotal;
+    final total = cartNotifier.total;
 
-class _CartPageState extends State<CartPage> {
-  late List<_CartItem> _cartItems;
-  int selectedQty = 1;
-  @override
-  void initState() {
-    super.initState();
-    _cartItems = [
-      _CartItem(
-        image: 'assets/product/product1.png',
-        title: 'Boots',
-        price: 50.00,
-        quantity: 1,
-      ),
-      _CartItem(
-        image: 'assets/product/product4.png',
-        title: 'Gold-plated ring',
-        price: 100.00,
-        quantity: 2,
-      ),
-      _CartItem(
-        image: 'assets/product/product6.png',
-        title: 'Dress',
-        price: 120.00,
-        quantity: 1,
-      ),
-    ];
-  }
-
-  double get _totalPrice {
-    double total = 0;
-    for (final item in _cartItems) {
-      total += item.price * item.quantity;
-    }
-    return total;
-  }
-
-  void _increment(int index) {
-    setState(() {
-      _cartItems[index].quantity++;
-    });
-  }
-
-  void _decrement(int index) {
-    setState(() {
-      if (_cartItems[index].quantity > 1) {
-        _cartItems[index].quantity--;
-      }
-    });
-  }
-
-  void _remove(int index) {
-    setState(() {
-      _cartItems.removeAt(index);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -89,11 +37,20 @@ class _CartPageState extends State<CartPage> {
           weight: FontWeight.bold,
         ),
       ),
-      body: _cartItems.isEmpty ? _buildEmptyCart() : _buildCartContent(),
+      body: cartItems.isEmpty
+          ? _buildEmptyCart(context)
+          : _buildCartContent(
+              context: context,
+              cartItems: cartItems,
+              cartNotifier: cartNotifier,
+              subtotal: subtotal,
+              total: total,
+              ref: ref,
+            ),
     );
   }
 
-  Widget _buildEmptyCart() {
+  Widget _buildEmptyCart(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +74,15 @@ class _CartPageState extends State<CartPage> {
           ),
           SizedBox(height: 30.h),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MainScreen(initialTab: 0),
+                ),
+                (route) => false,
+              );
+            },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 14.h),
               decoration: BoxDecoration(
@@ -137,33 +102,58 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  Widget _buildCartContent() {
+  Widget _buildCartContent({
+    required BuildContext context,
+    required List cartItems,
+    required CartNotifier cartNotifier,
+    required double subtotal,
+    required double total,
+    required WidgetRef ref,
+  }) {
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            itemCount: _cartItems.length,
+            itemCount: cartItems.length,
             itemBuilder: (context, index) {
-              final item = _cartItems[index];
+              final item = cartItems[index];
               return CartItemCard(
-                image: item.image,
-                title: item.title,
-                price: item.price,
+                image: item.productImage,
+                title: item.productName,
+                price: item.unitPrice,
                 quantity: item.quantity,
-                onIncrement: () => _increment(index),
-                onDecrement: () => _decrement(index),
-                onRemove: () => _remove(index),
+                selectedColor: item.selectedColor,
+                selectedSize: item.selectedSize,
+                onIncrement: () => cartNotifier.incrementQuantity(index),
+                onDecrement: () => cartNotifier.decrementQuantity(index),
+                onRemove: () => cartNotifier.removeItem(
+                  item.productId,
+                  item.selectedColor,
+                  item.selectedSize,
+                ),
               );
             },
           ),
         ),
-        _buildBottomSection(),
+        _buildBottomSection(
+          context: context,
+          cartItems: cartItems,
+          subtotal: subtotal,
+          total: total,
+          ref: ref,
+        ),
       ],
     );
   }
 
-  Widget _buildBottomSection() {
+  Widget _buildBottomSection({
+    required BuildContext context,
+    required List cartItems,
+    required double subtotal,
+    required double total,
+    required WidgetRef ref,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -177,7 +167,7 @@ class _CartPageState extends State<CartPage> {
             children: [
               CustemText(text: 'Subtotal', size: 14, color: AppColors.grey600),
               CustemText(
-                text: '\$${_totalPrice.toStringAsFixed(2)}',
+                text: '\$${subtotal.toStringAsFixed(2)}',
                 size: 14,
                 color: AppColors.primary,
               ),
@@ -204,7 +194,7 @@ class _CartPageState extends State<CartPage> {
                 color: AppColors.primary,
               ),
               CustemText(
-                text: '\$${_totalPrice.toStringAsFixed(2)}',
+                text: '\$${total.toStringAsFixed(2)}',
                 size: 16,
                 weight: FontWeight.w700,
                 color: AppColors.primary,
@@ -215,15 +205,16 @@ class _CartPageState extends State<CartPage> {
           Button(
             isSvgg: true,
             title: "Checkout",
-            onTap: _cartItems.isEmpty
+            onTap: cartItems.isEmpty
                 ? null
                 : () {
+                    final firstItem = cartItems.first;
                     final product =
-                        widget.products ??
+                        products ??
                         ProductModel(
-                          name: _cartItems.first.title,
-                          image: _cartItems.first.image,
-                          price: _cartItems.first.price,
+                          name: firstItem.productName,
+                          image: firstItem.productImage,
+                          price: firstItem.unitPrice,
                           descrp: '',
                         );
                     Navigator.push(
@@ -232,8 +223,8 @@ class _CartPageState extends State<CartPage> {
                         builder: (_) {
                           return PlaceOrder(
                             product: product,
-                            qty: selectedQty,
-                            total: _totalPrice,
+                            qty: firstItem.quantity,
+                            total: total,
                           );
                         },
                       ),
@@ -245,18 +236,4 @@ class _CartPageState extends State<CartPage> {
       ),
     );
   }
-}
-
-class _CartItem {
-  final String image;
-  final String title;
-  final double price;
-  int quantity;
-
-  _CartItem({
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.quantity,
-  });
 }

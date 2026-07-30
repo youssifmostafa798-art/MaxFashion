@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,19 +8,21 @@ import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/core/router/app_router.dart';
 
-class Checkout extends StatefulWidget {
+class Checkout extends ConsumerStatefulWidget {
   const Checkout({super.key, required this.products});
   final ProductModel products;
 
   @override
-  State<Checkout> createState() => _CheckoutState();
+  ConsumerState<Checkout> createState() => _CheckoutState();
 }
 
-class _CheckoutState extends State<Checkout> {
+class _CheckoutState extends ConsumerState<Checkout> {
   int selectedQty = 1;
 
   @override
@@ -67,6 +70,19 @@ class _CheckoutState extends State<Checkout> {
                 isSvgg: true,
                 title: "Add to cart",
                 onTap: () {
+                  final productId = CartItemModel.generateProductId(
+                    widget.products.name,
+                    widget.products.image,
+                  );
+                  ref.read(cartProvider.notifier).addItem(
+                        CartItemModel(
+                          productId: productId,
+                          productName: widget.products.name,
+                          productImage: widget.products.image,
+                          quantity: selectedQty,
+                          unitPrice: widget.products.price,
+                        ),
+                      );
                   showDialog(
                     barrierDismissible: false,
                     context: context,

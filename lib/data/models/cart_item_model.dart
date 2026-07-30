@@ -1,0 +1,45 @@
+class CartItemModel {
+  final String productId;
+  final String productName;
+  final String productImage;
+  final String? selectedColor;
+  final String? selectedSize;
+  final int quantity;
+  final double unitPrice;
+
+  const CartItemModel({
+    required this.productId,
+    required this.productName,
+    required this.productImage,
+    this.selectedColor,
+    this.selectedSize,
+    required this.quantity,
+    required this.unitPrice,
+  });
+
+  double get totalPrice => unitPrice * quantity;
+
+  CartItemModel copyWith({
+    String? productId,
+    String? productName,
+    String? productImage,
+    String? selectedColor,
+    String? selectedSize,
+    int? quantity,
+    double? unitPrice,
+  }) {
+    return CartItemModel(
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      productImage: productImage ?? this.productImage,
+      selectedColor: selectedColor ?? this.selectedColor,
+      selectedSize: selectedSize ?? this.selectedSize,
+      quantity: quantity ?? this.quantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+    );
+  }
+
+  static String generateProductId(String name, String image) {
+    return '${name}_$image'.replaceAll(RegExp(r'\s+'), '_');
+  }
+}

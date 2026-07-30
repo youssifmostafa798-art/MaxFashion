@@ -14,6 +14,8 @@ class CartItemCard extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     required this.onRemove,
+    this.selectedColor,
+    this.selectedSize,
   });
 
   final String image;
@@ -23,6 +25,8 @@ class CartItemCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final VoidCallback onRemove;
+  final String? selectedColor;
+  final String? selectedSize;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,41 @@ class CartItemCard extends StatelessWidget {
                   weight: FontWeight.w600,
                   color: AppColors.primary,
                 ),
+                if (selectedColor != null || selectedSize != null) ...[
+                  Gap(6.h),
+                  Row(
+                    children: [
+                      if (selectedColor != null) ...[
+                        Container(
+                          width: 14.w,
+                          height: 14.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _parseColor(selectedColor!),
+                            border: Border.all(color: AppColors.grey300),
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        CustemText(
+                          text: selectedColor!,
+                          size: 12,
+                          color: AppColors.grey600,
+                        ),
+                      ],
+                      if (selectedColor != null && selectedSize != null)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: CustemText(text: '|', size: 12, color: AppColors.grey400),
+                        ),
+                      if (selectedSize != null)
+                        CustemText(
+                          text: 'Size: $selectedSize',
+                          size: 12,
+                          color: AppColors.grey600,
+                        ),
+                    ],
+                  ),
+                ],
                 Gap(10.h),
                 Row(
                   children: [
@@ -125,5 +164,35 @@ class CartItemCard extends StatelessWidget {
         child: Icon(icon, size: 16.w, color: AppColors.primary),
       ),
     );
+  }
+
+  static Color _parseColor(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'black':
+        return Colors.black;
+      case 'white':
+        return Colors.white;
+      case 'red':
+        return Colors.red;
+      case 'blue':
+        return Colors.blue;
+      case 'green':
+        return Colors.green;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'pink':
+        return Colors.pink;
+      case 'purple':
+        return Colors.purple;
+      case 'grey':
+      case 'gray':
+        return Colors.grey;
+      case 'brown':
+        return Colors.brown;
+      default:
+        return Colors.grey;
+    }
   }
 }
