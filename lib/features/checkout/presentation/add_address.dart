@@ -68,24 +68,6 @@ class _AddAddressState extends State<AddAddress> {
                 key: _formkey,
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustemTextField(
-                            hint: "First Name",
-                            controller: firstNameController,
-                          ),
-                        ),
-                        Gap(20.w),
-                        Expanded(
-                          child: CustemTextField(
-                            hint: "Last Name",
-                            controller: lastNameController,
-                          ),
-                        ),
-                      ],
-                    ),
-
                     Gap(30.h),
                     CustemTextField(
                       hint: "Address",
@@ -93,8 +75,7 @@ class _AddAddressState extends State<AddAddress> {
                     ),
 
                     Gap(30.h),
-                    CustemTextField(
-                        hint: "City", controller: cityController),
+                    CustemTextField(hint: "City", controller: cityController),
 
                     Gap(30.h),
                     Row(
@@ -124,7 +105,7 @@ class _AddAddressState extends State<AddAddress> {
                 ),
               ),
 
-              Gap(210.h),
+              Gap(100.h),
               Button(
                 isSvgg: false,
                 title: "Add now".toUpperCase(),

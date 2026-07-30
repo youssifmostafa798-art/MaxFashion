@@ -51,8 +51,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
   void editAddress() async {
     final newAddress = await Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (_) => AddAddress(editData: _savedAddress)),
+      MaterialPageRoute(builder: (_) => AddAddress(editData: _savedAddress)),
     );
     if (mounted) {
       setState(() {
@@ -106,13 +105,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Gap(20.h),
-                            CustemText(
-                              text:
-                                  "${_savedAddress['first'] + _savedAddress['last']}",
-                              spacing: 2,
-                              color: AppColors.primary,
-                              size: 20,
-                            ),
+
                             Gap(8.h),
                             CustemText(
                               text:
@@ -160,10 +153,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
-                : CustemText(
-                    text: "SHIPPING METHOD",
-                    color: AppColors.grey700,
-                  ),
+                : CustemText(text: "SHIPPING METHOD", color: AppColors.grey700),
             Gap(10.h),
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
@@ -175,10 +165,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Gap(20.h),
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
-                : CustemText(
-                    text: "PAYMENT METHOD",
-                    color: AppColors.grey700,
-                  ),
+                : CustemText(text: "PAYMENT METHOD", color: AppColors.grey700),
             Gap(10.h),
 
             savedCard != null
@@ -234,7 +221,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const CustemText(
-                    text: "Total", color: AppColors.primary, spacing: 3),
+                  text: "Total",
+                  color: AppColors.primary,
+                  spacing: 3,
+                ),
                 CustemText(
                   text: "\$ ${widget.total}",
                   color: Colors.red.shade200,
@@ -379,8 +369,7 @@ class _CustomContainer extends StatelessWidget {
         children: [
           CustemText(text: text, color: AppColors.grey700),
           const Spacer(),
-          if (isFree)
-            const CustemText(text: "FREE", color: AppColors.grey700),
+          if (isFree) const CustemText(text: "FREE", color: AppColors.grey700),
           Icon(iconData, color: Colors.black),
         ],
       ),
