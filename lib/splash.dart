@@ -53,7 +53,12 @@ class _SplashPageState extends State<SplashPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/logo/logo.png', width: 120.w, height: 120.w),
+              Image.asset(
+                'assets/logo/logo.png',
+                width: 120.w,
+                height: 120.w,
+                cacheWidth: 120,
+              ),
               SizedBox(height: 24.h),
             ],
           ),

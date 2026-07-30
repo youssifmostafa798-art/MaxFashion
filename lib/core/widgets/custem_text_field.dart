@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class CustemTextField extends StatelessWidget {
   final String hint;
@@ -15,12 +16,10 @@ class CustemTextField extends StatelessWidget {
       cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade400),
-
+        hintStyle: TextStyle(color: AppColors.grey400),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.2.w),
+          borderSide: BorderSide(color: AppColors.grey300, width: 1.2.w),
         ),
-
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.black, width: 1.5.w),
         ),

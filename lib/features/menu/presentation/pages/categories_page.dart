@@ -12,11 +12,10 @@ class CategoriesPage extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-
         backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: const CustemText(
           text: 'MENU',
           size: 18,
           color: AppColors.primary,
@@ -32,15 +31,15 @@ class CategoriesPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 10.h),
-                _buildSearchBar(),
+                const _SearchBar(),
                 SizedBox(height: 20.h),
-                _buildSectionTitle('CATEGORIES'),
+                const _SectionTitle('CATEGORIES'),
                 SizedBox(height: 12.h),
-                _buildCategoryGrid(),
+                const _CategoryGrid(),
                 SizedBox(height: 24.h),
-                _buildSectionTitle('SHOP BY'),
+                const _SectionTitle('SHOP BY'),
                 SizedBox(height: 12.h),
-                _buildShopByList(),
+                const _ShopByList(),
                 SizedBox(height: 30.h),
               ],
             ),
@@ -49,8 +48,13 @@ class CategoriesPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSearchBar() {
+class _SearchBar extends StatelessWidget {
+  const _SearchBar();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 48.h,
       decoration: BoxDecoration(
@@ -64,7 +68,7 @@ class CategoriesPage extends StatelessWidget {
             child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
           ),
           SizedBox(width: 10.w),
-          CustemText(
+          const CustemText(
             text: 'Search categories...',
             size: 14,
             color: AppColors.grey400,
@@ -73,8 +77,14 @@ class CategoriesPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSectionTitle(String title) {
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.title);
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
     return CustemText(
       text: title,
       size: 14,
@@ -82,22 +92,27 @@ class CategoriesPage extends StatelessWidget {
       spacing: 3,
     );
   }
+}
 
-  Widget _buildCategoryGrid() {
-    final categories = [
-      _CategoryItem('Men', Icons.male),
-      _CategoryItem('Women', Icons.female),
-      _CategoryItem('Kids', Icons.child_care),
-      _CategoryItem('Shoes', Icons.shopping_bag_outlined),
-      _CategoryItem('Accessories', Icons.watch_outlined),
-      _CategoryItem('Brands', Icons.star_border),
-      _CategoryItem('Sale', Icons.local_offer_outlined),
-    ];
+class _CategoryGrid extends StatelessWidget {
+  const _CategoryGrid();
 
+  static const _categories = [
+    _CategoryItem('Men', Icons.male),
+    _CategoryItem('Women', Icons.female),
+    _CategoryItem('Kids', Icons.child_care),
+    _CategoryItem('Shoes', Icons.shopping_bag_outlined),
+    _CategoryItem('Accessories', Icons.watch_outlined),
+    _CategoryItem('Brands', Icons.star_border),
+    _CategoryItem('Sale', Icons.local_offer_outlined),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: categories.length,
+      itemCount: _categories.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 16.h,
@@ -105,13 +120,18 @@ class CategoriesPage extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        final cat = categories[index];
-        return _buildCategoryItem(cat);
+        return _CategoryItemWidget(cat: _categories[index]);
       },
     );
   }
+}
 
-  Widget _buildCategoryItem(_CategoryItem cat) {
+class _CategoryItemWidget extends StatelessWidget {
+  const _CategoryItemWidget({required this.cat});
+  final _CategoryItem cat;
+
+  @override
+  Widget build(BuildContext context) {
     final bool isSale = cat.label == 'Sale';
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -140,17 +160,22 @@ class CategoriesPage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildShopByList() {
-    final items = [
-      _ShopByItem('New Arrivals', Icons.new_releases_outlined),
-      _ShopByItem('Trending Now', Icons.trending_up),
-      _ShopByItem('Best Sellers', Icons.thumb_up_outlined),
-      _ShopByItem('Online Exclusive', Icons.language),
-    ];
+class _ShopByList extends StatelessWidget {
+  const _ShopByList();
 
+  static const _items = [
+    _ShopByItem('New Arrivals', Icons.new_releases_outlined),
+    _ShopByItem('Trending Now', Icons.trending_up),
+    _ShopByItem('Best Sellers', Icons.thumb_up_outlined),
+    _ShopByItem('Online Exclusive', Icons.language),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      children: items.map((item) {
+      children: _items.map((item) {
         return Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),

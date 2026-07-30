@@ -14,11 +14,10 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-
         backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: const CustemText(
           text: 'YOU',
           size: 18,
           color: AppColors.primary,
@@ -30,19 +29,24 @@ class ProfilePage extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           children: [
-            _buildProfileHeader(),
+            const _ProfileHeader(),
             SizedBox(height: 24.h),
-            _buildMenuSection(),
+            const _MenuSection(),
             SizedBox(height: 24.h),
-            _buildLogoutButton(context),
+            const _LogoutButton(),
             SizedBox(height: 30.h),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildProfileHeader() {
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: 24.h),
@@ -55,21 +59,21 @@ class ProfilePage extends StatelessWidget {
           Container(
             width: 80.w,
             height: 80.w,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.grey300,
             ),
             child: Icon(Icons.person, size: 44.w, color: AppColors.white),
           ),
           SizedBox(height: 14.h),
-          CustemText(
+          const CustemText(
             text: 'Alex Johnson',
             size: 18,
             weight: FontWeight.w700,
             color: AppColors.primary,
           ),
           SizedBox(height: 4.h),
-          CustemText(
+          const CustemText(
             text: 'alex.johnson@email.com',
             size: 13,
             color: AppColors.grey500,
@@ -78,12 +82,17 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildMenuSection() {
+class _MenuSection extends StatelessWidget {
+  const _MenuSection();
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustemText(
+        const CustemText(
           text: 'ACCOUNT',
           size: 12,
           color: AppColors.grey500,
@@ -125,16 +134,22 @@ class ProfilePage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildLogoutButton(BuildContext context) {
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton();
+
+  @override
+  Widget build(BuildContext context) {
     return ProfileMenuItem(
       icon: Icons.logout,
       title: 'Logout',
       isDestructive: true,
       onTap: () {
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil(AppRouter.auth, (route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRouter.auth,
+          (route) => false,
+        );
       },
     );
   }

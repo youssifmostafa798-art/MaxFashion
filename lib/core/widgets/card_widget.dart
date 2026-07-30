@@ -26,11 +26,11 @@ class CardWidget extends StatefulWidget {
 
 class _CardWidgetState extends State<CardWidget> {
   late int number;
+
   @override
   void initState() {
-    number = 1;
-    number = widget.qty;
     super.initState();
+    number = widget.qty;
   }
 
   @override
@@ -38,7 +38,12 @@ class _CardWidgetState extends State<CardWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(widget.products.image, width: 120.w, fit: BoxFit.cover),
+        Image.asset(
+          widget.products.image,
+          width: 120.w,
+          fit: BoxFit.cover,
+          cacheWidth: 120,
+        ),
         Gap(8.w),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,12 +74,15 @@ class _CardWidgetState extends State<CardWidget> {
             if (widget.enableQty)
               Row(
                 children: [
-                  qty(() {
-                    setState(() {
-                      if (number > 1) number--;
-                      widget.onChanged(number);
-                    });
-                  }, 'assets/svgs/min.svg'),
+                  _QtyButton(
+                    svg: 'assets/svgs/min.svg',
+                    onTap: () {
+                      setState(() {
+                        if (number > 1) number--;
+                        widget.onChanged(number);
+                      });
+                    },
+                  ),
                   Gap(15.w),
                   CustemText(
                     text: number.toString(),
@@ -83,12 +91,15 @@ class _CardWidgetState extends State<CardWidget> {
                     color: AppColors.primary,
                   ),
                   Gap(15.w),
-                  qty(() {
-                    setState(() {
-                      number++;
-                      widget.onChanged(number);
-                    });
-                  }, 'assets/svgs/plus.svg'),
+                  _QtyButton(
+                    svg: 'assets/svgs/plus.svg',
+                    onTap: () {
+                      setState(() {
+                        number++;
+                        widget.onChanged(number);
+                      });
+                    },
+                  ),
                 ],
               ),
           ],
@@ -98,16 +109,23 @@ class _CardWidgetState extends State<CardWidget> {
   }
 }
 
-Widget qty(VoidCallback onTapp, String svg) {
-  return GestureDetector(
-    onTap: onTapp,
-    child: Container(
-      padding: EdgeInsets.all(3.w),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.grey.shade400, width: 1.w),
+class _QtyButton extends StatelessWidget {
+  const _QtyButton({required this.svg, required this.onTap});
+  final String svg;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(3.w),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.grey400, width: 1.w),
+        ),
+        child: SvgPicture.asset(svg),
       ),
-      child: SvgPicture.asset(svg),
-    ),
-  );
+    );
+  }
 }

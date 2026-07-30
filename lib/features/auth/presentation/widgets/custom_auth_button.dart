@@ -20,12 +20,11 @@ class CustomAuthButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: isLoading ? null : onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+      child: Container(
         width: double.infinity,
         height: 52.h,
         decoration: BoxDecoration(
-          color: isOutlined ? AppColors.primary : AppColors.primary,
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(8.r),
           border: isOutlined
               ? Border.all(color: AppColors.grey400, width: 1.w)
@@ -38,8 +37,8 @@ class CustomAuthButton extends StatelessWidget {
                   height: 20.w,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.w,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      isOutlined ? AppColors.white : AppColors.white,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.white,
                     ),
                   ),
                 )
@@ -49,7 +48,7 @@ class CustomAuthButton extends StatelessWidget {
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
-                    color: isOutlined ? AppColors.white : AppColors.white,
+                    color: AppColors.white,
                   ),
                 ),
         ),

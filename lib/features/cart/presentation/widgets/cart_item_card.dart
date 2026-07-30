@@ -48,6 +48,7 @@ class CartItemCard extends StatelessWidget {
               width: 90.w,
               height: 110.h,
               fit: BoxFit.cover,
+              cacheWidth: 90,
             ),
           ),
           Gap(12.w),

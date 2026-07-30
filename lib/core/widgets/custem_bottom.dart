@@ -18,8 +18,6 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isSvg = isSvgg;
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -33,12 +31,11 @@ class Button extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              isSvg
-                  ? SvgPicture.asset(
-                      "assets/svgs/shopping bag.svg",
-                      width: 20.w,
-                    )
-                  : SizedBox.shrink(),
+              if (isSvgg)
+                SvgPicture.asset(
+                  "assets/svgs/shopping bag.svg",
+                  width: 20.w,
+                ),
               Gap(10.w),
               CustemText(text: title.toUpperCase(), size: 15),
             ],

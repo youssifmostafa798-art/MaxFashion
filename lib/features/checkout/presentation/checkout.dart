@@ -28,19 +28,18 @@ class _CheckoutState extends ConsumerState<Checkout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustemAppbar(isBlackk: false, showSearchBar: false),
+      appBar: const CustemAppbar(isBlackk: false, showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Header(title: "Checkout"),
+              const Header(title: "Checkout"),
 
               CardWidget(
                 products: widget.products,
                 enableQty: true,
                 qty: selectedQty,
-
                 onChanged: (v) {
                   setState(() {
                     selectedQty = v;
@@ -48,13 +47,13 @@ class _CheckoutState extends ConsumerState<Checkout> {
                 },
               ),
 
-              promo(),
+              const _PromoSection(),
               Gap(50.h),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustemText(
+                  const CustemText(
                     text: "Est. Total",
                     color: AppColors.primary,
                     spacing: 3,
@@ -99,15 +98,13 @@ class _CheckoutState extends ConsumerState<Checkout> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Icon(Icons.close),
+                                    onTap: () => Navigator.pop(context),
+                                    child: const Icon(Icons.close),
                                   ),
                                 ),
                                 Gap(20.h),
-                                CustemText(
-                                  text: "ADDED TO CART".toUpperCase(),
+                                const CustemText(
+                                  text: "ADDED TO CART",
                                   spacing: 2,
                                   color: Colors.black,
                                   size: 19,
@@ -115,13 +112,13 @@ class _CheckoutState extends ConsumerState<Checkout> {
                                 Gap(40.h),
                                 SvgPicture.asset("assets/pop/done.svg"),
                                 Gap(40.h),
-                                CustemText(
+                                const CustemText(
                                   text: "Item added to your\ncart successfully",
                                   size: 18,
                                   color: Colors.black,
                                 ),
                                 Gap(20.h),
-                                CustemText(
+                                const CustemText(
                                   text:
                                       "You can review your cart \nor continue shopping.",
                                   size: 18,
@@ -135,12 +132,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
                                   color: Colors.black,
                                 ),
                                 Gap(40.h),
-                                CustemText(
+                                const CustemText(
                                   text: "Ready to checkout?",
                                   color: Colors.black,
                                 ),
 
-                                Spacer(),
+                                const Spacer(),
                                 Row(
                                   children: [
                                     Expanded(
@@ -187,34 +184,39 @@ class _CheckoutState extends ConsumerState<Checkout> {
   }
 }
 
-Widget promo() {
-  return Column(
-    children: [
-      Gap(20.h),
-      Divider(),
-      Gap(20.h),
-      Row(
-        children: [
-          SvgPicture.asset("assets/svgs/promo.svg", width: 28.w),
-          Gap(20.w),
-          CustemText(text: "ADD Promo Code", color: AppColors.primary),
-        ],
-      ),
-      Gap(20.h),
-      Divider(),
-      Gap(20.h),
-      Row(
-        children: [
-          SvgPicture.asset("assets/svgs/delivery.svg", width: 25.w),
-          Gap(20.w),
-          CustemText(text: "Delivery", color: AppColors.primary),
-          Spacer(),
-          CustemText(text: "FREE", color: AppColors.primary),
-          Gap(5.w),
-        ],
-      ),
-      Gap(10.h),
-      Divider(),
-    ],
-  );
+class _PromoSection extends StatelessWidget {
+  const _PromoSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Gap(20.h),
+        const Divider(),
+        Gap(20.h),
+        Row(
+          children: [
+            SvgPicture.asset("assets/svgs/promo.svg", width: 28.w),
+            Gap(20.w),
+            const CustemText(text: "ADD Promo Code", color: AppColors.primary),
+          ],
+        ),
+        Gap(20.h),
+        const Divider(),
+        Gap(20.h),
+        Row(
+          children: [
+            SvgPicture.asset("assets/svgs/delivery.svg", width: 25.w),
+            Gap(20.w),
+            const CustemText(text: "Delivery", color: AppColors.primary),
+            const Spacer(),
+            const CustemText(text: "FREE", color: AppColors.primary),
+            Gap(5.w),
+          ],
+        ),
+        Gap(10.h),
+        const Divider(),
+      ],
+    );
+  }
 }

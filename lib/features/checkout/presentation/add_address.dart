@@ -57,71 +57,70 @@ class _AddAddressState extends State<AddAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustemAppbar(isBlackk: false),
+      appBar: const CustemAppbar(isBlackk: false),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: Column(
             children: [
-              Header(title: "Add Shipping Address"),
+              const Header(title: "Add Shipping Address"),
               Form(
                 key: _formkey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustemTextField(
-                              hint: "First Name",
-                              controller: firstNameController,
-                            ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustemTextField(
+                            hint: "First Name",
+                            controller: firstNameController,
                           ),
-                          Gap(20.w),
-                          Expanded(
-                            child: CustemTextField(
-                              hint: "Last Name",
-                              controller: lastNameController,
-                            ),
+                        ),
+                        Gap(20.w),
+                        Expanded(
+                          child: CustemTextField(
+                            hint: "Last Name",
+                            controller: lastNameController,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
 
-                      Gap(30.h),
-                      CustemTextField(
-                        hint: "Address",
-                        controller: addressController,
-                      ),
+                    Gap(30.h),
+                    CustemTextField(
+                      hint: "Address",
+                      controller: addressController,
+                    ),
 
-                      Gap(30.h),
-                      CustemTextField(hint: "City", controller: cityController),
+                    Gap(30.h),
+                    CustemTextField(
+                        hint: "City", controller: cityController),
 
-                      Gap(30.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustemTextField(
-                              hint: "State",
-                              controller: stateController,
-                            ),
+                    Gap(30.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustemTextField(
+                            hint: "State",
+                            controller: stateController,
                           ),
-                          Gap(30.w),
-                          Expanded(
-                            child: CustemTextField(
-                              hint: "ZIP Code",
-                              controller: zipController,
-                            ),
+                        ),
+                        Gap(30.w),
+                        Expanded(
+                          child: CustemTextField(
+                            hint: "ZIP Code",
+                            controller: zipController,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
 
-                      Gap(30.h),
-                      CustemTextField(
-                        hint: "Phone Number",
-                        controller: phoneController,
-                      ),
-                    ],
-                  ),
+                    Gap(30.h),
+                    CustemTextField(
+                      hint: "Phone Number",
+                      controller: phoneController,
+                    ),
+                  ],
                 ),
               ),
 

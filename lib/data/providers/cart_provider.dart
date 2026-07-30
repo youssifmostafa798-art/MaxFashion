@@ -57,18 +57,19 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
   }
 
   void clear() => state = [];
-
-  double get subtotal =>
-      state.fold(0.0, (sum, item) => sum + item.unitPrice * item.quantity);
-
-  double get deliveryFee => state.isEmpty ? 0.0 : 0.0;
-
-  double get discount => 0.0;
-
-  double get total => subtotal + deliveryFee - discount;
 }
 
 final cartProvider =
     StateNotifierProvider<CartNotifier, List<CartItemModel>>((ref) {
   return CartNotifier();
+});
+
+final cartSubtotalProvider = Provider<double>((ref) {
+  final items = ref.watch(cartProvider);
+  return items.fold(0.0, (sum, item) => sum + item.unitPrice * item.quantity);
+});
+
+final cartTotalProvider = Provider<double>((ref) {
+  final subtotal = ref.watch(cartSubtotalProvider);
+  return subtotal;
 });

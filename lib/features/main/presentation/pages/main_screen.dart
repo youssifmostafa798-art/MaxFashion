@@ -17,18 +17,41 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late int _currentIndex = widget.initialTab;
+  final List<Widget?> _pagesCache = List.filled(4, null);
 
-  final List<Widget> _pages = const [
-    Home(),
-    CategoriesPage(),
-    CartPage(),
-    ProfilePage(),
-  ];
+  Widget _buildPage(int index) {
+    if (_pagesCache[index] != null) return _pagesCache[index]!;
+
+    Widget page;
+    switch (index) {
+      case 0:
+        page = const _LazyHome();
+        break;
+      case 1:
+        page = const _LazyCategories();
+        break;
+      case 2:
+        page = const _LazyCart();
+        break;
+      case 3:
+        page = const _LazyProfile();
+        break;
+      default:
+        page = const _LazyHome();
+    }
+    _pagesCache[index] = page;
+    return page;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          for (int i = 0; i < 4; i++) _buildPage(i),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -71,5 +94,37 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
+  }
+}
+
+class _LazyHome extends StatelessWidget {
+  const _LazyHome();
+  @override
+  Widget build(BuildContext context) {
+    return const Home();
+  }
+}
+
+class _LazyCategories extends StatelessWidget {
+  const _LazyCategories();
+  @override
+  Widget build(BuildContext context) {
+    return const CategoriesPage();
+  }
+}
+
+class _LazyCart extends StatelessWidget {
+  const _LazyCart();
+  @override
+  Widget build(BuildContext context) {
+    return const CartPage();
+  }
+}
+
+class _LazyProfile extends StatelessWidget {
+  const _LazyProfile();
+  @override
+  Widget build(BuildContext context) {
+    return const ProfilePage();
   }
 }

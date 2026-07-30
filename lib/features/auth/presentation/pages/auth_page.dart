@@ -16,10 +16,14 @@ class AuthPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-
             children: [
               const Spacer(flex: 3),
-              Image.asset('assets/logo/logo.png', width: 120.w, height: 120.w),
+              Image.asset(
+                'assets/logo/logo.png',
+                width: 120.w,
+                height: 120.w,
+                cacheWidth: 120,
+              ),
               const Spacer(flex: 3),
               CustomAuthButton(
                 text: 'Create Account',
@@ -38,7 +42,6 @@ class AuthPage extends StatelessWidget {
               SizedBox(height: 32.h),
               GestureDetector(
                 onTap: () {
-                  // TODO: Supabase guest session
                   Navigator.pushReplacementNamed(context, AppRouter.main);
                 },
                 child: Text(

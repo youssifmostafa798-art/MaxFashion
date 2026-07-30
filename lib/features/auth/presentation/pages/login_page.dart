@@ -80,7 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter your email';
                     }
-                    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                    if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value.trim())) {
                       return 'Invalid email address';
                     }
                     return null;
@@ -114,10 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 36.h),
-                CustomAuthButton(
-                  text: 'Login',
-                  onTap: _onLogin,
-                ),
+                CustomAuthButton(text: 'Login', onTap: _onLogin),
                 SizedBox(height: 24.h),
                 Row(
                   children: [

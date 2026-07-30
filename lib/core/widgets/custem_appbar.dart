@@ -22,12 +22,11 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isBlack = isBlackk;
     final bool canPop = showBackButton && Navigator.canPop(context);
 
     return AppBar(
       toolbarHeight: _height,
-      backgroundColor: isBlack ? AppColors.primary : Colors.white,
+      backgroundColor: isBlackk ? AppColors.primary : Colors.white,
       automaticallyImplyLeading: false,
       leading: const SizedBox.shrink(),
       leadingWidth: 0,
@@ -46,7 +45,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.arrow_back,
-                        color: isBlack ? Colors.white : Colors.black,
+                        color: isBlackk ? Colors.white : Colors.black,
                         size: 24.w,
                       ),
                     ),
@@ -55,7 +54,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                 SvgPicture.asset(
                   'assets/logo/logo-bg.svg',
                   colorFilter: ColorFilter.mode(
-                    isBlack ? Colors.white : AppColors.primary,
+                    isBlackk ? Colors.white : AppColors.primary,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -68,15 +67,18 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
             SizedBox(height: 12.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: _buildSearchBar(),
+              child: _SearchBar(),
             ),
           ],
         ],
       ),
     );
   }
+}
 
-  Widget _buildSearchBar() {
+class _SearchBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 48.h,
       width: double.infinity,
@@ -91,7 +93,11 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
             child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
           ),
           SizedBox(width: 10.w),
-          CustemText(text: 'Search....', size: 14, color: AppColors.grey400),
+          const CustemText(
+            text: 'Search....',
+            size: 14,
+            color: AppColors.grey400,
+          ),
         ],
       ),
     );
