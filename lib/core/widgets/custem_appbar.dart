@@ -24,10 +24,11 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final bool canPop = showBackButton && Navigator.canPop(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AppBar(
       toolbarHeight: _height,
-      backgroundColor: isBlackk ? AppColors.primary : Colors.white,
+      backgroundColor: isBlackk ? AppColors.primary : colorScheme.surface,
       automaticallyImplyLeading: false,
       leading: const SizedBox.shrink(),
       leadingWidth: 0,
@@ -46,7 +47,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.arrow_back,
-                        color: isBlackk ? Colors.white : Colors.black,
+                        color: isBlackk ? Colors.white : colorScheme.onSurface,
                         size: 24.w,
                       ),
                     ),
@@ -55,7 +56,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                 SvgPicture.asset(
                   'assets/logo/logo-bg.svg',
                   colorFilter: ColorFilter.mode(
-                    isBlackk ? Colors.white : AppColors.primary,
+                    isBlackk ? Colors.white : colorScheme.onSurface,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -80,6 +81,8 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
 class _SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -91,20 +94,20 @@ class _SearchBar extends StatelessWidget {
         height: 48.h,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.grey100,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
             Padding(
               padding: EdgeInsets.only(left: 14.w),
-              child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
+              child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
             ),
             SizedBox(width: 10.w),
-            const CustemText(
+            CustemText(
               text: 'Search....',
               size: 14,
-              color: AppColors.grey400,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),

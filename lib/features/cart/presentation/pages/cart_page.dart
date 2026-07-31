@@ -19,18 +19,19 @@ class CartPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartItems = ref.watch(cartProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: const CustemText(
+        title: CustemText(
           text: 'MY BAG',
           size: 18,
-          color: AppColors.primary,
+          color: colorScheme.onSurface,
           spacing: 4,
           weight: FontWeight.bold,
         ),
@@ -97,53 +98,54 @@ class _CartBottomSection extends ConsumerWidget {
     final cartItems = ref.watch(cartProvider);
     final subtotal = ref.watch(cartSubtotalProvider);
     final total = ref.watch(cartTotalProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grey200)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        border: Border(top: BorderSide(color: colorScheme.outline)),
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const CustemText(
-                  text: 'Subtotal', size: 14, color: AppColors.grey600),
+              CustemText(
+                  text: 'Subtotal', size: 14, color: colorScheme.onSurfaceVariant),
               CustemText(
                 text: '\$${subtotal.toStringAsFixed(2)}',
                 size: 14,
-                color: AppColors.primary,
+                color: colorScheme.onSurface,
               ),
             ],
           ),
           SizedBox(height: 8.h),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustemText(
-                  text: 'Delivery', size: 14, color: AppColors.grey600),
-              CustemText(text: 'Free', size: 14, color: AppColors.accent),
+                  text: 'Delivery', size: 14, color: colorScheme.onSurfaceVariant),
+              const CustemText(text: 'Free', size: 14, color: AppColors.accent),
             ],
           ),
           SizedBox(height: 12.h),
-          Container(height: 1, color: AppColors.grey200),
+          Container(height: 1, color: colorScheme.outline),
           SizedBox(height: 12.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const CustemText(
+              CustemText(
                 text: 'Est. Total',
                 size: 16,
                 weight: FontWeight.w700,
-                color: AppColors.primary,
+                color: colorScheme.onSurface,
               ),
               CustemText(
                 text: '\$${total.toStringAsFixed(2)}',
                 size: 16,
                 weight: FontWeight.w700,
-                color: AppColors.primary,
+                color: colorScheme.onSurface,
               ),
             ],
           ),
@@ -185,6 +187,8 @@ class _CartBottomSection extends ConsumerWidget {
 class _EmptyCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -192,19 +196,19 @@ class _EmptyCart extends StatelessWidget {
           Icon(
             Icons.shopping_bag_outlined,
             size: 80.w,
-            color: AppColors.grey300,
+            color: colorScheme.outline,
           ),
           SizedBox(height: 20.h),
-          const CustemText(
+          CustemText(
             text: 'Your bag is empty',
             size: 18,
-            color: AppColors.grey600,
+            color: colorScheme.onSurfaceVariant,
           ),
           SizedBox(height: 8.h),
-          const CustemText(
+          CustemText(
             text: 'Add items to get started',
             size: 14,
-            color: AppColors.grey400,
+            color: colorScheme.onSurfaceVariant,
           ),
           SizedBox(height: 30.h),
           GestureDetector(
@@ -219,13 +223,13 @@ class _EmptyCart extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 14.h),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.onSurface,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: const CustemText(
+              child: CustemText(
                 text: 'START SHOPPING',
                 size: 14,
-                color: AppColors.white,
+                color: Theme.of(context).colorScheme.surface,
                 spacing: 2,
               ),
             ),

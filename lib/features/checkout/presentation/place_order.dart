@@ -13,7 +13,6 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/features/checkout/presentation/add_address.dart';
 import 'package:max/features/checkout/presentation/add_card.dart';
 
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/header.dart';
 
 class PlaceOrder extends StatefulWidget {
@@ -88,7 +87,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 : CustemText(
                     text: "SHIPPING ADDRESS",
                     spacing: 2,
-                    color: AppColors.grey500,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 15,
                   ),
             Gap(15.h),
@@ -110,27 +109,27 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             CustemText(
                               text:
                                   "${_savedAddress['city'] ?? ''}${_savedAddress['address'] ?? ''}",
-                              color: AppColors.grey500,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               size: 15,
                             ),
                             Gap(5.h),
                             CustemText(
                               text:
                                   "${_savedAddress['state'] ?? ''}${_savedAddress['zip'] ?? ''}",
-                              color: AppColors.grey500,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               size: 15,
                             ),
                             Gap(5.h),
                             CustemText(
                               text: "${_savedAddress['phone'] ?? ''}",
-                              color: AppColors.grey500,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                               size: 15,
                             ),
                           ],
                         ),
-                        const Icon(
+                        Icon(
                           Icons.arrow_forward_ios_outlined,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ],
                     ),
@@ -153,7 +152,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
 
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
-                : CustemText(text: "SHIPPING METHOD", color: AppColors.grey700),
+                : CustemText(text: "SHIPPING METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
             Gap(10.h),
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
@@ -165,7 +164,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Gap(20.h),
             savedCard != null && _savedAddress != null
                 ? const SizedBox.shrink()
-                : CustemText(text: "PAYMENT METHOD", color: AppColors.grey700),
+                : CustemText(text: "PAYMENT METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
             Gap(10.h),
 
             savedCard != null
@@ -187,17 +186,17 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                   final suffix = numStr.length >= 2
                                       ? numStr.substring(numStr.length - 2)
                                       : numStr;
-                                  return CustemText(
-                                    text:
-                                        "Master Card ending \u2022\u2022\u2022\u2022$suffix",
-                                    color: Colors.black,
-                                  );
+                                   return CustemText(
+                                     text:
+                                         "Master Card ending \u2022\u2022\u2022\u2022$suffix",
+                                     color: Theme.of(context).colorScheme.onSurface,
+                                   );
                                 },
                               ),
                             ),
-                          const Icon(
+                          Icon(
                             Icons.arrow_forward_ios_outlined,
-                            color: Colors.black,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ],
                       ),
@@ -228,9 +227,9 @@ class _PlaceOrderState extends State<PlaceOrder> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CustemText(
+                CustemText(
                   text: "Total",
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.onSurface,
                   spacing: 3,
                 ),
                 CustemText(
@@ -250,7 +249,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   builder: (context) {
                     return Dialog(
                       child: Container(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.surface,
                         height: 520.h,
                         width: double.infinity,
                         child: Padding(
@@ -267,37 +266,37 @@ class _PlaceOrderState extends State<PlaceOrder> {
                                 ),
                               ),
                               Gap(20.h),
-                              const CustemText(
+                              CustemText(
                                 text: "PAYMENT SUCCESS",
                                 spacing: 2,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 size: 19,
                               ),
                               Gap(40.h),
                               SvgPicture.asset("assets/pop/done.svg"),
                               Gap(40.h),
-                              const CustemText(
+                              CustemText(
                                 text: "Your payment was success",
                                 size: 18,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                               Gap(10.h),
-                              const CustemText(
+                              CustemText(
                                 text: "Payment ID 15263541",
                                 size: 18,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                               Gap(20.h),
                               Image.asset(
                                 'assets/svgs/line.png',
                                 width: 150.w,
                                 height: 15.h,
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                               Gap(20.h),
-                              const CustemText(
+                              CustemText(
                                 text: "Rate your purchase",
-                                color: Colors.black,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                               Gap(20.h),
                               Row(
@@ -366,19 +365,21 @@ class _CustomContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.grey200,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustemText(text: text, color: AppColors.grey700),
+          CustemText(text: text, color: colorScheme.onSurfaceVariant),
           const Spacer(),
-          if (isFree) const CustemText(text: "FREE", color: AppColors.grey700),
-          Icon(iconData, color: Colors.black),
+          if (isFree) CustemText(text: "FREE", color: colorScheme.onSurfaceVariant),
+          Icon(iconData, color: colorScheme.onSurface),
         ],
       ),
     );

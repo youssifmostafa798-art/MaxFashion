@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 
 class CustomAuthTextField extends StatefulWidget {
   const CustomAuthTextField({
@@ -33,42 +32,44 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextFormField(
       controller: widget.controller,
       obscureText: _obscureText,
       keyboardType: widget.keyboardType,
-      cursorColor: AppColors.primary,
+      cursorColor: colorScheme.onSurface,
       validator: widget.validator,
       style: TextStyle(
         fontSize: 14.sp,
-        color: AppColors.primary,
+        color: colorScheme.onSurface,
         fontWeight: FontWeight.w400,
       ),
       decoration: InputDecoration(
         hintText: widget.hint,
         hintStyle: TextStyle(
-          color: AppColors.grey400,
+          color: colorScheme.onSurfaceVariant,
           fontSize: 14.sp,
           fontWeight: FontWeight.w400,
         ),
         filled: true,
-        fillColor: AppColors.whiteSmoke,
+        fillColor: colorScheme.surfaceContainerHighest,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.grey200, width: 1.w),
+          borderSide: BorderSide(color: colorScheme.outline, width: 1.w),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.2.w),
+          borderSide: BorderSide(color: colorScheme.onSurface, width: 1.2.w),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.grey500, width: 1.w),
+          borderSide: BorderSide(color: colorScheme.onSurfaceVariant, width: 1.w),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: AppColors.primary, width: 1.2.w),
+          borderSide: BorderSide(color: colorScheme.onSurface, width: 1.2.w),
         ),
         suffixIcon: widget.isPassword
             ? GestureDetector(
@@ -79,7 +80,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
                 },
                 child: Icon(
                   _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                  color: AppColors.grey500,
+                  color: colorScheme.onSurfaceVariant,
                   size: 20.w,
                 ),
               )

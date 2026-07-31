@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
+
 import 'package:max/core/router/app_router.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
@@ -60,7 +60,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -75,7 +75,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   child: Icon(
                     Icons.arrow_back_ios_new,
                     size: 20.w,
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(height: 40.h),
@@ -84,7 +84,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     height: 1.2,
                   ),
                 ),
@@ -94,7 +94,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.grey500,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 SizedBox(height: 48.h),
@@ -184,7 +184,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 SizedBox(height: 24.h),
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.grey300)),
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
@@ -192,12 +192,12 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.grey400,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           letterSpacing: 2,
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.grey300)),
+                    Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
                   ],
                 ),
                 SizedBox(height: 24.h),

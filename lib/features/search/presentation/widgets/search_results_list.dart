@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/search/presentation/widgets/highlighted_text.dart';
@@ -51,15 +50,17 @@ class _SearchResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.grey200),
+          border: Border.all(color: colorScheme.outline),
         ),
         child: Row(
           children: [
@@ -81,14 +82,13 @@ class _SearchResultCard extends StatelessWidget {
                     text: product.name.replaceAll('\n', ' '),
                     query: query,
                     size: 14,
-                    color: AppColors.primary,
                     weight: FontWeight.w600,
                   ),
                   Gap(4.h),
                   CustemText(
                     text: product.category,
                     size: 12,
-                    color: AppColors.grey500,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                   Gap(4.h),
                   CustemText(
@@ -113,6 +113,8 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(40.w),
@@ -122,21 +124,21 @@ class _EmptyState extends StatelessWidget {
             Container(
               width: 100.w,
               height: 100.w,
-              decoration: const BoxDecoration(
-                color: AppColors.grey100,
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.search_off_rounded,
                 size: 48.w,
-                color: AppColors.grey400,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
             Gap(24.h),
             CustemText(
               text: 'No Results Found',
               size: 18,
-              color: AppColors.primary,
+              color: colorScheme.onSurface,
               weight: FontWeight.w600,
               spacing: 2,
             ),
@@ -144,7 +146,7 @@ class _EmptyState extends StatelessWidget {
             CustemText(
               text: 'Try another keyword',
               size: 14,
-              color: AppColors.grey500,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),

@@ -10,7 +10,6 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/core/router/app_router.dart';
 
@@ -53,9 +52,9 @@ class _CheckoutState extends ConsumerState<Checkout> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CustemText(
+                  CustemText(
                     text: "Est. Total",
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.onSurface,
                     spacing: 3,
                   ),
                   CustemText(
@@ -88,7 +87,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                     builder: (context) {
                       return Dialog(
                         child: Container(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.surface,
                           height: 520.h,
                           width: double.infinity,
                           child: Padding(
@@ -103,38 +102,38 @@ class _CheckoutState extends ConsumerState<Checkout> {
                                   ),
                                 ),
                                 Gap(20.h),
-                                const CustemText(
+                                CustemText(
                                   text: "ADDED TO CART",
                                   spacing: 2,
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   size: 19,
                                 ),
                                 Gap(40.h),
                                 SvgPicture.asset("assets/pop/done.svg"),
                                 Gap(40.h),
-                                const CustemText(
+                                CustemText(
                                   text: "Item added to your\ncart successfully",
                                   size: 18,
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                                 Gap(20.h),
-                                const CustemText(
+                                CustemText(
                                   text:
                                       "You can review your cart \nor continue shopping.",
                                   size: 18,
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                                 Gap(40.h),
                                 Image.asset(
                                   'assets/svgs/line.png',
                                   width: 150.w,
                                   height: 15.h,
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
                                 Gap(40.h),
-                                const CustemText(
+                                CustemText(
                                   text: "Ready to checkout?",
-                                  color: Colors.black,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                 ),
 
                                 const Spacer(),
@@ -189,6 +188,8 @@ class _PromoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
         Gap(20.h),
@@ -198,7 +199,7 @@ class _PromoSection extends StatelessWidget {
           children: [
             SvgPicture.asset("assets/svgs/promo.svg", width: 28.w),
             Gap(20.w),
-            const CustemText(text: "ADD Promo Code", color: AppColors.primary),
+            CustemText(text: "ADD Promo Code", color: colorScheme.onSurface),
           ],
         ),
         Gap(20.h),
@@ -208,9 +209,9 @@ class _PromoSection extends StatelessWidget {
           children: [
             SvgPicture.asset("assets/svgs/delivery.svg", width: 25.w),
             Gap(20.w),
-            const CustemText(text: "Delivery", color: AppColors.primary),
+            CustemText(text: "Delivery", color: colorScheme.onSurface),
             const Spacer(),
-            const CustemText(text: "FREE", color: AppColors.primary),
+            CustemText(text: "FREE", color: colorScheme.onSurface),
             Gap(5.w),
           ],
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 
 class CustemTextField extends StatelessWidget {
   final String hint;
@@ -10,21 +9,23 @@ class CustemTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextFormField(
       controller: controller,
       validator: (v) {
         if (v == null || v.trim().isEmpty) return 'Please fill the field';
         return null;
       },
-      cursorColor: Colors.black,
+      cursorColor: colorScheme.onSurface,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: AppColors.grey400),
+        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppColors.grey300, width: 1.2.w),
+          borderSide: BorderSide(color: colorScheme.outline, width: 1.2.w),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 1.5.w),
+          borderSide: BorderSide(color: colorScheme.onSurface, width: 1.5.w),
         ),
       ),
     );

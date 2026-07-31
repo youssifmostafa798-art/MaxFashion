@@ -21,20 +21,22 @@ class ProfileMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     final Color iconColor =
-        isDestructive ? AppColors.accent : AppColors.primary;
+        isDestructive ? AppColors.accent : colorScheme.onSurface;
     final Color textColor =
-        isDestructive ? AppColors.accent : AppColors.primary;
+        isDestructive ? AppColors.accent : colorScheme.onSurface;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isDestructive ? AppColors.accent.withValues(alpha: 0.2) : AppColors.grey200,
+            color: isDestructive ? AppColors.accent.withValues(alpha: 0.2) : colorScheme.outline,
           ),
         ),
         child: Row(
@@ -52,12 +54,12 @@ class ProfileMenuItem extends StatelessWidget {
               CustemText(
                 text: trailing!,
                 size: 13,
-                color: AppColors.grey500,
+                color: colorScheme.onSurfaceVariant,
               ),
             SizedBox(width: 4.w),
             Icon(
               Icons.chevron_right,
-              color: AppColors.grey400,
+              color: colorScheme.onSurfaceVariant,
               size: 20.w,
             ),
           ],

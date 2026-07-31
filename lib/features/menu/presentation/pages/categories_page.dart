@@ -10,17 +10,19 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: const CustemText(
+        title: CustemText(
           text: 'MENU',
           size: 18,
-          color: AppColors.primary,
+          color: colorScheme.onSurface,
           spacing: 4,
           weight: FontWeight.bold,
         ),
@@ -57,6 +59,8 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -71,20 +75,20 @@ class _SearchBar extends StatelessWidget {
       child: Container(
         height: 48.h,
         decoration: BoxDecoration(
-          color: AppColors.grey100,
+          color: colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
             Padding(
               padding: EdgeInsets.only(left: 14.w),
-              child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
+              child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
             ),
             SizedBox(width: 10.w),
-            const CustemText(
+            CustemText(
               text: 'Search categories...',
               size: 14,
-              color: AppColors.grey400,
+              color: colorScheme.onSurfaceVariant,
             ),
           ],
         ),
@@ -102,7 +106,7 @@ class _SectionTitle extends StatelessWidget {
     return CustemText(
       text: title,
       size: 14,
-      color: AppColors.grey600,
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
       spacing: 3,
     );
   }
@@ -146,6 +150,7 @@ class _CategoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final bool isSale = cat.label == 'Sale';
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -156,12 +161,12 @@ class _CategoryItemWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSale
                 ? AppColors.accent.withValues(alpha: 0.08)
-                : AppColors.grey100,
+                : colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Icon(
             cat.icon,
-            color: isSale ? AppColors.accent : AppColors.primary,
+            color: isSale ? AppColors.accent : colorScheme.onSurface,
             size: 28.w,
           ),
         ),
@@ -169,7 +174,7 @@ class _CategoryItemWidget extends StatelessWidget {
         CustemText(
           text: cat.label,
           size: 11,
-          color: isSale ? AppColors.accent : AppColors.primary,
+          color: isSale ? AppColors.accent : colorScheme.onSurface,
         ),
       ],
     );
@@ -188,27 +193,29 @@ class _ShopByList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: _items.map((item) {
         return Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
           decoration: BoxDecoration(
-            color: AppColors.grey100,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(
             children: [
-              Icon(item.icon, color: AppColors.primary, size: 22.w),
+              Icon(item.icon, color: colorScheme.onSurface, size: 22.w),
               SizedBox(width: 14.w),
               Expanded(
                 child: CustemText(
                   text: item.label,
                   size: 14,
-                  color: AppColors.primary,
+                  color: colorScheme.onSurface,
                 ),
               ),
-              Icon(Icons.chevron_right, color: AppColors.grey500, size: 20.w),
+              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20.w),
             ],
           ),
         );

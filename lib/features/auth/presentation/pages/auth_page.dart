@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
+
 import 'package:max/core/router/app_router.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 
@@ -10,7 +10,7 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -49,9 +49,9 @@ class AuthPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.grey500,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     decoration: TextDecoration.underline,
-                    decorationColor: AppColors.grey500,
+                    decorationColor: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),

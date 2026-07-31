@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 
 class CustomAuthButton extends StatelessWidget {
   const CustomAuthButton({
@@ -18,16 +17,18 @@ class CustomAuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: isLoading ? null : onTap,
       child: Container(
         width: double.infinity,
         height: 52.h,
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: colorScheme.onSurface,
           borderRadius: BorderRadius.circular(8.r),
           border: isOutlined
-              ? Border.all(color: AppColors.grey400, width: 1.w)
+              ? Border.all(color: colorScheme.outline, width: 1.w)
               : null,
         ),
         child: Center(
@@ -37,8 +38,8 @@ class CustomAuthButton extends StatelessWidget {
                   height: 20.w,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.w,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      colorScheme.surface,
                     ),
                   ),
                 )
@@ -48,7 +49,7 @@ class CustomAuthButton extends StatelessWidget {
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
-                    color: AppColors.white,
+                    color: colorScheme.surface,
                   ),
                 ),
         ),

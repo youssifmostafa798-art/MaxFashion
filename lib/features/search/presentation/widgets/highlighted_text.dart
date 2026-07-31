@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 
 class HighlightedText extends StatelessWidget {
@@ -9,27 +8,31 @@ class HighlightedText extends StatelessWidget {
     required this.text,
     required this.query,
     this.size = 16,
-    this.color = AppColors.primary,
+    this.color,
     this.weight = FontWeight.normal,
-    this.highlightColor = AppColors.primary,
+    this.highlightColor,
     this.spacing = 1,
   });
 
   final String text;
   final String query;
   final double size;
-  final Color color;
+  final Color? color;
   final FontWeight weight;
-  final Color highlightColor;
+  final Color? highlightColor;
   final double spacing;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final effectiveColor = color ?? colorScheme.onSurface;
+    final effectiveHighlight = highlightColor ?? colorScheme.onSurface;
+
     if (query.trim().isEmpty) {
       return CustemText(
         text: text,
         size: size,
-        color: color,
+        color: effectiveColor,
         weight: weight,
         spacing: spacing,
       );
@@ -47,7 +50,7 @@ class HighlightedText extends StatelessWidget {
           text: text.substring(start),
           style: TextStyle(
             fontSize: size.sp,
-            color: color,
+            color: effectiveColor,
             fontWeight: weight,
             fontFamily: 'Tenor_Sans',
             letterSpacing: spacing,
@@ -61,7 +64,7 @@ class HighlightedText extends StatelessWidget {
           text: text.substring(start, index),
           style: TextStyle(
             fontSize: size.sp,
-            color: color,
+            color: effectiveColor,
             fontWeight: weight,
             fontFamily: 'Tenor_Sans',
             letterSpacing: spacing,
@@ -73,7 +76,7 @@ class HighlightedText extends StatelessWidget {
         text: text.substring(index, index + lowerQuery.length),
         style: TextStyle(
           fontSize: size.sp,
-          color: highlightColor,
+          color: effectiveHighlight,
           fontWeight: FontWeight.bold,
           fontFamily: 'Tenor_Sans',
           letterSpacing: spacing,

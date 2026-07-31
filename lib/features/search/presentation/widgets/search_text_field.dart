@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/data/providers/search_provider.dart';
 
 class SearchTextField extends ConsumerStatefulWidget {
@@ -36,9 +35,6 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialValue ?? '');
-    // ref.listen is only legal inside build(). For lifecycle-driven side-effects
-    // use ref.listenManual(), which returns a ProviderSubscription that must be
-    // cancelled in dispose() to avoid memory leaks.
     _querySubscription = ref.listenManual<String>(
       searchProvider.select((s) => s.query),
       (previous, next) {
@@ -58,17 +54,19 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 48.h,
       decoration: BoxDecoration(
-        color: widget.backgroundColor ?? AppColors.grey100,
+        color: widget.backgroundColor ?? colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           Padding(
             padding: EdgeInsets.only(left: 14.w),
-            child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
+            child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
           ),
           SizedBox(width: 10.w),
           Expanded(
@@ -79,14 +77,14 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
               onSubmitted: widget.onSubmitted,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.primary,
+                color: colorScheme.onSurface,
                 fontFamily: 'Tenor_Sans',
               ),
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 hintStyle: TextStyle(
                   fontSize: 14.sp,
-                  color: AppColors.grey400,
+                  color: colorScheme.onSurfaceVariant,
                   fontFamily: 'Tenor_Sans',
                 ),
                 border: InputBorder.none,
@@ -101,7 +99,7 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
                         child: Icon(
                           Icons.close,
                           size: 18.w,
-                          color: AppColors.grey500,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       )
                     : null,

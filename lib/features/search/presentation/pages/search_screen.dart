@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/search/presentation/widgets/search_text_field.dart';
@@ -49,11 +48,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     final searchState = ref.watch(searchProvider);
     final query = searchState.query;
     final hasQuery = query.trim().isNotEmpty;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         automaticallyImplyLeading: false,
         toolbarHeight: 80.h,
@@ -66,7 +66,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   child: Icon(
                     Icons.arrow_back,
                     size: 24.w,
-                    color: AppColors.primary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -121,8 +121,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   Widget _buildSearchResults(SearchState searchState) {
     if (searchState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
+      return Center(
+        child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface),
       );
     }
 

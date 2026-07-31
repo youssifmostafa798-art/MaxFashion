@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 
 class CartItemCard extends StatelessWidget {
@@ -30,13 +29,15 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grey200),
+        border: Border.all(color: colorScheme.outline),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +64,7 @@ class CartItemCard extends StatelessWidget {
                       child: CustemText(
                         text: title.toUpperCase(),
                         size: 13,
-                        color: AppColors.primary,
+                        color: colorScheme.onSurface,
                         spacing: 2,
                       ),
                     ),
@@ -72,7 +73,7 @@ class CartItemCard extends StatelessWidget {
                       child: Icon(
                         Icons.close,
                         size: 18.w,
-                        color: AppColors.grey500,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -82,7 +83,7 @@ class CartItemCard extends StatelessWidget {
                   text: '\$${price.toStringAsFixed(2)}',
                   size: 15,
                   weight: FontWeight.w600,
-                  color: AppColors.primary,
+                  color: colorScheme.onSurface,
                 ),
                 if (selectedColor != null || selectedSize != null) ...[
                   Gap(6.h),
@@ -95,26 +96,26 @@ class CartItemCard extends StatelessWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: _parseColor(selectedColor!),
-                            border: Border.all(color: AppColors.grey300),
+                            border: Border.all(color: colorScheme.outline),
                           ),
                         ),
                         SizedBox(width: 4.w),
                         CustemText(
                           text: selectedColor!,
                           size: 12,
-                          color: AppColors.grey600,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ],
                       if (selectedColor != null && selectedSize != null)
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
-                          child: CustemText(text: '|', size: 12, color: AppColors.grey400),
+                          child: CustemText(text: '|', size: 12, color: colorScheme.onSurfaceVariant),
                         ),
                       if (selectedSize != null)
                         CustemText(
                           text: 'Size: $selectedSize',
                           size: 12,
-                          color: AppColors.grey600,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                     ],
                   ),
@@ -123,6 +124,7 @@ class CartItemCard extends StatelessWidget {
                 Row(
                   children: [
                     _buildQtyButton(
+                      context: context,
                       icon: Icons.remove,
                       onTap: onDecrement,
                     ),
@@ -132,10 +134,11 @@ class CartItemCard extends StatelessWidget {
                         text: quantity.toString(),
                         size: 14,
                         weight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     _buildQtyButton(
+                      context: context,
                       icon: Icons.add,
                       onTap: onIncrement,
                     ),
@@ -150,6 +153,7 @@ class CartItemCard extends StatelessWidget {
   }
 
   Widget _buildQtyButton({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onTap,
   }) {
@@ -160,9 +164,9 @@ class CartItemCard extends StatelessWidget {
         height: 30.w,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.grey300),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
         ),
-        child: Icon(icon, size: 16.w, color: AppColors.primary),
+        child: Icon(icon, size: 16.w, color: Theme.of(context).colorScheme.onSurface),
       ),
     );
   }

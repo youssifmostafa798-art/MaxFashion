@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/product_model.dart';
-import 'package:max/core/theme/app_colors.dart';
 
 class CardWidget extends StatefulWidget {
   const CardWidget({
@@ -35,6 +34,8 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,7 +53,7 @@ class _CardWidgetState extends State<CardWidget> {
             CustemText(
               text: widget.products.name.toUpperCase(),
               spacing: 5,
-              color: AppColors.primary,
+              color: colorScheme.onSurface,
             ),
             Gap(10.h),
             SizedBox(
@@ -60,7 +61,7 @@ class _CardWidgetState extends State<CardWidget> {
               child: CustemText(
                 text: widget.products.descrp,
                 size: 15,
-                color: AppColors.primary,
+                color: colorScheme.onSurface,
               ),
             ),
             Gap(15.h),
@@ -88,7 +89,7 @@ class _CardWidgetState extends State<CardWidget> {
                     text: number.toString(),
                     size: 15,
                     weight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: colorScheme.onSurface,
                   ),
                   Gap(15.w),
                   _QtyButton(
@@ -116,13 +117,15 @@ class _QtyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.grey400, width: 1.w),
+          border: Border.all(color: colorScheme.outline, width: 1.w),
         ),
         child: SvgPicture.asset(svg),
       ),

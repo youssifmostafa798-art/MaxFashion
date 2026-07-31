@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/providers/search_provider.dart';
@@ -15,6 +14,7 @@ class RecentSearchesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recentSearches = ref.watch(searchProvider.select((s) => s.recentSearches));
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (recentSearches.isEmpty) return const SizedBox.shrink();
 
@@ -29,7 +29,7 @@ class RecentSearchesSection extends ConsumerWidget {
               CustemText(
                 text: 'RECENT SEARCHES',
                 size: 12,
-                color: AppColors.grey600,
+                color: colorScheme.onSurfaceVariant,
                 spacing: 3,
               ),
               GestureDetector(
@@ -37,7 +37,7 @@ class RecentSearchesSection extends ConsumerWidget {
                 child: CustemText(
                   text: 'Clear all',
                   size: 12,
-                  color: AppColors.grey500,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -58,24 +58,24 @@ class RecentSearchesSection extends ConsumerWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: AppColors.grey100,
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(color: AppColors.grey200),
+                    border: Border.all(color: colorScheme.outline),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.history, size: 14.w, color: AppColors.grey500),
+                      Icon(Icons.history, size: 14.w, color: colorScheme.onSurfaceVariant),
                       SizedBox(width: 6.w),
                       CustemText(
                         text: query,
                         size: 12,
-                        color: AppColors.primary,
+                        color: colorScheme.onSurface,
                       ),
                       SizedBox(width: 4.w),
                       GestureDetector(
                         onTap: () => ref.read(searchProvider.notifier).removeRecentSearch(query),
-                        child: Icon(Icons.close, size: 12.w, color: AppColors.grey500),
+                        child: Icon(Icons.close, size: 12.w, color: colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -97,6 +97,7 @@ class SuggestedProductsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (products.isEmpty) return const SizedBox.shrink();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,7 +107,7 @@ class SuggestedProductsSection extends StatelessWidget {
           child: CustemText(
             text: 'SUGGESTED FOR YOU',
             size: 12,
-            color: AppColors.grey600,
+            color: colorScheme.onSurfaceVariant,
             spacing: 3,
           ),
         ),
@@ -147,7 +148,7 @@ class SuggestedProductsSection extends StatelessWidget {
                       CustemText(
                         text: product.name.replaceAll('\n', ' '),
                         size: 11,
-                        color: AppColors.primary,
+                        color: colorScheme.onSurface,
                       ),
                     ],
                   ),
@@ -166,6 +167,8 @@ class PopularCategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -174,7 +177,7 @@ class PopularCategoriesSection extends StatelessWidget {
           child: CustemText(
             text: 'POPULAR CATEGORIES',
             size: 12,
-            color: AppColors.grey600,
+            color: colorScheme.onSurfaceVariant,
             spacing: 3,
           ),
         ),
@@ -195,12 +198,12 @@ class PopularCategoriesSection extends StatelessWidget {
                     width: 56.w,
                     height: 56.w,
                     decoration: BoxDecoration(
-                      color: AppColors.grey100,
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(14.r),
                     ),
                     child: Icon(
                       cat.icon,
-                      color: AppColors.primary,
+                      color: colorScheme.onSurface,
                       size: 24.w,
                     ),
                   ),
@@ -208,7 +211,7 @@ class PopularCategoriesSection extends StatelessWidget {
                   CustemText(
                     text: cat.name,
                     size: 11,
-                    color: AppColors.primary,
+                    color: colorScheme.onSurface,
                   ),
                 ],
               );
