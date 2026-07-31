@@ -49,6 +49,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> _restoreSession() async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
+      final rememberMe = await _repository.getRememberMe();
+      if (!rememberMe) {
+        state = state.copyWith(isLoading: false, clearUser: true);
+        return;
+      }
       final user = await _repository.getCurrentUser();
       state = state.copyWith(
         user: user,
@@ -88,9 +93,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> login({
     required String email,
     required String password,
+    bool rememberMe = false,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
+      await _repository.setRememberMe(rememberMe);
       final user = await _repository.login(
         email: email,
         password: password,

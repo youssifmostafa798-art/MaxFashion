@@ -33,4 +33,8 @@ class AuthRepository {
   }
 
   Future<void> logout() => _authService.logout();
+
+  Future<void> setRememberMe(bool value) => _authService.setRememberMe(value);
+
+  Future<bool> getRememberMe() => _authService.getRememberMe();
 }

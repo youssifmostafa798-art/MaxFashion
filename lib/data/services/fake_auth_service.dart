@@ -6,6 +6,7 @@ class FakeAuthService {
   static const _kUsersKey = 'fake_auth_users';
   static const _kCurrentUserKey = 'fake_auth_current_user';
   static const _kIsLoggedInKey = 'fake_auth_is_logged_in';
+  static const _kRememberMeKey = 'fake_auth_remember_me';
 
   Future<List<Map<String, dynamic>>> _getStoredUsers() async {
     final prefs = await SharedPreferences.getInstance();
@@ -101,7 +102,19 @@ class FakeAuthService {
     return user;
   }
 
+  Future<void> setRememberMe(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kRememberMeKey, value);
+  }
+
+  Future<bool> getRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_kRememberMeKey) ?? false;
+  }
+
   Future<void> logout() async {
     await _clearCurrentUser();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_kRememberMeKey, false);
   }
 }

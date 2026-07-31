@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/core/router/app_router.dart';
-import 'package:max/data/providers/auth_provider.dart';
 
-class SplashPage extends ConsumerStatefulWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
-  ConsumerState<SplashPage> createState() => _SplashPageState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends ConsumerState<SplashPage>
+class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -33,11 +32,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
   }
 
   Future<void> _navigateToNext() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rememberMe = prefs.getBool('fake_auth_remember_me') ?? false;
+    final isLoggedIn = prefs.getBool('fake_auth_is_logged_in') ?? false;
+
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
-    final authState = ref.read(authStateProvider);
-    if (authState.user != null) {
+    if (rememberMe && isLoggedIn) {
       Navigator.pushReplacementNamed(context, AppRouter.main);
     } else {
       Navigator.pushReplacementNamed(context, AppRouter.auth);

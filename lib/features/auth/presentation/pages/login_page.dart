@@ -18,6 +18,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _rememberMe = false;
 
   @override
   void dispose() {
@@ -32,6 +33,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.read(authStateProvider.notifier).login(
           email: _emailController.text.trim(),
           password: _passwordController.text,
+          rememberMe: _rememberMe,
         );
   }
 
@@ -133,6 +135,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 36.h),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          _rememberMe = value ?? false;
+                        });
+                      },
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    Text(
+                      'Remember Me',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
                 CustomAuthButton(
                   text: 'Login',
                   isLoading: authState.isLoading,
