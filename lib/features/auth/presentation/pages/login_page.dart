@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_text_field.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -25,14 +27,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onLogin() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Supabase login integration
-      Navigator.pushReplacementNamed(context, AppRouter.main);
-    }
+    if (!_formKey.currentState!.validate()) return;
+
+    ref.read(authStateProvider.notifier).login(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authStateProvider);
+
+    ref.listen<AuthState>(authStateProvider, (prev, next) {
+      if (next.user != null && !next.isLoading) {
+        Navigator.pushReplacementNamed(context, AppRouter.main);
+      }
+      if (next.error != null && next.error!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error!)),
+        );
+        ref.read(authStateProvider.notifier).clearError();
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -115,7 +133,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 36.h),
-                CustomAuthButton(text: 'Login', onTap: _onLogin),
+                CustomAuthButton(
+                  text: 'Login',
+                  isLoading: authState.isLoading,
+                  onTap: _onLogin,
+                ),
                 SizedBox(height: 24.h),
                 Row(
                   children: [

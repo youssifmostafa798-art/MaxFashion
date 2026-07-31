@@ -109,20 +109,20 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             Gap(8.h),
                             CustemText(
                               text:
-                                  "${_savedAddress['city'] + _savedAddress['address']}",
+                                  "${_savedAddress['city'] ?? ''}${_savedAddress['address'] ?? ''}",
                               color: AppColors.grey500,
                               size: 15,
                             ),
                             Gap(5.h),
                             CustemText(
                               text:
-                                  "${_savedAddress['state'] + _savedAddress['zip']}",
+                                  "${_savedAddress['state'] ?? ''}${_savedAddress['zip'] ?? ''}",
                               color: AppColors.grey500,
                               size: 15,
                             ),
                             Gap(5.h),
                             CustemText(
-                              text: "${_savedAddress['phone']}",
+                              text: "${_savedAddress['phone'] ?? ''}",
                               color: AppColors.grey500,
                               size: 15,
                             ),
@@ -180,13 +180,21 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             width: 40.w,
                           ),
                           Gap(10.w),
-                          Expanded(
-                            child: CustemText(
-                              text:
-                                  "Master Card ending \u2022\u2022\u2022\u2022${savedCard['number'].toString().substring(savedCard['number'].length - 2)}",
-                              color: Colors.black,
+                            Expanded(
+                              child: Builder(
+                                builder: (context) {
+                                  final numStr = savedCard['number'].toString();
+                                  final suffix = numStr.length >= 2
+                                      ? numStr.substring(numStr.length - 2)
+                                      : numStr;
+                                  return CustemText(
+                                    text:
+                                        "Master Card ending \u2022\u2022\u2022\u2022$suffix",
+                                    color: Colors.black,
+                                  );
+                                },
+                              ),
                             ),
-                          ),
                           const Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: Colors.black,

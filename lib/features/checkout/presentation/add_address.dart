@@ -110,21 +110,19 @@ class _AddAddressState extends State<AddAddress> {
                 isSvgg: false,
                 title: "Add now".toUpperCase(),
                 onTap: () {
-                  if (_formkey.currentState!.validate()) {
-                    return;
-                  } else {
-                    final data = {
-                      'first': firstNameController.text,
-                      'last': lastNameController.text,
-                      'address': addressController.text,
-                      'city': cityController.text,
-                      'phone': phoneController.text,
-                      'zip': zipController.text,
-                      'state': stateController.text,
-                    };
+                  if (!_formkey.currentState!.validate()) return;
 
-                    Navigator.pop(context, data);
-                  }
+                  final data = {
+                    'first': firstNameController.text,
+                    'last': lastNameController.text,
+                    'address': addressController.text,
+                    'city': cityController.text,
+                    'phone': phoneController.text,
+                    'zip': zipController.text,
+                    'state': stateController.text,
+                  };
+
+                  Navigator.pop(context, data);
                 },
               ),
               Gap(70.h),

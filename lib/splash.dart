@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/data/providers/auth_provider.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
+class _SplashPageState extends ConsumerState<SplashPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -34,7 +36,13 @@ class _SplashPageState extends State<SplashPage>
   Future<void> _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, AppRouter.auth);
+
+    final authState = ref.read(authStateProvider);
+    if (authState.user != null) {
+      Navigator.pushReplacementNamed(context, AppRouter.main);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRouter.auth);
+    }
   }
 
   @override

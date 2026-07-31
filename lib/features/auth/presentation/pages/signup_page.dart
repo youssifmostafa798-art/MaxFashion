@@ -1,40 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_text_field.dart';
 
-class SignupPage extends StatefulWidget {
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _onSignup() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Supabase signup integration
-      Navigator.pushReplacementNamed(context, AppRouter.main);
-    }
+    if (!_formKey.currentState!.validate()) return;
+
+    ref.read(authStateProvider.notifier).signUp(
+          fullName: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          phoneNumber: '',
+          password: _passwordController.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authStateProvider);
+
+    ref.listen<AuthState>(authStateProvider, (prev, next) {
+      if (next.user != null && !next.isLoading) {
+        Navigator.pushReplacementNamed(context, AppRouter.main);
+      }
+      if (next.error != null && next.error!.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error!)),
+        );
+        ref.read(authStateProvider.notifier).clearError();
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -117,8 +139,27 @@ class _SignupPageState extends State<SignupPage> {
                     return null;
                   },
                 ),
+                SizedBox(height: 16.h),
+                CustomAuthTextField(
+                  controller: _confirmPasswordController,
+                  hint: 'Confirm Password',
+                  isPassword: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 36.h),
-                CustomAuthButton(text: 'Sign Up', onTap: _onSignup),
+                CustomAuthButton(
+                  text: 'Sign Up',
+                  isLoading: authState.isLoading,
+                  onTap: _onSignup,
+                ),
                 SizedBox(height: 24.h),
                 Row(
                   children: [

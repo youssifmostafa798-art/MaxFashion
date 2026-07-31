@@ -12,7 +12,10 @@ class CustemTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      validator: (v) => "Please Fill The Field",
+      validator: (v) {
+        if (v == null || v.trim().isEmpty) return 'Please fill the field';
+        return null;
+      },
       cursorColor: Colors.black,
       decoration: InputDecoration(
         hintText: hint,

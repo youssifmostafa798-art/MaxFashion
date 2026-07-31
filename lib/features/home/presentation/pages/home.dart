@@ -55,7 +55,7 @@ class Home extends StatelessWidget {
                       GridView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: ProductModel.products.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,

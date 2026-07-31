@@ -1,0 +1,57 @@
+class UserModel {
+  final String id;
+  final String fullName;
+  final String email;
+  final String phoneNumber;
+  final String? profileImage;
+  final DateTime memberSince;
+
+  const UserModel({
+    required this.id,
+    required this.fullName,
+    required this.email,
+    required this.phoneNumber,
+    this.profileImage,
+    required this.memberSince,
+  });
+
+  UserModel copyWith({
+    String? id,
+    String? fullName,
+    String? email,
+    String? phoneNumber,
+    String? profileImage,
+    DateTime? memberSince,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImage: profileImage ?? this.profileImage,
+      memberSince: memberSince ?? this.memberSince,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'profileImage': profileImage,
+      'memberSince': memberSince.toIso8601String(),
+    };
+  }
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] as String,
+      fullName: json['fullName'] as String,
+      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      profileImage: json['profileImage'] as String?,
+      memberSince: DateTime.parse(json['memberSince'] as String),
+    );
+  }
+}
