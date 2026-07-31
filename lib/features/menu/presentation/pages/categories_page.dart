@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/features/search/presentation/pages/search_screen.dart';
+import 'package:max/data/providers/search_provider.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
@@ -55,25 +57,37 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48.h,
-      decoration: BoxDecoration(
-        color: AppColors.grey100,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 14.w),
-            child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SearchScreen(
+              searchContext: SearchContextType.category,
+            ),
           ),
-          SizedBox(width: 10.w),
-          const CustemText(
-            text: 'Search categories...',
-            size: 14,
-            color: AppColors.grey400,
-          ),
-        ],
+        );
+      },
+      child: Container(
+        height: 48.h,
+        decoration: BoxDecoration(
+          color: AppColors.grey100,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 14.w),
+              child: Icon(Icons.search, color: AppColors.grey500, size: 20.w),
+            ),
+            SizedBox(width: 10.w),
+            const CustemText(
+              text: 'Search categories...',
+              size: 14,
+              color: AppColors.grey400,
+            ),
+          ],
+        ),
       ),
     );
   }

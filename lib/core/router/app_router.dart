@@ -5,6 +5,7 @@ import 'package:max/features/auth/presentation/pages/login_page.dart';
 import 'package:max/features/auth/presentation/pages/signup_page.dart';
 import 'package:max/features/home/presentation/pages/home.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
+import 'package:max/features/search/presentation/pages/search_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -15,6 +16,7 @@ class AppRouter {
   static const String signup = '/signup';
   static const String home = '/home';
   static const String main = '/main';
+  static const String search = '/search';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -31,6 +33,8 @@ class AppRouter {
       case main:
         final int tab = (settings.arguments as int?) ?? 0;
         return MaterialPageRoute(builder: (_) => MainScreen(initialTab: tab));
+      case search:
+        return MaterialPageRoute(builder: (_) => const SearchScreen());
       default:
         return MaterialPageRoute(builder: (_) => const SplashPage());
     }

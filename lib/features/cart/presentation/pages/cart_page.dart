@@ -157,6 +157,7 @@ class _CartBottomSection extends ConsumerWidget {
                     final firstItem = cartItems.first;
                     final product = products ??
                         ProductModel(
+                          id: firstItem.productId,
                           name: firstItem.productName,
                           image: firstItem.productImage,
                           price: firstItem.unitPrice,
