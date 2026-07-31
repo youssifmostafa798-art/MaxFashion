@@ -49,7 +49,7 @@ class UserModel {
       id: json['id'] as String,
       fullName: json['fullName'] as String,
       email: json['email'] as String,
-      phoneNumber: json['phoneNumber'] as String,
+      phoneNumber: (json['phoneNumber'] as String?) ?? '',
       profileImage: json['profileImage'] as String?,
       memberSince: DateTime.parse(json['memberSince'] as String),
     );

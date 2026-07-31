@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
 
@@ -49,11 +50,11 @@ class ProfilePage extends ConsumerWidget {
 
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({required this.user});
-  final dynamic user;
+  final UserModel? user;
 
   String _getMemberSinceText() {
     if (user == null) return 'Member since —';
-    final date = user.memberSince as DateTime;
+    final date = user!.memberSince;
     final months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
@@ -63,62 +64,77 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayName = user != null ? user.fullName as String : 'Guest User';
-    final displayEmail =
-        user != null ? user.email as String : 'guest@example.com';
+    final displayName = user?.fullName ?? 'Guest User';
+    final displayEmail = user?.email ?? 'guest@example.com';
+    final displayPhone = user?.phoneNumber ?? '';
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.h),
-      decoration: BoxDecoration(
-        color: AppColors.grey100,
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 80.w,
-            height: 80.w,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.grey300,
-            ),
-            child: user != null && user.profileImage != null
-                ? ClipOval(
-                    child: Image.network(
-                      user.profileImage as String,
-                      fit: BoxFit.cover,
-                      width: 80.w,
-                      height: 80.w,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.person,
-                        size: 44.w,
-                        color: AppColors.white,
+    return GestureDetector(
+      onTap: user == null
+          ? () {
+              Navigator.pushNamed(context, AppRouter.signup);
+            }
+          : null,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 24.h),
+        decoration: BoxDecoration(
+          color: AppColors.grey100,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 80.w,
+              height: 80.w,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.grey300,
+              ),
+              child: user != null && user!.profileImage != null
+                  ? ClipOval(
+                      child: Image.network(
+                        user!.profileImage!,
+                        fit: BoxFit.cover,
+                        width: 80.w,
+                        height: 80.w,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.person,
+                          size: 44.w,
+                          color: AppColors.white,
+                        ),
                       ),
-                    ),
-                  )
-                : Icon(Icons.person, size: 44.w, color: AppColors.white),
-          ),
-          SizedBox(height: 14.h),
-          CustemText(
-            text: displayName,
-            size: 18,
-            weight: FontWeight.w700,
-            color: AppColors.primary,
-          ),
-          SizedBox(height: 4.h),
-          CustemText(
-            text: displayEmail,
-            size: 13,
-            color: AppColors.grey500,
-          ),
-          SizedBox(height: 4.h),
-          CustemText(
-            text: _getMemberSinceText(),
-            size: 12,
-            color: AppColors.grey500,
-          ),
-        ],
+                    )
+                  : Icon(Icons.person, size: 44.w, color: AppColors.white),
+            ),
+            SizedBox(height: 14.h),
+            CustemText(
+              text: displayName,
+              size: 18,
+              weight: FontWeight.w700,
+              color: AppColors.primary,
+            ),
+            SizedBox(height: 4.h),
+            CustemText(
+              text: displayEmail,
+              size: 13,
+              color: AppColors.grey500,
+            ),
+            if (displayPhone.isNotEmpty) ...[
+              SizedBox(height: 4.h),
+              CustemText(
+                text: displayPhone,
+                size: 13,
+                color: AppColors.grey500,
+              ),
+            ],
+            SizedBox(height: 4.h),
+            CustemText(
+              text: _getMemberSinceText(),
+              size: 12,
+              color: AppColors.grey500,
+            ),
+          ],
+        ),
       ),
     );
   }

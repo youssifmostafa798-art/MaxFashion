@@ -18,6 +18,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -25,6 +26,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -36,7 +38,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     ref.read(authStateProvider.notifier).signUp(
           fullName: _nameController.text.trim(),
           email: _emailController.text.trim(),
-          phoneNumber: '',
+          phoneNumber: _phoneController.text.trim(),
           password: _passwordController.text,
         );
   }
@@ -120,6 +122,25 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                       r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
                     ).hasMatch(value.trim())) {
                       return 'Invalid email address';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16.h),
+                CustomAuthTextField(
+                  controller: _phoneController,
+                  hint: 'Phone Number',
+                  keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    final trimmed = value.trim();
+                    if (trimmed.length != 11) {
+                      return 'Phone number must be 11 digits';
+                    }
+                    if (!RegExp(r'^01[0-2,5]\d{8}$').hasMatch(trimmed)) {
+                      return 'Enter a valid Egyptian phone number';
                     }
                     return null;
                   },
