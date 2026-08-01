@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:max/core/theme/theme_provider.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/user_model.dart';
@@ -13,6 +12,7 @@ import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
+import 'package:max/features/settings/presentation/pages/settings_page.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -46,10 +46,6 @@ class ProfilePage extends ConsumerWidget {
             _ProfileHeader(user: user),
             SizedBox(height: 24.h),
             const _MenuSection(),
-            SizedBox(height: 24.h),
-            const _AppearanceSection(),
-            SizedBox(height: 24.h),
-            _LogoutButton(ref: ref),
             SizedBox(height: 30.h),
           ],
         ),
@@ -216,52 +212,11 @@ class _MenuSection extends ConsumerWidget {
         ProfileMenuItem(
           icon: Icons.settings_outlined,
           title: 'Settings',
-          onTap: () {},
-        ),
-      ],
-    );
-  }
-}
-
-class _AppearanceSection extends ConsumerWidget {
-  const _AppearanceSection();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustemText(
-          text: 'APPEARANCE',
-          size: 12,
-          color: colorScheme.onSurfaceVariant,
-          spacing: 3,
-        ),
-        SizedBox(height: 12.h),
-        SegmentedButton<ThemeMode>(
-          segments: const [
-            ButtonSegment<ThemeMode>(
-              value: ThemeMode.light,
-              label: Text('Light'),
-              icon: Icon(Icons.light_mode),
-            ),
-            ButtonSegment<ThemeMode>(
-              value: ThemeMode.dark,
-              label: Text('Dark'),
-              icon: Icon(Icons.dark_mode),
-            ),
-            ButtonSegment<ThemeMode>(
-              value: ThemeMode.system,
-              label: Text('System'),
-              icon: Icon(Icons.settings_brightness),
-            ),
-          ],
-          selected: {themeMode},
-          onSelectionChanged: (Set<ThemeMode> selected) {
-            ref.read(themeProvider.notifier).setThemeMode(selected.first);
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SettingsPage()),
+            );
           },
         ),
       ],
@@ -269,25 +224,4 @@ class _AppearanceSection extends ConsumerWidget {
   }
 }
 
-class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({required this.ref});
-  final WidgetRef ref;
 
-  @override
-  Widget build(BuildContext context) {
-    return ProfileMenuItem(
-      icon: Icons.logout,
-      title: 'Logout',
-      isDestructive: true,
-      onTap: () async {
-        await ref.read(authStateProvider.notifier).logout();
-        if (context.mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.auth,
-            (route) => false,
-          );
-        }
-      },
-    );
-  }
-}
