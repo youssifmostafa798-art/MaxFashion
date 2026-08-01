@@ -94,9 +94,8 @@ class FakeAuthService {
       throw Exception('Incorrect email or password');
     }
 
-    final user = UserModel.fromJson(
-      match.first..remove('password'),
-    );
+    final userMap = Map<String, dynamic>.from(match.first)..remove('password');
+    final user = UserModel.fromJson(userMap);
     await _saveCurrentUser(user);
 
     return user;

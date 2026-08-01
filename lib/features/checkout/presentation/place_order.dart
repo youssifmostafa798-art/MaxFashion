@@ -35,6 +35,10 @@ class _PlaceOrderState extends State<PlaceOrder> {
   dynamic _savedAddress;
   dynamic savedCard;
 
+  String _joinParts(List<String?> parts) {
+    return parts.where((p) => p != null && p.isNotEmpty).join(', ');
+  }
+
   void _openAddress() async {
     final addressData = await Navigator.push(
       context,
@@ -108,14 +112,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
                             Gap(8.h),
                             CustemText(
                               text:
-                                  "${_savedAddress['city'] ?? ''}${_savedAddress['address'] ?? ''}",
+                                  _joinParts([_savedAddress['address'], _savedAddress['city']]),
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                               size: 15,
                             ),
                             Gap(5.h),
                             CustemText(
                               text:
-                                  "${_savedAddress['state'] ?? ''}${_savedAddress['zip'] ?? ''}",
+                                  _joinParts([_savedAddress['state'], _savedAddress['zip']]),
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                               size: 15,
                             ),

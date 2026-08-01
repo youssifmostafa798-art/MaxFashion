@@ -67,7 +67,7 @@ class _AddCardState extends State<AddCard> {
                       final data = {
                         'number': cardNumber,
                         'name': cardName,
-                        'date ': expiryDate,
+                        'date': expiryDate,
                         'cvv': cvvCode,
                       };
                       Navigator.pop(context, data);

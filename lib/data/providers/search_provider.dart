@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 import 'package:max/data/repositories/search/local_search_repository.dart';
@@ -59,8 +61,8 @@ class SearchNotifier extends StateNotifier<SearchState> {
     _loadSuggested();
   }
 
-  void _loadRecentSearches() {
-    final saved = _recentSearches;
+  void _loadRecentSearches() async {
+    final saved = await _loadRecentSearchesFromPrefs();
     state = state.copyWith(recentSearches: saved);
   }
 
@@ -131,11 +133,20 @@ class SearchNotifier extends StateNotifier<SearchState> {
     );
   }
 
-  List<String> get _recentSearches {
-    return const [];
+  static const _kRecentSearchesKey = 'recent_searches';
+
+  Future<List<String>> _loadRecentSearchesFromPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString(_kRecentSearchesKey);
+    if (jsonString == null) return [];
+    final List<dynamic> decoded = jsonDecode(jsonString);
+    return decoded.cast<String>();
   }
 
-  void _saveRecentSearches(List<String> searches) {}
+  void _saveRecentSearches(List<String> searches) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_kRecentSearchesKey, jsonEncode(searches));
+  }
 
   @override
   void dispose() {
