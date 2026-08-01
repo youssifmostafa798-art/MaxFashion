@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_text.dart';
-import 'package:max/core/widgets/favorite_button.dart';
 import 'package:max/data/models/cover_model.dart';
 import 'package:max/data/models/product_model.dart';
-import 'package:max/features/checkout/presentation/checkout.dart';
+import 'package:max/data/providers/product_provider.dart';
+import 'package:max/features/product/presentation/pages/product_detail_page.dart';
+import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
 
-class Home extends StatelessWidget {
+class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final products = ref.watch(allProductsProvider);
 
     return Scaffold(
       appBar: CustemAppbar(
@@ -52,55 +55,9 @@ class Home extends StatelessWidget {
                       Gap(100.h),
                       Image.asset("assets/cover/cover1.png"),
                       Gap(20.h),
-                      GridView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: ProductModel.products.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 0,
-                          crossAxisSpacing: 15.w,
-                          childAspectRatio: 0.50,
-                        ),
-                        itemBuilder: (context, index) {
-                          final item = ProductModel.products[index];
-                          return GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (c) => Checkout(products: item),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    Image.asset(item.image),
-                                    Positioned(
-                                      top: 8.w,
-                                      right: 8.w,
-                                      child: FavoriteButton(product: item),
-                                    ),
-                                  ],
-                                ),
-                                Gap(10.h),
-                                CustemText(text: item.name),
-                                CustemText(
-                                  text: item.descrp,
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                Gap(9.h),
-                                CustemText(
-                                  text: "\$ ${item.price.toString()}",
-                                  color: Color(0xffDD8560),
-                                  size: 20,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                      _ProductGrid(
+                        products: products,
+                        colorScheme: colorScheme,
                       ),
                       Gap(5.h),
                       CustemText(
@@ -159,6 +116,44 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProductGrid extends StatelessWidget {
+  const _ProductGrid({
+    required this.products,
+    required this.colorScheme,
+  });
+
+  final List<ProductModel> products;
+  final ColorScheme colorScheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: products.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 15.w,
+        childAspectRatio: 0.50,
+      ),
+      itemBuilder: (context, index) {
+        final item = products[index];
+        return ProductGridCard(
+          product: item,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (c) => ProductDetailPage(product: item),
+            ),
+          ),
+        );
+      },
     );
   }
 }

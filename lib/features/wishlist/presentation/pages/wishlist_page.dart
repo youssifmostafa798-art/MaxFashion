@@ -5,7 +5,7 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
-import 'package:max/features/checkout/presentation/checkout.dart';
+import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/features/wishlist/presentation/widgets/wishlist_item_card.dart';
 
@@ -88,7 +88,9 @@ class _WishlistContent extends ConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => Checkout(products: product)),
+              MaterialPageRoute(
+                builder: (_) => ProductDetailPage(product: product),
+              ),
             );
           },
         );

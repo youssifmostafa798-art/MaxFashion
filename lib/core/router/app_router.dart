@@ -6,6 +6,9 @@ import 'package:max/features/auth/presentation/pages/signup_page.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
+import 'package:max/features/product/presentation/pages/product_listing_page.dart';
+import 'package:max/features/product/presentation/pages/product_detail_page.dart';
+import 'package:max/data/models/product_model.dart';
 
 class AppRouter {
   AppRouter._();
@@ -17,6 +20,8 @@ class AppRouter {
   static const String main = '/main';
   static const String search = '/search';
   static const String wishlist = '/wishlist';
+  static const String productListing = '/product-listing';
+  static const String productDetail = '/product-detail';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -35,6 +40,16 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SearchScreen());
       case wishlist:
         return MaterialPageRoute(builder: (_) => const WishlistPage());
+      case productListing:
+        final String category = (settings.arguments as String?) ?? '';
+        return MaterialPageRoute(
+          builder: (_) => ProductListingPage(category: category),
+        );
+      case productDetail:
+        final ProductModel product = settings.arguments as ProductModel;
+        return MaterialPageRoute(
+          builder: (_) => ProductDetailPage(product: product),
+        );
       default:
         return MaterialPageRoute(builder: (_) => const SplashPage());
     }

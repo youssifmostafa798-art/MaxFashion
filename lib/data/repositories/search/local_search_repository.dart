@@ -7,7 +7,7 @@ class LocalSearchRepository implements SearchRepository {
     final trimmed = query.trim().toLowerCase();
     if (trimmed.isEmpty) return [];
 
-    final items = source ?? ProductModel.allProducts();
+    final items = source ?? ProductModel.products;
 
     return items.where((product) {
       final name = product.name.toLowerCase();
@@ -23,12 +23,12 @@ class LocalSearchRepository implements SearchRepository {
 
   @override
   List<ProductModel> getPopularProducts() {
-    return ProductModel.allProducts().take(4).toList();
+    return ProductModel.products.take(4).toList();
   }
 
   @override
   List<ProductModel> getSuggestedProducts() {
-    final all = ProductModel.allProducts();
+    final all = ProductModel.products;
     if (all.length <= 3) return all;
     return all.sublist(0, 3);
   }

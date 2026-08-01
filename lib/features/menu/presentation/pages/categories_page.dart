@@ -4,6 +4,7 @@ import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
@@ -152,31 +153,41 @@ class _CategoryItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final bool isSale = cat.label == 'Sale';
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 64.w,
-          height: 64.w,
-          decoration: BoxDecoration(
-            color: isSale
-                ? AppColors.accent.withValues(alpha: 0.08)
-                : colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16.r),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProductListingPage(category: cat.label),
           ),
-          child: Icon(
-            cat.icon,
+        );
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 64.w,
+            height: 64.w,
+            decoration: BoxDecoration(
+              color: isSale
+                  ? AppColors.accent.withValues(alpha: 0.08)
+                  : colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Icon(
+              cat.icon,
+              color: isSale ? AppColors.accent : colorScheme.onSurface,
+              size: 28.w,
+            ),
+          ),
+          SizedBox(height: 6.h),
+          CustemText(
+            text: cat.label,
+            size: 11,
             color: isSale ? AppColors.accent : colorScheme.onSurface,
-            size: 28.w,
           ),
-        ),
-        SizedBox(height: 6.h),
-        CustemText(
-          text: cat.label,
-          size: 11,
-          color: isSale ? AppColors.accent : colorScheme.onSurface,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

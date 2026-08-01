@@ -7,6 +7,8 @@ import 'package:max/core/widgets/favorite_button.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/features/product/presentation/pages/product_detail_page.dart';
+import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 
 class RecentSearchesSection extends ConsumerWidget {
   const RecentSearchesSection({super.key, required this.onTap});
@@ -128,7 +130,7 @@ class SuggestedProductsSection extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (c) => Scaffold(),
+                      builder: (c) => ProductDetailPage(product: product),
                     ),
                   );
                 },
@@ -202,29 +204,39 @@ class PopularCategoriesSection extends StatelessWidget {
             separatorBuilder: (_, _) => SizedBox(width: 16.w),
             itemBuilder: (context, index) {
               final cat = CategoryModel.categories[index];
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 56.w,
-                    height: 56.w,
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(14.r),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProductListingPage(category: cat.name),
                     ),
-                    child: Icon(
-                      cat.icon,
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 56.w,
+                      height: 56.w,
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: Icon(
+                        cat.icon,
+                        color: colorScheme.onSurface,
+                        size: 24.w,
+                      ),
+                    ),
+                    Gap(6.h),
+                    CustemText(
+                      text: cat.name,
+                      size: 11,
                       color: colorScheme.onSurface,
-                      size: 24.w,
                     ),
-                  ),
-                  Gap(6.h),
-                  CustemText(
-                    text: cat.name,
-                    size: 11,
-                    color: colorScheme.onSurface,
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           ),

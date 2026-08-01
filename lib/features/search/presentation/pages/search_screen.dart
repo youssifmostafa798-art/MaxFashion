@@ -6,7 +6,7 @@ import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/search/presentation/widgets/search_text_field.dart';
 import 'package:max/features/search/presentation/widgets/search_results_list.dart';
 import 'package:max/features/search/presentation/widgets/search_suggestions.dart';
-import 'package:max/features/checkout/presentation/checkout.dart';
+import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key, this.initialSource, this.searchContext});
@@ -132,7 +132,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       onProductSelected: (product) async {
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (c) => Checkout(products: product)),
+          MaterialPageRoute(builder: (c) => ProductDetailPage(product: product)),
         );
         if (!context.mounted) return;
         ref.read(searchProvider.notifier).resetSession();
