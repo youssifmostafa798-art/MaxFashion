@@ -111,6 +111,47 @@ class FakeAuthService {
     return prefs.getBool(_kRememberMeKey) ?? false;
   }
 
+  Future<UserModel> updateProfile({
+    required String fullName,
+    required String phoneNumber,
+    String? profileImage,
+    DateTime? dateOfBirth,
+    String? gender,
+    String? country,
+  }) async {
+    final currentUser = await getCurrentUser();
+    if (currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    final updatedUser = currentUser.copyWith(
+      fullName: fullName.trim(),
+      phoneNumber: phoneNumber.trim(),
+      profileImage: profileImage,
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      country: country,
+      clearProfileImage: profileImage == null && currentUser.profileImage != null,
+      clearDateOfBirth: dateOfBirth == null && currentUser.dateOfBirth != null,
+      clearGender: gender == null && currentUser.gender != null,
+      clearCountry: country == null && currentUser.country != null,
+    );
+
+    final users = await _getStoredUsers();
+    final index = users.indexWhere(
+      (u) => (u['email'] as String).toLowerCase() == currentUser.email.toLowerCase(),
+    );
+    if (index != -1) {
+      final userJson = updatedUser.toJson();
+      userJson['password'] = users[index]['password'];
+      users[index] = userJson;
+      await _saveStoredUsers(users);
+    }
+
+    await _saveCurrentUser(updatedUser);
+    return updatedUser;
+  }
+
   Future<void> logout() async {
     await _clearCurrentUser();
     final prefs = await SharedPreferences.getInstance();

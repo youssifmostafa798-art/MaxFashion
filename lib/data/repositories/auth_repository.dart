@@ -34,6 +34,24 @@ class AuthRepository {
 
   Future<void> logout() => _authService.logout();
 
+  Future<UserModel> updateProfile({
+    required String fullName,
+    required String phoneNumber,
+    String? profileImage,
+    DateTime? dateOfBirth,
+    String? gender,
+    String? country,
+  }) {
+    return _authService.updateProfile(
+      fullName: fullName,
+      phoneNumber: phoneNumber,
+      profileImage: profileImage,
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      country: country,
+    );
+  }
+
   Future<void> setRememberMe(bool value) => _authService.setRememberMe(value);
 
   Future<bool> getRememberMe() => _authService.getRememberMe();
