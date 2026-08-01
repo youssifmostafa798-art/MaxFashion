@@ -52,7 +52,9 @@ class SettingsPage extends ConsumerWidget {
                   subtitle: 'English (US)',
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Language selection coming soon')),
+                      const SnackBar(
+                        content: Text('Language selection coming soon'),
+                      ),
                     );
                   },
                 ),
@@ -61,9 +63,7 @@ class SettingsPage extends ConsumerWidget {
             SizedBox(height: 24.h),
             SettingsSection(
               title: 'APPEARANCE',
-              children: [
-                _ThemeSelector(themeMode: themeMode, ref: ref),
-              ],
+              children: [_ThemeSelector(themeMode: themeMode, ref: ref)],
             ),
             SizedBox(height: 24.h),
             SettingsSection(
@@ -75,7 +75,8 @@ class SettingsPage extends ConsumerWidget {
                   subtitle: 'Receive order updates and promotions',
                   value: notificationsEnabled,
                   onChanged: (value) {
-                    ref.read(notificationsEnabledProvider.notifier).state = value;
+                    ref.read(notificationsEnabledProvider.notifier).state =
+                        value;
                   },
                 ),
               ],
@@ -134,9 +135,9 @@ class SettingsPage extends ConsumerWidget {
   }
 
   void _showPlaceholder(BuildContext context, String title) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$title coming soon')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$title coming soon')));
   }
 
   void _showAboutDialog(BuildContext context) {
@@ -149,19 +150,16 @@ class SettingsPage extends ConsumerWidget {
         size: 40.w,
         color: AppColors.accent,
       ),
-      children: [
-        const Text('Your premium fashion destination.'),
-      ],
+      children: [const Text('Your premium fashion destination.')],
     );
   }
 
   Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
     await ref.read(authStateProvider.notifier).logout();
     if (context.mounted) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        AppRouter.auth,
-        (route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil(AppRouter.auth, (route) => false);
     }
   }
 }
@@ -176,7 +174,7 @@ class _ThemeSelector extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(12.r),
@@ -187,14 +185,13 @@ class _ThemeSelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.palette_outlined,
-                  color: colorScheme.onSurfaceVariant, size: 22.w),
-              SizedBox(width: 14.w),
-              CustemText(
-                text: 'Theme',
-                size: 14,
-                color: colorScheme.onSurface,
+              Icon(
+                Icons.palette_outlined,
+                color: colorScheme.onSurfaceVariant,
+                size: 22.w,
               ),
+              SizedBox(width: 14.w),
+              CustemText(text: 'Theme', size: 14, color: colorScheme.onSurface),
             ],
           ),
           SizedBox(height: 12.h),
@@ -202,17 +199,17 @@ class _ThemeSelector extends StatelessWidget {
             segments: const [
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.light,
-                label: Text('Light'),
+                label: Text('Light', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.light_mode),
               ),
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.dark,
-                label: Text('Dark'),
+                label: Text('Dark', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.dark_mode),
               ),
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.system,
-                label: Text('System'),
+                label: Text('System', style: TextStyle(fontSize: 12)),
                 icon: Icon(Icons.settings_brightness),
               ),
             ],

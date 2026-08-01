@@ -21,10 +21,7 @@ class Home extends ConsumerWidget {
     final products = ref.watch(allProductsProvider);
 
     return Scaffold(
-      appBar: CustemAppbar(
-        showBackButton: false,
-        showSearchBar: true,
-      ),
+      appBar: CustemAppbar(showBackButton: false, showSearchBar: true),
       body: Stack(
         children: [
           Positioned(
@@ -121,10 +118,7 @@ class Home extends ConsumerWidget {
 }
 
 class _ProductGrid extends StatelessWidget {
-  const _ProductGrid({
-    required this.products,
-    required this.colorScheme,
-  });
+  const _ProductGrid({required this.products, required this.colorScheme});
 
   final List<ProductModel> products;
   final ColorScheme colorScheme;
@@ -148,9 +142,7 @@ class _ProductGrid extends StatelessWidget {
           product: item,
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (c) => ProductDetailPage(product: item),
-            ),
+            MaterialPageRoute(builder: (c) => ProductDetailPage(product: item)),
           ),
         );
       },
@@ -179,7 +171,7 @@ Widget about(BuildContext context) {
       CustemText(
         height: 2.5,
         text:
-            "support@openui.design \n       +60 825 876 \n08:00 - 22:00 - Everyday",
+            "youssifmostafa798@gmail.com \n       +201553178468\n17:00 - 22:00 - Everyday",
       ),
       Gap(20.h),
       Image.asset("assets/svgs/line.png", width: 190.w),
