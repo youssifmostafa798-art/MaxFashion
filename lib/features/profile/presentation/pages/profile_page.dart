@@ -7,6 +7,8 @@ import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
+import 'package:max/data/providers/orders_provider.dart';
+import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -145,12 +147,13 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
-class _MenuSection extends StatelessWidget {
+class _MenuSection extends ConsumerWidget {
   const _MenuSection();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final ordersCount = ref.watch(ordersCountProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,8 +174,13 @@ class _MenuSection extends StatelessWidget {
         ProfileMenuItem(
           icon: Icons.shopping_bag_outlined,
           title: 'My Orders',
-          trailing: '3',
-          onTap: () {},
+          trailing: ordersCount > 0 ? '$ordersCount' : null,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const OrdersPage()),
+            );
+          },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(

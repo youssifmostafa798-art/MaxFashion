@@ -1,42 +1,64 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/card_widget.dart';
 
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/custem_text.dart';
-import 'package:max/data/models/product_model.dart';
-
+import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/models/order_item_model.dart';
+import 'package:max/data/models/order_model.dart';
+import 'package:max/data/providers/cart_provider.dart';
+import 'package:max/data/providers/orders_provider.dart';
 import 'package:max/features/checkout/presentation/add_address.dart';
 import 'package:max/features/checkout/presentation/add_card.dart';
+import 'package:max/features/orders/presentation/pages/orders_page.dart';
 
 import 'package:max/core/widgets/header.dart';
 
-class PlaceOrder extends StatefulWidget {
+class PlaceOrder extends ConsumerStatefulWidget {
   const PlaceOrder({
     super.key,
-    required this.product,
-    required this.qty,
+    required this.cartItems,
     required this.total,
   });
 
-  final ProductModel product;
-  final int qty;
+  final List<CartItemModel> cartItems;
   final double total;
 
   @override
-  State<PlaceOrder> createState() => _PlaceOrderState();
+  ConsumerState<PlaceOrder> createState() => _PlaceOrderState();
 }
 
-class _PlaceOrderState extends State<PlaceOrder> {
+class _PlaceOrderState extends ConsumerState<PlaceOrder> {
   dynamic _savedAddress;
   dynamic savedCard;
 
   String _joinParts(List<String?> parts) {
     return parts.where((p) => p != null && p.isNotEmpty).join(', ');
+  }
+
+  String _buildAddressString() {
+    if (_savedAddress == null) return '';
+    final parts = [
+      _savedAddress['address'],
+      _savedAddress['city'],
+      _savedAddress['state'],
+      _savedAddress['zip'],
+    ];
+    return _joinParts(parts.whereType<String>().toList());
+  }
+
+  String _buildPaymentString() {
+    if (savedCard == null) return '';
+    final numStr = savedCard['number'].toString();
+    final suffix = numStr.length >= 2
+        ? numStr.substring(numStr.length - 2)
+        : numStr;
+    return 'Master Card ending \u2022\u2022\u2022\u2022$suffix';
   }
 
   void _openAddress() async {
@@ -73,6 +95,30 @@ class _PlaceOrderState extends State<PlaceOrder> {
         savedCard = cardData;
       });
     }
+  }
+
+  void _placeOrder() {
+    final orderItems = widget.cartItems
+        .map((item) => OrderItemModel.fromCartItem(item))
+        .toList();
+
+    final order = OrderModel(
+      orderId: _generateOrderId(),
+      orderDate: DateTime.now(),
+      items: orderItems,
+      totalPrice: widget.total,
+      paymentMethod: _buildPaymentString(),
+      deliveryAddress: _buildAddressString(),
+      status: OrderStatus.processing,
+    );
+
+    ref.read(ordersProvider.notifier).addOrder(order);
+    ref.read(cartProvider.notifier).clear();
+  }
+
+  String _generateOrderId() {
+    final now = DateTime.now();
+    return '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -220,12 +266,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   ),
             Gap(30.h),
             savedCard != null && _savedAddress != null
-                ? CardWidget(
-                    products: widget.product,
-                    enableQty: true,
-                    qty: widget.qty,
-                    onChanged: (qty) {},
-                  )
+                ? _buildCartItemsList()
                 : const SizedBox.shrink(),
             const Spacer(),
             Row(
@@ -237,7 +278,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   spacing: 3,
                 ),
                 CustemText(
-                  text: "\$ ${widget.total}",
+                  text: "\$ ${widget.total.toStringAsFixed(2)}",
                   color: Colors.red.shade200,
                 ),
               ],
@@ -247,111 +288,189 @@ class _PlaceOrderState extends State<PlaceOrder> {
               isSvgg: true,
               title: "PLACE ORDER",
               onTap: () {
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: Container(
-                        color: Theme.of(context).colorScheme.surface,
-                        height: 520.h,
-                        width: double.infinity,
-                        child: Padding(
-                          padding: EdgeInsets.all(15.w),
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Icon(CupertinoIcons.clear),
-                                ),
-                              ),
-                              Gap(20.h),
-                              CustemText(
-                                text: "PAYMENT SUCCESS",
-                                spacing: 2,
-                                color: Theme.of(context).colorScheme.onSurface,
-                                size: 19,
-                              ),
-                              Gap(40.h),
-                              SvgPicture.asset("assets/pop/done.svg"),
-                              Gap(40.h),
-                              CustemText(
-                                text: "Your payment was success",
-                                size: 18,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              Gap(10.h),
-                              CustemText(
-                                text: "Payment ID 15263541",
-                                size: 18,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              Gap(20.h),
-                              Image.asset(
-                                'assets/svgs/line.png',
-                                width: 150.w,
-                                height: 15.h,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              Gap(20.h),
-                              CustemText(
-                                text: "Rate your purchase",
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                              Gap(20.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset("assets/pop/emogi1.svg"),
-                                  Gap(20.w),
-                                  SvgPicture.asset("assets/pop/emogi2.svg"),
-                                  Gap(20.w),
-                                  SvgPicture.asset("assets/pop/emogi3.svg"),
-                                ],
-                              ),
-
-                              const Spacer(),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Button(
-                                      isSvgg: false,
-                                      title: "SUBMIT",
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                  Gap(20.w),
-                                  Expanded(
-                                    child: Button(
-                                      isSvgg: false,
-                                      title: "CANCEL",
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
+                _placeOrder();
+                _showSuccessDialog();
               },
             ),
             Gap(60.h),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCartItemsList() {
+    return SizedBox(
+      height: 120.h,
+      child: ListView.builder(
+        itemCount: widget.cartItems.length,
+        itemBuilder: (context, index) {
+          final item = widget.cartItems[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Image.asset(
+                    item.productImage,
+                    width: 48.w,
+                    height: 48.w,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 48.w,
+                      height: 48.w,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.outline,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: Theme.of(context).colorScheme.surface,
+                        size: 20.w,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustemText(
+                        text: item.productName,
+                        size: 13,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      SizedBox(height: 2.h),
+                      CustemText(
+                        text: 'Qty: ${item.quantity}',
+                        size: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+                CustemText(
+                  text: '\$${item.totalPrice.toStringAsFixed(2)}',
+                  size: 13,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showSuccessDialog() {
+    final orderId = _generateOrderId();
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            color: Theme.of(context).colorScheme.surface,
+            height: 520.h,
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.all(15.w),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(CupertinoIcons.clear),
+                    ),
+                  ),
+                  Gap(20.h),
+                  CustemText(
+                    text: "PAYMENT SUCCESS",
+                    spacing: 2,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 19,
+                  ),
+                  Gap(40.h),
+                  SvgPicture.asset("assets/pop/done.svg"),
+                  Gap(40.h),
+                  CustemText(
+                    text: "Your payment was success",
+                    size: 18,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  Gap(10.h),
+                  CustemText(
+                    text: "Payment ID $orderId",
+                    size: 18,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  Gap(20.h),
+                  Image.asset(
+                    'assets/svgs/line.png',
+                    width: 150.w,
+                    height: 15.h,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  Gap(20.h),
+                  CustemText(
+                    text: "Rate your purchase",
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  Gap(20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/pop/emogi1.svg"),
+                      Gap(20.w),
+                      SvgPicture.asset("assets/pop/emogi2.svg"),
+                      Gap(20.w),
+                      SvgPicture.asset("assets/pop/emogi3.svg"),
+                    ],
+                  ),
+
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Button(
+                          isSvgg: false,
+                          title: "SUBMIT",
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const OrdersPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Gap(20.w),
+                      Expanded(
+                        child: Button(
+                          isSvgg: false,
+                          title: "CANCEL",
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

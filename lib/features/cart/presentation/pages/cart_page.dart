@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/features/cart/presentation/widgets/cart_item_card.dart';
-import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 
 import '../../../../core/widgets/custem_bottom.dart';
@@ -156,21 +155,11 @@ class _CartBottomSection extends ConsumerWidget {
             onTap: cartItems.isEmpty
                 ? null
                 : () {
-                    final firstItem = cartItems.first;
-                    final product = products ??
-                        ProductModel(
-                          id: firstItem.productId,
-                          name: firstItem.productName,
-                          image: firstItem.productImage,
-                          price: firstItem.unitPrice,
-                          descrp: '',
-                        );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => PlaceOrder(
-                          product: product,
-                          qty: firstItem.quantity,
+                          cartItems: cartItems,
                           total: total,
                         ),
                       ),

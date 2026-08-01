@@ -1,0 +1,225 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/widgets/custem_appbar.dart';
+import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/data/models/order_model.dart';
+import 'package:max/features/orders/presentation/widgets/order_status_chip.dart';
+import 'package:max/features/orders/presentation/widgets/order_timeline.dart';
+
+class OrderDetailsPage extends StatelessWidget {
+  const OrderDetailsPage({super.key, required this.order});
+
+  final OrderModel order;
+
+  String _formatDateTime(DateTime date) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    final hour = date.hour;
+    final minute = date.minute.toString().padLeft(2, '0');
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+    return '${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year} \u2022 $displayHour:$minute $period';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: const CustemAppbar(showSearchBar: false),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustemText(
+                        text: 'Order #${order.orderId}',
+                        size: 18,
+                        weight: FontWeight.w700,
+                        color: colorScheme.onSurface,
+                      ),
+                      SizedBox(height: 4.h),
+                      CustemText(
+                        text: _formatDateTime(order.orderDate),
+                        size: 13,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+                OrderStatusChip(status: order.status),
+              ],
+            ),
+            SizedBox(height: 24.h),
+
+            CustemText(
+              text: 'PRODUCTS',
+              size: 12,
+              spacing: 2,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            SizedBox(height: 12.h),
+            ...order.items.map((item) => Padding(
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  child: Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Image.asset(
+                            item.productImage,
+                            width: 60.w,
+                            height: 60.w,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              width: 60.w,
+                              height: 60.w,
+                              decoration: BoxDecoration(
+                                color: colorScheme.outline,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Icon(
+                                Icons.image_outlined,
+                                color: colorScheme.surface,
+                                size: 28.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustemText(
+                                text: item.productName,
+                                size: 14,
+                                weight: FontWeight.w600,
+                                color: colorScheme.onSurface,
+                              ),
+                              SizedBox(height: 4.h),
+                              if (item.selectedColor != null ||
+                                  item.selectedSize != null)
+                                CustemText(
+                                  text: [
+                                    if (item.selectedColor != null)
+                                      'Color: ${item.selectedColor}',
+                                    if (item.selectedSize != null)
+                                      'Size: ${item.selectedSize}',
+                                  ].join(' • '),
+                                  size: 12,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              SizedBox(height: 4.h),
+                              CustemText(
+                                text: 'Qty: ${item.quantity}',
+                                size: 12,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustemText(
+                          text: '\$${item.totalPrice.toStringAsFixed(2)}',
+                          size: 14,
+                          weight: FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            SizedBox(height: 8.h),
+            Container(height: 1, color: colorScheme.outline),
+            SizedBox(height: 16.h),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustemText(
+                  text: 'Total (${order.itemCount} items)',
+                  size: 14,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                CustemText(
+                  text: '\$${order.totalPrice.toStringAsFixed(2)}',
+                  size: 16,
+                  weight: FontWeight.w700,
+                  color: colorScheme.onSurface,
+                ),
+              ],
+            ),
+            SizedBox(height: 24.h),
+
+            _InfoRow(
+              label: 'DELIVERY ADDRESS',
+              value: order.deliveryAddress,
+            ),
+            SizedBox(height: 16.h),
+            _InfoRow(
+              label: 'PAYMENT METHOD',
+              value: order.paymentMethod,
+            ),
+            SizedBox(height: 24.h),
+
+            OrderTimeline(order: order),
+            SizedBox(height: 24.h),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustemText(
+          text: label,
+          size: 12,
+          spacing: 2,
+          color: colorScheme.onSurfaceVariant,
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: CustemText(
+            text: value,
+            size: 14,
+            color: colorScheme.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+}
