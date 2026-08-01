@@ -27,6 +27,8 @@ class AppColors {
   static const Color scaffoldLight = Color(0xFFFFFFFF);
   static const Color scaffoldDark = Color(0xFF000000);
 
+  static const Color darkSurface = Color(0xFF181818);
+
   static const Color textPrimary = Color(0xFF000000);
   static const Color textSecondary = Color(0xFF757575);
   static const Color textHint = Color(0xFFBDBDBD);

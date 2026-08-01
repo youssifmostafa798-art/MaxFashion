@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'custem_text.dart';
 
 class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
   const CustemAppbar({
     super.key,
-    required this.isBlackk,
     this.showBackButton = true,
     this.showSearchBar = false,
   });
-  final bool isBlackk;
   final bool showBackButton;
   final bool showSearchBar;
 
@@ -28,7 +25,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       toolbarHeight: _height,
-      backgroundColor: isBlackk ? AppColors.primary : colorScheme.surface,
+      backgroundColor: colorScheme.surfaceContainerHigh,
       automaticallyImplyLeading: false,
       leading: const SizedBox.shrink(),
       leadingWidth: 0,
@@ -47,7 +44,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.arrow_back,
-                        color: isBlackk ? Colors.white : colorScheme.onSurface,
+                        color: colorScheme.onSurface,
                         size: 24.w,
                       ),
                     ),
@@ -56,7 +53,7 @@ class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
                 SvgPicture.asset(
                   'assets/logo/logo-bg.svg',
                   colorFilter: ColorFilter.mode(
-                    isBlackk ? Colors.white : colorScheme.onSurface,
+                    colorScheme.onSurface,
                     BlendMode.srcIn,
                   ),
                 ),

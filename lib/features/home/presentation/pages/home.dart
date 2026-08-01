@@ -8,17 +8,16 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/cover_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/checkout/presentation/checkout.dart';
-import 'package:max/core/theme/app_colors.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.primary,
       appBar: CustemAppbar(
-        isBlackk: true,
         showBackButton: false,
         showSearchBar: true,
       ),
@@ -80,7 +79,7 @@ class Home extends StatelessWidget {
                                 CustemText(text: item.name),
                                 CustemText(
                                   text: item.descrp,
-                                  color: Colors.grey,
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                                 Gap(9.h),
                                 CustemText(
@@ -126,20 +125,21 @@ class Home extends StatelessWidget {
                           },
                         ),
                       ),
-                      about(),
+                      about(context),
                       Gap(20.h),
                     ],
                   ),
                 ),
                 Container(
                   width: double.infinity,
-                  color: Colors.grey.shade400,
+                  color: colorScheme.surfaceContainerHighest,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 15.h, top: 10.h),
                     child: Center(
                       child: CustemText(
                         height: 2.5,
                         text: "Copyright© OpenUI All Rights Reserved.",
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -153,17 +153,19 @@ class Home extends StatelessWidget {
   }
 }
 
-Widget about() {
+Widget about(BuildContext context) {
+  final colorScheme = Theme.of(context).colorScheme;
+
   return Column(
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Ionicons.logo_twitter, color: Colors.white),
+          Icon(Ionicons.logo_twitter, color: colorScheme.onSurface),
           Gap(30.w),
-          Icon(Ionicons.logo_instagram, color: Colors.white),
+          Icon(Ionicons.logo_instagram, color: colorScheme.onSurface),
           Gap(30.w),
-          Icon(Ionicons.logo_facebook, color: Colors.white),
+          Icon(Ionicons.logo_facebook, color: colorScheme.onSurface),
         ],
       ),
       Gap(20.h),

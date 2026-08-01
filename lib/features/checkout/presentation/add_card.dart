@@ -27,7 +27,7 @@ class _AddCardState extends State<AddCard> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: CustemAppbar(isBlackk: false),
+        appBar: const CustemAppbar(),
 
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0.w),

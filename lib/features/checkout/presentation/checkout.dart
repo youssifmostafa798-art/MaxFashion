@@ -27,7 +27,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustemAppbar(isBlackk: false, showSearchBar: false),
+      appBar: const CustemAppbar(showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(

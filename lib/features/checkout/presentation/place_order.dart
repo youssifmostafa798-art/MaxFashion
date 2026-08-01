@@ -74,7 +74,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustemAppbar(isBlackk: false, showSearchBar: false),
+      appBar: const CustemAppbar(showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: Column(

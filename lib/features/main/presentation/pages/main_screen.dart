@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/features/home/presentation/pages/home.dart';
 import 'package:max/features/menu/presentation/pages/categories_page.dart';
@@ -56,20 +55,7 @@ class _MainScreenState extends State<MainScreen> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        selectedItemColor: Theme.of(context).colorScheme.onSurface,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        selectedLabelStyle: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w600,
-          fontFamily: 'Tenor_Sans',
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Tenor_Sans',
-        ),
-        elevation: 12,
+        elevation: 8,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

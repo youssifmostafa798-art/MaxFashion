@@ -18,7 +18,7 @@ class AppTheme {
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.white,
-      elevation: 0,
+      elevation: 1,
       iconTheme: IconThemeData(color: AppColors.black),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -39,16 +39,16 @@ class AppTheme {
       surfaceContainerHighest: AppColors.blackMedium,
       outline: AppColors.grey800,
       onSurfaceVariant: AppColors.grey400,
-      surfaceContainerHigh: AppColors.blackLight,
+      surfaceContainerHigh: AppColors.darkSurface,
       surfaceContainerLow: Color(0xFF121212),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF121212),
-      elevation: 0,
+      backgroundColor: AppColors.darkSurface,
+      elevation: 1,
       iconTheme: IconThemeData(color: Colors.white),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Color(0xFF121212),
+      backgroundColor: AppColors.darkSurface,
       selectedItemColor: Colors.white,
       unselectedItemColor: AppColors.grey400,
     ),
