@@ -11,11 +11,13 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/models/order_item_model.dart';
 import 'package:max/data/models/order_model.dart';
+import 'package:max/data/providers/address_provider.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
-import 'package:max/features/checkout/presentation/add_address.dart';
 import 'package:max/features/checkout/presentation/add_card.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
+import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 
 import 'package:max/core/widgets/header.dart';
 
@@ -34,22 +36,10 @@ class PlaceOrder extends ConsumerStatefulWidget {
 }
 
 class _PlaceOrderState extends ConsumerState<PlaceOrder> {
-  dynamic _savedAddress;
   dynamic savedCard;
 
   String _joinParts(List<String?> parts) {
     return parts.where((p) => p != null && p.isNotEmpty).join(', ');
-  }
-
-  String _buildAddressString() {
-    if (_savedAddress == null) return '';
-    final parts = [
-      _savedAddress['address'],
-      _savedAddress['city'],
-      _savedAddress['state'],
-      _savedAddress['zip'],
-    ];
-    return _joinParts(parts.whereType<String>().toList());
   }
 
   String _buildPaymentString() {
@@ -61,28 +51,11 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     return 'Master Card ending \u2022\u2022\u2022\u2022$suffix';
   }
 
-  void _openAddress() async {
-    final addressData = await Navigator.push(
+  void _openAddresses() {
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const AddAddress()),
+      MaterialPageRoute(builder: (_) => const AddressesPage()),
     );
-    if (addressData != null) {
-      setState(() {
-        _savedAddress = addressData;
-      });
-    }
-  }
-
-  void editAddress() async {
-    final newAddress = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => AddAddress(editData: _savedAddress)),
-    );
-    if (mounted) {
-      setState(() {
-        _savedAddress = newAddress;
-      });
-    }
   }
 
   void _openCard() async {
@@ -102,13 +75,22 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
         .map((item) => OrderItemModel.fromCartItem(item))
         .toList();
 
+    final defaultAddr = ref.read(defaultAddressProvider);
+    final user = ref.read(authStateProvider).user;
+
+    final deliveryParts = <String>[
+      if (user != null) user.fullName,
+      if (user != null && user.phoneNumber.isNotEmpty) user.phoneNumber,
+      if (defaultAddr != null) defaultAddr.fullAddress,
+    ];
+
     final order = OrderModel(
       orderId: _generateOrderId(),
       orderDate: DateTime.now(),
       items: orderItems,
       totalPrice: widget.total,
       paymentMethod: _buildPaymentString(),
-      deliveryAddress: _buildAddressString(),
+      deliveryAddress: deliveryParts.join(', '),
       status: OrderStatus.processing,
     );
 
@@ -123,6 +105,11 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultAddress = ref.watch(defaultAddressProvider);
+    final authState = ref.watch(authStateProvider);
+    final user = authState.user;
+    final hasAddress = defaultAddress != null;
+
     return Scaffold(
       appBar: const CustemAppbar(showSearchBar: false),
       body: Padding(
@@ -132,7 +119,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
           children: [
             const Header(title: "Checkout"),
 
-            savedCard != null && _savedAddress != null
+            savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : CustemText(
                     text: "SHIPPING ADDRESS",
@@ -142,40 +129,63 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                   ),
             Gap(15.h),
 
-            _savedAddress != null
+            hasAddress
                 ? GestureDetector(
                     onTap: () {
-                      editAddress();
+                      _openAddresses();
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Gap(20.h),
-
-                            Gap(8.h),
-                            CustemText(
-                              text:
-                                  _joinParts([_savedAddress['address'], _savedAddress['city']]),
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              size: 15,
-                            ),
-                            Gap(5.h),
-                            CustemText(
-                              text:
-                                  _joinParts([_savedAddress['state'], _savedAddress['zip']]),
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              size: 15,
-                            ),
-                            Gap(5.h),
-                            CustemText(
-                              text: "${_savedAddress['phone'] ?? ''}",
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              size: 15,
-                            ),
-                          ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (user != null) ...[
+                                Gap(8.h),
+                                CustemText(
+                                  text: user.fullName,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 15,
+                                ),
+                                CustemText(
+                                  text: user.phoneNumber,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  size: 13,
+                                ),
+                                Gap(4.h),
+                              ],
+                              CustemText(
+                                text: defaultAddress.street,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: 14,
+                              ),
+                              if (defaultAddress.apartment != null &&
+                                  defaultAddress.apartment!.isNotEmpty) ...[
+                                Gap(2.h),
+                                CustemText(
+                                  text: defaultAddress.apartment!,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  size: 13,
+                                ),
+                              ],
+                              Gap(2.h),
+                              CustemText(
+                                text: _joinParts([
+                                  defaultAddress.city,
+                                  defaultAddress.state,
+                                  defaultAddress.zip,
+                                ]),
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: 13,
+                              ),
+                              CustemText(
+                                text: defaultAddress.country,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                size: 13,
+                              ),
+                            ],
+                          ),
                         ),
                         Icon(
                           Icons.arrow_forward_ios_outlined,
@@ -186,10 +196,10 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                   )
                 : const SizedBox.shrink(),
 
-            _savedAddress == null
+            !hasAddress
                 ? GestureDetector(
                     onTap: () {
-                      _openAddress();
+                      _openAddresses();
                     },
                     child: const _CustomContainer(
                       text: "Add shipping address",
@@ -200,11 +210,11 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                 : const SizedBox.shrink(),
             Gap(15.h),
 
-            savedCard != null && _savedAddress != null
+            savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : CustemText(text: "SHIPPING METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
             Gap(10.h),
-            savedCard != null && _savedAddress != null
+            savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : const _CustomContainer(
                     text: "Pickup at store",
@@ -212,7 +222,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                     isFree: true,
                   ),
             Gap(20.h),
-            savedCard != null && _savedAddress != null
+            savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : CustemText(text: "PAYMENT METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
             Gap(10.h),
@@ -265,7 +275,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                     ),
                   ),
             Gap(30.h),
-            savedCard != null && _savedAddress != null
+            savedCard != null && hasAddress
                 ? _buildCartItemsList()
                 : const SizedBox.shrink(),
             const Spacer(),

@@ -6,10 +6,12 @@ import 'package:max/core/theme/theme_provider.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/user_model.dart';
+import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
+import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
 
@@ -157,6 +159,7 @@ class _MenuSection extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final ordersCount = ref.watch(ordersCountProvider);
     final wishlistCount = ref.watch(wishlistCountProvider);
+    final addressCount = ref.watch(addressCountProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,8 +204,13 @@ class _MenuSection extends ConsumerWidget {
         ProfileMenuItem(
           icon: Icons.location_on_outlined,
           title: 'Addresses',
-          trailing: '2',
-          onTap: () {},
+          trailing: addressCount > 0 ? '$addressCount' : null,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AddressesPage()),
+            );
+          },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(
