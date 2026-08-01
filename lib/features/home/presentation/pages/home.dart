@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/favorite_button.dart';
 import 'package:max/data/models/cover_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/checkout/presentation/checkout.dart';
@@ -74,7 +75,16 @@ class Home extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(item.image),
+                                Stack(
+                                  children: [
+                                    Image.asset(item.image),
+                                    Positioned(
+                                      top: 8.w,
+                                      right: 8.w,
+                                      child: FavoriteButton(product: item),
+                                    ),
+                                  ],
+                                ),
                                 Gap(10.h),
                                 CustemText(text: item.name),
                                 CustemText(

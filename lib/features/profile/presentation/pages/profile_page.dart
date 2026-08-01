@@ -8,8 +8,10 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
+import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
+import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -154,6 +156,7 @@ class _MenuSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final ordersCount = ref.watch(ordersCountProvider);
+    final wishlistCount = ref.watch(wishlistCountProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,8 +189,13 @@ class _MenuSection extends ConsumerWidget {
         ProfileMenuItem(
           icon: Icons.favorite_border,
           title: 'Wishlist',
-          trailing: '8',
-          onTap: () {},
+          trailing: wishlistCount > 0 ? '$wishlistCount' : null,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const WishlistPage()),
+            );
+          },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(

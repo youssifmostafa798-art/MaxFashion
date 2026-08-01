@@ -7,6 +7,7 @@ import 'package:max/core/widgets/card_widget.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
@@ -34,6 +35,13 @@ class _CheckoutState extends ConsumerState<Checkout> {
           child: Column(
             children: [
               const Header(title: "Checkout"),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FavoriteButton(product: widget.products),
+                ],
+              ),
 
               CardWidget(
                 products: widget.products,
@@ -197,7 +205,11 @@ class _PromoSection extends StatelessWidget {
         Gap(20.h),
         Row(
           children: [
-            SvgPicture.asset("assets/svgs/promo.svg", width: 28.w),
+            SvgPicture.asset(
+              "assets/svgs/promo.svg",
+              width: 28.w,
+              colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
+            ),
             Gap(20.w),
             CustemText(text: "ADD Promo Code", color: colorScheme.onSurface),
           ],
@@ -207,7 +219,11 @@ class _PromoSection extends StatelessWidget {
         Gap(20.h),
         Row(
           children: [
-            SvgPicture.asset("assets/svgs/delivery.svg", width: 25.w),
+            SvgPicture.asset(
+              "assets/svgs/delivery.svg",
+              width: 25.w,
+              colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
+            ),
             Gap(20.w),
             CustemText(text: "Delivery", color: colorScheme.onSurface),
             const Spacer(),

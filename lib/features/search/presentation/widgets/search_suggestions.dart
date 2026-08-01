@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/favorite_button.dart';
 import 'package:max/data/models/category_model.dart';
+import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/search_provider.dart';
 
 class RecentSearchesSection extends ConsumerWidget {
@@ -120,7 +122,7 @@ class SuggestedProductsSection extends StatelessWidget {
             itemCount: products.length,
             separatorBuilder: (_, _) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = products[index] as ProductModel;
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -135,14 +137,23 @@ class SuggestedProductsSection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Image.asset(
-                          product.image,
-                          width: 100.w,
-                          height: 100.h,
-                          fit: BoxFit.cover,
-                        ),
+                      Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Image.asset(
+                              product.image,
+                              width: 100.w,
+                              height: 100.h,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: 4.w,
+                            right: 4.w,
+                            child: FavoriteButton(product: product, size: 18),
+                          ),
+                        ],
                       ),
                       Gap(6.h),
                       CustemText(
