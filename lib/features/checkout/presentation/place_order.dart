@@ -22,11 +22,7 @@ import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/core/widgets/header.dart';
 
 class PlaceOrder extends ConsumerStatefulWidget {
-  const PlaceOrder({
-    super.key,
-    required this.cartItems,
-    required this.total,
-  });
+  const PlaceOrder({super.key, required this.cartItems, required this.total});
 
   final List<CartItemModel> cartItems;
   final double total;
@@ -36,7 +32,7 @@ class PlaceOrder extends ConsumerStatefulWidget {
 }
 
 class _PlaceOrderState extends ConsumerState<PlaceOrder> {
-  dynamic savedCard;
+  Map<String, dynamic>? savedCard;
 
   String _joinParts(List<String?> parts) {
     return parts.where((p) => p != null && p.isNotEmpty).join(', ');
@@ -44,7 +40,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
   String _buildPaymentString() {
     if (savedCard == null) return '';
-    final numStr = savedCard['number'].toString();
+    final numStr = savedCard!['number'].toString();
     final suffix = numStr.length >= 2
         ? numStr.substring(numStr.length - 2)
         : numStr;
@@ -70,7 +66,94 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     }
   }
 
-  void _placeOrder() {
+  bool _validateOrder() {
+    final defaultAddr = ref.read(defaultAddressProvider);
+    if (defaultAddr == null) {
+      _showValidationDialog(
+        title: 'MISSING INFORMATION',
+        message: 'Please add a shipping address',
+      );
+      return false;
+    }
+    if (savedCard == null) {
+      _showValidationDialog(
+        title: 'MISSING INFORMATION',
+        message: 'Please select a payment method',
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void _showValidationDialog({required String title, required String message}) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            color: Theme.of(context).colorScheme.surface,
+            height: 320.h,
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.all(15.w),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(CupertinoIcons.clear),
+                    ),
+                  ),
+                  Gap(20.h),
+                  CustemText(
+                    text: title,
+                    spacing: 2,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 19,
+                  ),
+                  Gap(30.h),
+                  Icon(
+                    Icons.error_outline_rounded,
+                    size: 60.w,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  Gap(30.h),
+                  CustemText(
+                    text: message,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  Gap(20.h),
+                  Image.asset(
+                    'assets/svgs/line.png',
+                    width: 150.w,
+                    height: 15.h,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  const Spacer(),
+                  Button(
+                    isSvgg: false,
+                    title: "GOT IT",
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _placeOrderAndConfirm() {
+    if (!_validateOrder()) return;
+
     final orderItems = widget.cartItems
         .map((item) => OrderItemModel.fromCartItem(item))
         .toList();
@@ -96,6 +179,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
     ref.read(ordersProvider.notifier).addOrder(order);
     ref.read(cartProvider.notifier).clear();
+    _showSuccessDialog();
   }
 
   String _generateOrderId() {
@@ -145,19 +229,25 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                                 Gap(8.h),
                                 CustemText(
                                   text: user.fullName,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                   size: 15,
                                 ),
                                 CustemText(
                                   text: user.phoneNumber,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                   size: 13,
                                 ),
                                 Gap(4.h),
                               ],
                               CustemText(
                                 text: defaultAddress.street,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 size: 14,
                               ),
                               if (defaultAddress.apartment != null &&
@@ -165,7 +255,9 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                                 Gap(2.h),
                                 CustemText(
                                   text: defaultAddress.apartment!,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
                                   size: 13,
                                 ),
                               ],
@@ -176,12 +268,16 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                                   defaultAddress.state,
                                   defaultAddress.zip,
                                 ]),
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 size: 13,
                               ),
                               CustemText(
                                 text: defaultAddress.country,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 size: 13,
                               ),
                             ],
@@ -212,7 +308,10 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
-                : CustemText(text: "SHIPPING METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
+                : CustemText(
+                    text: "SHIPPING METHOD",
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             Gap(10.h),
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
@@ -224,7 +323,10 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
             Gap(20.h),
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
-                : CustemText(text: "PAYMENT METHOD", color: Theme.of(context).colorScheme.onSurfaceVariant),
+                : CustemText(
+                    text: "PAYMENT METHOD",
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             Gap(10.h),
 
             savedCard != null
@@ -239,21 +341,23 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                             width: 40.w,
                           ),
                           Gap(10.w),
-                            Expanded(
-                              child: Builder(
-                                builder: (context) {
-                                  final numStr = savedCard['number'].toString();
-                                  final suffix = numStr.length >= 2
-                                      ? numStr.substring(numStr.length - 2)
-                                      : numStr;
-                                   return CustemText(
-                                     text:
-                                         "Master Card ending \u2022\u2022\u2022\u2022$suffix",
-                                     color: Theme.of(context).colorScheme.onSurface,
-                                   );
-                                },
-                              ),
+                          Expanded(
+                            child: Builder(
+                              builder: (context) {
+                                final numStr = savedCard!['number'].toString();
+                                final suffix = numStr.length >= 2
+                                    ? numStr.substring(numStr.length - 2)
+                                    : numStr;
+                                return CustemText(
+                                  text:
+                                      "Master Card ending \u2022\u2022\u2022\u2022$suffix",
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                );
+                              },
                             ),
+                          ),
                           Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
@@ -298,8 +402,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
               isSvgg: true,
               title: "PLACE ORDER",
               onTap: () {
-                _placeOrder();
-                _showSuccessDialog();
+                _placeOrderAndConfirm();
               },
             ),
             Gap(60.h),
@@ -511,7 +614,8 @@ class _CustomContainer extends StatelessWidget {
         children: [
           CustemText(text: text, color: colorScheme.onSurfaceVariant),
           const Spacer(),
-          if (isFree) CustemText(text: "FREE", color: colorScheme.onSurfaceVariant),
+          if (isFree)
+            CustemText(text: "FREE", color: colorScheme.onSurfaceVariant),
           Icon(iconData, color: colorScheme.onSurface),
         ],
       ),

@@ -52,4 +52,25 @@ class OrderItemModel {
       unitPrice: unitPrice ?? this.unitPrice,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'productId': productId,
+        'productName': productName,
+        'productImage': productImage,
+        'selectedColor': selectedColor,
+        'selectedSize': selectedSize,
+        'quantity': quantity,
+        'unitPrice': unitPrice,
+      };
+
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) =>
+      OrderItemModel(
+        productId: json['productId'] as String,
+        productName: json['productName'] as String,
+        productImage: json['productImage'] as String,
+        selectedColor: json['selectedColor'] as String?,
+        selectedSize: json['selectedSize'] as String?,
+        quantity: json['quantity'] as int,
+        unitPrice: (json['unitPrice'] as num).toDouble(),
+      );
 }

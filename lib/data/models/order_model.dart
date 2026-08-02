@@ -55,4 +55,27 @@ class OrderModel {
       status: status ?? this.status,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'orderId': orderId,
+        'orderDate': orderDate.toIso8601String(),
+        'items': items.map((item) => item.toJson()).toList(),
+        'totalPrice': totalPrice,
+        'paymentMethod': paymentMethod,
+        'deliveryAddress': deliveryAddress,
+        'status': status.index,
+      };
+
+  factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
+        orderId: json['orderId'] as String,
+        orderDate: DateTime.parse(json['orderDate'] as String),
+        items: (json['items'] as List)
+            .map((item) =>
+                OrderItemModel.fromJson(item as Map<String, dynamic>))
+            .toList(),
+        totalPrice: (json['totalPrice'] as num).toDouble(),
+        paymentMethod: json['paymentMethod'] as String,
+        deliveryAddress: json['deliveryAddress'] as String,
+        status: OrderStatus.values[json['status'] as int],
+      );
 }

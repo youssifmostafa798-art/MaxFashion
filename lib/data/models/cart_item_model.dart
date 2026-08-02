@@ -42,4 +42,24 @@ class CartItemModel {
   static String generateProductId(String name, String image) {
     return '${name}_$image'.replaceAll(RegExp(r'\s+'), '_');
   }
+
+  Map<String, dynamic> toJson() => {
+        'productId': productId,
+        'productName': productName,
+        'productImage': productImage,
+        'selectedColor': selectedColor,
+        'selectedSize': selectedSize,
+        'quantity': quantity,
+        'unitPrice': unitPrice,
+      };
+
+  factory CartItemModel.fromJson(Map<String, dynamic> json) => CartItemModel(
+        productId: json['productId'] as String,
+        productName: json['productName'] as String,
+        productImage: json['productImage'] as String,
+        selectedColor: json['selectedColor'] as String?,
+        selectedSize: json['selectedSize'] as String?,
+        quantity: json['quantity'] as int,
+        unitPrice: (json['unitPrice'] as num).toDouble(),
+      );
 }

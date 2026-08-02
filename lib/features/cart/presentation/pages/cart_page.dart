@@ -11,9 +11,7 @@ import '../../../checkout/presentation/place_order.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 
 class CartPage extends ConsumerWidget {
-  const CartPage({super.key, this.products});
-
-  final dynamic products;
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,16 +35,13 @@ class CartPage extends ConsumerWidget {
       ),
       body: cartItems.isEmpty
           ? _EmptyCart()
-          : _CartContent(
-              products: products,
-            ),
+          : _CartContent(),
     );
   }
 }
 
 class _CartContent extends ConsumerWidget {
-  const _CartContent({this.products});
-  final dynamic products;
+  const _CartContent();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,15 +77,14 @@ class _CartContent extends ConsumerWidget {
             },
           ),
         ),
-        _CartBottomSection(products: products),
+        _CartBottomSection(),
       ],
     );
   }
 }
 
 class _CartBottomSection extends ConsumerWidget {
-  const _CartBottomSection({this.products});
-  final dynamic products;
+  const _CartBottomSection();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

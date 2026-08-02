@@ -9,15 +9,22 @@ final ordersRepositoryProvider = Provider<OrdersRepository>((ref) {
 class OrdersNotifier extends StateNotifier<List<OrderModel>> {
   final OrdersRepository _repository;
 
-  OrdersNotifier(this._repository) : super(_repository.getOrders());
+  OrdersNotifier(this._repository) : super([]) {
+    _loadOrders();
+  }
 
-  void addOrder(OrderModel order) {
-    _repository.addOrder(order);
+  Future<void> _loadOrders() async {
+    await _repository.loadOrders();
     state = _repository.getOrders();
   }
 
-  void updateOrderStatus(String orderId, OrderStatus status) {
-    _repository.updateOrderStatus(orderId, status);
+  Future<void> addOrder(OrderModel order) async {
+    await _repository.addOrder(order);
+    state = _repository.getOrders();
+  }
+
+  Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
+    await _repository.updateOrderStatus(orderId, status);
     state = _repository.getOrders();
   }
 

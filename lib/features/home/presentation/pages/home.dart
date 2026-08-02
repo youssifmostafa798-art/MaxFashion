@@ -18,7 +18,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    final products = ref.watch(allProductsProvider);
+    final products = ref.watch(featuredProductsProvider);
 
     return Scaffold(
       appBar: CustemAppbar(showBackButton: false, showSearchBar: true),

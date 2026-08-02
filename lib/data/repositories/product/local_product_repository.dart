@@ -16,7 +16,7 @@ class LocalProductRepository implements ProductRepository {
 
   @override
   List<ProductModel> getFeaturedProducts() {
-    return ProductModel.products.take(4).toList();
+    return ProductModel.products.where((p) => p.featured).toList();
   }
 
   @override

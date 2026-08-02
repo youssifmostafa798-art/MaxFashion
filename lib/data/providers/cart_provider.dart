@@ -1,8 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/services/cart_storage.dart';
 
 class CartNotifier extends StateNotifier<List<CartItemModel>> {
-  CartNotifier() : super([]);
+  CartNotifier() : super([]) {
+    _loadCart();
+  }
+
+  Future<void> _loadCart() async {
+    state = await CartStorage.loadCart();
+  }
+
+  Future<void> _save() async {
+    await CartStorage.saveCart(state);
+  }
 
   void addItem(CartItemModel item) {
     final existingIndex = state.indexWhere(
@@ -22,6 +33,7 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
     } else {
       state = [...state, item];
     }
+    _save();
   }
 
   void removeItem(String productId, String? color, String? size) {
@@ -33,6 +45,7 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
                   e.selectedSize == size),
         )
         .toList();
+    _save();
   }
 
   void incrementQuantity(int index) {
@@ -43,6 +56,7 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
       item.copyWith(quantity: item.quantity + 1),
       ...state.sublist(index + 1),
     ];
+    _save();
   }
 
   void decrementQuantity(int index) {
@@ -54,9 +68,13 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
       item.copyWith(quantity: item.quantity - 1),
       ...state.sublist(index + 1),
     ];
+    _save();
   }
 
-  void clear() => state = [];
+  void clear() {
+    state = [];
+    _save();
+  }
 }
 
 final cartProvider =

@@ -12,8 +12,7 @@ class FakeAuthService {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_kUsersKey);
     if (jsonString == null) return [];
-    final List<dynamic> decoded = jsonDecode(jsonString);
-    return decoded.cast<Map<String, dynamic>>();
+    return (jsonDecode(jsonString) as List).cast<Map<String, dynamic>>();
   }
 
   Future<void> _saveStoredUsers(List<Map<String, dynamic>> users) async {

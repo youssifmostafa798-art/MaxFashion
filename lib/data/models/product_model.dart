@@ -7,6 +7,7 @@ class ProductModel {
   final String category;
   final String collection;
   final List<String> keywords;
+  final bool featured;
 
   const ProductModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductModel {
     this.category = '',
     this.collection = '',
     this.keywords = const [],
+    this.featured = false,
   });
 
   static List<ProductModel> products = [
@@ -29,6 +31,7 @@ class ProductModel {
       category: 'Shoes',
       collection: 'Black collection',
       keywords: ['footwear', 'leather', 'winter', 'ankle'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p2',
@@ -39,6 +42,7 @@ class ProductModel {
       category: 'Accessories',
       collection: 'HAE BY HAEKIM',
       keywords: ['jewelry', 'gold', 'silver', 'accessory'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p3',
@@ -79,6 +83,7 @@ class ProductModel {
       category: 'Women',
       collection: 'White collection',
       keywords: ['fashion', 'formal', 'party', 'women'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p7',
@@ -89,6 +94,7 @@ class ProductModel {
       category: 'Men',
       collection: 'Black collection',
       keywords: ['formal', 'blazer', 'men', 'office'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p8',
@@ -99,6 +105,7 @@ class ProductModel {
       category: 'Shoes',
       collection: 'Black collection',
       keywords: ['sports', 'running', 'sneakers', 'athletic'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p9',
@@ -169,6 +176,7 @@ class ProductModel {
       category: 'Accessories',
       collection: 'White collection',
       keywords: ['bag', 'crossbody', 'fashion', 'accessory'],
+      featured: true,
     ),
     const ProductModel(
       id: 'p16',

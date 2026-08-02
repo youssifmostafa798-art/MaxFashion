@@ -139,8 +139,9 @@ class SearchNotifier extends StateNotifier<SearchState> {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_kRecentSearchesKey);
     if (jsonString == null) return [];
-    final List<dynamic> decoded = jsonDecode(jsonString);
-    return decoded.cast<String>();
+    final List<String> decoded =
+        (jsonDecode(jsonString) as List).cast<String>();
+    return decoded;
   }
 
   void _saveRecentSearches(List<String> searches) async {

@@ -15,8 +15,9 @@ class WishlistNotifier extends StateNotifier<List<ProductModel>> {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_wishlistKey);
     if (raw == null) return;
-    final List<dynamic> ids = jsonDecode(raw) as List<dynamic>;
-    final idSet = ids.cast<String>().toSet();
+    final List<String> ids =
+        (jsonDecode(raw) as List).cast<String>();
+    final idSet = ids.toSet();
     state = ProductModel.products
         .where((p) => idSet.contains(p.id))
         .toList();

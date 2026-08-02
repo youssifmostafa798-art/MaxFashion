@@ -96,7 +96,7 @@ class RecentSearchesSection extends ConsumerWidget {
 class SuggestedProductsSection extends StatelessWidget {
   const SuggestedProductsSection({super.key, required this.products});
 
-  final List<dynamic> products;
+  final List<ProductModel> products;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,7 @@ class SuggestedProductsSection extends StatelessWidget {
             itemCount: products.length,
             separatorBuilder: (_, _) => SizedBox(width: 12.w),
             itemBuilder: (context, index) {
-              final product = products[index] as ProductModel;
+              final product = products[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
