@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/order_model.dart';
@@ -10,18 +11,6 @@ class OrderDetailsPage extends StatelessWidget {
   const OrderDetailsPage({super.key, required this.order});
 
   final OrderModel order;
-
-  String _formatDateTime(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    final hour = date.hour;
-    final minute = date.minute.toString().padLeft(2, '0');
-    final period = hour >= 12 ? 'PM' : 'AM';
-    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-    return '${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year} \u2022 $displayHour:$minute $period';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +38,7 @@ class OrderDetailsPage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       CustemText(
-                        text: _formatDateTime(order.orderDate),
+                        text: DateFormatter.formatDateTime(order.orderDate),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),

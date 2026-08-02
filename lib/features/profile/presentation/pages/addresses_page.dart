@@ -7,7 +7,7 @@ import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/data/models/address_model.dart';
 import 'package:max/data/providers/address_provider.dart';
-import 'package:max/features/checkout/presentation/add_address.dart';
+import 'package:max/features/checkout/presentation/pages/add_address.dart';
 import 'package:max/features/profile/presentation/widgets/address_card.dart';
 import 'package:max/features/profile/presentation/widgets/empty_addresses.dart';
 

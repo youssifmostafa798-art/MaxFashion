@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
@@ -62,12 +63,7 @@ class _ProfileHeader extends StatelessWidget {
 
   String _getMemberSinceText() {
     if (user == null) return 'Member since —';
-    final date = user!.memberSince;
-    final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    return 'Member since ${months[date.month - 1]} ${date.year}';
+    return 'Member since ${DateFormatter.formatMonthYear(user!.memberSince)}';
   }
 
   @override

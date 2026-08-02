@@ -4,7 +4,6 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:max/core/widgets/custem_appbar.dart';
 import 'package:max/core/widgets/custem_bottom.dart';
 import 'package:max/core/widgets/custem_text.dart';
@@ -15,7 +14,7 @@ import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
-import 'package:max/features/checkout/presentation/add_card.dart';
+import 'package:max/features/checkout/presentation/pages/add_card.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 

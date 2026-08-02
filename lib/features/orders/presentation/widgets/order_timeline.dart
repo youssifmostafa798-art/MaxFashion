@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/core/widgets/custem_text.dart';
 
@@ -83,7 +84,7 @@ class OrderTimeline extends StatelessWidget {
                       if (step['date'] != null) ...[
                         SizedBox(height: 2.h),
                         CustemText(
-                          text: _formatDateTime(step['date'] as DateTime),
+                          text: DateFormatter.formatDateTime(step['date'] as DateTime),
                           size: 12,
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -97,18 +98,6 @@ class OrderTimeline extends StatelessWidget {
         }),
       ],
     );
-  }
-
-  String _formatDateTime(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    final hour = date.hour;
-    final minute = date.minute.toString().padLeft(2, '0');
-    final period = hour >= 12 ? 'PM' : 'AM';
-    final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-    return '${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year} \u2022 $displayHour:$minute $period';
   }
 
   List<Map<String, dynamic>> _buildSteps() {

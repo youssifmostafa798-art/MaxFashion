@@ -6,9 +6,9 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/features/cart/presentation/widgets/cart_item_card.dart';
 import 'package:max/data/providers/cart_provider.dart';
 
-import '../../../../core/widgets/custem_bottom.dart';
-import '../../../checkout/presentation/place_order.dart';
-import '../../../main/presentation/pages/main_screen.dart';
+import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/features/checkout/presentation/pages/place_order.dart';
+import 'package:max/features/main/presentation/pages/main_screen.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});

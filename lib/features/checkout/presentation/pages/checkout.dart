@@ -12,16 +12,17 @@ import 'package:max/features/checkout/presentation/widgets/added_to_cart_dialog.
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
+import 'package:max/core/widgets/header.dart';
 
-class ProductDetailPage extends ConsumerStatefulWidget {
-  const ProductDetailPage({super.key, required this.product});
-  final ProductModel product;
+class Checkout extends ConsumerStatefulWidget {
+  const Checkout({super.key, required this.products});
+  final ProductModel products;
 
   @override
-  ConsumerState<ProductDetailPage> createState() => _ProductDetailPageState();
+  ConsumerState<Checkout> createState() => _CheckoutState();
 }
 
-class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
+class _CheckoutState extends ConsumerState<Checkout> {
   int selectedQty = 1;
 
   @override
@@ -33,12 +34,15 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const Header(title: "Checkout"),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [FavoriteButton(product: widget.product)],
+                children: [FavoriteButton(product: widget.products)],
               ),
+
               CardWidget(
-                products: widget.product,
+                products: widget.products,
                 enableQty: true,
                 qty: selectedQty,
                 onChanged: (v) {
@@ -47,8 +51,10 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   });
                 },
               ),
+
               const PromoSection(),
               Gap(50.h),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -58,7 +64,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     spacing: 3,
                   ),
                   CustemText(
-                    text: "\$ ${widget.product.price * selectedQty}",
+                    text: "\$ ${widget.products.price * selectedQty}",
                     color: Colors.red.shade200,
                   ),
                 ],
@@ -69,18 +75,18 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 title: "Add to cart",
                 onTap: () {
                   final productId = CartItemModel.generateProductId(
-                    widget.product.name,
-                    widget.product.image,
+                    widget.products.name,
+                    widget.products.image,
                   );
                   ref
                       .read(cartProvider.notifier)
                       .addItem(
                         CartItemModel(
                           productId: productId,
-                          productName: widget.product.name,
-                          productImage: widget.product.image,
+                          productName: widget.products.name,
+                          productImage: widget.products.image,
                           quantity: selectedQty,
-                          unitPrice: widget.product.price,
+                          unitPrice: widget.products.price,
                         ),
                       );
                   showAddedToCartDialog(context);

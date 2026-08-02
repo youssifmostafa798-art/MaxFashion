@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/features/orders/presentation/widgets/order_status_chip.dart';
@@ -9,14 +10,6 @@ class OrderCard extends StatelessWidget {
 
   final OrderModel order;
   final VoidCallback? onTap;
-
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    return '${months[date.month - 1]} ${date.day.toString().padLeft(2, '0')}, ${date.year}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +42,7 @@ class OrderCard extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       CustemText(
-                        text: _formatDate(order.orderDate),
+                        text: DateFormatter.formatDate(order.orderDate),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),

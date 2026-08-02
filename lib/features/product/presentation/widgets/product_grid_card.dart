@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custem_text.dart';
-import 'package:max/core/widgets/favorite_button.dart';
+import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 
 class ProductGridCard extends StatelessWidget {
