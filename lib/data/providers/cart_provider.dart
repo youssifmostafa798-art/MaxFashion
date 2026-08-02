@@ -36,7 +36,7 @@ class CartNotifier extends StateNotifier<List<CartItemModel>> {
     _save();
   }
 
-  void removeItem(String productId, String? color, String? size) {
+  void removeItem(String productId, String? color, String size) {
     state = state
         .where(
           (e) =>

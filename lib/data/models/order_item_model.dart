@@ -5,7 +5,7 @@ class OrderItemModel {
   final String productName;
   final String productImage;
   final String? selectedColor;
-  final String? selectedSize;
+  final String selectedSize;
   final int quantity;
   final double unitPrice;
 
@@ -14,7 +14,7 @@ class OrderItemModel {
     required this.productName,
     required this.productImage,
     this.selectedColor,
-    this.selectedSize,
+    required this.selectedSize,
     required this.quantity,
     required this.unitPrice,
   });
@@ -69,7 +69,7 @@ class OrderItemModel {
         productName: json['productName'] as String,
         productImage: json['productImage'] as String,
         selectedColor: json['selectedColor'] as String?,
-        selectedSize: json['selectedSize'] as String?,
+        selectedSize: (json['selectedSize'] as String?) ?? 'S',
         quantity: json['quantity'] as int,
         unitPrice: (json['unitPrice'] as num).toDouble(),
       );

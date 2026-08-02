@@ -8,6 +8,7 @@ class ProductModel {
   final String collection;
   final List<String> keywords;
   final bool featured;
+  final List<String> sizes;
 
   const ProductModel({
     required this.id,
@@ -19,6 +20,7 @@ class ProductModel {
     this.collection = '',
     this.keywords = const [],
     this.featured = false,
+    this.sizes = const ['S', 'M', 'L', 'XL', 'XXL'],
   });
 
   static List<ProductModel> products = [

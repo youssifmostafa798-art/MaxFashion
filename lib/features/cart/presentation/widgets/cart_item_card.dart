@@ -14,7 +14,7 @@ class CartItemCard extends StatelessWidget {
     required this.onDecrement,
     required this.onRemove,
     this.selectedColor,
-    this.selectedSize,
+    required this.selectedSize,
   });
 
   final String image;
@@ -25,7 +25,7 @@ class CartItemCard extends StatelessWidget {
   final VoidCallback onDecrement;
   final VoidCallback onRemove;
   final String? selectedColor;
-  final String? selectedSize;
+  final String selectedSize;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class CartItemCard extends StatelessWidget {
                   weight: FontWeight.w600,
                   color: colorScheme.onSurface,
                 ),
-                if (selectedColor != null || selectedSize != null) ...[
+                if (selectedColor != null || selectedSize.isNotEmpty) ...[
                   Gap(6.h),
                   Row(
                     children: [
@@ -106,17 +106,16 @@ class CartItemCard extends StatelessWidget {
                           color: colorScheme.onSurfaceVariant,
                         ),
                       ],
-                      if (selectedColor != null && selectedSize != null)
+                      if (selectedColor != null && selectedSize.isNotEmpty)
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: CustomText(text: '|', size: 12, color: colorScheme.onSurfaceVariant),
                         ),
-                      if (selectedSize != null)
-                        CustomText(
-                          text: 'Size: $selectedSize',
-                          size: 12,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                      CustomText(
+                        text: 'Size: $selectedSize',
+                        size: 12,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ],
                   ),
                 ],

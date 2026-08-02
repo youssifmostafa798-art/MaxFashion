@@ -89,9 +89,11 @@ class _WishlistContent extends ConsumerWidget {
             ref.read(wishlistProvider.notifier).remove(product.id);
           },
           onMoveToCart: () {
+            final defaultSize = product.sizes.first;
             final productId = CartItemModel.generateProductId(
               product.name,
               product.image,
+              defaultSize,
             );
             ref
                 .read(cartProvider.notifier)
@@ -100,6 +102,7 @@ class _WishlistContent extends ConsumerWidget {
                     productId: productId,
                     productName: product.name,
                     productImage: product.image,
+                    selectedSize: defaultSize,
                     quantity: 1,
                     unitPrice: product.price,
                   ),

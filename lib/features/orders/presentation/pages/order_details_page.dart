@@ -102,15 +102,18 @@ class OrderDetailsPage extends StatelessWidget {
                                 color: colorScheme.onSurface,
                               ),
                               SizedBox(height: 4.h),
-                              if (item.selectedColor != null ||
-                                  item.selectedSize != null)
+                              if (item.selectedColor != null)
                                 CustomText(
                                   text: [
-                                    if (item.selectedColor != null)
-                                      'Color: ${item.selectedColor}',
-                                    if (item.selectedSize != null)
-                                      'Size: ${item.selectedSize}',
+                                    'Size: ${item.selectedSize}',
+                                    'Color: ${item.selectedColor}',
                                   ].join(' • '),
+                                  size: 12,
+                                  color: colorScheme.onSurfaceVariant,
+                                )
+                              else
+                                CustomText(
+                                  text: 'Size: ${item.selectedSize}',
                                   size: 12,
                                   color: colorScheme.onSurfaceVariant,
                                 ),

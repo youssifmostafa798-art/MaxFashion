@@ -615,7 +615,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                       ),
                       SizedBox(height: 2.h),
                       CustomText(
-                        text: 'Qty: ${item.quantity}',
+                        text: 'Size: ${item.selectedSize}  Qty: ${item.quantity}',
                         size: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),

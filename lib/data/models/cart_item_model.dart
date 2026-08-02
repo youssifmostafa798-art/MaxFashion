@@ -3,7 +3,7 @@ class CartItemModel {
   final String productName;
   final String productImage;
   final String? selectedColor;
-  final String? selectedSize;
+  final String selectedSize;
   final int quantity;
   final double unitPrice;
 
@@ -12,7 +12,7 @@ class CartItemModel {
     required this.productName,
     required this.productImage,
     this.selectedColor,
-    this.selectedSize,
+    required this.selectedSize,
     required this.quantity,
     required this.unitPrice,
   });
@@ -39,8 +39,8 @@ class CartItemModel {
     );
   }
 
-  static String generateProductId(String name, String image) {
-    return '${name}_$image'.replaceAll(RegExp(r'\s+'), '_');
+  static String generateProductId(String name, String image, String size) {
+    return '${name}_${image}_$size'.replaceAll(RegExp(r'\s+'), '_');
   }
 
   Map<String, dynamic> toJson() => {
@@ -58,7 +58,7 @@ class CartItemModel {
         productName: json['productName'] as String,
         productImage: json['productImage'] as String,
         selectedColor: json['selectedColor'] as String?,
-        selectedSize: json['selectedSize'] as String?,
+        selectedSize: (json['selectedSize'] as String?) ?? 'S',
         quantity: json['quantity'] as int,
         unitPrice: (json['unitPrice'] as num).toDouble(),
       );

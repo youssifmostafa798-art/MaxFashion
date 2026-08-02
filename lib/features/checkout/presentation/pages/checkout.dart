@@ -24,6 +24,13 @@ class Checkout extends ConsumerStatefulWidget {
 
 class _CheckoutState extends ConsumerState<Checkout> {
   int selectedQty = 1;
+  late String selectedSize;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSize = widget.products.sizes.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +59,60 @@ class _CheckoutState extends ConsumerState<Checkout> {
                 },
               ),
 
+              Gap(16.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CustomText(
+                  text: "SIZE",
+                  size: 13,
+                  weight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  spacing: 2,
+                ),
+              ),
+              Gap(10.h),
+              Row(
+                children: widget.products.sizes.map((size) {
+                  final isSelected = selectedSize == size;
+                  return Padding(
+                    padding: EdgeInsets.only(right: 10.w),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedSize = size;
+                        });
+                      },
+                      child: Container(
+                        width: 48.w,
+                        height: 48.w,
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.onSurface
+                              : Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.onSurface
+                                : Theme.of(context).colorScheme.outline,
+                            width: isSelected ? 1.5 : 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: CustomText(
+                            text: size,
+                            size: 13,
+                            weight: FontWeight.w600,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.surface
+                                : Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
               const PromoSection(),
               Gap(50.h),
 
@@ -77,6 +138,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   final productId = CartItemModel.generateProductId(
                     widget.products.name,
                     widget.products.image,
+                    selectedSize,
                   );
                   ref
                       .read(cartProvider.notifier)
@@ -85,6 +147,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                           productId: productId,
                           productName: widget.products.name,
                           productImage: widget.products.image,
+                          selectedSize: selectedSize,
                           quantity: selectedQty,
                           unitPrice: widget.products.price,
                         ),
