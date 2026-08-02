@@ -23,6 +23,8 @@ dependencies:
   flutter_riverpod: ^2.6.1
   shared_preferences: ^2.2.2
   image_picker: ^1.1.2
+  supabase_flutter: ^2.9.1
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +47,7 @@ flutter:
 
  
   assets:
+     - .env
      - assets/cover/
      - assets/logo/
      - assets/product/
