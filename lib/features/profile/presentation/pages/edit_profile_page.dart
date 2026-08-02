@@ -5,6 +5,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/success_dialog.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:max/features/profile/presentation/widgets/profile_avatar_widget.dart';
 import 'package:max/features/profile/presentation/widgets/profile_form_section.dart';
@@ -362,13 +363,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final success = await notifier.save();
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Profile updated successfully'),
-          backgroundColor: Colors.green.shade600,
-        ),
+      showSuccessDialog(
+        context: context,
+        title: 'Profile Updated',
+        message: 'Your profile information has been saved successfully.',
+        icon: Icons.check_circle_rounded,
+        onDismissed: () {
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+        },
       );
-      Navigator.of(context).pop();
     }
   }
 }
