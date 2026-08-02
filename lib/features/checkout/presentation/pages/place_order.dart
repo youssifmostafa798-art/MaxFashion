@@ -10,10 +10,12 @@ import 'package:max/core/widgets/custem_text.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/models/order_item_model.dart';
 import 'package:max/data/models/order_model.dart';
+import 'package:max/data/models/payment_card_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
+import 'package:max/data/providers/payment_card_provider.dart';
 import 'package:max/features/checkout/presentation/pages/add_card.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
@@ -32,6 +34,7 @@ class PlaceOrder extends ConsumerStatefulWidget {
 
 class _PlaceOrderState extends ConsumerState<PlaceOrder> {
   Map<String, dynamic>? savedCard;
+  PaymentCardModel? _selectedSavedCard;
 
   String _joinParts(List<String?> parts) {
     return parts.where((p) => p != null && p.isNotEmpty).join(', ');
@@ -61,7 +64,85 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     if (cardData != null) {
       setState(() {
         savedCard = cardData;
+        _selectedSavedCard = null;
       });
+      _saveCurrentCardToProvider();
+    }
+  }
+
+  void _selectSavedCard(PaymentCardModel card) {
+    setState(() {
+      _selectedSavedCard = card;
+      savedCard = {
+        'number': card.last4Digits,
+        'name': card.cardHolderName,
+        'date': card.expiry,
+        'cvv': '',
+      };
+    });
+  }
+
+  String _getCardBrandName(String brand) {
+    switch (brand) {
+      case 'visa':
+        return 'Visa';
+      case 'mastercard':
+        return 'Mastercard';
+      default:
+        return 'Card';
+    }
+  }
+
+  String _getCardBrandIcon(String brand) {
+    switch (brand) {
+      case 'visa':
+        return 'assets/svgs/visa.svg';
+      case 'mastercard':
+        return 'assets/svgs/Mastercard.svg';
+      default:
+        return 'assets/svgs/Mastercard.svg';
+    }
+  }
+
+  String _detectCardBrand(String cardNumber) {
+    final cleanNumber = cardNumber.replaceAll(RegExp(r'\s+'), '');
+    if (cleanNumber.isEmpty) return 'otherBrand';
+    final firstDigit = int.tryParse(cleanNumber[0]) ?? 0;
+    if (firstDigit == 4) return 'visa';
+    if (firstDigit == 5) return 'mastercard';
+    if (firstDigit == 3) return 'americanExpress';
+    if (firstDigit == 6) return 'discover';
+    return 'otherBrand';
+  }
+
+  void _saveCurrentCardToProvider() {
+    if (savedCard == null) return;
+    final cardData = savedCard!;
+    final number = cardData['number'].toString();
+    final last4 = number.length >= 4
+        ? number.substring(number.length - 4)
+        : number;
+    final dateParts = cardData['date'].toString().split('/');
+    final month = dateParts.isNotEmpty ? dateParts[0] : '';
+    final year = dateParts.length > 1 ? dateParts[1] : '';
+    final name = cardData['name'].toString();
+
+    final brand = _detectCardBrand(number);
+
+    final newCard = PaymentCardModel(
+      id: PaymentCardModel.generateId(),
+      cardHolderName: name,
+      last4Digits: last4,
+      expiryMonth: month,
+      expiryYear: year,
+      cardBrand: brand,
+      isDefault: false,
+      createdAt: DateTime.now(),
+    );
+
+    final provider = ref.read(paymentCardProvider.notifier);
+    if (!provider.isDuplicate(newCard)) {
+      provider.add(newCard);
     }
   }
 
@@ -192,15 +273,26 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     final authState = ref.watch(authStateProvider);
     final user = authState.user;
     final hasAddress = defaultAddress != null;
+    final savedCards = ref.watch(paymentCardProvider);
+    final defaultCard = ref.watch(defaultPaymentCardProvider);
+
+    if (_selectedSavedCard == null && savedCard == null && defaultCard != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _selectedSavedCard == null && savedCard == null) {
+          _selectSavedCard(defaultCard);
+        }
+      });
+    }
 
     return Scaffold(
       appBar: const CustemAppbar(showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Header(title: "Checkout"),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Header(title: "Checkout"),
 
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
@@ -320,68 +412,169 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                     isFree: true,
                   ),
             Gap(20.h),
-            savedCard != null && hasAddress
-                ? const SizedBox.shrink()
-                : CustemText(
-                    text: "PAYMENT METHOD",
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            Gap(10.h),
 
-            savedCard != null
-                ? Column(
-                    children: [
-                      const Divider(),
-                      Gap(10.h),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svgs/Mastercard.svg",
-                            width: 40.w,
+            if (savedCards.isNotEmpty) ...[
+              CustemText(
+                text: "SAVED PAYMENT METHODS",
+                spacing: 2,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                size: 15,
+              ),
+              Gap(10.h),
+              ...savedCards.map((card) {
+                final isSelected = _selectedSavedCard?.id == card.id;
+                return GestureDetector(
+                  onTap: () => _selectSavedCard(card),
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10.h),
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(14.r),
+                      border: isSelected
+                          ? Border.all(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              width: 1.5.w,
+                            )
+                          : null,
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          _getCardBrandIcon(card.cardBrand),
+                          width: 40.w,
+                        ),
+                        Gap(12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustemText(
+                                text: card.maskedNumber,
+                                size: 14,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              Gap(2.h),
+                              CustemText(
+                                text: 'Expires ${card.expiry}',
+                                size: 12,
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                            ],
                           ),
-                          Gap(10.w),
-                          Expanded(
-                            child: Builder(
-                              builder: (context) {
-                                final numStr = savedCard!['number'].toString();
-                                final suffix = numStr.length >= 2
-                                    ? numStr.substring(numStr.length - 2)
-                                    : numStr;
-                                return CustemText(
-                                  text:
-                                      "Master Card ending \u2022\u2022\u2022\u2022$suffix",
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                );
-                              },
+                        ),
+                        if (card.isDefault)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: CustemText(
+                              text: 'DEFAULT',
+                              size: 9,
+                              color: Theme.of(context).colorScheme.surface,
+                              spacing: 1,
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios_outlined,
-                            color: Theme.of(context).colorScheme.onSurface,
+                        if (isSelected)
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.w),
+                            child: Icon(
+                              Icons.check_circle,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              size: 20.w,
+                            ),
                           ),
-                        ],
-                      ),
-                      Gap(10.h),
-                      const Divider(),
-                    ],
-                  )
-                : GestureDetector(
-                    onTap: () {
-                      _openCard();
-                    },
-                    child: const _CustomContainer(
-                      text: "Select payment method",
-                      iconData: Icons.arrow_drop_down,
-                      isFree: false,
+                      ],
                     ),
                   ),
+                );
+              }),
+              GestureDetector(
+                onTap: _openCard,
+                child: _CustomContainer(
+                  text: "Add New Card",
+                  iconData: Icons.add,
+                  isFree: false,
+                ),
+              ),
+              Gap(20.h),
+            ],
+
+            savedCard != null && hasAddress && savedCards.isEmpty
+                ? const SizedBox.shrink()
+                : savedCards.isEmpty
+                    ? CustemText(
+                        text: "PAYMENT METHOD",
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      )
+                    : const SizedBox.shrink(),
+            savedCards.isEmpty ? Gap(10.h) : const SizedBox.shrink(),
+
+            savedCards.isEmpty
+                ? savedCard != null
+                    ? Column(
+                        children: [
+                          const Divider(),
+                          Gap(10.h),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                _getCardBrandIcon(
+                                  _selectedSavedCard?.cardBrand ?? 'mastercard',
+                                ),
+                                width: 40.w,
+                              ),
+                              Gap(10.w),
+                              Expanded(
+                                child: Builder(
+                                  builder: (context) {
+                                    final numStr = savedCard!['number'].toString();
+                                    final suffix = numStr.length >= 2
+                                        ? numStr.substring(numStr.length - 2)
+                                        : numStr;
+                                    final brandName = _getCardBrandName(
+                                      _selectedSavedCard?.cardBrand ?? 'mastercard',
+                                    );
+                                    return CustemText(
+                                      text:
+                                          "$brandName ending \u2022\u2022\u2022\u2022$suffix",
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    );
+                                  },
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ],
+                          ),
+                          Gap(10.h),
+                          const Divider(),
+                        ],
+                      )
+                    : GestureDetector(
+                        onTap: _openCard,
+                        child: const _CustomContainer(
+                          text: "Select payment method",
+                          iconData: Icons.arrow_drop_down,
+                          isFree: false,
+                        ),
+                      )
+                : const SizedBox.shrink(),
+
             Gap(30.h),
             savedCard != null && hasAddress
                 ? _buildCartItemsList()
                 : const SizedBox.shrink(),
-            const Spacer(),
+            Gap(30.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -405,7 +598,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
               },
             ),
             Gap(60.h),
-          ],
+            ],
+          ),
         ),
       ),
     );

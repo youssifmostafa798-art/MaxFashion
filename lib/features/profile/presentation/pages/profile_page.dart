@@ -10,10 +10,12 @@ import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/orders_provider.dart';
+import 'package:max/data/providers/payment_card_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:max/features/profile/presentation/pages/payment_methods_page.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:max/features/settings/presentation/pages/settings_page.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
@@ -168,6 +170,7 @@ class _MenuSection extends ConsumerWidget {
     final ordersCount = ref.watch(ordersCountProvider);
     final wishlistCount = ref.watch(wishlistCountProvider);
     final addressCount = ref.watch(addressCountProvider);
+    final cardCount = ref.watch(paymentCardCountProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,6 +225,18 @@ class _MenuSection extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const AddressesPage()),
+            );
+          },
+        ),
+        SizedBox(height: 10.h),
+        ProfileMenuItem(
+          icon: Icons.credit_card_outlined,
+          title: 'Payment Methods',
+          trailing: cardCount > 0 ? '$cardCount' : null,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PaymentMethodsPage()),
             );
           },
         ),
