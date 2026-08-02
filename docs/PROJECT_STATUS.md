@@ -1,345 +1,383 @@
 # Project Status
 
-**Generated On:** August 02, 2026
-**Project Version:** 1.0.0+1
-**Total Dart Files:** 100 (99 lib + 1 test)
-**Total Lines of Code:** ~10,278
+Generated On: August 02, 2026
+Project Version: 1.0.0+1
 
 ---
 
 ## Overall Completion
 
-| Metric | % |
-|---|---|
-| **Overall Project** | **68%** |
-| UI | 90% |
-| Business Logic | 65% |
-| Architecture | 78% |
+| Category | Percentage |
+|----------|-----------|
+| **Overall** | **75%** |
+| UI | 92% |
+| Business Logic | 70% |
+| Architecture | 85% |
 | Backend | 0% |
-| State Management | 75% |
-| Authentication | 50% |
-| Navigation | 85% |
-| Reusable Components | 72% |
+| State Management | 80% |
+| Authentication | 35% |
+| Navigation | 75% |
+| Reusable Components | 88% |
 | Testing | 2% |
-| Performance | 15% |
+| Performance | 60% |
 
 ---
 
 ## Completed Features
 
-| # | Feature | Evidence |
-|---|---------|----------|
-| 1 | Flutter project structure (feature-first architecture) | `lib/core/`, `lib/data/`, `lib/features/` — 12 feature modules |
-| 2 | App Theme (Light + Dark) with persistence | `core/theme/app_theme.dart`, `theme_provider.dart`, `theme_storage.dart` |
-| 3 | Centralized AppColors | `core/theme/app_colors.dart` — 42 color constants |
-| 4 | ScreenUtil integration (375x812 design) | `main.dart` — `ScreenUtilInit` wrapping `MaterialApp` |
-| 5 | Splash screen with fade animation | `splash.dart` — 1200ms fade, auto-navigate based on session |
-| 6 | Authentication UI (Auth, Login, Signup) | `features/auth/` — 3 pages, 2 widgets, full form validation |
-| 7 | Fake Auth Service with SharedPreferences | `data/services/fake_auth_service.dart` — signup, login, logout, profile update, remember me |
-| 8 | Auth state management (Riverpod) | `data/providers/auth_provider.dart` — session restore, signup, login, logout, updateProfile |
-| 9 | Home screen with featured products, covers, about section | `features/home/presentation/pages/home.dart` — uses `featuredProductsProvider` |
-| 10 | Custom Bottom Navigation (4 tabs: Home, Menu, Cart, You) | `features/main/presentation/pages/main_screen.dart` — IndexedStack with page caching |
-| 11 | Cart badge on bottom nav (live count) | `main_screen.dart` lines 76-84 — `BadgeWidget` with `cartCount` |
-| 12 | Wishlist badge on bottom nav (live count) | `main_screen.dart` lines 87-95 — `BadgeWidget` with `wishlistCount` |
-| 13 | Categories/Menu page with grid and shop-by list | `features/menu/presentation/pages/categories_page.dart` — 7 categories, 4 shop-by items |
-| 14 | Product Listing page (filtered by category) | `features/product/presentation/pages/product_listing_page.dart` |
-| 15 | Product Detail page with qty selector and add-to-cart | `features/product/presentation/pages/product_detail_page.dart` |
-| 16 | Product Grid Card widget | `features/product/presentation/widgets/product_grid_card.dart` |
-| 17 | Full Search system (debounced, recent searches, suggestions, highlighted results) | `features/search/` — 1 page, 5 widgets; `data/providers/search_provider.dart` |
-| 18 | Cart with full CRUD (add, remove, increment, decrement) | `data/providers/cart_provider.dart` — `CartNotifier` |
-| 19 | Cart persistence via SharedPreferences | `data/services/cart_storage.dart` — loaded on init |
-| 20 | Product Checkout flow (single product) | `features/checkout/presentation/pages/checkout.dart` |
-| 21 | Place Order flow with validation | `features/checkout/presentation/pages/place_order.dart` — validates address + payment |
-| 22 | Credit Card entry (flutter_credit_card) | `features/checkout/presentation/pages/add_card.dart` |
-| 23 | Saved Payment Cards with CRUD and persistence | `data/providers/payment_card_provider.dart`, `data/services/payment_card_storage.dart` |
-| 24 | Address CRUD (add, edit, delete, set default) with persistence | `data/providers/address_provider.dart` — via SharedPreferences |
-| 25 | Order creation and persistence | `data/repositories/orders_repository.dart`, `data/services/orders_storage.dart` |
-| 26 | Order History page | `features/orders/presentation/pages/orders_page.dart` |
-| 27 | Order Details page with timeline | `features/orders/presentation/pages/order_details_page.dart` |
-| 28 | Order status chip and timeline widgets | `features/orders/presentation/widgets/` — 4 widgets |
-| 29 | Wishlist with persistence (SharedPreferences) | `data/providers/wishlist_provider.dart` — add, remove, toggle, load/save |
-| 30 | Wishlist page with move-to-cart | `features/wishlist/presentation/pages/wishlist_page.dart` |
-| 31 | Profile page with user info, menu items, counts | `features/profile/presentation/pages/profile_page.dart` |
-| 32 | Edit Profile page (name, phone, DOB, gender, country, avatar) | `features/profile/presentation/pages/edit_profile_page.dart` — 374 lines |
-| 33 | Edit Profile provider with change tracking and validation | `features/profile/presentation/providers/edit_profile_provider.dart` |
-| 34 | Address management page (add/edit/delete/set default) | `features/profile/presentation/pages/addresses_page.dart` |
-| 35 | Settings page (theme, notifications, privacy, support, about, logout) | `features/settings/presentation/pages/settings_page.dart` |
-| 36 | Theme toggle (Light/Dark/System) with persistence | `features/settings/presentation/pages/settings_page.dart` — SegmentedButton |
-| 37 | Skeleton loaders (Home, Orders, Product Detail, Product Listing, Search, Wishlist) | `core/widgets/skeletons/` — 7 skeleton widgets |
-| 38 | Shimmer effect for skeletons | `core/widgets/skeletons/shimmer_effect.dart` — custom animation |
-| 39 | Shared widgets: Header, FavoriteButton, BadgeWidget, CustemTextField, CustemText, Button, CustemAppbar, CardWidget | `core/widgets/` — 7 files |
-| 40 | Auth widgets: CustomAuthTextField, CustomAuthButton | `features/auth/presentation/widgets/` — 2 files |
-| 41 | Profile widgets: ProfileMenuItem, ProfileFormSection, ProfileAvatar, AddressCard, EmptyAddresses, PaymentCardTile | `features/profile/presentation/widgets/` — 6 files |
-| 42 | Settings widgets: SettingsTile, SettingsTileSwitch, SettingsSection | `features/settings/presentation/widgets/` — 3 files |
-| 43 | Data models with copyWith, toJson/fromJson | `data/models/` — 10 models (User, Product, Order, OrderItem, CartItem, Address, Category, Cover, SearchResult, PaymentCard) |
-| 44 | Product repository (abstract + local implementation) | `data/repositories/product/` — 2 files |
-| 45 | Search repository (abstract + local implementation) | `data/repositories/search/` — 2 files |
-| 46 | Guest mode (continue without login) | `features/auth/presentation/pages/auth_page.dart` — "Continue as Guest" option |
-| 47 | Date formatting utility | `core/utils/date_formatter.dart` — formatDate, formatDateTime, formatMonthYear |
-| 48 | App constants for asset paths | `core/constants/app_constants.dart` |
+### Core Architecture
+- Feature-first Clean Architecture (lib/core, lib/data, lib/features)
+- Riverpod state management with StateNotifier pattern
+- Centralized AppColors (zero hardcoded colors in widgets)
+- AppTheme with light/dark theme support
+- ThemeProvider with SharedPreferences persistence
+- ScreenUtil responsive sizing (375x812 design)
+- Named routing with custom slide/fade transitions
+- Shared component library (17+ reusable widgets)
+
+### Splash Screen
+- Fade + scale animation on launch
+- Session restore check (remember me / logged in state)
+- Auto-navigate to Main or Auth after 2s delay
+- Files: `lib/splash.dart`
+
+### Authentication (UI Complete, Mock Backend)
+- AuthPage with Create Account / Login / Continue as Guest
+- LoginPage with form validation, remember me, error SnackBars
+- SignupPage with full name, email, Egyptian phone validation, password confirm
+- CustomAuthButton with loading state and scale animation
+- CustomAuthTextField with password visibility toggle
+- FakeAuthService storing users in SharedPreferences
+- Session persistence and restore on app launch
+- Files: `lib/features/auth/presentation/*`, `lib/data/services/fake_auth_service.dart`
+
+### Home Screen
+- Custom Appbar with centered logo and search bar
+- SVG text overlays (10, October, Collection)
+- Cover image hero banner
+- Featured products 2-column grid
+- "You may also like" horizontal carousel
+- Social media links, contact info, copyright footer
+- HomeSkeleton shimmer loading state
+- Files: `lib/features/home/presentation/pages/home.dart`
+
+### Categories / Menu
+- Category grid (7 items) with staggered fade-in animation
+- "Shop by" list (New Arrivals, Trending, Best Sellers, Online Exclusive)
+- Search bar navigating to SearchScreen
+- Files: `lib/features/menu/presentation/pages/categories_page.dart`
+
+### Search
+- Debounced search (250ms)
+- Recent searches with persistence (SharedPreferences)
+- Suggested products section
+- Popular categories section
+- Search results with highlighted matching text
+- Empty state for no results
+- SearchSkeleton loading state
+- Context-aware hints (global, home, category, cart, wishlist, orders)
+- Files: `lib/features/search/presentation/*`
+
+### Product Listing
+- 2-column grid layout with item count
+- Category-based filtering
+- Empty category state with icon
+- ProductListingSkeleton loading state
+- Files: `lib/features/product/presentation/pages/product_listing_page.dart`
+
+### Product Details
+- Size selector with animated highlight
+- Quantity selector (+/-)
+- Favorite toggle button
+- Promo section widget
+- Est. total price display
+- "Add to Cart" with success dialog
+- ProductDetailSkeleton loading state
+- Files: `lib/features/product/presentation/pages/product_detail_page.dart`
+
+### Cart
+- Cart items with swipe-to-dismiss delete
+- Quantity increment/decrement controls
+- Subtotal and total calculation (providers)
+- Empty cart state with "Start Shopping" button
+- Checkout navigation
+- Files: `lib/features/cart/presentation/*`
+
+### Checkout / Place Order
+- Shipping address display and selection
+- Shipping method display
+- Saved payment methods list with selection
+- Add new card via credit card form
+- Order validation (address + payment required)
+- Order creation with OrderItemModel.fromCartItem
+- Order success dialog with order ID
+- Files: `lib/features/checkout/presentation/*`
+
+### Wishlist
+- Toggle add/remove from any product card
+- Persisted in SharedPreferences (product IDs)
+- Wishlist count badge on Profile tab
+- WishlistItemCard with remove and "Move to Cart" concept
+- WishlistSkeleton loading state
+- Files: `lib/features/wishlist/presentation/*`
+
+### Orders
+- Order history list with OrderCard
+- Order detail page with OrderTimeline
+- Order status chips (Processing, Shipped, Delivered, Cancelled)
+- Empty orders state
+- OrdersSkeleton loading state
+- Orders persisted in SharedPreferences
+- Files: `lib/features/orders/presentation/*`
+
+### Profile
+- Profile header with avatar, name, email, phone, member since
+- Guest mode with sign-up prompt
+- Menu items with live counts (orders, wishlist, addresses, cards)
+- Edit Profile with form validation, avatar picker, date picker
+- EditProfileProvider with change tracking and save
+- Files: `lib/features/profile/presentation/*`
+
+### Addresses
+- Add/Edit/Delete addresses
+- Set default address
+- Address label selection (Home, Work, Other)
+- Empty addresses state
+- AddressCard with edit/delete/set-default actions
+- Files: `lib/features/profile/presentation/pages/addresses_page.dart`, `lib/features/checkout/presentation/pages/add_address.dart`
+
+### Payment Methods
+- Add cards with CreditCardWidget form
+- Delete card with confirmation dialog
+- Set default card
+- Duplicate card detection
+- Card brand auto-detection (Visa, Mastercard, etc.)
+- Empty payment methods state
+- Files: `lib/features/profile/presentation/pages/payment_methods_page.dart`
+
+### Settings
+- Theme selector (Light / Dark / System) with SegmentedButton
+- Language placeholder (coming soon SnackBar)
+- Push notifications toggle (local only)
+- Privacy Policy placeholder
+- Terms & Conditions placeholder
+- Contact Support placeholder
+- About App dialog
+- Logout functionality
+- Files: `lib/features/settings/presentation/*`
 
 ---
 
 ## Features In Progress
 
-| # | Feature | Progress | What Remains |
-|---|---------|----------|--------------|
-| 1 | **Filter/Sort** in product listing | 0% | No filter or sort UI in ProductListingPage |
-| 2 | **Forgot Password** flow | 10% | "Forgot Password?" text shown in login but not wired |
-| 3 | **Hero animations** between product grid and detail | 0% | No Hero widgets used anywhere |
-| 4 | **Haptic feedback** on actions | 0% | No HapticFeedback usage anywhere |
-| 5 | **Change password** in settings/profile | 0% | Not implemented |
-| 6 | **Delete account** in settings/profile | 0% | Not implemented |
+| Feature | Status | What Remains |
+|---------|--------|-------------|
+| Authentication | 🟡 Partial | UI + mock complete. Needs real Supabase backend integration. |
+| Navigation | 🟡 Partial | Bottom nav works but missing dedicated Wishlist/Search tabs. No IndexedStack for all tabs. |
+| Performance | 🟡 Partial | Skeleton loading implemented. No profiling, no image caching, no cold start optimization. |
 
 ---
 
-## Remaining Features (Sorted by Priority)
+## Remaining Features
 
-### P0 — Critical for MVP
+### Priority 1 — Backend Integration
+1. Replace FakeAuthService with Supabase Auth
+2. Add `supabase_flutter` dependency and initialize
+3. Create Supabase project, env vars, database schema
+4. Implement real Signup/Login/Logout/Forgot Password with Supabase
+5. Add email verification flow
+6. Store Supabase URL and anon key securely
 
-| # | Feature | Why |
-|---|---------|-----|
-| 1 | Replace FakeAuthService with real backend | Core auth is mock-only |
-| 2 | Supabase integration (or any real backend) | No real data persistence beyond SharedPreferences |
-| 3 | Real product images (not just 6 assets reused) | 18 products share only 6 images |
-| 4 | Image caching (cached_network_image) | All images are local assets |
+### Priority 2 — Database & Data
+7. Create all Supabase tables (profiles, categories, products, product_images, etc.)
+8. Write Row Level Security policies
+9. Add indexes on frequently queried columns
+10. Seed database with realistic sample data
+11. Replace hardcoded ProductModel.products with Supabase queries
+12. Replace hardcoded CategoryModel.categories with Supabase data
 
-### P1 — High Priority
+### Priority 3 — Feature Wiring
+13. Wire Home screen to live categories and featured products from Supabase
+14. Wire Product Listing to paginated Supabase queries
+15. Wire Product Details to real product data
+16. Wire Search to Supabase full-text search
+17. Wire Wishlist to Supabase favorites table
+18. Wire Cart to Supabase carts/cart_items tables
+19. Wire Orders to Supabase orders/order_items tables
+20. Wire Profile to Supabase profiles table
+21. Wire Addresses to Supabase addresses table
+22. Integrate `cached_network_image` for network images
 
-| # | Feature | Why |
-|---|---------|-----|
-| 5 | Forgot Password flow | UI exists but no functionality |
-| 6 | Change Password functionality | Not implemented |
-| 7 | Delete Account functionality | Not implemented |
-| 8 | Product filter/sort in listing page | Missing from category browsing |
-| 9 | Promo code functionality | UI exists but no backend logic |
-| 10 | Push notification integration | Settings toggle exists but no implementation |
+### Priority 4 — UX Polish
+23. Add dedicated Wishlist tab to bottom navigation
+24. Add dedicated Search tab to bottom navigation
+25. Hero animations across full navigation flow
+26. Wishlist heart micro-interaction animation
+27. Cart badge animation on count change
+28. Accessibility pass (contrast + tap targets)
+29. Spacing/alignment consistency pass
 
-### P2 — Medium Priority
-
-| # | Feature | Why |
-|---|---------|-----|
-| 11 | Hero animations between grid and detail | No shared element transitions |
-| 12 | Haptic feedback on key actions | Not implemented |
-| 13 | Navigation persistence (scroll position) | IndexedStack preserves tabs but scroll position lost |
-| 14 | Language selection | Settings shows "coming soon" |
-| 15 | Privacy Policy page | Settings shows "coming soon" |
-| 16 | Accessibility pass (contrast, tap targets) | Not done |
-
-### P3 — Low Priority
-
-| # | Feature | Why |
-|---|---------|-----|
-| 17 | Unit tests for providers/repositories | Only 1 smoke test exists |
-| 18 | Widget tests for shared components | None exist |
-| 19 | E2E tests | None exist |
-| 20 | Performance profiling (DevTools) | Not done |
-| 21 | Signed release builds | Not done |
-| 22 | README polish | Only default Flutter README |
-| 23 | Play Store listing assets | Not started |
+### Priority 5 — Quality & Release
+30. Unit tests for cart, checkout, auth flows
+31. Widget tests for core shared components
+32. Manual E2E testing
+33. Performance profiling with DevTools
+34. Cold start optimization
+35. Image compression and caching
+36. Signed APK/AAB builds
+37. README, portfolio, Play Store listing
 
 ---
 
 ## Current Bugs
 
-### 🔴 Critical
-
-None. All previously identified critical bugs have been fixed:
-- Cart persistence is implemented via `cart_storage.dart`
-- Orders persistence is implemented via `orders_storage.dart`
-- Order placement validates address and payment method before proceeding
-
 ### 🟠 High
 
-| # | Bug | File | Root Cause | Suggested Fix |
-|---|-----|------|------------|---------------|
-| 1 | **Product images reused across different products** | `data/models/product_model.dart` | 18 products share only 6 images (p1,p7,p8,p12,p14,p17 all use `product1.png`; p2,p9 share `product2.png`; p6,p10,p11,p16,p18 share `product6.png`) | Add unique product images or use placeholder variation system |
+| # | File | Description | Root Cause | Suggested Fix |
+|---|------|-------------|------------|---------------|
+| 1 | `main_screen.dart:82` | Wishlist badge shown on "You" tab instead of profile-relevant count | `BadgeWidget` uses `wishlistCountProvider` for the Profile/You tab icon | Use `ordersCountProvider` or a dedicated profile badge, or remove the badge from the You tab |
+| 2 | `product_grid_card.dart`, `search_results_list.dart`, `product_detail_page.dart` | Checkout widgets imported in non-checkout features | `FavoriteButton`, `CardWidget`, `PromoSection`, `AddedToCartDialog` live in `features/checkout/presentation/widgets/` but are used by product and search features | Move these shared widgets to `lib/core/widgets/` |
 
 ### 🟡 Medium
 
-| # | Bug | File | Root Cause | Suggested Fix |
-|---|-----|------|------------|---------------|
-| 2 | **Duplicate date formatting code** | `order_details_page.dart`, `order_card.dart`, `order_timeline.dart` | Same `_formatDateTime`/`_formatDate` logic repeated 3 times despite `core/utils/date_formatter.dart` existing | Replace inline formatters with `DateFormatter` calls |
-| 3 | **`DropdownButtonFormField` uses `initialValue`** | `features/profile/presentation/widgets/profile_form_section.dart:177` | `initialValue` may not exist on `DropdownButtonFormField` in all Flutter versions; `value` is the standard parameter | Change to `value: value` for compatibility |
-| 4 | **Duplicate "Added to Cart" dialog** | `product_detail_page.dart` and `checkout/presentation/widgets/added_to_cart_dialog.dart` | Nearly identical dialog code exists in both files (~60 lines each) | Extract to shared widget in `core/widgets/` |
-| 5 | **Duplicate `intersperse` extension** | `profile_form_section.dart` and `settings_section.dart` | Identical extension defined in two files | Extract to `core/utils/extensions.dart` |
-| 6 | **Cross-feature imports** | `cart_page.dart` → `main_screen.dart`, `wishlist_page.dart` → `main_screen.dart`, `place_order.dart` → `orders_page.dart`, `place_order.dart` → `addresses_page.dart` | Features directly import from other features' presentation layers | Use named routes or a navigation abstraction |
-| 7 | **Order IDs are timestamp-based without milliseconds** | `place_order.dart:265-268` | Two orders placed in the same second get the same ID | Add milliseconds to the timestamp or use UUID |
+| # | File | Description | Root Cause | Suggested Fix |
+|---|------|-------------|------------|---------------|
+| 3 | `id_generator.dart:11-20` | `generate()` and `generateOrderId()` are identical methods | Code duplication | Remove `generateOrderId()` or make it a typedef |
+| 4 | `product_repository.dart` + `local_product_repository.dart` | Repository interface exists but only local implementation; no abstraction boundary for swapping to Supabase | Incomplete architecture | When adding Supabase, create `RemoteProductRepository` implementing the same interface |
+| 5 | `categories_page.dart:100` | Categories hardcoded in `_CategoryGrid` and also in `CategoryModel.categories` — two sources of truth | Duplicate static data | Use `CategoryModel.categories` everywhere, remove hardcoded `_CategoryItem` list |
+| 6 | `checkout.dart` | `Checkout` page duplicates `ProductDetailPage` logic entirely (size selector, qty, add to cart) | Code duplication | The Checkout page appears unused (PlaceOrder is the actual checkout flow). Consider removing or consolidating |
 
 ### 🟢 Low
 
-| # | Bug | File | Root Cause | Suggested Fix |
-|---|-----|------|------------|---------------|
-| 8 | **Typos in file names: "custem" instead of "custom"** | `core/widgets/custem_text.dart`, `custem_appbar.dart`, `custem_bottom.dart`, `custem_text_field.dart` | Persistent typo across all shared widgets | Rename files and update all imports |
-| 9 | **`ProductModel.descrp` typo** | `data/models/product_model.dart:6` | Field named `descrp` instead of `description` | Rename field and update all references |
-| 10 | **Hardcoded email and phone in Home footer** | `features/home/presentation/pages/home.dart:193-194` | Personal contact info hardcoded in source | Move to constants or remove |
-| 11 | **Generic `Button` class name** | `core/widgets/custem_bottom.dart` | Too generic; could conflict with other button widgets | Rename to `PrimaryButton` or `AppButton` |
-| 12 | **`SearchTapWidget` appears unused** | `features/search/presentation/widgets/search_tap_widget.dart` | Not imported or instantiated anywhere; `custem_appbar.dart` has its own inline `_SearchBar` | Remove or integrate as the canonical search bar widget |
-| 13 | **`SearchResultModel` unused** | `data/models/search_result_model.dart` | Defined but never referenced in the codebase | Remove the unused model |
+| # | File | Description | Root Cause | Suggested Fix |
+|---|------|-------------|------------|---------------|
+| 7 | `settings_page.dart:55-59,92-98,109` | Language, Privacy, Terms, Support all show "coming soon" SnackBar | Placeholder implementations | Implement or remove these menu items |
+| 8 | `search_text_field.dart:81-90` | Clear button suffix icon only shows when controller text is non-empty, but doesn't update on external clear | State sync issue | Use a listener or rebuild on controller changes |
+| 9 | `custom_button.dart:55` | Uses `AnimatedBuilder` (deprecated) instead of `AnimatedWidget` or `Builder` | Deprecated API usage | Replace with `AnimatedBuilder` is fine for now but consider migration |
 
 ---
 
 ## Technical Debt
 
 ### Dead Code
-- `data/models/search_result_model.dart` — `SearchResultModel` class defined but never used
-- `features/search/presentation/widgets/search_tap_widget.dart` — `SearchTapWidget` defined but never instantiated
+- `lib/features/checkout/presentation/pages/checkout.dart` — The `Checkout` page appears to be a duplicate of `ProductDetailPage` and is never routed to. Only `PlaceOrder` is used for the actual checkout flow.
+- `lib/data/repositories/product/product_repository.dart` — Abstract class exists but no remote implementation; only `LocalProductRepository` exists.
 
 ### Unused Files
-- `data/models/search_result_model.dart` — No references found in any file
-- `features/search/presentation/widgets/search_tap_widget.dart` — Not imported or used anywhere
+- `lib/features/checkout/presentation/pages/checkout.dart` — Not referenced in any router or navigation code.
 
 ### Duplicate Code
-- **Date formatting** — `_formatDateTime`/`_formatDate` duplicated in `order_details_page.dart`, `order_card.dart`, `order_timeline.dart` (3 copies) despite `core/utils/date_formatter.dart` existing
-- **"Added to Cart" dialog** — Nearly identical dialog code in `product_detail_page.dart` and `checkout/presentation/widgets/added_to_cart_dialog.dart` (~60 lines each)
-- **`intersperse` extension** — Defined identically in both `profile_form_section.dart` and `settings_section.dart`
-- **Promo/Delivery section** — `_PromoSection` widget in `checkout/presentation/widgets/promo_section.dart` appears similar to inline promo sections in other checkout files
-- **Category grid** — Category list hardcoded in both `categories_page.dart` and `category_model.dart` (categories_page imports from category_model but also has its own grid logic)
-
-### Refactoring Opportunities
-- Extract date formatting usage to consistently use `core/utils/date_formatter.dart` across all order widgets
-- Extract "Added to Cart" dialog to a single shared widget in `core/widgets/`
-- Extract `intersperse` extension to `core/utils/extensions.dart`
-- Rename `custem_*` files to `custom_*` (4 files + all imports)
-- Rename `descrp` to `description` in `ProductModel`
-- Rename `Button` to `PrimaryButton` in `custem_bottom.dart`
-- Add type annotations replacing any `dynamic` usages
-- Consolidate category data source
-
-### Temporary Implementations
-- `FakeAuthService` — Entire auth system is mock-based; designed to be replaced with Supabase
-- `LocalProductRepository` — Returns hardcoded products from static list
-- `LocalSearchRepository` — Searches hardcoded products
-- `OrdersRepository` — Functional persistence via SharedPreferences but no real backend
-- All product data hardcoded in `ProductModel.products` static list (18 items)
+- `id_generator.dart`: `generate()` and `generateOrderId()` are identical.
+- `categories_page.dart`: Category list duplicated (`_CategoryItem` vs `CategoryModel.categories`).
+- `checkout.dart` vs `product_detail_page.dart`: Nearly identical UI and logic for size selector, qty, add to cart.
+- Search functionality duplicated between `LocalProductRepository.searchProducts()` and `LocalSearchRepository.searchProducts()` — same algorithm.
 
 ### Hardcoded Data
-- 18 products hardcoded in `data/models/product_model.dart:13-206`
-- 7 categories hardcoded in `data/models/category_model.dart:11-18`
-- 3 cover images hardcoded in `data/models/cover_model.dart:4-8`
-- Contact email and phone in `features/home/presentation/pages/home.dart:193-194`
-- Design size 375x812 hardcoded in `main.dart:20`
+- `ProductModel.products` — 18 products hardcoded with local asset paths. No network images.
+- `CategoryModel.categories` — 7 categories hardcoded.
+- `CoverModel.covers` — 3 covers hardcoded with local assets.
+- `AppConstants` — All asset paths hardcoded.
+- `About` section in `home.dart` — Email, phone, hours hardcoded.
 
 ### Mock Services
-- `data/services/fake_auth_service.dart` — 159 lines of mock auth using SharedPreferences
-- `data/repositories/product/local_product_repository.dart` — Returns hardcoded products
-- `data/repositories/search/local_search_repository.dart` — Searches hardcoded products
+- `FakeAuthService` — Entire auth system is mock using SharedPreferences. Stores passwords in plain text in local storage.
 
 ### Architecture Violations
-- **Feature-to-feature imports** (4 instances):
-  - `cart_page.dart` imports from `main_screen.dart`
-  - `wishlist_page.dart` imports from `main_screen.dart`
-  - `place_order.dart` imports from `orders_page.dart`
-  - `place_order.dart` imports from `addresses_page.dart`
-- **No domain layer** — Business logic lives directly in providers; no use cases/interactors
-- **No centralized error handling** — Errors shown via `SnackBar` directly in each page
+- Checkout widgets (`FavoriteButton`, `CardWidget`, `PromoSection`, `AddedToCartDialog`) used across product/search features — violates feature boundary isolation.
+- `categories_page.dart` defines its own `_CategoryItem` instead of using `CategoryModel`.
+- `edit_profile_provider.dart` placed in `presentation/providers/` — should be in `data/providers/` or a separate `providers/` folder per feature.
 
-### Naming Problems
-- `custem_*` files — should be `custom_*`
-- `ProductModel.descrp` — should be `description`
-- `Button` class in `custem_bottom.dart` — too generic, should be `PrimaryButton`
-- `CustemAppbar` — should be `CustomAppBar`
-- `CustemText` — should be `CustomText`
-- `CustemTextField` — should be `CustomTextField`
+### Naming Inconsistencies
+- Feature folders use `presentation/pages/` and `presentation/widgets/` but `edit_profile_provider.dart` is in `presentation/providers/` — inconsistent with data layer providers.
+- `CustomAuthButton` vs `CustomButton` — two button widgets with similar names but different implementations.
+- `main_screen.dart` labels tabs "Home, Menu, Cart, You" but "You" tab shows wishlist badge.
+
+### Missing Abstractions
+- No domain layer (use cases / entities) — data models are used directly in presentation.
+- No error handling abstraction — try/catch with `.toString()` is used throughout.
+- No loading state abstraction — each page manages its own `_isLoading` state.
 
 ---
 
 ## Architecture Review
 
-### Overall Assessment: **Healthy with Minor Violations**
+**Overall: Healthy with known gaps**
 
-The project follows a **feature-first Clean Architecture** pattern:
+The architecture follows a reasonable feature-first structure:
+- `lib/core/` — Shared utilities, theme, widgets
+- `lib/data/` — Models, providers, repositories, services
+- `lib/features/` — Feature modules with presentation layer
 
-```
-lib/
-├── core/           ← Shared: theme, router, constants, widgets, skeletons
-├── data/           ← Models, providers, repositories, services
-├── features/       ← 12 feature modules
-│   └── {feature}/
-│       └── presentation/
-│           ├── pages/
-│           ├── widgets/
-│           └── providers/ (some features)
-├── main.dart       ← App entry point
-└── splash.dart     ← Splash screen
-```
+**Strengths:**
+- Clean separation of concerns at the folder level
+- Riverpod used consistently for state management
+- Centralized theme and colors (no hardcoded values in widgets)
+- Repository pattern established for products and search
+- Local storage abstractions (CartStorage, OrdersStorage, etc.)
 
-### Strengths
-- Feature-first organization consistently applied across 12 feature modules
-- Riverpod state management used consistently across all 8 providers
-- Abstract repository interfaces with local implementations (ready for backend swap)
-- Consistent widget naming and design system with centralized colors
-- Dark/light theme support with persistence
-- Responsive sizing via ScreenUtil
-- Skeleton/shimmer loading states for 6 different screens
-- Cart, wishlist, addresses, payment cards, orders all persist via SharedPreferences
-- Proper session management with remember-me functionality
+**Violations:**
+- No domain layer — business logic lives in providers and widgets
+- Feature boundary leakage — checkout widgets used in product/search features
+- Inconsistent provider placement (some in data layer, one in presentation)
+- No error handling abstraction layer
 
-### Violations
-1. **No domain layer** — Business logic lives directly in providers; no use cases/interactors
-2. **Feature-to-feature imports** — 4 instances of features importing directly from other features' presentation layers
-3. **No centralized error handling** — Errors shown via `SnackBar` directly in each page; no error state abstraction
-4. **No dependency injection** — `FakeAuthService` is instantiated directly in `AuthRepository`; no DI container
-5. **Mixed widget patterns** — Some widgets are `ConsumerWidget`, some are `StatelessWidget` even when they could use Riverpod
+**Recommendation:** The architecture is solid for a v1.0. When adding Supabase, introduce a proper domain layer with use cases, and enforce feature boundary isolation.
 
 ---
 
 ## Tomorrow Development Plan
 
-- [ ] 1. Fix bug #2: Replace inline date formatters with `DateFormatter` calls in order widgets
-- [ ] 2. Fix bug #3: Change `initialValue` to `value` in `ProfileFormDropdown`
-- [ ] 3. Fix bug #6: Replace cross-feature imports with named routes (4 instances)
-- [ ] 4. Fix bug #7: Add milliseconds to order ID generation
-- [ ] 5. Remove dead code: `SearchResultModel` and `SearchTapWidget`
-- [ ] 6. Extract duplicate "Added to Cart" dialog to shared widget
-- [ ] 7. Extract duplicate `intersperse` extension to `core/utils/`
-- [ ] 8. Run `flutter analyze` and fix all warnings
+- [ ] Fix wishlist badge on "You" tab — use orders count or remove badge
+- [ ] Move `FavoriteButton`, `CardWidget`, `PromoSection`, `AddedToCartDialog` to `lib/core/widgets/`
+- [ ] Remove or consolidate duplicate `Checkout` page
+- [ ] Consolidate category data — remove `_CategoryItem` duplicates from `categories_page.dart`
+- [ ] Consolidate search logic — remove duplicate `searchProducts` from `LocalProductRepository`
+- [ ] Remove `generateOrderId()` duplicate from `id_generator.dart`
 
 ---
 
 ## Next Milestones
 
-### Milestone 1 — Bug Fixes & Code Cleanup (Est. 1-2 days)
-- Fix all medium-severity bugs
+### Milestone 1 — Bug Fixes & Cleanup (1-2 days)
+- Fix all confirmed bugs (badge, architecture violations)
 - Remove dead code and unused files
-- Extract duplicate code to shared utilities
-- Replace cross-feature imports with routes
-- Run `flutter analyze` clean
+- Consolidate duplicate code
+- Run `flutter analyze` — confirm zero issues
 
-### Milestone 2 — UI Polish & Shared Components (Est. 3-5 days)
-- Rename `custem_*` to `custom_*` and update all imports
-- Add Hero animations between grid and detail
-- Add haptic feedback on key actions
-- Implement forgot password flow
-- Add filter/sort to product listing
+### Milestone 2 — UI Polish (3-5 days)
+- Add dedicated Wishlist and Search tabs to bottom nav
+- Hero animations between grid and detail views
+- Wishlist heart micro-interaction
+- Cart badge animation
+- Accessibility pass
+- Spacing/alignment consistency review
 
-### Milestone 3 — Backend Integration (Est. 1-2 weeks)
-- Set up Supabase project
-- Replace `FakeAuthService` with real auth provider
-- Replace hardcoded products with API/database
-- Add real image loading with `cached_network_image`
-- Implement real cart, wishlist, orders, addresses, payment cards via Supabase
+### Milestone 3 — Backend Integration (1-2 weeks)
+- Set up Supabase project and initialize client
+- Replace FakeAuthService with real Supabase Auth
+- Create database schema with RLS policies
+- Wire all features to live data
+- Add `cached_network_image` for network images
 
-### Milestone 4 — Testing & Release (Est. 1 week)
-- Unit tests for providers and repositories
-- Widget tests for shared components
+### Milestone 4 — Testing & Release (1 week)
+- Unit tests for cart, checkout, auth
+- Widget tests for core components
 - Manual E2E testing
-- Signed release builds
-- README and documentation
+- Performance profiling and optimization
+- Signed APK/AAB builds
+- README and portfolio preparation
 
 ---
 
 ## Development Notes
 
-1. **State management: Riverpod** — Already chosen and consistently used across all 8 providers. No need to evaluate alternatives.
-2. **All product data is local assets** — 6 product images are reused across 18 products. Real product photography needed for production.
-3. **Cart, orders, wishlist, addresses, payment cards all persist** — Using SharedPreferences via dedicated storage services. Previous audit incorrectly flagged cart and orders as non-persistent.
-4. **Cart and wishlist badges ARE implemented** — Both show live counts on the bottom navigation bar via `BadgeWidget`.
-5. **Order placement HAS validation** — `_validateOrder()` checks for address and payment method before allowing order placement. Previous audit incorrectly flagged this as a critical bug.
-6. **Home DOES use featured products** — Uses `featuredProductsProvider` (not `allProductsProvider`).
-7. **`_OrdersList` IS typed correctly** — `final List<OrderModel> orders;` at `orders_page.dart:79`. Previous audit incorrectly reported this as `dynamic`.
-8. **`flutter_credit_card` is UI-only** — Does not process payments. A real payment processor will be needed for production.
-9. **No `.env` file exists** — Supabase credentials will need to be added when backend integration begins.
-10. **Single smoke test** — `test/widget_test.dart` contains only a basic pump test. Does not wrap with `ProviderScope` so may fail.
-11. **Flutter SDK constraint `^3.10.1`** — Very recent SDK. Ensure CI/CD environments support this version.
-12. **Navigation uses imperative routes** — `Navigator.push` and `onGenerateRoute` pattern. The original plan mentioned `go_router` as future, but current implementation works fine.
+1. **State management is Riverpod** — all new providers must follow the existing StateNotifier/StateNotifierProvider pattern.
+2. **ScreenUtil is used everywhere** — always use `.w`, `.h`, `.r`, `.sp` for sizing. Design size is 375x812.
+3. **HapticUtils** exists and is used consistently — always call `HapticUtils.light()` on tap interactions.
+4. **Theme-aware** — always use `Theme.of(context).colorScheme` instead of hardcoded colors.
+5. **Skeleton loading** is implemented for Home, Product Listing, Product Detail, Search, Orders, Wishlist — any new data-driven screen should include a skeleton.
+6. **SharedPreferences** is the current persistence layer — all storage classes (CartStorage, OrdersStorage, etc.) use it.
+7. **flutter analyze passes clean** — maintain zero warnings policy.
+8. **Fake auth stores passwords in plain text** — this is acceptable for mock only, must be replaced before any real deployment.
+9. **No network images yet** — all product images use local assets. Supabase Storage + cached_network_image is needed for real data.
+10. **The `Checkout` page (`checkout.dart`) appears unused** — the actual checkout flow goes through `PlaceOrder`. Consider removing it.
