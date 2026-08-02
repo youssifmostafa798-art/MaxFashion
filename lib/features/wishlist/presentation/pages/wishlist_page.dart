@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
@@ -79,6 +80,7 @@ class _WishlistContent extends ConsumerWidget {
     final wishlistItems = ref.watch(wishlistProvider);
 
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       itemCount: wishlistItems.length,
       itemBuilder: (context, index) {
@@ -166,6 +168,7 @@ class _EmptyWishlist extends StatelessWidget {
           SizedBox(height: 30.h),
           GestureDetector(
             onTap: () {
+              HapticUtils.light();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(

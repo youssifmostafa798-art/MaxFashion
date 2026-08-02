@@ -143,6 +143,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     final searchState = ref.watch(searchProvider);
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

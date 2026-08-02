@@ -11,10 +11,25 @@ void showSuccessDialog({
   Duration autoDismissDuration = const Duration(milliseconds: 1500),
   VoidCallback? onDismissed,
 }) {
-  showDialog(
-    barrierDismissible: false,
+  showGeneralDialog(
     context: context,
-    builder: (context) {
+    barrierDismissible: false,
+    barrierLabel: title,
+    transitionDuration: const Duration(milliseconds: 280),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
+      return ScaleTransition(
+        scale: Tween<double>(begin: 0.85, end: 1.0).animate(curvedAnimation),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+          child: child,
+        ),
+      );
+    },
+    pageBuilder: (context, animation, secondaryAnimation) {
       return Dialog(
         child: Container(
           color: Theme.of(context).colorScheme.surface,

@@ -5,12 +5,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 void showAddedToCartDialog(BuildContext context) {
-  showDialog(
-    barrierDismissible: false,
+  HapticUtils.medium();
+  showGeneralDialog(
     context: context,
-    builder: (context) {
+    barrierDismissible: false,
+    barrierLabel: 'Added to Cart',
+    transitionDuration: const Duration(milliseconds: 300),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
+      return ScaleTransition(
+        scale: Tween<double>(begin: 0.85, end: 1.0).animate(curvedAnimation),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+          child: child,
+        ),
+      );
+    },
+    pageBuilder: (context, animation, secondaryAnimation) {
       return Dialog(
         child: Container(
           color: Theme.of(context).colorScheme.surface,
@@ -23,7 +40,10 @@ void showAddedToCartDialog(BuildContext context) {
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      HapticUtils.light();
+                      Navigator.pop(context);
+                    },
                     child: const Icon(Icons.close),
                   ),
                 ),
@@ -68,6 +88,7 @@ void showAddedToCartDialog(BuildContext context) {
                         isSvg: false,
                         title: "View\nCart",
                         onTap: () {
+                          HapticUtils.light();
                           Navigator.pop(context);
                           Navigator.pushReplacementNamed(
                             context,
@@ -83,6 +104,7 @@ void showAddedToCartDialog(BuildContext context) {
                         isSvg: false,
                         title: "Shop\nMore",
                         onTap: () {
+                          HapticUtils.light();
                           Navigator.pop(context);
                           Navigator.pop(context);
                         },

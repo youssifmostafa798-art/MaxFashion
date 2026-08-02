@@ -12,6 +12,7 @@ import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
 import 'package:max/core/widgets/skeletons/home_skeleton.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -63,6 +64,7 @@ class _HomeState extends ConsumerState<Home> {
             child: SvgPicture.asset("assets/texts/Collection.svg"),
           ),
           SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Padding(
@@ -88,6 +90,7 @@ class _HomeState extends ConsumerState<Home> {
                         height: 500.h,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
                           itemCount: CoverModel.covers.length,
                           itemBuilder: (context, index) {
                             final item = CoverModel.covers[index];
@@ -178,11 +181,20 @@ Widget about(BuildContext context) {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Ionicons.logo_twitter, color: colorScheme.onSurface),
+          GestureDetector(
+            onTap: () => HapticUtils.light(),
+            child: Icon(Ionicons.logo_twitter, color: colorScheme.onSurface),
+          ),
           Gap(30.w),
-          Icon(Ionicons.logo_instagram, color: colorScheme.onSurface),
+          GestureDetector(
+            onTap: () => HapticUtils.light(),
+            child: Icon(Ionicons.logo_instagram, color: colorScheme.onSurface),
+          ),
           Gap(30.w),
-          Icon(Ionicons.logo_facebook, color: colorScheme.onSurface),
+          GestureDetector(
+            onTap: () => HapticUtils.light(),
+            child: Icon(Ionicons.logo_facebook, color: colorScheme.onSurface),
+          ),
         ],
       ),
       Gap(20.h),

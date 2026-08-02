@@ -21,4 +21,8 @@ class DateFormatter {
   static String formatMonthYear(DateTime date) {
     return '${_months[date.month - 1]} ${date.year}';
   }
+
+  static String formatDateNumeric(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
 }

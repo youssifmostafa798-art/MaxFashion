@@ -24,22 +24,32 @@ class BadgeWidget extends StatelessWidget {
             Positioned(
               top: -3.w,
               right: -5.w,
-              child: Container(
-                height: 16.w,
-                constraints: BoxConstraints(minWidth: 16.w),
-                padding: EdgeInsets.symmetric(horizontal: 4.w),
-                decoration: const BoxDecoration(
-                  color: Color(0xffDD8560),
-                  shape: BoxShape.circle,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                switchInCurve: Curves.easeOutBack,
+                switchOutCurve: Curves.easeIn,
+                transitionBuilder: (child, animation) => ScaleTransition(
+                  scale: animation,
+                  child: child,
                 ),
-                alignment: Alignment.center,
-                child: Text(
-                  count > 99 ? '99+' : '$count',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.w700,
-                    height: 1,
+                child: Container(
+                  key: ValueKey(count),
+                  height: 16.w,
+                  constraints: BoxConstraints(minWidth: 16.w),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffDD8560),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    count > 99 ? '99+' : '$count',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.w700,
+                      height: 1,
+                    ),
                   ),
                 ),
               ),

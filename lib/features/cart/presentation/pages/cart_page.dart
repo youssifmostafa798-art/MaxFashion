@@ -9,6 +9,7 @@ import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 class CartPage extends ConsumerWidget {
   const CartPage({super.key});
@@ -51,6 +52,7 @@ class _CartContent extends ConsumerWidget {
       children: [
         Expanded(
           child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             itemCount: cartItems.length,
             itemBuilder: (context, index) {
@@ -149,6 +151,7 @@ class _CartBottomSection extends ConsumerWidget {
             onTap: cartItems.isEmpty
                 ? null
                 : () {
+                    HapticUtils.light();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -196,6 +199,7 @@ class _EmptyCart extends StatelessWidget {
           SizedBox(height: 30.h),
           GestureDetector(
             onTap: () {
+              HapticUtils.light();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(

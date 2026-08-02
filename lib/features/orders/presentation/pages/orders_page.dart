@@ -81,6 +81,7 @@ class _OrdersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       itemCount: orders.length,
       itemBuilder: (context, index) {

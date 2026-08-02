@@ -40,6 +40,7 @@ class SettingsPage extends ConsumerWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           children: [

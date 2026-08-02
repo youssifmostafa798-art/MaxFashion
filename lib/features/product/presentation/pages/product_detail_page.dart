@@ -13,6 +13,7 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/widgets/skeletons/product_detail_skeleton.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -50,6 +51,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               Row(
@@ -61,6 +63,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 enableQty: true,
                 qty: selectedQty,
                 onChanged: (v) {
+                  HapticUtils.light();
                   setState(() {
                     selectedQty = v;
                   });
@@ -85,11 +88,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     padding: EdgeInsets.only(right: 10.w),
                     child: GestureDetector(
                       onTap: () {
+                        HapticUtils.selection();
                         setState(() {
                           selectedSize = size;
                         });
                       },
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
                         width: 48.w,
                         height: 48.w,
                         decoration: BoxDecoration(

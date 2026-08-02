@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 
 class EmptyOrdersWidget extends StatelessWidget {
@@ -37,6 +38,7 @@ class EmptyOrdersWidget extends StatelessWidget {
             SizedBox(height: 32.h),
             GestureDetector(
               onTap: () {
+                HapticUtils.light();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(

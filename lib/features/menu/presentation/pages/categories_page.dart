@@ -2,12 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 
-class CategoriesPage extends StatelessWidget {
+class CategoriesPage extends StatefulWidget {
   const CategoriesPage({super.key});
+
+  @override
+  State<CategoriesPage> createState() => _CategoriesPageState();
+}
+
+class _CategoriesPageState extends State<CategoriesPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _staggerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _staggerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _staggerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +54,7 @@ class CategoriesPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
@@ -64,6 +89,7 @@ class _SearchBar extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        HapticUtils.light();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -139,54 +165,102 @@ class _CategoryGrid extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        return _CategoryItemWidget(cat: _categories[index]);
+        return _CategoryItemWidget(
+          cat: _categories[index],
+          index: index,
+        );
       },
     );
   }
 }
 
-class _CategoryItemWidget extends StatelessWidget {
-  const _CategoryItemWidget({required this.cat});
+class _CategoryItemWidget extends StatefulWidget {
+  const _CategoryItemWidget({required this.cat, required this.index});
   final _CategoryItem cat;
+  final int index;
+
+  @override
+  State<_CategoryItemWidget> createState() => _CategoryItemWidgetState();
+}
+
+class _CategoryItemWidgetState extends State<_CategoryItemWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    Future.delayed(Duration(milliseconds: 60 * widget.index), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bool isSale = cat.label == 'Sale';
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ProductListingPage(category: cat.label),
+    final bool isSale = widget.cat.label == 'Sale';
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: GestureDetector(
+          onTap: () {
+            HapticUtils.light();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProductListingPage(category: widget.cat.label),
+              ),
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64.w,
+                height: 64.w,
+                decoration: BoxDecoration(
+                  color: isSale
+                      ? AppColors.accent.withValues(alpha: 0.08)
+                      : colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Icon(
+                  widget.cat.icon,
+                  color: isSale ? AppColors.accent : colorScheme.onSurface,
+                  size: 28.w,
+                ),
+              ),
+              SizedBox(height: 6.h),
+              CustomText(
+                text: widget.cat.label,
+                size: 11,
+                color: isSale ? AppColors.accent : colorScheme.onSurface,
+              ),
+            ],
           ),
-        );
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 64.w,
-            height: 64.w,
-            decoration: BoxDecoration(
-              color: isSale
-                  ? AppColors.accent.withValues(alpha: 0.08)
-                  : colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Icon(
-              cat.icon,
-              color: isSale ? AppColors.accent : colorScheme.onSurface,
-              size: 28.w,
-            ),
-          ),
-          SizedBox(height: 6.h),
-          CustomText(
-            text: cat.label,
-            size: 11,
-            color: isSale ? AppColors.accent : colorScheme.onSurface,
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -207,27 +281,43 @@ class _ShopByList extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
-      children: _items.map((item) {
-        return Container(
-          margin: EdgeInsets.only(bottom: 12.h),
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Row(
-            children: [
-              Icon(item.icon, color: colorScheme.onSurface, size: 22.w),
-              SizedBox(width: 14.w),
-              Expanded(
-                child: CustomText(
-                  text: item.label,
-                  size: 14,
-                  color: colorScheme.onSurface,
-                ),
+      children: _items.asMap().entries.map((entry) {
+        final index = entry.key;
+        final item = entry.value;
+        return TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.0, end: 1.0),
+          duration: Duration(milliseconds: 400 + (index * 80)),
+          curve: Curves.easeOutCubic,
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value,
+              child: Transform.translate(
+                offset: Offset(0, 12 * (1 - value)),
+                child: child,
               ),
-              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20.w),
-            ],
+            );
+          },
+          child: Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              children: [
+                Icon(item.icon, color: colorScheme.onSurface, size: 22.w),
+                SizedBox(width: 14.w),
+                Expanded(
+                  child: CustomText(
+                    text: item.label,
+                    size: 14,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20.w),
+              ],
+            ),
           ),
         );
       }).toList(),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/success_dialog.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
@@ -66,8 +67,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   void _updateDobController(DateTime? date) {
     if (date != null) {
-      _dobController.text =
-          '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+      _dobController.text = DateFormatter.formatDateNumeric(date);
     } else {
       _dobController.clear();
     }

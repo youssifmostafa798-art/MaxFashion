@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 class FavoriteButton extends ConsumerWidget {
   const FavoriteButton({
@@ -22,6 +23,7 @@ class FavoriteButton extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
+        HapticUtils.selection();
         ref.read(wishlistProvider.notifier).toggle(product);
       },
       child: AnimatedSwitcher(

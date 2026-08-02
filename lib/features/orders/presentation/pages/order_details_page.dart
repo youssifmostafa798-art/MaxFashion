@@ -19,6 +19,7 @@ class OrderDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

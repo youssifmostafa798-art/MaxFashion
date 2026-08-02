@@ -228,7 +228,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
     ref.read(ordersProvider.notifier).addOrder(order);
     ref.read(cartProvider.notifier).clear();
-    _showSuccessDialog();
+    _showSuccessDialog(order.orderId);
   }
 
   @override
@@ -635,8 +635,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     );
   }
 
-  void _showSuccessDialog() {
-    final orderId = IdGenerator.generateOrderId();
+  void _showSuccessDialog(String orderId) {
     showDialog(
       barrierDismissible: false,
       context: context,

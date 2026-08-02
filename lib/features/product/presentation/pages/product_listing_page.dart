@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
@@ -55,7 +56,10 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage> {
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            HapticUtils.light();
+            Navigator.pop(context);
+          },
         ),
       ),
       body: products.isEmpty
@@ -84,6 +88,7 @@ class _ProductGrid extends StatelessWidget {
         ),
         Expanded(
           child: GridView.builder(
+            physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: products.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

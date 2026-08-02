@@ -26,32 +26,83 @@ class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
-        return MaterialPageRoute(builder: (_) => const SplashPage());
+        return _buildRoute(const SplashPage(), settings);
       case auth:
-        return MaterialPageRoute(builder: (_) => const AuthPage());
+        return _buildRoute(const AuthPage(), settings);
       case login:
-        return MaterialPageRoute(builder: (_) => const LoginPage());
+        return _buildRoute(const LoginPage(), settings, direction: _SlideDirection.right);
       case signup:
-        return MaterialPageRoute(builder: (_) => const SignupPage());
+        return _buildRoute(const SignupPage(), settings, direction: _SlideDirection.right);
       case main:
         final int tab = (settings.arguments as int?) ?? 0;
-        return MaterialPageRoute(builder: (_) => MainScreen(initialTab: tab));
+        return _buildRoute(MainScreen(initialTab: tab), settings);
       case search:
-        return MaterialPageRoute(builder: (_) => const SearchScreen());
+        return _buildRoute(const SearchScreen(), settings, direction: _SlideDirection.bottom);
       case wishlist:
-        return MaterialPageRoute(builder: (_) => const WishlistPage());
+        return _buildRoute(const WishlistPage(), settings, direction: _SlideDirection.right);
       case productListing:
         final String category = (settings.arguments as String?) ?? '';
-        return MaterialPageRoute(
-          builder: (_) => ProductListingPage(category: category),
+        return _buildRoute(
+          ProductListingPage(category: category),
+          settings,
+          direction: _SlideDirection.right,
         );
       case productDetail:
         final ProductModel product = settings.arguments as ProductModel;
-        return MaterialPageRoute(
-          builder: (_) => ProductDetailPage(product: product),
+        return _buildRoute(
+          ProductDetailPage(product: product),
+          settings,
+          direction: _SlideDirection.right,
         );
       default:
-        return MaterialPageRoute(builder: (_) => const SplashPage());
+        return _buildRoute(const SplashPage(), settings);
     }
   }
+
+  static Route<dynamic> _buildRoute(
+    Widget page,
+    RouteSettings settings, {
+    _SlideDirection direction = _SlideDirection.right,
+  }) {
+    return PageRouteBuilder(
+      settings: settings,
+      transitionDuration: const Duration(milliseconds: 320),
+      reverseTransitionDuration: const Duration(milliseconds: 280),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+          reverseCurve: Curves.easeInCubic,
+        );
+
+        switch (direction) {
+          case _SlideDirection.right:
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.06, 0.0),
+                end: Offset.zero,
+              ).animate(curved),
+              child: FadeTransition(
+                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curved),
+                child: child,
+              ),
+            );
+          case _SlideDirection.bottom:
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.03),
+                end: Offset.zero,
+              ).animate(curved),
+              child: FadeTransition(
+                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curved),
+                child: child,
+              ),
+            );
+        }
+      },
+    );
+  }
 }
+
+enum _SlideDirection { right, bottom }

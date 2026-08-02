@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 class ActionChipWidget extends StatelessWidget {
   const ActionChipWidget({
@@ -22,7 +23,10 @@ class ActionChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        HapticUtils.light();
+        onTap();
+      },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
         decoration: BoxDecoration(

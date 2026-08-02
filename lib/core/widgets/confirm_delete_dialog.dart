@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/utils/haptic_utils.dart';
 
 void showConfirmDeleteDialog({
   required BuildContext context,
@@ -9,9 +10,25 @@ void showConfirmDeleteDialog({
   required VoidCallback onDelete,
 }) {
   final colorScheme = Theme.of(context).colorScheme;
-  showDialog(
+  showGeneralDialog(
     context: context,
-    builder: (context) {
+    barrierDismissible: true,
+    barrierLabel: title,
+    transitionDuration: const Duration(milliseconds: 250),
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
+      return ScaleTransition(
+        scale: Tween<double>(begin: 0.9, end: 1.0).animate(curvedAnimation),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+          child: child,
+        ),
+      );
+    },
+    pageBuilder: (context, animation, secondaryAnimation) {
       return Dialog(
         child: Container(
           padding: EdgeInsets.all(20.w),
@@ -51,7 +68,10 @@ void showConfirmDeleteDialog({
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () {
+                        HapticUtils.light();
+                        Navigator.pop(context);
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         decoration: BoxDecoration(
@@ -75,6 +95,7 @@ void showConfirmDeleteDialog({
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
+                        HapticUtils.medium();
                         onDelete();
                         Navigator.pop(context);
                       },
