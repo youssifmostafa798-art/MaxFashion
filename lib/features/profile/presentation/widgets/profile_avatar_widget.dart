@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class ProfileAvatar extends StatelessWidget {
   const ProfileAvatar({
@@ -92,7 +92,7 @@ class ProfileAvatar extends StatelessWidget {
 
   Widget _buildPlaceholder(ColorScheme colorScheme) {
     return Center(
-      child: CustemText(
+      child: CustomText(
         text: 'Photo',
         size: 14,
         color: colorScheme.onSurfaceVariant,

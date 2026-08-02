@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class HighlightedText extends StatelessWidget {
   const HighlightedText({
@@ -29,7 +29,7 @@ class HighlightedText extends StatelessWidget {
     final effectiveHighlight = highlightColor ?? colorScheme.onSurface;
 
     if (query.trim().isEmpty) {
-      return CustemText(
+      return CustomText(
         text: text,
         size: size,
         color: effectiveColor,

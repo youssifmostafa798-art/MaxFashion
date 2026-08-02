@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/data/models/order_model.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/orders/presentation/widgets/order_status_chip.dart';
 
 class OrderCard extends StatelessWidget {
@@ -34,14 +34,14 @@ class OrderCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustemText(
+                      CustomText(
                         text: 'Order #${order.orderId}',
                         size: 15,
                         weight: FontWeight.w600,
                         color: colorScheme.onSurface,
                       ),
                       SizedBox(height: 4.h),
-                      CustemText(
+                      CustomText(
                         text: DateFormatter.formatDate(order.orderDate),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
@@ -61,13 +61,13 @@ class OrderCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustemText(
+                    CustomText(
                       text: '${order.itemCount} item${order.itemCount > 1 ? 's' : ''}',
                       size: 13,
                       color: colorScheme.onSurfaceVariant,
                     ),
                     SizedBox(height: 2.h),
-                    CustemText(
+                    CustomText(
                       text: '\$${order.totalPrice.toStringAsFixed(2)}',
                       size: 16,
                       weight: FontWeight.w700,
@@ -83,7 +83,7 @@ class OrderCard extends StatelessWidget {
                       color: colorScheme.onSurface,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    child: CustemText(
+                    child: CustomText(
                       text: 'VIEW DETAILS',
                       size: 12,
                       color: colorScheme.surface,

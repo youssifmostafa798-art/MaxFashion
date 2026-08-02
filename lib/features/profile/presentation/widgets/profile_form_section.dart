@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/utils/list_extensions.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class ProfileFormSection extends StatelessWidget {
   const ProfileFormSection({
@@ -20,7 +21,7 @@ class ProfileFormSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustemText(
+        CustomText(
           text: title,
           size: 12,
           color: colorScheme.onSurfaceVariant,
@@ -69,7 +70,7 @@ class ProfileFormField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) ...[
-          CustemText(
+          CustomText(
             text: label!,
             size: 12,
             color: colorScheme.onSurfaceVariant,
@@ -165,7 +166,7 @@ class ProfileFormDropdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) ...[
-          CustemText(
+          CustomText(
             text: label!,
             size: 12,
             color: colorScheme.onSurfaceVariant,
@@ -216,19 +217,5 @@ class ProfileFormDropdown extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-extension _ListExtensions<T> on List<T> {
-  List<T> intersperse(T separator) {
-    if (length <= 1) return this;
-    final result = <T>[];
-    for (var i = 0; i < length; i++) {
-      result.add(this[i]);
-      if (i < length - 1) {
-        result.add(separator);
-      }
-    }
-    return result;
   }
 }

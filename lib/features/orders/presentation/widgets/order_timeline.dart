@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/data/models/order_model.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class OrderTimeline extends StatelessWidget {
   const OrderTimeline({super.key, required this.order});
@@ -17,7 +17,7 @@ class OrderTimeline extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustemText(
+        CustomText(
           text: 'ORDER TIMELINE',
           size: 12,
           spacing: 2,
@@ -73,7 +73,7 @@ class OrderTimeline extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustemText(
+                      CustomText(
                         text: step['title'] as String,
                         size: 14,
                         weight: FontWeight.w600,
@@ -83,7 +83,7 @@ class OrderTimeline extends StatelessWidget {
                       ),
                       if (step['date'] != null) ...[
                         SizedBox(height: 2.h),
-                        CustemText(
+                        CustomText(
                           text: DateFormatter.formatDateTime(step['date'] as DateTime),
                           size: 12,
                           color: colorScheme.onSurfaceVariant,

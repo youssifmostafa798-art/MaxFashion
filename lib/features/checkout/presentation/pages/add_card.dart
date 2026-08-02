@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/header.dart';
 
 class AddCard extends StatefulWidget {
@@ -27,7 +27,7 @@ class _AddCardState extends State<AddCard> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: const CustemAppbar(),
+        appBar: const CustomAppbar(),
 
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0.w),
@@ -59,8 +59,8 @@ class _AddCardState extends State<AddCard> {
 
                 Gap(90.h),
 
-                Button(
-                  isSvgg: true,
+                CustomButton(
+                  isSvg: true,
                   title: "Add Card".toUpperCase(),
                   onTap: () {
                     if (key.currentState!.validate()) {

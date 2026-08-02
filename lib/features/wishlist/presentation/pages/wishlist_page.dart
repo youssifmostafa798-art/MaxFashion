@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
@@ -41,7 +41,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
           backgroundColor: colorScheme.surface,
           elevation: 0,
           centerTitle: true,
-          title: CustemText(
+          title: CustomText(
             text: 'WISHLIST',
             size: 18,
             color: colorScheme.onSurface,
@@ -60,7 +60,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: CustomText(
           text: 'WISHLIST',
           size: 18,
           color: colorScheme.onSurface,
@@ -107,7 +107,7 @@ class _WishlistContent extends ConsumerWidget {
             final colorScheme = Theme.of(context).colorScheme;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: CustemText(
+                content: CustomText(
                   text: '${product.name} added to cart',
                   size: 14,
                   color: colorScheme.surface,
@@ -148,14 +148,14 @@ class _EmptyWishlist extends StatelessWidget {
         children: [
           Icon(Icons.favorite_border, size: 80.w, color: colorScheme.outline),
           SizedBox(height: 20.h),
-          CustemText(
+          CustomText(
             text: 'Your wishlist is empty',
             size: 18,
             weight: FontWeight.w600,
             color: colorScheme.onSurface,
           ),
           SizedBox(height: 8.h),
-          CustemText(
+          CustomText(
             text: 'Save your favorite products here.',
             size: 14,
             color: colorScheme.onSurfaceVariant,
@@ -177,7 +177,7 @@ class _EmptyWishlist extends StatelessWidget {
                 color: colorScheme.onSurface,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: CustemText(
+              child: CustomText(
                 text: 'CONTINUE SHOPPING',
                 size: 14,
                 color: colorScheme.surface,

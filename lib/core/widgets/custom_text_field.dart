@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustemTextField extends StatelessWidget {
+class CustomTextField extends StatelessWidget {
   final String hint;
   final TextEditingController? controller;
 
-  const CustemTextField({super.key, required this.hint, this.controller});
+  const CustomTextField({super.key, required this.hint, this.controller});
 
   @override
   Widget build(BuildContext context) {

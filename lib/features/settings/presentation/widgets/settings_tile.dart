@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class SettingsTile extends StatelessWidget {
   const SettingsTile({
@@ -51,14 +51,14 @@ class SettingsTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustemText(
+                  CustomText(
                     text: title,
                     size: 14,
                     color: textColor,
                   ),
                   if (subtitle != null) ...[
                     SizedBox(height: 2.h),
-                    CustemText(
+                    CustomText(
                       text: subtitle!,
                       size: 11,
                       color: colorScheme.onSurfaceVariant,
@@ -116,14 +116,14 @@ class SettingsTileSwitch extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustemText(
+                CustomText(
                   text: title,
                   size: 14,
                   color: colorScheme.onSurface,
                 ),
                 if (subtitle != null) ...[
                   SizedBox(height: 2.h),
-                  CustemText(
+                  CustomText(
                     text: subtitle!,
                     size: 11,
                     color: colorScheme.onSurfaceVariant,

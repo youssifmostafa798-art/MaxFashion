@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/features/checkout/presentation/widgets/card_widget.dart';
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/features/checkout/presentation/widgets/promo_section.dart';
 import 'package:max/features/checkout/presentation/widgets/added_to_cart_dialog.dart';
@@ -38,13 +38,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        appBar: const CustemAppbar(showSearchBar: false),
+        appBar: const CustomAppbar(showSearchBar: false),
         body: const ProductDetailSkeleton(),
       );
     }
 
     return Scaffold(
-      appBar: const CustemAppbar(showSearchBar: false),
+      appBar: const CustomAppbar(showSearchBar: false),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.0.w),
         child: SingleChildScrollView(
@@ -69,20 +69,20 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustemText(
+                  CustomText(
                     text: "Est. Total",
                     color: Theme.of(context).colorScheme.onSurface,
                     spacing: 3,
                   ),
-                  CustemText(
+                  CustomText(
                     text: "\$ ${widget.product.price * selectedQty}",
                     color: Colors.red.shade200,
                   ),
                 ],
               ),
               Gap(15.h),
-              Button(
-                isSvgg: true,
+              CustomButton(
+                isSvg: true,
                 title: "Add to cart",
                 onTap: () {
                   final productId = CartItemModel.generateProductId(

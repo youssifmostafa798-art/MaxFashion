@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/cover_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
@@ -41,7 +41,7 @@ class _HomeState extends ConsumerState<Home> {
     }
 
     return Scaffold(
-      appBar: CustemAppbar(showBackButton: false, showSearchBar: true),
+      appBar: CustomAppbar(showBackButton: false, showSearchBar: true),
       body: Stack(
         children: [
           Positioned(
@@ -77,7 +77,7 @@ class _HomeState extends ConsumerState<Home> {
                         colorScheme: colorScheme,
                       ),
                       Gap(5.h),
-                      CustemText(
+                      CustomText(
                         text: "You may also like".toUpperCase(),
                         size: 20,
                       ),
@@ -102,7 +102,7 @@ class _HomeState extends ConsumerState<Home> {
                                     fit: BoxFit.cover,
                                   ),
                                   Gap(10.h),
-                                  CustemText(text: item.name.toUpperCase()),
+                                  CustomText(text: item.name.toUpperCase()),
                                 ],
                               ),
                             );
@@ -120,7 +120,7 @@ class _HomeState extends ConsumerState<Home> {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: 15.h, top: 10.h),
                     child: Center(
-                      child: CustemText(
+                      child: CustomText(
                         height: 2.5,
                         text: "Copyright© OpenUI All Rights Reserved.",
                         color: colorScheme.onSurfaceVariant,
@@ -188,7 +188,7 @@ Widget about(BuildContext context) {
       Gap(20.h),
       Image.asset("assets/svgs/line.png", width: 190.w),
       Gap(20.h),
-      CustemText(
+      CustomText(
         height: 2.5,
         text:
             "youssifmostafa798@gmail.com \n       +201553178468\n17:00 - 22:00 - Everyday",
@@ -196,7 +196,7 @@ Widget about(BuildContext context) {
       Gap(20.h),
       Image.asset("assets/svgs/line.png", width: 190.w),
       Gap(20.h),
-      CustemText(height: 2.5, text: "About   Contact    Blog"),
+      CustomText(height: 2.5, text: "About   Contact    Blog"),
     ],
   );
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 
 class Header extends StatelessWidget {
@@ -16,7 +16,7 @@ class Header extends StatelessWidget {
       children: [
         Gap(20.h),
         Center(
-          child: CustemText(
+          child: CustomText(
             text: title.toUpperCase(),
             color: colorScheme.onSurface,
             size: 18,

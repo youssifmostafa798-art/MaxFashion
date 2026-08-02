@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 
 class EmptyOrdersWidget extends StatelessWidget {
@@ -22,14 +22,14 @@ class EmptyOrdersWidget extends StatelessWidget {
               color: colorScheme.outline,
             ),
             SizedBox(height: 24.h),
-            CustemText(
+            CustomText(
               text: "You haven't placed any orders yet",
               size: 18,
               weight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
             SizedBox(height: 10.h),
-            CustemText(
+            CustomText(
               text: 'Your completed purchases will appear here.',
               size: 14,
               color: colorScheme.onSurfaceVariant,
@@ -50,7 +50,7 @@ class EmptyOrdersWidget extends StatelessWidget {
                   color: colorScheme.onSurface,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: CustemText(
+                child: CustomText(
                   text: 'CONTINUE SHOPPING',
                   size: 14,
                   color: colorScheme.surface,

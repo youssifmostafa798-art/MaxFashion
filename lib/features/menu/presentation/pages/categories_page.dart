@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
@@ -20,7 +20,7 @@ class CategoriesPage extends StatelessWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: CustomText(
           text: 'MENU',
           size: 18,
           color: colorScheme.onSurface,
@@ -86,7 +86,7 @@ class _SearchBar extends StatelessWidget {
               child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
             ),
             SizedBox(width: 10.w),
-            CustemText(
+            CustomText(
               text: 'Search categories...',
               size: 14,
               color: colorScheme.onSurfaceVariant,
@@ -104,7 +104,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustemText(
+    return CustomText(
       text: title,
       size: 14,
       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -181,7 +181,7 @@ class _CategoryItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 6.h),
-          CustemText(
+          CustomText(
             text: cat.label,
             size: 11,
             color: isSale ? AppColors.accent : colorScheme.onSurface,
@@ -220,7 +220,7 @@ class _ShopByList extends StatelessWidget {
               Icon(item.icon, color: colorScheme.onSurface, size: 22.w),
               SizedBox(width: 14.w),
               Expanded(
-                child: CustemText(
+                child: CustomText(
                   text: item.label,
                   size: 14,
                   color: colorScheme.onSurface,

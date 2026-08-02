@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/action_chip_widget.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/address_model.dart';
 
 class AddressCard extends StatelessWidget {
@@ -48,7 +49,7 @@ class AddressCard extends StatelessWidget {
                       : colorScheme.outline,
                   borderRadius: BorderRadius.circular(20.r),
                 ),
-                child: CustemText(
+                child: CustomText(
                   text: address.label.toUpperCase(),
                   size: 10,
                   color: address.isDefault
@@ -68,7 +69,7 @@ class AddressCard extends StatelessWidget {
                     color: colorScheme.onSurface,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
-                  child: CustemText(
+                  child: CustomText(
                     text: 'DEFAULT',
                     size: 10,
                     color: colorScheme.surface,
@@ -78,7 +79,7 @@ class AddressCard extends StatelessWidget {
             ],
           ),
           Gap(10.h),
-          CustemText(
+          CustomText(
             text: address.street,
             size: 14,
             weight: FontWeight.w600,
@@ -86,19 +87,19 @@ class AddressCard extends StatelessWidget {
           ),
           if (address.apartment != null && address.apartment!.isNotEmpty) ...[
             Gap(2.h),
-            CustemText(
+            CustomText(
               text: address.apartment!,
               size: 13,
               color: colorScheme.onSurfaceVariant,
             ),
           ],
           Gap(4.h),
-          CustemText(
+          CustomText(
             text: '${address.city}, ${address.state} ${address.zip}',
             size: 13,
             color: colorScheme.onSurfaceVariant,
           ),
-          CustemText(
+          CustomText(
             text: address.country,
             size: 13,
             color: colorScheme.onSurfaceVariant,
@@ -106,14 +107,14 @@ class AddressCard extends StatelessWidget {
           Gap(12.h),
           Row(
             children: [
-              _ActionChip(
+              ActionChipWidget(
                 icon: Icons.edit_outlined,
                 label: 'Edit',
                 onTap: onEdit,
                 colorScheme: colorScheme,
               ),
               Gap(8.w),
-              _ActionChip(
+              ActionChipWidget(
                 icon: Icons.delete_outline,
                 label: 'Delete',
                 onTap: onDelete,
@@ -124,7 +125,7 @@ class AddressCard extends StatelessWidget {
               if (!address.isDefault)
                 GestureDetector(
                   onTap: onSetDefault,
-                  child: CustemText(
+                  child: CustomText(
                     text: 'Set Default',
                     size: 12,
                     color: colorScheme.onSurface,
@@ -133,53 +134,6 @@ class AddressCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ActionChip extends StatelessWidget {
-  const _ActionChip({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    required this.colorScheme,
-    this.isDestructive = false,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final ColorScheme colorScheme;
-  final bool isDestructive;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-        decoration: BoxDecoration(
-          color: colorScheme.surface,
-          borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(color: colorScheme.outline),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 14.w,
-              color: isDestructive ? Colors.red.shade300 : colorScheme.onSurface,
-            ),
-            Gap(4.w),
-            CustemText(
-              text: label,
-              size: 12,
-              color: isDestructive ? Colors.red.shade300 : colorScheme.onSurface,
-            ),
-          ],
-        ),
       ),
     );
   }

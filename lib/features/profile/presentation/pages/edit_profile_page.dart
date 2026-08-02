@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:max/features/profile/presentation/widgets/profile_avatar_widget.dart';
 import 'package:max/features/profile/presentation/widgets/profile_form_section.dart';
@@ -160,7 +160,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               }
             },
           ),
-          title: CustemText(
+          title: CustomText(
             text: 'EDIT PROFILE',
             size: 18,
             color: colorScheme.onSurface,
@@ -323,7 +323,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     color: colorScheme.surface,
                   ),
                 )
-              : CustemText(
+              : CustomText(
                   text: 'SAVE CHANGES',
                   size: 15,
                   color: colorScheme.surface,
@@ -345,7 +345,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           border: Border.all(color: colorScheme.outline),
         ),
         child: Center(
-          child: CustemText(
+          child: CustomText(
             text: 'CANCEL',
             size: 15,
             color: colorScheme.onSurface,

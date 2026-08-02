@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class CartItemCard extends StatelessWidget {
   const CartItemCard({
@@ -61,7 +61,7 @@ class CartItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: CustemText(
+                      child: CustomText(
                         text: title.toUpperCase(),
                         size: 13,
                         color: colorScheme.onSurface,
@@ -79,7 +79,7 @@ class CartItemCard extends StatelessWidget {
                   ],
                 ),
                 Gap(6.h),
-                CustemText(
+                CustomText(
                   text: '\$${price.toStringAsFixed(2)}',
                   size: 15,
                   weight: FontWeight.w600,
@@ -100,7 +100,7 @@ class CartItemCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 4.w),
-                        CustemText(
+                        CustomText(
                           text: selectedColor!,
                           size: 12,
                           color: colorScheme.onSurfaceVariant,
@@ -109,10 +109,10 @@ class CartItemCard extends StatelessWidget {
                       if (selectedColor != null && selectedSize != null)
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.w),
-                          child: CustemText(text: '|', size: 12, color: colorScheme.onSurfaceVariant),
+                          child: CustomText(text: '|', size: 12, color: colorScheme.onSurfaceVariant),
                         ),
                       if (selectedSize != null)
-                        CustemText(
+                        CustomText(
                           text: 'Size: $selectedSize',
                           size: 12,
                           color: colorScheme.onSurfaceVariant,
@@ -130,7 +130,7 @@ class CartItemCard extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
-                      child: CustemText(
+                      child: CustomText(
                         text: quantity.toString(),
                         size: 14,
                         weight: FontWeight.w600,

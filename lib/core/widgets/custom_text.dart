@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustemText extends StatelessWidget {
-  const CustemText({
+class CustomText extends StatelessWidget {
+  const CustomText({
     super.key,
     required this.text,
     this.size = 16,

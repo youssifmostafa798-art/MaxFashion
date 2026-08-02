@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/utils/form_validators.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_text_field.dart';
@@ -114,17 +115,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   controller: _emailController,
                   hint: 'Email',
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(
-                      r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value.trim())) {
-                      return 'Invalid email address';
-                    }
-                    return null;
-                  },
+                  validator: FormValidators.validateEmail,
                 ),
                 SizedBox(height: 16.h),
                 CustomAuthTextField(
@@ -150,15 +141,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   controller: _passwordController,
                   hint: 'Password',
                   isPassword: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
+                  validator: FormValidators.validatePassword,
                 ),
                 SizedBox(height: 16.h),
                 CustomAuthTextField(

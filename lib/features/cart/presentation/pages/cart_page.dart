@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/cart/presentation/widgets/cart_item_card.dart';
 import 'package:max/data/providers/cart_provider.dart';
 
-import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 
@@ -25,7 +25,7 @@ class CartPage extends ConsumerWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: CustomText(
           text: 'MY BAG',
           size: 18,
           color: colorScheme.onSurface,
@@ -104,9 +104,9 @@ class _CartBottomSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustemText(
+              CustomText(
                   text: 'Subtotal', size: 14, color: colorScheme.onSurfaceVariant),
-              CustemText(
+              CustomText(
                 text: '\$${subtotal.toStringAsFixed(2)}',
                 size: 14,
                 color: colorScheme.onSurface,
@@ -117,9 +117,9 @@ class _CartBottomSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustemText(
+              CustomText(
                   text: 'Delivery', size: 14, color: colorScheme.onSurfaceVariant),
-              const CustemText(text: 'Free', size: 14, color: AppColors.accent),
+              const CustomText(text: 'Free', size: 14, color: AppColors.accent),
             ],
           ),
           SizedBox(height: 12.h),
@@ -128,13 +128,13 @@ class _CartBottomSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustemText(
+              CustomText(
                 text: 'Est. Total',
                 size: 16,
                 weight: FontWeight.w700,
                 color: colorScheme.onSurface,
               ),
-              CustemText(
+              CustomText(
                 text: '\$${total.toStringAsFixed(2)}',
                 size: 16,
                 weight: FontWeight.w700,
@@ -143,8 +143,8 @@ class _CartBottomSection extends ConsumerWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          Button(
-            isSvgg: true,
+          CustomButton(
+            isSvg: true,
             title: "Checkout",
             onTap: cartItems.isEmpty
                 ? null
@@ -182,13 +182,13 @@ class _EmptyCart extends StatelessWidget {
             color: colorScheme.outline,
           ),
           SizedBox(height: 20.h),
-          CustemText(
+          CustomText(
             text: 'Your bag is empty',
             size: 18,
             color: colorScheme.onSurfaceVariant,
           ),
           SizedBox(height: 8.h),
-          CustemText(
+          CustomText(
             text: 'Add items to get started',
             size: 14,
             color: colorScheme.onSurfaceVariant,
@@ -209,7 +209,7 @@ class _EmptyCart extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: CustemText(
+              child: CustomText(
                 text: 'START SHOPPING',
                 size: 14,
                 color: Theme.of(context).colorScheme.surface,

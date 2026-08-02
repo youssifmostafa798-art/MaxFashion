@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
-class Button extends StatelessWidget {
-  const Button({
+class CustomButton extends StatelessWidget {
+  const CustomButton({
     super.key,
-    required this.isSvgg,
+    required this.isSvg,
     required this.title,
     required this.onTap,
   });
-  final bool isSvgg;
+  final bool isSvg;
   final String title;
   final Function()? onTap;
 
@@ -32,7 +32,7 @@ class Button extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (isSvgg)
+              if (isSvg)
                 SvgPicture.asset(
                   "assets/svgs/shopping bag.svg",
                   width: 20.w,
@@ -42,7 +42,7 @@ class Button extends StatelessWidget {
                   ),
                 ),
               Gap(10.w),
-              CustemText(text: title.toUpperCase(), size: 15, color: colorScheme.surface),
+              CustomText(text: title.toUpperCase(), size: 15, color: colorScheme.surface),
             ],
           ),
         ),

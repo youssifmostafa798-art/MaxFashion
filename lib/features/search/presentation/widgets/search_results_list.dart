@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/search/presentation/widgets/highlighted_text.dart';
@@ -89,13 +89,13 @@ class _SearchResultCard extends StatelessWidget {
                     weight: FontWeight.w600,
                   ),
                   Gap(4.h),
-                  CustemText(
+                  CustomText(
                     text: product.category,
                     size: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),
                   Gap(4.h),
-                  CustemText(
+                  CustomText(
                     text: '\$${product.price.toStringAsFixed(2)}',
                     size: 15,
                     weight: FontWeight.w600,
@@ -140,7 +140,7 @@ class _EmptyState extends StatelessWidget {
               ),
             ),
             Gap(24.h),
-            CustemText(
+            CustomText(
               text: 'No Results Found',
               size: 18,
               color: colorScheme.onSurface,
@@ -148,7 +148,7 @@ class _EmptyState extends StatelessWidget {
               spacing: 2,
             ),
             Gap(8.h),
-            CustemText(
+            CustomText(
               text: 'Try another keyword',
               size: 14,
               color: colorScheme.onSurfaceVariant,

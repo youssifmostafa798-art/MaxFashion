@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
@@ -30,7 +30,7 @@ class RecentSearchesSection extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustemText(
+              CustomText(
                 text: 'RECENT SEARCHES',
                 size: 12,
                 color: colorScheme.onSurfaceVariant,
@@ -38,7 +38,7 @@ class RecentSearchesSection extends ConsumerWidget {
               ),
               GestureDetector(
                 onTap: () => ref.read(searchProvider.notifier).clearRecentSearches(),
-                child: CustemText(
+                child: CustomText(
                   text: 'Clear all',
                   size: 12,
                   color: colorScheme.onSurfaceVariant,
@@ -71,7 +71,7 @@ class RecentSearchesSection extends ConsumerWidget {
                     children: [
                       Icon(Icons.history, size: 14.w, color: colorScheme.onSurfaceVariant),
                       SizedBox(width: 6.w),
-                      CustemText(
+                      CustomText(
                         text: query,
                         size: 12,
                         color: colorScheme.onSurface,
@@ -108,7 +108,7 @@ class SuggestedProductsSection extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: CustemText(
+          child: CustomText(
             text: 'SUGGESTED FOR YOU',
             size: 12,
             color: colorScheme.onSurfaceVariant,
@@ -161,7 +161,7 @@ class SuggestedProductsSection extends StatelessWidget {
                         ],
                       ),
                       Gap(6.h),
-                      CustemText(
+                      CustomText(
                         text: product.name.replaceAll('\n', ' '),
                         size: 11,
                         color: colorScheme.onSurface,
@@ -190,7 +190,7 @@ class PopularCategoriesSection extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: CustemText(
+          child: CustomText(
             text: 'POPULAR CATEGORIES',
             size: 12,
             color: colorScheme.onSurfaceVariant,
@@ -233,7 +233,7 @@ class PopularCategoriesSection extends StatelessWidget {
                       ),
                     ),
                     Gap(6.h),
-                    CustemText(
+                    CustomText(
                       text: cat.name,
                       size: 11,
                       color: colorScheme.onSurface,

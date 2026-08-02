@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/router/app_router.dart';
 
 void showAddedToCartDialog(BuildContext context) {
@@ -28,7 +28,7 @@ void showAddedToCartDialog(BuildContext context) {
                   ),
                 ),
                 Gap(20.h),
-                CustemText(
+                CustomText(
                   text: "ADDED TO CART",
                   spacing: 2,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -37,13 +37,13 @@ void showAddedToCartDialog(BuildContext context) {
                 Gap(40.h),
                 SvgPicture.asset("assets/pop/done.svg"),
                 Gap(40.h),
-                CustemText(
+                CustomText(
                   text: "Item added to your\ncart successfully",
                   size: 18,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(20.h),
-                CustemText(
+                CustomText(
                   text: "You can review your cart \nor continue shopping.",
                   size: 18,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -56,7 +56,7 @@ void showAddedToCartDialog(BuildContext context) {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(40.h),
-                CustemText(
+                CustomText(
                   text: "Ready to checkout?",
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -64,8 +64,8 @@ void showAddedToCartDialog(BuildContext context) {
                 Row(
                   children: [
                     Expanded(
-                      child: Button(
-                        isSvgg: false,
+                      child: CustomButton(
+                        isSvg: false,
                         title: "View\nCart",
                         onTap: () {
                           Navigator.pop(context);
@@ -79,8 +79,8 @@ void showAddedToCartDialog(BuildContext context) {
                     ),
                     Gap(20.w),
                     Expanded(
-                      child: Button(
-                        isSvgg: false,
+                      child: CustomButton(
+                        isSvg: false,
                         title: "Shop\nMore",
                         onTap: () {
                           Navigator.pop(context);

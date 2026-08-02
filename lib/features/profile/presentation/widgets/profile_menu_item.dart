@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class ProfileMenuItem extends StatelessWidget {
   const ProfileMenuItem({
@@ -44,14 +44,14 @@ class ProfileMenuItem extends StatelessWidget {
             Icon(icon, color: iconColor, size: 22.w),
             SizedBox(width: 14.w),
             Expanded(
-              child: CustemText(
+              child: CustomText(
                 text: title,
                 size: 14,
                 color: textColor,
               ),
             ),
             if (trailing != null)
-              CustemText(
+              CustomText(
                 text: trailing!,
                 size: 13,
                 color: colorScheme.onSurfaceVariant,

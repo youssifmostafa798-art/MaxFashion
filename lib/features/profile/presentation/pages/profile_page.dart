@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -36,7 +36,7 @@ class ProfilePage extends ConsumerWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: CustomText(
           text: 'YOU',
           size: 18,
           color: colorScheme.onSurface,
@@ -128,28 +128,28 @@ class _ProfileHeader extends StatelessWidget {
                   : Icon(Icons.person, size: 44.w, color: colorScheme.surface),
             ),
             SizedBox(height: 14.h),
-            CustemText(
+            CustomText(
               text: displayName,
               size: 18,
               weight: FontWeight.w700,
               color: colorScheme.onSurface,
             ),
             SizedBox(height: 4.h),
-            CustemText(
+            CustomText(
               text: displayEmail,
               size: 13,
               color: colorScheme.onSurfaceVariant,
             ),
             if (displayPhone.isNotEmpty) ...[
               SizedBox(height: 4.h),
-              CustemText(
+              CustomText(
                 text: displayPhone,
                 size: 13,
                 color: colorScheme.onSurfaceVariant,
               ),
             ],
             SizedBox(height: 4.h),
-            CustemText(
+            CustomText(
               text: _getMemberSinceText(),
               size: 12,
               color: colorScheme.onSurfaceVariant,
@@ -175,7 +175,7 @@ class _MenuSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustemText(
+        CustomText(
           text: 'ACCOUNT',
           size: 12,
           color: colorScheme.onSurfaceVariant,

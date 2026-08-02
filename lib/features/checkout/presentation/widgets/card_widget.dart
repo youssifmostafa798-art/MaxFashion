@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/product_model.dart';
 
 class CardWidget extends StatefulWidget {
@@ -53,7 +53,7 @@ class _CardWidgetState extends State<CardWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Gap(8.h),
-            CustemText(
+            CustomText(
               text: widget.products.name.toUpperCase(),
               spacing: 5,
               color: colorScheme.onSurface,
@@ -61,14 +61,14 @@ class _CardWidgetState extends State<CardWidget> {
             Gap(10.h),
             SizedBox(
               width: 200.w,
-              child: CustemText(
-                text: widget.products.descrp,
+              child: CustomText(
+                text: widget.products.description,
                 size: 15,
                 color: colorScheme.onSurface,
               ),
             ),
             Gap(15.h),
-            CustemText(
+            CustomText(
               text: "\$ ${widget.products.price}",
               size: 16,
               weight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _CardWidgetState extends State<CardWidget> {
                     },
                   ),
                   Gap(15.w),
-                  CustemText(
+                  CustomText(
                     text: number.toString(),
                     size: 15,
                     weight: FontWeight.bold,

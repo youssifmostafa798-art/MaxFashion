@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
-import 'package:max/core/widgets/custem_text.dart';
-import 'package:max/core/widgets/custem_text_field.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/custom_text_field.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/data/models/address_model.dart';
 
@@ -65,7 +65,7 @@ class _AddAddressState extends State<AddAddress> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustemAppbar(),
+      appBar: const CustomAppbar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.0.w),
@@ -78,7 +78,7 @@ class _AddAddressState extends State<AddAddress> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Gap(20.h),
-                    CustemText(
+                    CustomText(
                       text: 'ADDRESS LABEL',
                       size: 12,
                       color: colorScheme.onSurfaceVariant,
@@ -124,17 +124,17 @@ class _AddAddressState extends State<AddAddress> {
                       }).toList(),
                     ),
                     Gap(30.h),
-                    CustemTextField(
+                    CustomTextField(
                       hint: "Street Address",
                       controller: streetController,
                     ),
                     Gap(30.h),
-                    CustemTextField(
+                    CustomTextField(
                       hint: "Apartment, Suite, etc. (optional)",
                       controller: apartmentController,
                     ),
                     Gap(30.h),
-                    CustemTextField(
+                    CustomTextField(
                       hint: "City",
                       controller: cityController,
                     ),
@@ -142,14 +142,14 @@ class _AddAddressState extends State<AddAddress> {
                     Row(
                       children: [
                         Expanded(
-                          child: CustemTextField(
+                          child: CustomTextField(
                             hint: "State",
                             controller: stateController,
                           ),
                         ),
                         Gap(30.w),
                         Expanded(
-                          child: CustemTextField(
+                          child: CustomTextField(
                             hint: "ZIP Code",
                             controller: zipController,
                           ),
@@ -157,7 +157,7 @@ class _AddAddressState extends State<AddAddress> {
                       ],
                     ),
                     Gap(30.h),
-                    CustemTextField(
+                    CustomTextField(
                       hint: "Country",
                       controller: countryController,
                     ),
@@ -165,8 +165,8 @@ class _AddAddressState extends State<AddAddress> {
                 ),
               ),
               Gap(60.h),
-              Button(
-                isSvgg: false,
+              CustomButton(
+                isSvg: false,
                 title: (widget.isEditing ? "Update" : "Add now").toUpperCase(),
                 onTap: () {
                   if (!_formkey.currentState!.validate()) return;

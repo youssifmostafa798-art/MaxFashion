@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class PromoSection extends StatelessWidget {
   const PromoSection({super.key});
@@ -24,7 +24,7 @@ class PromoSection extends StatelessWidget {
               colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
             ),
             Gap(20.w),
-            CustemText(text: "ADD Promo Code", color: colorScheme.onSurface),
+            CustomText(text: "ADD Promo Code", color: colorScheme.onSurface),
           ],
         ),
         Gap(20.h),
@@ -38,9 +38,9 @@ class PromoSection extends StatelessWidget {
               colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
             ),
             Gap(20.w),
-            CustemText(text: "Delivery", color: colorScheme.onSurface),
+            CustomText(text: "Delivery", color: colorScheme.onSurface),
             const Spacer(),
-            CustemText(text: "FREE", color: colorScheme.onSurface),
+            CustomText(text: "FREE", color: colorScheme.onSurface),
             Gap(5.w),
           ],
         ),

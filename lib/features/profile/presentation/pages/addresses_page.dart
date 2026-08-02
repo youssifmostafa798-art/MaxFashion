@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
+import 'package:max/core/widgets/confirm_delete_dialog.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/data/models/address_model.dart';
 import 'package:max/data/providers/address_provider.dart';
@@ -40,104 +41,12 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
   }
 
   void _deleteAddress(AddressModel address) {
-    showDialog(
+    showConfirmDeleteDialog(
       context: context,
-      builder: (context) {
-        final colorScheme = Theme.of(context).colorScheme;
-        return Dialog(
-          child: Container(
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Gap(10.h),
-                Text(
-                  '\ud83d\uddd1\ufe0f',
-                  style: TextStyle(fontSize: 40.w),
-                ),
-                Gap(16.h),
-                Text(
-                  'Delete Address?',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w700,
-                    color: colorScheme.onSurface,
-                    fontFamily: 'Tenor_Sans',
-                  ),
-                ),
-                Gap(8.h),
-                Text(
-                  'This action cannot be undone.',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: colorScheme.onSurfaceVariant,
-                    fontFamily: 'Tenor_Sans',
-                  ),
-                ),
-                Gap(24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'CANCEL',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: colorScheme.onSurface,
-                                fontFamily: 'Tenor_Sans',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Gap(12.w),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(addressProvider.notifier)
-                              .remove(address.id);
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 14.h),
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade300,
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'DELETE',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.white,
-                                fontFamily: 'Tenor_Sans',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(10.h),
-              ],
-            ),
-          ),
-        );
+      emoji: '\ud83d\uddd1\ufe0f',
+      title: 'Delete Address?',
+      onDelete: () {
+        ref.read(addressProvider.notifier).remove(address.id);
       },
     );
   }
@@ -151,7 +60,7 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
     final addresses = ref.watch(addressProvider);
 
     return Scaffold(
-      appBar: const CustemAppbar(showSearchBar: false),
+      appBar: const CustomAppbar(showSearchBar: false),
       body: addresses.isEmpty
           ? EmptyAddresses(onAdd: _addAddress)
           : Column(
@@ -178,8 +87,8 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 30.h),
-                  child: Button(
-                    isSvgg: false,
+                  child: CustomButton(
+                    isSvg: false,
                     title: 'Add Address',
                     onTap: _addAddress,
                   ),

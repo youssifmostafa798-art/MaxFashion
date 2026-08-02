@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
-import 'package:max/core/widgets/custem_appbar.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_appbar.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/features/orders/presentation/widgets/order_status_chip.dart';
 import 'package:max/features/orders/presentation/widgets/order_timeline.dart';
@@ -17,7 +17,7 @@ class OrderDetailsPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: const CustemAppbar(showSearchBar: false),
+      appBar: const CustomAppbar(showSearchBar: false),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
@@ -30,14 +30,14 @@ class OrderDetailsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustemText(
+                      CustomText(
                         text: 'Order #${order.orderId}',
                         size: 18,
                         weight: FontWeight.w700,
                         color: colorScheme.onSurface,
                       ),
                       SizedBox(height: 4.h),
-                      CustemText(
+                      CustomText(
                         text: DateFormatter.formatDateTime(order.orderDate),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
@@ -50,7 +50,7 @@ class OrderDetailsPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            CustemText(
+            CustomText(
               text: 'PRODUCTS',
               size: 12,
               spacing: 2,
@@ -95,7 +95,7 @@ class OrderDetailsPage extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustemText(
+                              CustomText(
                                 text: item.productName,
                                 size: 14,
                                 weight: FontWeight.w600,
@@ -104,7 +104,7 @@ class OrderDetailsPage extends StatelessWidget {
                               SizedBox(height: 4.h),
                               if (item.selectedColor != null ||
                                   item.selectedSize != null)
-                                CustemText(
+                                CustomText(
                                   text: [
                                     if (item.selectedColor != null)
                                       'Color: ${item.selectedColor}',
@@ -115,7 +115,7 @@ class OrderDetailsPage extends StatelessWidget {
                                   color: colorScheme.onSurfaceVariant,
                                 ),
                               SizedBox(height: 4.h),
-                              CustemText(
+                              CustomText(
                                 text: 'Qty: ${item.quantity}',
                                 size: 12,
                                 color: colorScheme.onSurfaceVariant,
@@ -123,7 +123,7 @@ class OrderDetailsPage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        CustemText(
+                        CustomText(
                           text: '\$${item.totalPrice.toStringAsFixed(2)}',
                           size: 14,
                           weight: FontWeight.w600,
@@ -140,12 +140,12 @@ class OrderDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustemText(
+                CustomText(
                   text: 'Total (${order.itemCount} items)',
                   size: 14,
                   color: colorScheme.onSurfaceVariant,
                 ),
-                CustemText(
+                CustomText(
                   text: '\$${order.totalPrice.toStringAsFixed(2)}',
                   size: 16,
                   weight: FontWeight.w700,
@@ -188,7 +188,7 @@ class _InfoRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustemText(
+        CustomText(
           text: label,
           size: 12,
           spacing: 2,
@@ -202,7 +202,7 @@ class _InfoRow extends StatelessWidget {
             color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: CustemText(
+          child: CustomText(
             text: value,
             size: 14,
             color: colorScheme.onSurface,

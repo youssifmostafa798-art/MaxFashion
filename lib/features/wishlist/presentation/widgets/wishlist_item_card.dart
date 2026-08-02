@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/product_model.dart';
 
 class WishlistItemCard extends StatelessWidget {
@@ -57,7 +57,7 @@ class WishlistItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: CustemText(
+                        child: CustomText(
                           text: product.name.toUpperCase(),
                           size: 13,
                           color: colorScheme.onSurface,
@@ -75,13 +75,13 @@ class WishlistItemCard extends StatelessWidget {
                     ],
                   ),
                   Gap(6.h),
-                  CustemText(
-                    text: product.descrp,
+                  CustomText(
+                    text: product.description,
                     size: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),
                   Gap(8.h),
-                  CustemText(
+                  CustomText(
                     text: '\$${product.price.toStringAsFixed(2)}',
                     size: 15,
                     weight: FontWeight.w600,
@@ -99,7 +99,7 @@ class WishlistItemCard extends StatelessWidget {
                         color: colorScheme.onSurface,
                         borderRadius: BorderRadius.circular(8.r),
                       ),
-                      child: CustemText(
+                      child: CustomText(
                         text: 'MOVE TO CART',
                         size: 11,
                         color: colorScheme.surface,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
@@ -46,7 +46,7 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage> {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        title: CustemText(
+        title: CustomText(
           text: widget.category.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
@@ -76,7 +76,7 @@ class _ProductGrid extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: CustemText(
+          child: CustomText(
             text: '${products.length} ${products.length == 1 ? 'item' : 'items'}',
             size: 13,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -141,7 +141,7 @@ class _EmptyCategory extends StatelessWidget {
               ),
             ),
             SizedBox(height: 24.h),
-            CustemText(
+            CustomText(
               text: 'No Products Found',
               size: 18,
               color: colorScheme.onSurface,
@@ -149,7 +149,7 @@ class _EmptyCategory extends StatelessWidget {
               spacing: 2,
             ),
             SizedBox(height: 8.h),
-            CustemText(
+            CustomText(
               text: 'No items in $category yet',
               size: 14,
               color: colorScheme.onSurfaceVariant,

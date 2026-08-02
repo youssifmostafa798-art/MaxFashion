@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/theme/theme_provider.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/settings/presentation/widgets/settings_section.dart';
 import 'package:max/features/settings/presentation/widgets/settings_tile.dart';
@@ -31,7 +31,7 @@ class SettingsPage extends ConsumerWidget {
           icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
-        title: CustemText(
+        title: CustomText(
           text: 'SETTINGS',
           size: 18,
           color: colorScheme.onSurface,
@@ -191,7 +191,7 @@ class _ThemeSelector extends StatelessWidget {
                 size: 22.w,
               ),
               SizedBox(width: 14.w),
-              CustemText(text: 'Theme', size: 14, color: colorScheme.onSurface),
+              CustomText(text: 'Theme', size: 14, color: colorScheme.onSurface),
             ],
           ),
           SizedBox(height: 12.h),

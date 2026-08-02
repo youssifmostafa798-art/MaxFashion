@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 
@@ -38,13 +38,13 @@ class ProductGridCard extends StatelessWidget {
             ],
           ),
           Gap(10.h),
-          CustemText(text: product.name),
-          CustemText(
-            text: product.descrp,
+          CustomText(text: product.name),
+          CustomText(
+            text: product.description,
             color: colorScheme.onSurfaceVariant,
           ),
           Gap(9.h),
-          CustemText(
+          CustomText(
             text: "\$ ${product.price.toString()}",
             color: const Color(0xffDD8560),
             size: 20,

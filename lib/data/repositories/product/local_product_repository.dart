@@ -37,7 +37,7 @@ class LocalProductRepository implements ProductRepository {
       final name = product.name.toLowerCase();
       final category = product.category.toLowerCase();
       final collection = product.collection.toLowerCase();
-      final description = product.descrp.toLowerCase();
+      final description = product.description.toLowerCase();
       final keywords = product.keywords.map((k) => k.toLowerCase()).join(' ');
       final searchable = '$name $category $collection $description $keywords';
 

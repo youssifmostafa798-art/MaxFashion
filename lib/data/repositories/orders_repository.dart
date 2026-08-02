@@ -30,6 +30,4 @@ class OrdersRepository {
       return null;
     }
   }
-
-  int get orderCount => _orders.length;
 }

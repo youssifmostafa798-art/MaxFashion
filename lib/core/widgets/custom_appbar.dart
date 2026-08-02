@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
-import 'custem_text.dart';
+import 'custom_text.dart';
 
-class CustemAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const CustemAppbar({
+class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppbar({
     super.key,
     this.showBackButton = true,
     this.showSearchBar = false,
@@ -101,7 +101,7 @@ class _SearchBar extends StatelessWidget {
               child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
             ),
             SizedBox(width: 10.w),
-            CustemText(
+            CustomText(
               text: 'Search....',
               size: 14,
               color: colorScheme.onSurfaceVariant,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custem_bottom.dart';
-import 'package:max/core/widgets/custem_text.dart';
+import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/core/widgets/custom_text.dart';
 
 class EmptyAddresses extends StatelessWidget {
   const EmptyAddresses({super.key, required this.onAdd});
@@ -24,21 +24,21 @@ class EmptyAddresses extends StatelessWidget {
               style: TextStyle(fontSize: 64.w),
             ),
             Gap(24.h),
-            CustemText(
+            CustomText(
               text: 'No saved addresses.',
               size: 18,
               weight: FontWeight.w700,
               color: colorScheme.onSurface,
             ),
             Gap(10.h),
-            CustemText(
+            CustomText(
               text: 'Add your first delivery address.',
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),
             Gap(40.h),
-            Button(
-              isSvgg: false,
+            CustomButton(
+              isSvg: false,
               title: 'Add Address',
               onTap: onAdd,
             ),
