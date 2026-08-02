@@ -7,6 +7,7 @@ import 'package:max/features/search/presentation/widgets/search_text_field.dart'
 import 'package:max/features/search/presentation/widgets/search_results_list.dart';
 import 'package:max/features/search/presentation/widgets/search_suggestions.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
+import 'package:max/core/widgets/skeletons/search_skeleton.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key, this.initialSource, this.searchContext});
@@ -121,9 +122,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   Widget _buildSearchResults(SearchState searchState) {
     if (searchState.isLoading) {
-      return Center(
-        child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface),
-      );
+      return const SearchSkeleton();
     }
 
     return SearchResultsList(

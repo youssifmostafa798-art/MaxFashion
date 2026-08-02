@@ -11,14 +11,34 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
+import 'package:max/core/widgets/skeletons/home_skeleton.dart';
 
-class Home extends ConsumerWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<Home> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final products = ref.watch(featuredProductsProvider);
+
+    if (_isLoading) {
+      return const HomeSkeleton();
+    }
 
     return Scaffold(
       appBar: CustemAppbar(showBackButton: false, showSearchBar: true),

@@ -7,14 +7,50 @@ import 'package:max/data/providers/orders_provider.dart';
 import 'package:max/features/orders/presentation/pages/order_details_page.dart';
 import 'package:max/features/orders/presentation/widgets/empty_orders_widget.dart';
 import 'package:max/features/orders/presentation/widgets/order_card.dart';
+import 'package:max/core/widgets/skeletons/orders_skeleton.dart';
 
-class OrdersPage extends ConsumerWidget {
+class OrdersPage extends ConsumerStatefulWidget {
   const OrdersPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<OrdersPage> createState() => _OrdersPageState();
+}
+
+class _OrdersPageState extends ConsumerState<OrdersPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final orders = ref.watch(ordersProvider);
     final colorScheme = Theme.of(context).colorScheme;
+
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: colorScheme.surface,
+          elevation: 0,
+          centerTitle: true,
+          title: CustemText(
+            text: 'MY ORDERS',
+            size: 18,
+            color: colorScheme.onSurface,
+            spacing: 4,
+            weight: FontWeight.bold,
+          ),
+        ),
+        body: const OrdersSkeleton(),
+      );
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/features/home/presentation/pages/home.dart';
 import 'package:max/features/menu/presentation/pages/categories_page.dart';
 import 'package:max/features/cart/presentation/pages/cart_page.dart';
 import 'package:max/features/profile/presentation/pages/profile_page.dart';
+import 'package:max/data/providers/cart_provider.dart';
+import 'package:max/data/providers/wishlist_provider.dart';
+import 'package:max/core/widgets/badge_widget.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key, this.initialTab = 0});
 
   final int initialTab;
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> {
   late int _currentIndex = widget.initialTab;
   final List<Widget?> _pagesCache = List.filled(4, null);
 
@@ -44,6 +47,9 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartCount = ref.watch(cartProvider.select((items) => items.length));
+    final wishlistCount = ref.watch(wishlistCountProvider);
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -56,25 +62,37 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.menu_outlined),
             activeIcon: Icon(Icons.menu),
             label: 'Menu',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag_outlined),
-            activeIcon: Icon(Icons.shopping_bag),
+            icon: BadgeWidget(
+              count: cartCount,
+              child: const Icon(Icons.shopping_bag_outlined),
+            ),
+            activeIcon: BadgeWidget(
+              count: cartCount,
+              child: const Icon(Icons.shopping_bag),
+            ),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
+            icon: BadgeWidget(
+              count: wishlistCount,
+              child: const Icon(Icons.person_outline),
+            ),
+            activeIcon: BadgeWidget(
+              count: wishlistCount,
+              child: const Icon(Icons.person),
+            ),
             label: 'You',
           ),
         ],

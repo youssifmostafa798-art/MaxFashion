@@ -39,11 +39,14 @@ class _CardWidgetState extends State<CardWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(
-          widget.products.image,
-          width: 120.w,
-          fit: BoxFit.cover,
-          cacheWidth: 120,
+        Hero(
+          tag: 'product-image-${widget.products.id}',
+          child: Image.asset(
+            widget.products.image,
+            width: 120.w,
+            fit: BoxFit.cover,
+            cacheWidth: 120,
+          ),
         ),
         Gap(8.w),
         Column(

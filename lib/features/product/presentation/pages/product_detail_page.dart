@@ -12,6 +12,7 @@ import 'package:max/features/checkout/presentation/widgets/added_to_cart_dialog.
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
+import 'package:max/core/widgets/skeletons/product_detail_skeleton.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -23,9 +24,25 @@ class ProductDetailPage extends ConsumerStatefulWidget {
 
 class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   int selectedQty = 1;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 400), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: const CustemAppbar(showSearchBar: false),
+        body: const ProductDetailSkeleton(),
+      );
+    }
+
     return Scaffold(
       appBar: const CustemAppbar(showSearchBar: false),
       body: Padding(

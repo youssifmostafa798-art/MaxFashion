@@ -26,7 +26,10 @@ class ProductGridCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.asset(product.image),
+              Hero(
+                tag: 'product-image-${product.id}',
+                child: Image.asset(product.image),
+              ),
               Positioned(
                 top: 8.w,
                 right: 8.w,

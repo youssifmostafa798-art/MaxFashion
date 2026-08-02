@@ -8,14 +8,50 @@ import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/features/wishlist/presentation/widgets/wishlist_item_card.dart';
+import 'package:max/core/widgets/skeletons/wishlist_skeleton.dart';
 
-class WishlistPage extends ConsumerWidget {
+class WishlistPage extends ConsumerStatefulWidget {
   const WishlistPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WishlistPage> createState() => _WishlistPageState();
+}
+
+class _WishlistPageState extends ConsumerState<WishlistPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final wishlistItems = ref.watch(wishlistProvider);
     final colorScheme = Theme.of(context).colorScheme;
+
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: colorScheme.surface,
+          elevation: 0,
+          centerTitle: true,
+          title: CustemText(
+            text: 'WISHLIST',
+            size: 18,
+            color: colorScheme.onSurface,
+            spacing: 4,
+            weight: FontWeight.bold,
+          ),
+        ),
+        body: const WishlistSkeleton(),
+      );
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,

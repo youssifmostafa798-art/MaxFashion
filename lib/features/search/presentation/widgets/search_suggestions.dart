@@ -134,14 +134,16 @@ class SuggestedProductsSection extends StatelessWidget {
                     ),
                   );
                 },
-                child: SizedBox(
-                  width: 100.w,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          ClipRRect(
+              child: SizedBox(
+                width: 100.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        Hero(
+                          tag: 'product-image-${product.id}',
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.r),
                             child: Image.asset(
                               product.image,
@@ -150,6 +152,7 @@ class SuggestedProductsSection extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
+                        ),
                           Positioned(
                             top: 4.w,
                             right: 4.w,

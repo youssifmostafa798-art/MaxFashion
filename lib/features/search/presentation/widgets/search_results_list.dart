@@ -65,13 +65,16 @@ class _SearchResultCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Image.asset(
-                product.image,
-                width: 80.w,
-                height: 100.h,
-                fit: BoxFit.cover,
+            Hero(
+              tag: 'product-image-${product.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.asset(
+                  product.image,
+                  width: 80.w,
+                  height: 100.h,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Gap(12.w),

@@ -35,14 +35,17 @@ class WishlistItemCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Image.asset(
-                product.image,
-                width: 90.w,
-                height: 110.h,
-                fit: BoxFit.cover,
-                cacheWidth: 90,
+            Hero(
+              tag: 'product-image-${product.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.asset(
+                  product.image,
+                  width: 90.w,
+                  height: 110.h,
+                  fit: BoxFit.cover,
+                  cacheWidth: 90,
+                ),
               ),
             ),
             Gap(12.w),

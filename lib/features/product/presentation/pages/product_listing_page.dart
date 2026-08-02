@@ -6,8 +6,9 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
+import 'package:max/core/widgets/skeletons/product_listing_skeleton.dart';
 
-class ProductListingPage extends ConsumerWidget {
+class ProductListingPage extends ConsumerStatefulWidget {
   const ProductListingPage({
     super.key,
     required this.category,
@@ -16,9 +17,28 @@ class ProductListingPage extends ConsumerWidget {
   final String category;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProductListingPage> createState() => _ProductListingPageState();
+}
+
+class _ProductListingPageState extends ConsumerState<ProductListingPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final products = ref.watch(categoryProductsProvider(category));
+    final products = ref.watch(categoryProductsProvider(widget.category));
+
+    if (_isLoading) {
+      return const ProductListingSkeleton();
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -27,7 +47,7 @@ class ProductListingPage extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         title: CustemText(
-          text: category.toUpperCase(),
+          text: widget.category.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -39,7 +59,7 @@ class ProductListingPage extends ConsumerWidget {
         ),
       ),
       body: products.isEmpty
-          ? _EmptyCategory(category: category)
+          ? _EmptyCategory(category: widget.category)
           : _ProductGrid(products: products),
     );
   }
