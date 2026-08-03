@@ -72,8 +72,24 @@ class _SignupPageState extends ConsumerState<SignupPage>
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next.user != null && !next.isLoading) {
         Navigator.pushReplacementNamed(context, AppRouter.main);
+        return;
       }
-      if (next.error != null && next.error!.isNotEmpty) {
+
+      if (next.emailConfirmationPending && next.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.error!),
+            duration: const Duration(seconds: 6),
+            backgroundColor: Colors.green.shade700,
+          ),
+        );
+        ref.read(authStateProvider.notifier).clearError();
+        return;
+      }
+
+      if (next.error != null &&
+          next.error!.isNotEmpty &&
+          !next.emailConfirmationPending) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(next.error!)),
         );
@@ -183,6 +199,34 @@ class _SignupPageState extends ConsumerState<SignupPage>
                     },
                   ),
                   SizedBox(height: 36.h),
+                  if (authState.emailConfirmationPending) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: Colors.green.shade200),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.mark_email_read_outlined,
+                              color: Colors.green.shade700, size: 24.w),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Text(
+                              'Confirmation email sent! Please check your inbox and verify your email, then login.',
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                  ],
                   CustomAuthButton(
                     text: 'Sign Up',
                     isLoading: authState.isLoading,

@@ -8,6 +8,7 @@ class UserModel {
   final DateTime? dateOfBirth;
   final String? gender;
   final String? country;
+  final String? bio;
 
   const UserModel({
     required this.id,
@@ -19,6 +20,7 @@ class UserModel {
     this.dateOfBirth,
     this.gender,
     this.country,
+    this.bio,
   });
 
   UserModel copyWith({
@@ -31,10 +33,12 @@ class UserModel {
     DateTime? dateOfBirth,
     String? gender,
     String? country,
+    String? bio,
     bool clearProfileImage = false,
     bool clearDateOfBirth = false,
     bool clearGender = false,
     bool clearCountry = false,
+    bool clearBio = false,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -47,6 +51,7 @@ class UserModel {
       dateOfBirth: clearDateOfBirth ? null : (dateOfBirth ?? this.dateOfBirth),
       gender: clearGender ? null : (gender ?? this.gender),
       country: clearCountry ? null : (country ?? this.country),
+      bio: clearBio ? null : (bio ?? this.bio),
     );
   }
 
@@ -71,6 +76,7 @@ class UserModel {
       'dateOfBirth': dateOfBirth?.toIso8601String(),
       'gender': gender,
       'country': country,
+      'bio': bio,
     };
   }
 
@@ -87,6 +93,7 @@ class UserModel {
           : null,
       gender: json['gender'] as String?,
       country: json['country'] as String?,
+      bio: json['bio'] as String?,
     );
   }
 }

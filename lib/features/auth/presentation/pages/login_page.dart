@@ -65,12 +65,17 @@ class _LoginPageState extends ConsumerState<LoginPage>
 
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next.user != null && !next.isLoading) {
-        Navigator.pushReplacementNamed(context, AppRouter.main);
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, AppRouter.main);
+        }
+        return;
       }
       if (next.error != null && next.error!.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error!)),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(next.error!)),
+          );
+        }
         ref.read(authStateProvider.notifier).clearError();
       }
     });

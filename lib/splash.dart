@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/core/router/app_router.dart';
 
 class SplashPage extends StatefulWidget {
@@ -46,16 +46,15 @@ class _SplashPageState extends State<SplashPage>
   }
 
   Future<void> _navigateToNext() async {
-    final prefs = await SharedPreferences.getInstance();
-    final rememberMe = prefs.getBool('fake_auth_remember_me') ?? false;
-    final isLoggedIn = prefs.getBool('fake_auth_is_logged_in') ?? false;
-
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
 
     HapticFeedback.lightImpact();
 
-    if (rememberMe && isLoggedIn) {
+    final session = Supabase.instance.client.auth.currentSession;
+    final user = Supabase.instance.client.auth.currentUser;
+
+    if (session != null && user != null) {
       Navigator.pushReplacementNamed(context, AppRouter.main);
     } else {
       Navigator.pushReplacementNamed(context, AppRouter.auth);

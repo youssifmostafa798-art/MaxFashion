@@ -26,6 +26,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late final TextEditingController _phoneController;
   late final TextEditingController _dobController;
   late final TextEditingController _countryController;
+  late final TextEditingController _bioController;
 
   bool _isInitialized = false;
 
@@ -40,6 +41,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _phoneController = TextEditingController();
     _dobController = TextEditingController();
     _countryController = TextEditingController();
+    _bioController = TextEditingController();
   }
 
   @override
@@ -50,6 +52,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _phoneController.dispose();
     _dobController.dispose();
     _countryController.dispose();
+    _bioController.dispose();
     super.dispose();
   }
 
@@ -60,6 +63,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       _emailController.text = state.email;
       _phoneController.text = state.phoneNumber;
       _countryController.text = state.country ?? '';
+      _bioController.text = state.bio ?? '';
       _updateDobController(state.dateOfBirth);
       _isInitialized = true;
     }
@@ -286,6 +290,21 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           .read(editProfileProvider.notifier)
                           .updateCountry(
                               value.trim().isEmpty ? null : value),
+                    ),
+                    ProfileFormField(
+                      controller: _bioController,
+                      hint: 'Tell us about yourself',
+                      label: 'BIO (OPTIONAL)',
+                      maxLines: 3,
+                      validator: (value) {
+                        if (value != null && value.trim().length > 200) {
+                          return 'Bio must be 200 characters or less';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => ref
+                          .read(editProfileProvider.notifier)
+                          .updateBio(value),
                     ),
                   ],
                 ),

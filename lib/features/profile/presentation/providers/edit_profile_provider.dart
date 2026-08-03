@@ -11,6 +11,7 @@ class EditProfileState {
   final DateTime? dateOfBirth;
   final String? gender;
   final String? country;
+  final String? bio;
   final String? profileImagePath;
   final bool hasChanges;
   final bool isLoading;
@@ -24,6 +25,7 @@ class EditProfileState {
     this.dateOfBirth,
     this.gender,
     this.country,
+    this.bio,
     this.profileImagePath,
     this.hasChanges = false,
     this.isLoading = false,
@@ -38,6 +40,7 @@ class EditProfileState {
     DateTime? dateOfBirth,
     String? gender,
     String? country,
+    String? bio,
     String? profileImagePath,
     bool? hasChanges,
     bool? isLoading,
@@ -45,6 +48,7 @@ class EditProfileState {
     bool clearDateOfBirth = false,
     bool clearGender = false,
     bool clearCountry = false,
+    bool clearBio = false,
     bool clearProfileImagePath = false,
     bool clearError = false,
   }) {
@@ -57,6 +61,7 @@ class EditProfileState {
           clearDateOfBirth ? null : (dateOfBirth ?? this.dateOfBirth),
       gender: clearGender ? null : (gender ?? this.gender),
       country: clearCountry ? null : (country ?? this.country),
+      bio: clearBio ? null : (bio ?? this.bio),
       profileImagePath: clearProfileImagePath
           ? null
           : (profileImagePath ?? this.profileImagePath),
@@ -78,6 +83,7 @@ class EditProfileState {
       dateOfBirth: user.dateOfBirth,
       gender: user.gender,
       country: user.country,
+      bio: user.bio,
       profileImagePath: user.profileImage,
     );
   }
@@ -133,6 +139,14 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
     }
   }
 
+  void updateBio(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      state = state.copyWith(clearBio: true, hasChanges: true);
+    } else {
+      state = state.copyWith(bio: value.trim(), hasChanges: true);
+    }
+  }
+
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
@@ -172,6 +186,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
           dateOfBirth: state.dateOfBirth,
           gender: state.gender,
           country: state.country,
+          bio: state.bio,
         );
 
     if (success) {
