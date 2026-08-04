@@ -23,8 +23,4 @@ final categoryProductsProvider =
   return repo.getProductsByCategory(category);
 });
 
-final productByIdProvider =
-    Provider.family<ProductModel?, String>((ref, id) {
-  final repo = ref.watch(productRepositoryProvider);
-  return repo.getProductById(id);
-});
+

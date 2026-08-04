@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class SearchTapWidget extends StatelessWidget {
   const SearchTapWidget({
@@ -53,9 +55,9 @@ class SearchTapWidget extends StatelessWidget {
             Text(
               hintText ?? 'Search....',
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: AppTextStyles.fontSize14,
                 color: colorScheme.onSurfaceVariant,
-                fontFamily: 'Tenor_Sans',
+                fontFamily: AppConstants.fontFamily,
               ),
             ),
           ],

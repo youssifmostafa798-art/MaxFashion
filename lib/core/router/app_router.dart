@@ -8,7 +8,23 @@ import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
+import 'package:max/features/cart/presentation/pages/cart_page.dart';
+import 'package:max/features/checkout/presentation/pages/checkout.dart';
+import 'package:max/features/checkout/presentation/pages/place_order.dart';
+import 'package:max/features/checkout/presentation/pages/add_address.dart';
+import 'package:max/features/checkout/presentation/pages/add_card.dart';
+import 'package:max/features/orders/presentation/pages/orders_page.dart';
+import 'package:max/features/orders/presentation/pages/order_details_page.dart';
+import 'package:max/features/profile/presentation/pages/profile_page.dart';
+import 'package:max/features/profile/presentation/pages/edit_profile_page.dart';
+import 'package:max/features/profile/presentation/pages/addresses_page.dart';
+import 'package:max/features/profile/presentation/pages/payment_methods_page.dart';
+import 'package:max/features/settings/presentation/pages/settings_page.dart';
+import 'package:max/features/menu/presentation/pages/categories_page.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/models/order_model.dart';
+import 'package:max/data/models/address_model.dart';
 
 class AppRouter {
   AppRouter._();
@@ -22,6 +38,19 @@ class AppRouter {
   static const String wishlist = '/wishlist';
   static const String productListing = '/product-listing';
   static const String productDetail = '/product-detail';
+  static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String placeOrder = '/place-order';
+  static const String addAddress = '/add-address';
+  static const String addCard = '/add-card';
+  static const String orders = '/orders';
+  static const String orderDetails = '/order-details';
+  static const String profile = '/profile';
+  static const String editProfile = '/edit-profile';
+  static const String addresses = '/addresses';
+  static const String paymentMethods = '/payment-methods';
+  static const String settings = '/settings';
+  static const String categories = '/categories';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -54,6 +83,54 @@ class AppRouter {
           settings,
           direction: _SlideDirection.right,
         );
+      case cart:
+        return _buildRoute(const CartPage(), settings, direction: _SlideDirection.right);
+      case checkout:
+        final ProductModel products = settings.arguments as ProductModel;
+        return _buildRoute(
+          Checkout(products: products),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case placeOrder:
+        final args = settings.arguments as Map<String, dynamic>;
+        final cartItems = args['cartItems'] as List<CartItemModel>;
+        final total = args['total'] as double;
+        return _buildRoute(
+          PlaceOrder(cartItems: cartItems, total: total),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case addAddress:
+        final AddressModel? editAddress = settings.arguments as AddressModel?;
+        return _buildRoute(
+          AddAddress(editAddress: editAddress),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case addCard:
+        return _buildRoute(const AddCard(), settings, direction: _SlideDirection.right);
+      case orders:
+        return _buildRoute(const OrdersPage(), settings, direction: _SlideDirection.right);
+      case orderDetails:
+        final OrderModel order = settings.arguments as OrderModel;
+        return _buildRoute(
+          OrderDetailsPage(order: order),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case profile:
+        return _buildRoute(const ProfilePage(), settings, direction: _SlideDirection.right);
+      case editProfile:
+        return _buildRoute(const EditProfilePage(), settings, direction: _SlideDirection.right);
+      case addresses:
+        return _buildRoute(const AddressesPage(), settings, direction: _SlideDirection.right);
+      case paymentMethods:
+        return _buildRoute(const PaymentMethodsPage(), settings, direction: _SlideDirection.right);
+      case AppRouter.settings:
+        return _buildRoute(const SettingsPage(), settings, direction: _SlideDirection.right);
+      case categories:
+        return _buildRoute(const CategoriesPage(), settings, direction: _SlideDirection.right);
       default:
         return _buildRoute(const SplashPage(), settings);
     }

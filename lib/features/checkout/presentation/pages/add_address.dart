@@ -7,6 +7,8 @@ import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/custom_text_field.dart';
 import 'package:max/core/widgets/header.dart';
+import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/data/models/address_model.dart';
 
 class AddAddress extends StatefulWidget {
@@ -111,11 +113,11 @@ class _AddAddressState extends State<AddAddress> {
                               child: Text(
                                 label,
                                 style: TextStyle(
-                                  fontSize: 13.sp,
+                                  fontSize: AppTextStyles.fontSize13,
                                   color: isSelected
                                       ? colorScheme.surface
                                       : colorScheme.onSurface,
-                                  fontFamily: 'Tenor_Sans',
+                                  fontFamily: AppConstants.fontFamily,
                                 ),
                               ),
                             ),

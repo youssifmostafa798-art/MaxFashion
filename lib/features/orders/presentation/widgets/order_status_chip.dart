@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/data/models/order_model.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class OrderStatusChip extends StatelessWidget {
   const OrderStatusChip({super.key, required this.status});
@@ -59,7 +60,7 @@ class OrderStatusChip extends StatelessWidget {
       child: Text(
         _getStatusLabel(),
         style: TextStyle(
-          fontSize: 12.sp,
+          fontSize: AppTextStyles.fontSize12,
           fontWeight: FontWeight.w600,
           color: _getTextColor(context),
         ),

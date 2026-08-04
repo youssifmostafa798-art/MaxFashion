@@ -5,6 +5,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/utils/date_formatter.dart';
+import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/success_dialog.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
@@ -134,7 +135,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.error!),
-            backgroundColor: Colors.red.shade400,
+            backgroundColor: AppColors.errorRed400,
           ),
         );
         ref.read(editProfileProvider.notifier).clearError();

@@ -12,8 +12,6 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-final searchSourceProvider = Provider<List<ProductModel>?>((ref) => null);
-
 enum SearchContextType { global, home, category, wishlist, cart, orders }
 
 final searchContextProvider = Provider<SearchContextType>((ref) {
@@ -90,8 +88,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
     state = state.copyWith(isLoading: true);
 
     final repo = ref.read(searchRepositoryProvider);
-    final source = ref.read(searchSourceProvider);
-    final results = repo.searchProducts(query, source: source);
+    final results = repo.searchProducts(query, source: null);
 
     state = state.copyWith(results: results, isLoading: false);
   }

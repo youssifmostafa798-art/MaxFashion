@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/list_extensions.dart';
+import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/widgets/custom_text.dart';
 
 class ProfileFormSection extends StatelessWidget {
@@ -89,16 +92,16 @@ class ProfileFormField extends StatelessWidget {
           onChanged: onChanged,
           cursorColor: colorScheme.onSurface,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: AppTextStyles.fontSize14,
             color: readOnly ? colorScheme.onSurfaceVariant : colorScheme.onSurface,
-            fontFamily: 'Tenor_Sans',
+            fontFamily: AppConstants.fontFamily,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
               color: colorScheme.onSurfaceVariant,
-              fontSize: 14.sp,
-              fontFamily: 'Tenor_Sans',
+              fontSize: AppTextStyles.fontSize14,
+              fontFamily: AppConstants.fontFamily,
             ),
             counterText: '',
             suffixIcon: suffixIcon != null
@@ -125,13 +128,13 @@ class ProfileFormField extends StatelessWidget {
             ),
             errorBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.red.shade400,
+                color: AppColors.errorRed400,
                 width: 1.2.w,
               ),
             ),
             focusedErrorBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.red.shade400,
+                color: AppColors.errorRed400,
                 width: 1.5.w,
               ),
             ),
@@ -183,16 +186,16 @@ class ProfileFormDropdown extends StatelessWidget {
             size: 22.w,
           ),
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: AppTextStyles.fontSize14,
             color: colorScheme.onSurface,
-            fontFamily: 'Tenor_Sans',
+            fontFamily: AppConstants.fontFamily,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
               color: colorScheme.onSurfaceVariant,
-              fontSize: 14.sp,
-              fontFamily: 'Tenor_Sans',
+              fontSize: AppTextStyles.fontSize14,
+              fontFamily: AppConstants.fontFamily,
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(

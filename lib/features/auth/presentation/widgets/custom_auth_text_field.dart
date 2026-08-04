@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class CustomAuthTextField extends StatefulWidget {
   const CustomAuthTextField({
@@ -41,7 +42,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
       cursorColor: colorScheme.onSurface,
       validator: widget.validator,
       style: TextStyle(
-        fontSize: 14.sp,
+        fontSize: AppTextStyles.fontSize14,
         color: colorScheme.onSurface,
         fontWeight: FontWeight.w400,
       ),
@@ -49,7 +50,7 @@ class _CustomAuthTextFieldState extends State<CustomAuthTextField> {
         hintText: widget.hint,
         hintStyle: TextStyle(
           color: colorScheme.onSurfaceVariant,
-          fontSize: 14.sp,
+          fontSize: AppTextStyles.fontSize14,
           fontWeight: FontWeight.w400,
         ),
         filled: true,

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/utils/form_validators.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -80,7 +82,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
           SnackBar(
             content: Text(next.error!),
             duration: const Duration(seconds: 6),
-            backgroundColor: Colors.green.shade700,
+            backgroundColor: AppColors.successGreen700,
           ),
         );
         ref.read(authStateProvider.notifier).clearError();
@@ -123,7 +125,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
                   Text(
                     'Create\nAccount',
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: AppTextStyles.fontSize32,
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 1.2,
@@ -133,7 +135,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
                   Text(
                     'Sign up to get started',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: AppTextStyles.fontSize14,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -204,21 +206,21 @@ class _SignupPageState extends ConsumerState<SignupPage>
                       width: double.infinity,
                       padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
-                        color: Colors.green.shade50,
+                        color: AppColors.successGreen50,
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: Colors.green.shade200),
+                        border: Border.all(color: AppColors.successGreen200),
                       ),
                       child: Row(
                         children: [
                           Icon(Icons.mark_email_read_outlined,
-                              color: Colors.green.shade700, size: 24.w),
+                              color: AppColors.successGreen700, size: 24.w),
                           SizedBox(width: 12.w),
                           Expanded(
                             child: Text(
                               'Confirmation email sent! Please check your inbox and verify your email, then login.',
                               style: TextStyle(
-                                fontSize: 13.sp,
-                                color: Colors.green.shade800,
+                                fontSize: AppTextStyles.fontSize13,
+                                color: AppColors.successGreen800,
                               ),
                             ),
                           ),
@@ -241,7 +243,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
                         child: Text(
                           'OR',
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: AppTextStyles.fontSize12,
                             fontWeight: FontWeight.w500,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                             letterSpacing: 2,

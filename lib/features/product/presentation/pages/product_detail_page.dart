@@ -14,6 +14,7 @@ import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/widgets/skeletons/product_detail_skeleton.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -137,7 +138,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   ),
                   CustomText(
                     text: "\$ ${widget.product.price * selectedQty}",
-                    color: Colors.red.shade200,
+                    color: AppColors.errorRed200,
                   ),
                 ],
               ),

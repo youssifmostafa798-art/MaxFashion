@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class SearchTextField extends ConsumerStatefulWidget {
   const SearchTextField({
@@ -76,16 +78,16 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
               onChanged: widget.onChanged,
               onSubmitted: widget.onSubmitted,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: AppTextStyles.fontSize14,
                 color: colorScheme.onSurface,
-                fontFamily: 'Tenor_Sans',
+                fontFamily: AppConstants.fontFamily,
               ),
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 hintStyle: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: AppTextStyles.fontSize14,
                   color: colorScheme.onSurfaceVariant,
-                  fontFamily: 'Tenor_Sans',
+                  fontFamily: AppConstants.fontFamily,
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,

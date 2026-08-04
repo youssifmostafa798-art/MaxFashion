@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 
 class AuthPage extends StatefulWidget {
@@ -87,7 +88,7 @@ class _AuthPageState extends State<AuthPage>
                     child: Text(
                       'Continue as Guest',
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: AppTextStyles.fontSize13,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         decoration: TextDecoration.underline,

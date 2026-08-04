@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class BadgeWidget extends StatelessWidget {
   const BadgeWidget({
@@ -46,7 +47,7 @@ class BadgeWidget extends StatelessWidget {
                     count > 99 ? '99+' : '$count',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 9.sp,
+                      fontSize: AppTextStyles.fontSize9,
                       fontWeight: FontWeight.w700,
                       height: 1,
                     ),

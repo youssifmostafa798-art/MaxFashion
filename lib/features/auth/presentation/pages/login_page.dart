@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/form_validators.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_text_field.dart';
@@ -106,7 +107,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   Text(
                     'Welcome\nBack',
                     style: TextStyle(
-                      fontSize: 32.sp,
+                      fontSize: AppTextStyles.fontSize32,
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).colorScheme.onSurface,
                       height: 1.2,
@@ -116,7 +117,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   Text(
                     'Sign in to continue',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: AppTextStyles.fontSize14,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -141,7 +142,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                     child: Text(
                       'Forgot Password?',
                       style: TextStyle(
-                        fontSize: 13.sp,
+                        fontSize: AppTextStyles.fontSize13,
                         fontWeight: FontWeight.w500,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -164,7 +165,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                       Text(
                         'Remember Me',
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: AppTextStyles.fontSize13,
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -186,7 +187,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         child: Text(
                           'OR',
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: AppTextStyles.fontSize12,
                             fontWeight: FontWeight.w500,
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                             letterSpacing: 2,

@@ -39,4 +39,17 @@ class AppColors {
 
   static const Color accent = Color(0xFF2E7D32);
   static const Color accentLight = Color(0xFF4CAF50);
+
+  // Semantic: Success
+  static const Color successGreen50 = Color(0xFFE8F5E9);
+  static const Color successGreen200 = Color(0xFFA5D6A7);
+  static const Color successGreen700 = Color(0xFF388E3C);
+  static const Color successGreen800 = Color(0xFF2E7D32);
+
+  // Semantic: Error / Destructive
+  static const Color errorRed200 = Color(0xFFEF9A9A);
+  static const Color errorRed400 = Color(0xFFEF5350);
+
+  // Semantic: Card
+  static const Color cardGrey800 = Color(0xFF424242);
 }

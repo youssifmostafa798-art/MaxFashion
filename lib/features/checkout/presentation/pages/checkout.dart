@@ -9,6 +9,7 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/features/checkout/presentation/widgets/promo_section.dart';
 import 'package:max/features/checkout/presentation/widgets/added_to_cart_dialog.dart';
+import 'package:max/core/theme/app_colors.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/cart_provider.dart';
@@ -126,7 +127,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   ),
                   CustomText(
                     text: "\$ ${widget.products.price * selectedQty}",
-                    color: Colors.red.shade200,
+                    color: AppColors.errorRed200,
                   ),
                 ],
               ),

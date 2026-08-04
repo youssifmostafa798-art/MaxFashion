@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 class CustomAuthButton extends StatefulWidget {
   const CustomAuthButton({
@@ -91,7 +92,7 @@ class _CustomAuthButtonState extends State<CustomAuthButton>
                 : Text(
                     widget.text,
                     style: TextStyle(
-                      fontSize: 15.sp,
+                      fontSize: AppTextStyles.fontSize15,
                       fontWeight: FontWeight.w500,
                       letterSpacing: 0.5,
                       color: colorScheme.surface,

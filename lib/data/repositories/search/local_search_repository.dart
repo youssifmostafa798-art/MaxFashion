@@ -1,24 +1,12 @@
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
+import 'package:max/data/repositories/product/product_search_matcher.dart';
 
 class LocalSearchRepository implements SearchRepository {
   @override
   List<ProductModel> searchProducts(String query, {List<ProductModel>? source}) {
-    final trimmed = query.trim().toLowerCase();
-    if (trimmed.isEmpty) return [];
-
     final items = source ?? ProductModel.products;
-
-    return items.where((product) {
-      final name = product.name.toLowerCase();
-      final category = product.category.toLowerCase();
-      final collection = product.collection.toLowerCase();
-      final description = product.description.toLowerCase();
-      final keywords = product.keywords.map((k) => k.toLowerCase()).join(' ');
-      final searchable = '$name $category $collection $description $keywords';
-
-      return searchable.contains(trimmed);
-    }).toList();
+    return ProductSearchMatcher.filterProducts(items, query);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/header.dart';
+import 'package:max/core/theme/app_colors.dart';
 
 class AddCard extends StatefulWidget {
   const AddCard({super.key});
@@ -45,7 +46,7 @@ class _AddCardState extends State<AddCard> {
                   showBackView: isShow,
                   isHolderNameVisible: true,
                   onCreditCardWidgetChange: (v) {},
-                  cardBgColor: Colors.grey.shade800,
+                  cardBgColor: AppColors.cardGrey800,
                 ),
 
                 CreditCardForm(

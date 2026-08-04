@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/theme/app_text_styles.dart';
 
 void showConfirmDeleteDialog({
   required BuildContext context,
@@ -48,19 +50,19 @@ void showConfirmDeleteDialog({
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: AppTextStyles.fontSize18,
                   fontWeight: FontWeight.w700,
                   color: colorScheme.onSurface,
-                  fontFamily: 'Tenor_Sans',
+                  fontFamily: AppConstants.fontFamily,
                 ),
               ),
               Gap(8.h),
               Text(
                 'This action cannot be undone.',
                 style: TextStyle(
-                  fontSize: 13.sp,
+                  fontSize: AppTextStyles.fontSize13,
                   color: colorScheme.onSurfaceVariant,
-                  fontFamily: 'Tenor_Sans',
+                  fontFamily: AppConstants.fontFamily,
                 ),
               ),
               Gap(24.h),
@@ -82,9 +84,9 @@ void showConfirmDeleteDialog({
                           child: Text(
                             'CANCEL',
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: AppTextStyles.fontSize14,
                               color: colorScheme.onSurface,
-                              fontFamily: 'Tenor_Sans',
+                              fontFamily: AppConstants.fontFamily,
                             ),
                           ),
                         ),
@@ -109,9 +111,9 @@ void showConfirmDeleteDialog({
                           child: Text(
                             'DELETE',
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: AppTextStyles.fontSize14,
                               color: Colors.white,
-                              fontFamily: 'Tenor_Sans',
+                              fontFamily: AppConstants.fontFamily,
                             ),
                           ),
                         ),

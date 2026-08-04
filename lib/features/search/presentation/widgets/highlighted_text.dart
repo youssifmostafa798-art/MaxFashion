@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/constants/app_constants.dart';
 
 class HighlightedText extends StatelessWidget {
   const HighlightedText({
@@ -52,7 +53,7 @@ class HighlightedText extends StatelessWidget {
             fontSize: size.sp,
             color: effectiveColor,
             fontWeight: weight,
-            fontFamily: 'Tenor_Sans',
+            fontFamily: AppConstants.fontFamily,
             letterSpacing: spacing,
           ),
         ));
@@ -66,7 +67,7 @@ class HighlightedText extends StatelessWidget {
             fontSize: size.sp,
             color: effectiveColor,
             fontWeight: weight,
-            fontFamily: 'Tenor_Sans',
+            fontFamily: AppConstants.fontFamily,
             letterSpacing: spacing,
           ),
         ));
@@ -78,7 +79,7 @@ class HighlightedText extends StatelessWidget {
           fontSize: size.sp,
           color: effectiveHighlight,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Tenor_Sans',
+          fontFamily: AppConstants.fontFamily,
           letterSpacing: spacing,
           decoration: TextDecoration.underline,
           decorationThickness: 1.5,
