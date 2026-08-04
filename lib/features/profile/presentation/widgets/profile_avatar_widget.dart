@@ -1,24 +1,53 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/custom_text.dart';
 
 class ProfileAvatar extends StatelessWidget {
   const ProfileAvatar({
     super.key,
-    required this.imagePath,
-    required this.onTap,
+    required this.avatarUrl,
+    this.onTap,
     this.radius = 50,
+    this.showCameraIcon = false,
   });
 
-  final String? imagePath;
-  final VoidCallback onTap;
+  final String? avatarUrl;
+  final VoidCallback? onTap;
   final double radius;
+  final bool showCameraIcon;
+
+  bool get _hasAvatar =>
+      avatarUrl != null && avatarUrl!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final size = radius * 2.w;
+
+    final avatar = Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colorScheme.surfaceContainerHighest,
+      ),
+      child: _hasAvatar
+          ? ClipOval(
+              child: Image.network(
+                avatarUrl!,
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                gaplessPlayback: true,
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildDefaultIcon(colorScheme),
+              ),
+            )
+          : _buildDefaultIcon(colorScheme),
+    );
+
+    if (!showCameraIcon) {
+      return onTap != null ? GestureDetector(onTap: onTap, child: avatar) : avatar;
+    }
 
     return GestureDetector(
       onTap: onTap,
@@ -28,13 +57,7 @@ class ProfileAvatar extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.surfaceContainerHighest,
-              ),
-              child: _buildImage(colorScheme),
-            ),
+            avatar,
             Positioned(
               bottom: 0,
               right: 0,
@@ -61,40 +84,11 @@ class ProfileAvatar extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(ColorScheme colorScheme) {
-    if (imagePath != null && imagePath!.isNotEmpty) {
-      if (imagePath!.startsWith('http')) {
-        return ClipOval(
-          child: Image.network(
-            imagePath!,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (context, error, stackTrace) =>
-                _buildPlaceholder(colorScheme),
-          ),
-        );
-      } else {
-        return ClipOval(
-          child: Image.file(
-            File(imagePath!),
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-            errorBuilder: (context, error, stackTrace) =>
-                _buildPlaceholder(colorScheme),
-          ),
-        );
-      }
-    }
-    return _buildPlaceholder(colorScheme);
-  }
-
-  Widget _buildPlaceholder(ColorScheme colorScheme) {
+  Widget _buildDefaultIcon(ColorScheme colorScheme) {
     return Center(
-      child: CustomText(
-        text: 'Photo',
-        size: 14,
+      child: Icon(
+        Icons.account_circle_rounded,
+        size: radius * 1.6.w,
         color: colorScheme.onSurfaceVariant,
       ),
     );

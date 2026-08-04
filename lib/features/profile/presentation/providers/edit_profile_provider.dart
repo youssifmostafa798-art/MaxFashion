@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
+import 'package:max/features/auth/domain/auth_repository_interface.dart';
+import 'package:max/features/auth/presentation/providers/auth_providers.dart';
 
 class EditProfileState {
   final String firstName;
@@ -12,9 +15,10 @@ class EditProfileState {
   final String? gender;
   final String? country;
   final String? bio;
-  final String? profileImagePath;
+  final String? avatarUrl;
   final bool hasChanges;
   final bool isLoading;
+  final bool isAvatarLoading;
   final String? error;
 
   const EditProfileState({
@@ -26,9 +30,10 @@ class EditProfileState {
     this.gender,
     this.country,
     this.bio,
-    this.profileImagePath,
+    this.avatarUrl,
     this.hasChanges = false,
     this.isLoading = false,
+    this.isAvatarLoading = false,
     this.error,
   });
 
@@ -41,15 +46,16 @@ class EditProfileState {
     String? gender,
     String? country,
     String? bio,
-    String? profileImagePath,
+    String? avatarUrl,
     bool? hasChanges,
     bool? isLoading,
+    bool? isAvatarLoading,
     String? error,
     bool clearDateOfBirth = false,
     bool clearGender = false,
     bool clearCountry = false,
     bool clearBio = false,
-    bool clearProfileImagePath = false,
+    bool clearAvatarUrl = false,
     bool clearError = false,
   }) {
     return EditProfileState(
@@ -62,11 +68,11 @@ class EditProfileState {
       gender: clearGender ? null : (gender ?? this.gender),
       country: clearCountry ? null : (country ?? this.country),
       bio: clearBio ? null : (bio ?? this.bio),
-      profileImagePath: clearProfileImagePath
-          ? null
-          : (profileImagePath ?? this.profileImagePath),
+      avatarUrl:
+          clearAvatarUrl ? null : (avatarUrl ?? this.avatarUrl),
       hasChanges: hasChanges ?? this.hasChanges,
       isLoading: isLoading ?? this.isLoading,
+      isAvatarLoading: isAvatarLoading ?? this.isAvatarLoading,
       error: clearError ? null : (error ?? this.error),
     );
   }
@@ -84,7 +90,7 @@ class EditProfileState {
       gender: user.gender,
       country: user.country,
       bio: user.bio,
-      profileImagePath: user.profileImage,
+      avatarUrl: user.profileImage,
     );
   }
 }
@@ -95,6 +101,9 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   }
 
   final Ref _ref;
+
+  AuthRepositoryInterface get _repository =>
+      _ref.read(authRepositoryProvider);
 
   void _loadUser() {
     final user = _ref.read(authStateProvider).user;
@@ -155,10 +164,43 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
       maxHeight: 512,
       imageQuality: 80,
     );
-    if (pickedFile != null) {
+    if (pickedFile == null) return;
+
+    state = state.copyWith(isAvatarLoading: true, clearError: true);
+
+    try {
+      final url = await _repository.uploadAvatar(File(pickedFile.path));
+      if (!mounted) return;
       state = state.copyWith(
-        profileImagePath: pickedFile.path,
+        avatarUrl: url,
+        isAvatarLoading: false,
         hasChanges: true,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(
+        isAvatarLoading: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  Future<void> removeAvatar() async {
+    state = state.copyWith(isAvatarLoading: true, clearError: true);
+
+    try {
+      final profile = await _repository.removeAvatar();
+      if (!mounted) return;
+      state = state.copyWith(
+        avatarUrl: profile.avatarUrl,
+        isAvatarLoading: false,
+        hasChanges: true,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(
+        isAvatarLoading: false,
+        error: e.toString(),
       );
     }
   }
@@ -182,7 +224,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         .updateProfile(
           fullName: state.fullName,
           phoneNumber: state.phoneNumber.trim(),
-          profileImage: state.profileImagePath,
+          profileImage: state.avatarUrl,
           dateOfBirth: state.dateOfBirth,
           gender: state.gender,
           country: state.country,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:max/features/auth/data/models/profile_model.dart';
 
 abstract class AuthRepositoryInterface {
@@ -28,4 +29,10 @@ abstract class AuthRepositoryInterface {
     String? country,
     String? bio,
   });
+
+  Future<String> uploadAvatar(File image);
+
+  Future<ProfileModel> removeAvatar();
+
+  Future<ProfileModel> updateAvatarUrl(String url);
 }

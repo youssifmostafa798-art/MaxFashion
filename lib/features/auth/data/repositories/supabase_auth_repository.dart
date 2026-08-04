@@ -1,4 +1,6 @@
 import 'dart:developer' as developer;
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/features/auth/data/models/profile_model.dart';
 import 'package:max/features/auth/domain/auth_repository_interface.dart';
@@ -186,5 +188,155 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
         await _client.from('profiles').select().eq('id', userId).single();
 
     return ProfileModel.fromMap(response);
+  }
+
+  @override
+  Future<String> uploadAvatar(File image) async {
+    try {
+      debugPrint('========== AVATAR UPLOAD START ==========');
+
+      final userId = _auth.currentUser?.id;
+      debugPrint('[Avatar] User ID: $userId');
+      if (userId == null) throw Exception('No authenticated user found.');
+
+      final fileExists = await image.exists();
+      debugPrint('[Avatar] File exists: $fileExists');
+      if (!fileExists) throw Exception('Image file does not exist: ${image.path}');
+
+      final fileSize = await image.length();
+      debugPrint('[Avatar] Selected image path: ${image.path}');
+      debugPrint('[Avatar] Selected image size: $fileSize bytes');
+
+      const bucketName = 'avatars';
+      final path = '$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      debugPrint('[Avatar] Bucket name: $bucketName');
+      debugPrint('[Avatar] Upload path: $path');
+
+      debugPrint('[Avatar] Uploading to Supabase Storage...');
+      final uploadResponse = await _client.storage
+          .from(bucketName)
+          .upload(path, image);
+      debugPrint('[Avatar] Storage upload response: $uploadResponse');
+
+      debugPrint('[Avatar] Getting public URL...');
+      final url = _client.storage.from(bucketName).getPublicUrl(path);
+      debugPrint('[Avatar] Public URL: $url');
+
+      debugPrint('[Avatar] Updating profiles.avatar_url in database...');
+      final dbResponse = await _client.from('profiles').update({
+        'avatar_url': url,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', userId);
+      debugPrint('[Avatar] Database update result: $dbResponse');
+
+      debugPrint('========== AVATAR UPLOAD END ==========');
+      return url;
+    } catch (e, stackTrace) {
+      debugPrint('========== AVATAR ERROR ==========');
+      debugPrint(e.toString());
+      debugPrint(stackTrace.toString());
+      debugPrint('====================================');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ProfileModel> removeAvatar() async {
+    try {
+      debugPrint('========== AVATAR REMOVE START ==========');
+
+      final userId = _auth.currentUser?.id;
+      debugPrint('[Avatar] User ID: $userId');
+      if (userId == null) throw Exception('No authenticated user found.');
+
+      final profile = await getProfile();
+      debugPrint('[Avatar] Current avatar_url: ${profile?.avatarUrl}');
+
+      if (profile?.avatarUrl != null && profile!.avatarUrl!.isNotEmpty) {
+        final avatarPath = _extractStoragePath(profile.avatarUrl!);
+        debugPrint('[Avatar] Extracted storage path: $avatarPath');
+
+        if (avatarPath != null) {
+          debugPrint('[Avatar] Deleting file from Supabase Storage...');
+          try {
+            final removeResponse = await _client.storage
+                .from('avatars')
+                .remove([avatarPath]);
+            debugPrint('[Avatar] Storage remove response: $removeResponse');
+          } catch (e, stackTrace) {
+            debugPrint('========== AVATAR ERROR ==========');
+            debugPrint(e.toString());
+            debugPrint(stackTrace.toString());
+            debugPrint('====================================');
+            debugPrint('[Avatar] Continuing despite storage delete failure');
+          }
+        }
+      } else {
+        debugPrint('[Avatar] No avatar to delete from storage');
+      }
+
+      debugPrint('[Avatar] Setting profiles.avatar_url = NULL in database...');
+      final dbResponse = await _client.from('profiles').update({
+        'avatar_url': null,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', userId);
+      debugPrint('[Avatar] Database update result: $dbResponse');
+
+      debugPrint('[Avatar] Fetching updated profile...');
+      final response =
+          await _client.from('profiles').select().eq('id', userId).single();
+      final updatedProfile = ProfileModel.fromMap(response);
+      debugPrint('[Avatar] Updated avatar_url: ${updatedProfile.avatarUrl}');
+
+      debugPrint('========== AVATAR REMOVE END ==========');
+      return updatedProfile;
+    } catch (e, stackTrace) {
+      debugPrint('========== AVATAR ERROR ==========');
+      debugPrint(e.toString());
+      debugPrint(stackTrace.toString());
+      debugPrint('====================================');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<ProfileModel> updateAvatarUrl(String url) async {
+    try {
+      debugPrint('========== AVATAR UPDATE START ==========');
+
+      final userId = _auth.currentUser?.id;
+      debugPrint('[Avatar] User ID: $userId');
+      debugPrint('[Avatar] New avatar URL: $url');
+      if (userId == null) throw Exception('No authenticated user found.');
+
+      debugPrint('[Avatar] Updating profiles.avatar_url in database...');
+      final dbResponse = await _client.from('profiles').update({
+        'avatar_url': url,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', userId);
+      debugPrint('[Avatar] Database update result: $dbResponse');
+
+      debugPrint('[Avatar] Fetching updated profile...');
+      final response =
+          await _client.from('profiles').select().eq('id', userId).single();
+      final updatedProfile = ProfileModel.fromMap(response);
+      debugPrint('[Avatar] Updated avatar_url: ${updatedProfile.avatarUrl}');
+
+      debugPrint('========== AVATAR UPDATE END ==========');
+      return updatedProfile;
+    } catch (e, stackTrace) {
+      debugPrint('========== AVATAR ERROR ==========');
+      debugPrint(e.toString());
+      debugPrint(stackTrace.toString());
+      debugPrint('====================================');
+      rethrow;
+    }
+  }
+
+  String? _extractStoragePath(String publicUrl) {
+    final marker = 'avatars/';
+    final index = publicUrl.indexOf(marker);
+    if (index == -1) return null;
+    return publicUrl.substring(index + marker.length);
   }
 }

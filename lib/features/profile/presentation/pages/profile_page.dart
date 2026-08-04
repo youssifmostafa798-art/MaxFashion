@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -16,6 +14,7 @@ import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:max/features/profile/presentation/pages/payment_methods_page.dart';
+import 'package:max/features/profile/presentation/widgets/profile_avatar_widget.dart';
 import 'package:max/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:max/features/settings/presentation/pages/settings_page.dart';
 import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
@@ -102,35 +101,10 @@ class _ProfileHeader extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: colorScheme.outline,
               ),
-              child: user != null && user!.profileImage != null
-                  ? ClipOval(
-                      child: user!.profileImage!.startsWith('http')
-                          ? Image.network(
-                              user!.profileImage!,
-                              fit: BoxFit.cover,
-                              width: 80.w,
-                              height: 80.w,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.person,
-                                size: 44.w,
-                                color: colorScheme.surface,
-                              ),
-                            )
-                          : Image.file(
-                              File(user!.profileImage!),
-                              fit: BoxFit.cover,
-                              width: 80.w,
-                              height: 80.w,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.person,
-                                size: 44.w,
-                                color: colorScheme.surface,
-                              ),
-                            ),
-                    )
-                  : Icon(Icons.person, size: 44.w, color: colorScheme.surface),
+              child: ProfileAvatar(
+                avatarUrl: user?.profileImage,
+                radius: 40,
+              ),
             ),
             SizedBox(height: 14.h),
             CustomText(
@@ -295,5 +269,3 @@ class _MenuSection extends ConsumerWidget {
     );
   }
 }
-
-

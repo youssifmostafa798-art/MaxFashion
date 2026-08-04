@@ -181,11 +181,40 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             child: Column(
               children: [
                 ProfileAvatar(
-                  imagePath: state.profileImagePath,
-                  onTap: () =>
-                      ref.read(editProfileProvider.notifier).pickImage(),
+                  avatarUrl: state.avatarUrl,
+                  onTap: state.isAvatarLoading
+                      ? null
+                      : () => ref
+                          .read(editProfileProvider.notifier)
+                          .pickImage(),
                   radius: 55,
+                  showCameraIcon: true,
                 ),
+                if (state.isAvatarLoading) ...[
+                  Gap(12.h),
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.w,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.w,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+                if (state.avatarUrl != null &&
+                    state.avatarUrl!.isNotEmpty &&
+                    !state.isAvatarLoading) ...[
+                  Gap(8.h),
+                  GestureDetector(
+                    onTap: () =>
+                        ref.read(editProfileProvider.notifier).removeAvatar(),
+                    child: CustomText(
+                      text: 'Remove Photo',
+                      size: 13,
+                      color: AppColors.errorRed400,
+                    ),
+                  ),
+                ],
                 Gap(30.h),
                 ProfileFormSection(
                   title: 'PERSONAL INFORMATION',
