@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
 
- 
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.3
   ionicons: ^0.2.2
@@ -24,7 +23,6 @@ dependencies:
   shared_preferences: ^2.2.2
   image_picker: ^1.1.2
   supabase_flutter: ^2.9.1
-
 
 dev_dependencies:
   flutter_test:
@@ -42,26 +40,21 @@ flutter_launcher_icons:
 
 flutter:
 
-
   uses-material-design: true
 
- 
   assets:
-     - assets/cover/
-     - assets/logo/
-     - assets/product/
-     - assets/svgs/
-     - assets/texts/
-     - assets/pop/
-     - assets/data/
-    
-     
-
-
+    - assets/cover/
+    - assets/logo/
+    - assets/product/
+    - assets/svgs/
+    - assets/texts/
+    - assets/pop/
+    - assets/data/
+    - assets/products/
 
   fonts:
-     - family: Tenor_Sans
-       fonts:
-        - asset: assets\fonts\Tenor_Sans\TenorSans-Regular.ttf
+    - family: Tenor_Sans
+      fonts:
+        - asset: assets/fonts/Tenor_Sans/TenorSans-Regular.ttf
         
 

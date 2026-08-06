@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
-import 'package:max/data/repositories/search/local_search_repository.dart';
+import 'package:max/data/repositories/search/supabase_search_repository.dart';
 
 final searchRepositoryProvider = Provider<SearchRepository>((ref) {
-  return LocalSearchRepository();
+  final productRepo = ref.watch(productRepositoryProvider);
+  return SupabaseSearchRepository(productRepo);
 });
 
 final searchQueryProvider = StateProvider<String>((ref) => '');

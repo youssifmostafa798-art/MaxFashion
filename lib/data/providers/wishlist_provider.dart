@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/product_provider.dart';
 
 const _wishlistKey = 'wishlist_ids';
 
 class WishlistNotifier extends StateNotifier<List<ProductModel>> {
-  WishlistNotifier() : super([]) {
+  final Ref ref;
+
+  WishlistNotifier(this.ref) : super([]) {
     _load();
   }
 
@@ -18,7 +21,8 @@ class WishlistNotifier extends StateNotifier<List<ProductModel>> {
     final List<String> ids =
         (jsonDecode(raw) as List).cast<String>();
     final idSet = ids.toSet();
-    state = ProductModel.products
+    final dataSource = ref.read(localProductDataSourceProvider);
+    state = dataSource.products
         .where((p) => idSet.contains(p.id))
         .toList();
   }
@@ -55,7 +59,7 @@ class WishlistNotifier extends StateNotifier<List<ProductModel>> {
 
 final wishlistProvider =
     StateNotifierProvider<WishlistNotifier, List<ProductModel>>((ref) {
-  return WishlistNotifier();
+  return WishlistNotifier(ref);
 });
 
 final wishlistCountProvider = Provider<int>((ref) {
