@@ -14,7 +14,7 @@ async function main() {
   if (!validateRequiredFields(data, REQUIRED_FIELDS, "product_sizes.json"))
     process.exit(1);
 
-  await batchInsert("product_sizes", data);
+  await batchInsert("product_sizes", data, "product_id,size");
 }
 
 main().catch((err) => {

@@ -3,7 +3,7 @@ import log from "./logger.js";
 
 const BATCH_SIZE = 100;
 
-export async function batchInsert(tableName, data) {
+export async function batchInsert(tableName, data, conflictColumn = "id") {
   log.success(`Validating...`);
 
   const total = data.length;
@@ -25,7 +25,7 @@ export async function batchInsert(tableName, data) {
 
     const { data: inserted, error } = await supabase
       .from(tableName)
-      .insert(batch)
+      .upsert(batch, { onConflict: conflictColumn })
       .select();
 
     if (error) {
@@ -40,6 +40,6 @@ export async function batchInsert(tableName, data) {
     insertedCount += inserted ? inserted.length : batch.length;
   }
 
-  log.success(`Import completed successfully: ${insertedCount} rows inserted into ${tableName}`);
+  log.success(`Import completed successfully: ${insertedCount} rows upserted into ${tableName}`);
   return insertedCount;
 }
