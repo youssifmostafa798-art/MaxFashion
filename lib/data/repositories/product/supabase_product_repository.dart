@@ -51,29 +51,13 @@ class SupabaseProductRepository implements ProductRepository {
   }
 
   Future<void> loadAll() async {
-    print('[DEBUG] loadAll() STARTED');
-    try {
-      print('[DEBUG] Supabase client initialized: ${_client != null}');
-      print('[DEBUG] Query: products.select($_selectWithRelations).order("id")');
-      final response = await _client
-          .from('products')
-          .select(_selectWithRelations)
-          .order('id');
-      print('[DEBUG] Query SUCCEEDED');
-      final rows = response as List;
-      print('[DEBUG] Rows returned: ${rows.length}');
-      if (rows.isNotEmpty) {
-        print('[DEBUG] First row keys: ${(rows.first as Map).keys.toList()}');
-        final first = _mapRowToModel(rows.first as Map<String, dynamic>);
-        print('[DEBUG] First product: id=${first.id}, name=${first.name}, images=${first.productImages.length}, sizes=${first.productSizes.length}');
-      }
-      _productsCache = rows.map((row) => _mapRowToModel(row as Map<String, dynamic>)).toList();
-      print('[DEBUG] Cache populated: ${_productsCache.length} products');
-    } catch (e, stack) {
-      print('[DEBUG] loadAll() FAILED: $e');
-      print('[DEBUG] Stack trace: $stack');
-    }
-    print('[DEBUG] loadAll() ENDED');
+    final response = await _client
+        .from('products')
+        .select(_selectWithRelations)
+        .order('id');
+
+    _productsCache =
+        (response as List).map((row) => _mapRowToModel(row as Map<String, dynamic>)).toList();
   }
 
   @override

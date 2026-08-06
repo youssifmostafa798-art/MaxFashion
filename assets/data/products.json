@@ -1,4 +1,4 @@
-[
+﻿[
     {
         "id": 1,
         "category_id": 1,
@@ -7,7 +7,7 @@
         "price": 28.05,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -19,7 +19,7 @@
         "price": 34.71,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -31,7 +31,7 @@
         "price": 46.28,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -43,7 +43,7 @@
         "price": 26.83,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -55,7 +55,7 @@
         "price": 46.47,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -67,7 +67,7 @@
         "price": 32.72,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/sunglasses/sunglasses 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -79,7 +79,7 @@
         "price": 35.93,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -91,7 +91,7 @@
         "price": 38.84,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -103,7 +103,7 @@
         "price": 45.42,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -115,7 +115,7 @@
         "price": 50.25,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -127,7 +127,7 @@
         "price": 56.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -139,7 +139,7 @@
         "price": 64.02,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -151,7 +151,7 @@
         "price": 61.74,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/accessories/watches/watches.jpg",
+        "thumbnail_url": "assets/products_supa/men/accessories/watches/watches.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -163,7 +163,7 @@
         "price": 70.81,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/collections jeans.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/collections_jeans.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -175,7 +175,7 @@
         "price": 45.06,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -187,7 +187,7 @@
         "price": 53.49,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -199,7 +199,7 @@
         "price": 75.77,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -211,7 +211,7 @@
         "price": 75.07,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -223,7 +223,7 @@
         "price": 44.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -235,7 +235,7 @@
         "price": 55.99,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -247,7 +247,7 @@
         "price": 72.38,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -259,7 +259,7 @@
         "price": 52.99,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -271,7 +271,7 @@
         "price": 76.93,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -283,7 +283,7 @@
         "price": 49.13,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -295,7 +295,7 @@
         "price": 40.82,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/jeans/jeans 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/jeans/jeans_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -307,7 +307,7 @@
         "price": 26.47,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/collection polo.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/collection_polo.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -319,7 +319,7 @@
         "price": 32.32,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -331,7 +331,7 @@
         "price": 33.86,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -343,7 +343,7 @@
         "price": 28.61,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -355,7 +355,7 @@
         "price": 30.86,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 12.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -367,7 +367,7 @@
         "price": 26.99,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 13.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_13.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -379,7 +379,7 @@
         "price": 30.57,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 14.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_14.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -391,7 +391,7 @@
         "price": 29.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 15.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_15.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -403,7 +403,7 @@
         "price": 47.22,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -415,7 +415,7 @@
         "price": 30.98,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -427,7 +427,7 @@
         "price": 31.88,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -439,7 +439,7 @@
         "price": 30.3,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -451,7 +451,7 @@
         "price": 32.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -463,7 +463,7 @@
         "price": 27.36,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -475,7 +475,7 @@
         "price": 37.33,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -487,7 +487,7 @@
         "price": 49.79,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/polos/polo 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/polos/polo_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -499,7 +499,7 @@
         "price": 36.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -511,7 +511,7 @@
         "price": 56.61,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -523,7 +523,7 @@
         "price": 45.63,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -535,7 +535,7 @@
         "price": 51.47,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -547,7 +547,7 @@
         "price": 36.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -559,7 +559,7 @@
         "price": 48.61,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -571,7 +571,7 @@
         "price": 51.5,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -583,7 +583,7 @@
         "price": 54.07,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -595,7 +595,7 @@
         "price": 36.34,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -607,7 +607,7 @@
         "price": 52.56,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -619,7 +619,7 @@
         "price": 43.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -631,7 +631,7 @@
         "price": 37.32,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shirts/shirts.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shirts/shirts.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -643,7 +643,7 @@
         "price": 42.98,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -655,7 +655,7 @@
         "price": 21.14,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -667,7 +667,7 @@
         "price": 41.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -679,7 +679,7 @@
         "price": 39.19,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -691,7 +691,7 @@
         "price": 37.28,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -703,7 +703,7 @@
         "price": 23.71,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/shorts/shorts 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/shorts/shorts_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -715,7 +715,7 @@
         "price": 44.76,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/collections tshirts.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/collections_tshirts.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -727,7 +727,7 @@
         "price": 37.52,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -739,7 +739,7 @@
         "price": 39.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -751,7 +751,7 @@
         "price": 23.35,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 12.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -763,7 +763,7 @@
         "price": 27.61,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 13.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_13.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -775,7 +775,7 @@
         "price": 35.52,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 14.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_14.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -787,7 +787,7 @@
         "price": 38.98,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 15.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_15.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -799,7 +799,7 @@
         "price": 38.21,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 16.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_16.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -811,7 +811,7 @@
         "price": 30.94,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 17.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_17.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -823,7 +823,7 @@
         "price": 29.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 18.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_18.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -835,7 +835,7 @@
         "price": 40.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 19.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_19.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -847,7 +847,7 @@
         "price": 42.36,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -859,7 +859,7 @@
         "price": 25.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 20.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_20.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -871,7 +871,7 @@
         "price": 44.07,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 21.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_21.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -883,7 +883,7 @@
         "price": 37.51,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 22.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_22.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -895,7 +895,7 @@
         "price": 21.44,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 23.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_23.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -907,7 +907,7 @@
         "price": 34.66,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 24.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_24.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -919,7 +919,7 @@
         "price": 32.22,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -931,7 +931,7 @@
         "price": 40.72,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -943,7 +943,7 @@
         "price": 22.87,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -955,7 +955,7 @@
         "price": 33.88,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -967,7 +967,7 @@
         "price": 42.5,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -979,7 +979,7 @@
         "price": 35.02,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -991,7 +991,7 @@
         "price": 25.87,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/clothing/tshirts/tshirt 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/clothing/tshirts/tshirt_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1003,7 +1003,7 @@
         "price": 99.28,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/boots/boots 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/boots/boots_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1015,7 +1015,7 @@
         "price": 99.05,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/boots/boots 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/boots/boots_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1027,7 +1027,7 @@
         "price": 99.51,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/boots/boots 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/boots/boots_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1039,7 +1039,7 @@
         "price": 91.22,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/boots/boots 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/boots/boots_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1051,7 +1051,7 @@
         "price": 112.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1063,7 +1063,7 @@
         "price": 71.59,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1075,7 +1075,7 @@
         "price": 115.6,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1087,7 +1087,7 @@
         "price": 100.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1099,7 +1099,7 @@
         "price": 76.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1111,7 +1111,7 @@
         "price": 90.52,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1123,7 +1123,7 @@
         "price": 71.1,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1135,7 +1135,7 @@
         "price": 115.02,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/loafers/loafers 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/loafers/loafers_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1147,7 +1147,7 @@
         "price": 104.49,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1159,7 +1159,7 @@
         "price": 132.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1171,7 +1171,7 @@
         "price": 135.83,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1183,7 +1183,7 @@
         "price": 111.88,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 12.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1195,7 +1195,7 @@
         "price": 101.48,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1207,7 +1207,7 @@
         "price": 137.45,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1219,7 +1219,7 @@
         "price": 116.65,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1231,7 +1231,7 @@
         "price": 86.96,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1243,7 +1243,7 @@
         "price": 76.5,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1255,7 +1255,7 @@
         "price": 113.29,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1267,7 +1267,7 @@
         "price": 117.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1279,7 +1279,7 @@
         "price": 86.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/running/running 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/running/running_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1291,7 +1291,7 @@
         "price": 79.66,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 1.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1303,7 +1303,7 @@
         "price": 82.18,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 10.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1315,7 +1315,7 @@
         "price": 148.82,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 11.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1327,7 +1327,7 @@
         "price": 65.42,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 12.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1339,7 +1339,7 @@
         "price": 149.87,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 2.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1351,7 +1351,7 @@
         "price": 114.19,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 3.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1363,7 +1363,7 @@
         "price": 141.19,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 4.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1375,7 +1375,7 @@
         "price": 134.43,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 5.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1387,7 +1387,7 @@
         "price": 131.62,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 6.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1399,7 +1399,7 @@
         "price": 110.69,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 7.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1411,7 +1411,7 @@
         "price": 127.96,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 8.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1423,7 +1423,7 @@
         "price": 109.18,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/men/shoes/sneakers/sneakers 9.jpg",
+        "thumbnail_url": "assets/products_supa/men/shoes/sneakers/sneakers_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1435,7 +1435,7 @@
         "price": 59.46,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/accessories all.png",
+        "thumbnail_url": "assets/products_supa/women/accessories/accessories_all.png",
         "is_featured": false,
         "is_available": true
     },
@@ -1447,7 +1447,7 @@
         "price": 26.54,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1459,7 +1459,7 @@
         "price": 38.94,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1471,7 +1471,7 @@
         "price": 38.35,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1483,7 +1483,7 @@
         "price": 29.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1495,7 +1495,7 @@
         "price": 39.44,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1507,7 +1507,7 @@
         "price": 37.55,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1519,7 +1519,7 @@
         "price": 26.44,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1531,7 +1531,7 @@
         "price": 37.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1543,7 +1543,7 @@
         "price": 28.11,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/bracelets/bracelets 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/bracelets/bracelets_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1555,7 +1555,7 @@
         "price": 38.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1567,7 +1567,7 @@
         "price": 26.05,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1579,7 +1579,7 @@
         "price": 26.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1591,7 +1591,7 @@
         "price": 32.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1603,7 +1603,7 @@
         "price": 25.29,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1615,7 +1615,7 @@
         "price": 41.31,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1627,7 +1627,7 @@
         "price": 30.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1639,7 +1639,7 @@
         "price": 43.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/earrings/earrings 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/earrings/earrings_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1651,7 +1651,7 @@
         "price": 22.23,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/necklaces/necklaces 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/necklaces/necklaces_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1663,7 +1663,7 @@
         "price": 40.37,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/necklaces/necklaces 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/necklaces/necklaces_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1675,7 +1675,7 @@
         "price": 26,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/necklaces/necklaces 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/necklaces/necklaces_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1687,7 +1687,7 @@
         "price": 38.77,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/necklaces/necklaces 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/necklaces/necklaces_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1699,7 +1699,7 @@
         "price": 32.83,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1711,7 +1711,7 @@
         "price": 43.82,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 10.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1723,7 +1723,7 @@
         "price": 15.57,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 11.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1735,7 +1735,7 @@
         "price": 27.22,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1747,7 +1747,7 @@
         "price": 23.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1759,7 +1759,7 @@
         "price": 49.84,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1771,7 +1771,7 @@
         "price": 23.11,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1783,7 +1783,7 @@
         "price": 49.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1795,7 +1795,7 @@
         "price": 15.66,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1807,7 +1807,7 @@
         "price": 43.21,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1819,7 +1819,7 @@
         "price": 15.39,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/rings/rings 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/rings/rings_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1831,7 +1831,7 @@
         "price": 21.22,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1843,7 +1843,7 @@
         "price": 49.1,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1855,7 +1855,7 @@
         "price": 36.18,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1867,7 +1867,7 @@
         "price": 47.65,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1879,7 +1879,7 @@
         "price": 43.3,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1891,7 +1891,7 @@
         "price": 21.87,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1903,7 +1903,7 @@
         "price": 48,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1915,7 +1915,7 @@
         "price": 42.49,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/sunglasses/weman_sunglasses 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1927,7 +1927,7 @@
         "price": 33.07,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1939,7 +1939,7 @@
         "price": 38.42,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1951,7 +1951,7 @@
         "price": 53.13,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1963,7 +1963,7 @@
         "price": 34.91,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1975,7 +1975,7 @@
         "price": 62.6,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1987,7 +1987,7 @@
         "price": 52.03,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -1999,7 +1999,7 @@
         "price": 32.3,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2011,7 +2011,7 @@
         "price": 46.18,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/accessories/watches/weman_watches 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/accessories/watches/weman_watches_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2023,7 +2023,7 @@
         "price": 94.14,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/bagss.png",
+        "thumbnail_url": "assets/products_supa/women/bags/bagss.png",
         "is_featured": false,
         "is_available": true
     },
@@ -2035,7 +2035,7 @@
         "price": 74.86,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2047,7 +2047,7 @@
         "price": 114.42,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 10.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2059,7 +2059,7 @@
         "price": 100.28,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 11.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2071,7 +2071,7 @@
         "price": 40.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 12.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2083,7 +2083,7 @@
         "price": 114.52,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 13.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_13.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2095,7 +2095,7 @@
         "price": 42.81,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 14.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_14.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2107,7 +2107,7 @@
         "price": 83.48,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 15.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_15.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2119,7 +2119,7 @@
         "price": 91.09,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 16.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_16.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2131,7 +2131,7 @@
         "price": 44.44,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 17.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_17.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2143,7 +2143,7 @@
         "price": 52.66,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 18.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_18.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2155,7 +2155,7 @@
         "price": 108.47,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2167,7 +2167,7 @@
         "price": 83.21,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2179,7 +2179,7 @@
         "price": 117.75,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2191,7 +2191,7 @@
         "price": 40.06,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2203,7 +2203,7 @@
         "price": 71.38,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2215,7 +2215,7 @@
         "price": 45.1,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2227,7 +2227,7 @@
         "price": 47.48,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2239,7 +2239,7 @@
         "price": 100.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/bags/weman_bags 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/bags/weman_bags_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2251,7 +2251,7 @@
         "price": 34.84,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/blouses/weman_blouses  2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/blouses/weman_blouses_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2263,7 +2263,7 @@
         "price": 51.87,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/blouses/weman_blouses 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/blouses/weman_blouses_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2275,7 +2275,7 @@
         "price": 26.36,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/blouses/weman_blouses 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/blouses/weman_blouses_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2287,7 +2287,7 @@
         "price": 33.68,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/blouses/weman_blouses 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/blouses/weman_blouses_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2299,7 +2299,7 @@
         "price": 39,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2311,7 +2311,7 @@
         "price": 26.06,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 10.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2323,7 +2323,7 @@
         "price": 22.38,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 11.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2335,7 +2335,7 @@
         "price": 25.34,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2347,7 +2347,7 @@
         "price": 38.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2359,7 +2359,7 @@
         "price": 31.03,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2371,7 +2371,7 @@
         "price": 24.59,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2383,7 +2383,7 @@
         "price": 30.88,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2395,7 +2395,7 @@
         "price": 35.44,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2407,7 +2407,7 @@
         "price": 38.66,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2419,7 +2419,7 @@
         "price": 29.01,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/crop_tops/crop_tops 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2431,7 +2431,7 @@
         "price": 78.98,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2443,7 +2443,7 @@
         "price": 65.46,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 10.png",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_10.png",
         "is_featured": false,
         "is_available": true
     },
@@ -2455,7 +2455,7 @@
         "price": 58.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 11.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2467,7 +2467,7 @@
         "price": 68.91,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 12.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_12.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2479,7 +2479,7 @@
         "price": 55.52,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 13.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_13.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2491,7 +2491,7 @@
         "price": 61.75,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 14.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_14.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2503,7 +2503,7 @@
         "price": 43.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 15.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_15.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2515,7 +2515,7 @@
         "price": 77.2,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2527,7 +2527,7 @@
         "price": 56.76,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2539,7 +2539,7 @@
         "price": 40.18,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2551,7 +2551,7 @@
         "price": 69.21,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2563,7 +2563,7 @@
         "price": 78.37,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2575,7 +2575,7 @@
         "price": 44.92,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2587,7 +2587,7 @@
         "price": 66.51,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2599,7 +2599,7 @@
         "price": 78.04,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/dresses/dresses 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/dresses/dresses_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2611,7 +2611,7 @@
         "price": 56.2,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/jeans/jeans 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/jeans/jeans_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2623,7 +2623,7 @@
         "price": 60.77,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/jeans/jeans 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/jeans/jeans_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2635,7 +2635,7 @@
         "price": 66.42,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/jeans/jeans 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/jeans/jeans_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2647,7 +2647,7 @@
         "price": 33.1,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2659,7 +2659,7 @@
         "price": 47.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 10.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_10.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2671,7 +2671,7 @@
         "price": 30.64,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 11.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_11.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2683,7 +2683,7 @@
         "price": 28.82,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2695,7 +2695,7 @@
         "price": 31.21,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2707,7 +2707,7 @@
         "price": 41.48,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2719,7 +2719,7 @@
         "price": 36.83,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2731,7 +2731,7 @@
         "price": 45.91,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2743,7 +2743,7 @@
         "price": 31.91,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2755,7 +2755,7 @@
         "price": 29.11,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_8.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2767,7 +2767,7 @@
         "price": 34.17,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/skirts/skirts 9.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/skirts/skirts_9.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2779,7 +2779,7 @@
         "price": 47.65,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2791,7 +2791,7 @@
         "price": 41.25,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2803,7 +2803,7 @@
         "price": 54.75,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2815,7 +2815,7 @@
         "price": 45.73,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2827,7 +2827,7 @@
         "price": 54.5,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2839,7 +2839,7 @@
         "price": 62.8,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2851,7 +2851,7 @@
         "price": 52.62,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/clothing/wide_leg_pants/wide_leg_pants 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2863,7 +2863,7 @@
         "price": 65.84,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/boots/weman_boots 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/boots/weman_boots_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2875,7 +2875,7 @@
         "price": 62.27,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/boots/weman_boots 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/boots/weman_boots_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2887,7 +2887,7 @@
         "price": 97.39,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/boots/weman_boots 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/boots/weman_boots_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2899,7 +2899,7 @@
         "price": 110.27,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/boots/weman_boots 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/boots/weman_boots_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2911,7 +2911,7 @@
         "price": 121.49,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/boots/weman_boots 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/boots/weman_boots_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2923,7 +2923,7 @@
         "price": 51.24,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 1.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_1.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2935,7 +2935,7 @@
         "price": 60.49,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 2.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_2.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2947,7 +2947,7 @@
         "price": 59.68,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 3.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_3.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2959,7 +2959,7 @@
         "price": 118.59,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 4.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_4.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2971,7 +2971,7 @@
         "price": 70.53,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 5.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_5.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2983,7 +2983,7 @@
         "price": 81.93,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 6.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_6.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -2995,7 +2995,7 @@
         "price": 79.53,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 7.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_7.jpg",
         "is_featured": false,
         "is_available": true
     },
@@ -3007,7 +3007,7 @@
         "price": 70.97,
         "discount_price": null,
         "brand": "MaxFashion",
-        "thumbnail_url": "assets/products/women/shoes/heels/heels 8.jpg",
+        "thumbnail_url": "assets/products_supa/women/shoes/heels/heels_8.jpg",
         "is_featured": false,
         "is_available": true
     }

@@ -1,0 +1,70 @@
+Launching lib\main.dart on Windows in debug mode...
+Building Windows application...                                    12.8s
+√ Built build\windows\x64\runner\Debug\max.exe
+supabase.supabase_flutter: INFO: ***** Supabase init completed ***** 
+Syncing files to device Windows...                                 113ms
+
+Flutter run key commands.
+r Hot reload. 
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on Windows is available at: http://127.0.0.1:65174/1wmWcn2u6JU=/
+The Flutter DevTools debugger and profiler on Windows is available at: http://127.0.0.1:65174/1wmWcn2u6JU=/devtools/?uri=ws://127.0.0.1:65174/1wmWcn2u6JU=/ws
+[DEBUG] productRepositoryProvider: creating SupabaseProductRepository
+[DEBUG] loadAll() STARTED
+[DEBUG] Supabase client initialized: true
+[DEBUG] Query: products.select(id, category_id, name, description, price, discount_price, brand, thumbnail_url, is_featured, is_available, product_images(id, product_id, image_url, sort_order), product_sizes(product_id, size, stock)).order("id")
+[DEBUG] featuredProductsProvider: _productsLoaded=false, featured.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] Query SUCCEEDED
+[DEBUG] Rows returned: 251
+[DEBUG] First row keys: [id, category_id, name, description, price, discount_price, brand, thumbnail_url, is_featured, is_available, product_images, product_sizes]
+[DEBUG] First product: id=p251, name=Pointed Toe Croco, images=1, sizes=8
+[DEBUG] Cache populated: 251 products
+[DEBUG] loadAll() ENDED
+[DEBUG] productRepositoryProvider: loadAll completed, setting _productsLoaded = true
+[DEBUG] featuredProductsProvider: _productsLoaded=true, featured.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] SearchScreen: results=0, suggested=3
+[DEBUG] Home: products.length=0
+
+══╡ EXCEPTION CAUGHT BY IMAGE RESOURCE SERVICE ╞════════════════════════════════════════════════════
+The following assertion was thrown resolving an image codec:
+Unable to load asset: "assets/products/women/shoes/heels/heels 8.jpg".
+Exception: Asset not found
+
+When the exception was thrown, this was the stack:
+#0      PlatformAssetBundle.loadBuffer (package:flutter/src/services/asset_bundle.dart:373:7)
+<asynchronous suspension>
+#1      AssetBundleImageProvider._loadAsync (package:flutter/src/painting/image_provider.dart:783:16)
+<asynchronous suspension>
+#2      MultiFrameImageStreamCompleter._handleCodecReady (package:flutter/src/painting/image_stream.dart:1021:3)
+<asynchronous suspension>
+
+Image provider: AssetImage(bundle: null, name: "assets/products/women/shoes/heels/heels 8.jpg")
+Image key: AssetBundleImageKey(bundle: PlatformAssetBundle#b1192(), name:
+  "assets/products/women/shoes/heels/heels 8.jpg", scale: 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+Another exception was thrown: Unable to load asset: "assets/products/women/shoes/heels/heels 7.jpg".
+Another exception was thrown: Unable to load asset: "assets/products/women/shoes/heels/heels 6.jpg".
+[DEBUG] SearchScreen: results=0, suggested=3
+Another exception was thrown: A RenderFlex overflowed by 154 pixels on the bottom.
+Another exception was thrown: A RenderFlex overflowed by 154 pixels on the bottom.
+Another exception was thrown: A RenderFlex overflowed by 154 pixels on the bottom.
+Another exception was thrown: A RenderFlex overflowed by 154 pixels on the bottom.
+Another exception was thrown: A RenderFlex overflowed by 154 pixels on the bottom.
+[DEBUG] Home: products.length=0
+[DEBUG] categoryProductsProvider("Men"): _productsLoaded=true, products.length=0
+[DEBUG] ProductListingPage("Men"): products.length=0
+[DEBUG] Home: products.length=0
+[DEBUG] ProductListingPage("Men"): products.length=0
+Another exception was thrown: A RenderFlex overflowed by 117 pixels on the bottom.
+Lost connection to device.
