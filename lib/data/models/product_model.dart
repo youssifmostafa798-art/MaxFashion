@@ -1,214 +1,310 @@
+import 'package:max/data/models/product_image_model.dart';
+import 'package:max/data/models/product_size_model.dart';
+
 class ProductModel {
   final String id;
-  final String image;
+  final int categoryId;
   final String name;
-  final double price;
   final String description;
-  final String category;
-  final String collection;
-  final List<String> keywords;
-  final bool featured;
-  final List<String> sizes;
+  final double price;
+  final double? discountPrice;
+  final String brand;
+  final String thumbnailUrl;
+  final bool isFeatured;
+  final bool isAvailable;
+  final List<ProductImageModel> productImages;
+  final List<ProductSizeModel> productSizes;
 
   const ProductModel({
     required this.id,
+    required this.categoryId,
     required this.name,
-    required this.image,
-    required this.price,
     required this.description,
-    this.category = '',
-    this.collection = '',
-    this.keywords = const [],
-    this.featured = false,
-    this.sizes = const ['S', 'M', 'L', 'XL', 'XXL'],
+    required this.price,
+    this.discountPrice,
+    required this.brand,
+    required this.thumbnailUrl,
+    this.isFeatured = false,
+    this.isAvailable = true,
+    this.productImages = const [],
+    this.productSizes = const [],
   });
+
+  String get image => thumbnailUrl;
+
+  String get category {
+    const map = {
+      1: 'Sunglasses',
+      2: 'Watches',
+      3: 'Jeans',
+      4: 'Polos',
+      5: 'Shirts',
+      6: 'Shorts',
+      7: 'T-Shirts',
+      8: 'Boots',
+      9: 'Loafers',
+      10: 'Running Shoes',
+      11: 'Sneakers',
+      12: 'Accessories',
+      13: 'Bracelets',
+      14: 'Earrings',
+      15: 'Necklaces',
+      16: 'Rings',
+      17: 'Bags',
+      18: 'Blouses',
+      19: 'Crop Tops',
+      20: 'Dresses',
+      21: 'Skirts',
+      22: 'Wide Leg Pants',
+      23: 'Heels',
+    };
+    return map[categoryId] ?? '';
+  }
+
+  bool get featured => isFeatured;
+
+  String get collection => '';
+
+  List<String> get keywords => [];
+
+  List<String> get sizes => productSizes.map((s) => s.size).toList();
+
+  double get effectivePrice => discountPrice ?? price;
+
+  bool get hasDiscount => discountPrice != null && discountPrice! < price;
+
+  ProductModel copyWith({
+    String? id,
+    int? categoryId,
+    String? name,
+    String? description,
+    double? price,
+    double? discountPrice,
+    String? brand,
+    String? thumbnailUrl,
+    bool? isFeatured,
+    bool? isAvailable,
+    List<ProductImageModel>? productImages,
+    List<ProductSizeModel>? productSizes,
+    bool clearDiscountPrice = false,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      categoryId: categoryId ?? this.categoryId,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      discountPrice:
+          clearDiscountPrice ? null : (discountPrice ?? this.discountPrice),
+      brand: brand ?? this.brand,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      isFeatured: isFeatured ?? this.isFeatured,
+      isAvailable: isAvailable ?? this.isAvailable,
+      productImages: productImages ?? this.productImages,
+      productSizes: productSizes ?? this.productSizes,
+    );
+  }
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      id: 'p${json['id']}',
+      categoryId: json['category_id'] as int,
+      name: json['name'] as String,
+      description: json['description'] as String,
+      price: (json['price'] as num).toDouble(),
+      discountPrice: json['discount_price'] != null
+          ? (json['discount_price'] as num).toDouble()
+          : null,
+      brand: json['brand'] as String,
+      thumbnailUrl: json['thumbnail_url'] as String,
+      isFeatured: json['is_featured'] as bool? ?? false,
+      isAvailable: json['is_available'] as bool? ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'category_id': categoryId,
+      'name': name,
+      'description': description,
+      'price': price,
+      'discount_price': discountPrice,
+      'brand': brand,
+      'thumbnail_url': thumbnailUrl,
+      'is_featured': isFeatured,
+      'is_available': isAvailable,
+    };
+  }
 
   static List<ProductModel> products = [
     const ProductModel(
       id: 'p1',
+      categoryId: 8,
       name: "Boots",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 50,
       description: 'Classic leather boots for all seasons',
-      category: 'Shoes',
-      collection: 'Black collection',
-      keywords: ['footwear', 'leather', 'winter', 'ankle'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p2',
+      categoryId: 14,
       name: "Earrings",
-      image: 'assets/product/product2.png',
+      thumbnailUrl: 'assets/product/product2.png',
       price: 100,
       description: 'Elegant gold-plated earrings',
-      category: 'Accessories',
-      collection: 'HAE BY HAEKIM',
-      keywords: ['jewelry', 'gold', 'silver', 'accessory'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p3',
+      categoryId: 16,
       name: "Stalesteel\nring",
-      image: 'assets/product/product3.png',
+      thumbnailUrl: 'assets/product/product3.png',
       price: 40,
       description: 'Minimalist steel ring',
-      category: 'Accessories',
-      collection: 'HAE BY HAEKIM',
-      keywords: ['jewelry', 'ring', 'steel', 'accessory'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p4',
+      categoryId: 16,
       name: "Gold-plated\nring",
-      image: 'assets/product/product4.png',
+      thumbnailUrl: 'assets/product/product4.png',
       price: 100,
       description: 'Premium gold-plated ring',
-      category: 'Accessories',
-      collection: 'HAE BY HAEKIM',
-      keywords: ['jewelry', 'ring', 'gold', 'accessory'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p5',
+      categoryId: 16,
       name: "Gold-plated\nring",
-      image: 'assets/product/product5.png',
+      thumbnailUrl: 'assets/product/product5.png',
       price: 80,
       description: 'Luxury gold ring with white collection',
-      category: 'Accessories',
-      collection: 'White collection',
-      keywords: ['jewelry', 'ring', 'gold', 'accessory'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p6',
+      categoryId: 20,
       name: "Dress",
-      image: 'assets/product/product6.png',
+      thumbnailUrl: 'assets/product/product6.png',
       price: 120,
       description: 'Elegant evening dress',
-      category: 'Women',
-      collection: 'White collection',
-      keywords: ['fashion', 'formal', 'party', 'women'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p7',
+      categoryId: 5,
       name: "Classic\nBlazer",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 190,
       description: 'Tailored blazer for men',
-      category: 'Men',
-      collection: 'Black collection',
-      keywords: ['formal', 'blazer', 'men', 'office'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p8',
+      categoryId: 11,
       name: "Running\nSneakers",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 85,
       description: 'Lightweight running sneakers',
-      category: 'Shoes',
-      collection: 'Black collection',
-      keywords: ['sports', 'running', 'sneakers', 'athletic'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p9',
+      categoryId: 12,
       name: "Silk\nScarf",
-      image: 'assets/product/product2.png',
+      thumbnailUrl: 'assets/product/product2.png',
       price: 65,
       description: 'Premium silk scarf',
-      category: 'Accessories',
-      collection: 'White collection',
-      keywords: ['scarf', 'silk', 'fashion', 'accessory'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p10',
+      categoryId: 7,
       name: "Kids\nT-Shirt",
-      image: 'assets/product/product6.png',
+      thumbnailUrl: 'assets/product/product6.png',
       price: 25,
       description: 'Soft cotton t-shirt for kids',
-      category: 'Kids',
-      collection: 'White collection',
-      keywords: ['kids', 'cotton', 'casual', 't-shirt'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p11',
+      categoryId: 3,
       name: "Skinny\nJeans",
-      image: 'assets/product/product6.png',
+      thumbnailUrl: 'assets/product/product6.png',
       price: 75,
       description: 'Stretchy skinny jeans for women',
-      category: 'Women',
-      collection: 'Black collection',
-      keywords: ['jeans', 'skinny', 'women', 'casual'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p12',
+      categoryId: 7,
       name: "Kids\nJacket",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 45,
       description: 'Warm winter jacket for kids',
-      category: 'Kids',
-      collection: 'Black collection',
-      keywords: ['kids', 'jacket', 'winter', 'warm'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p13',
+      categoryId: 12,
       name: "Leather\nBelt",
-      image: 'assets/product/product3.png',
+      thumbnailUrl: 'assets/product/product3.png',
       price: 55,
       description: 'Genuine leather belt for men',
-      category: 'Men',
-      collection: 'Black collection',
-      keywords: ['belt', 'leather', 'men', 'accessory'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p14',
+      categoryId: 23,
       name: "High\nHeels",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 110,
       description: 'Stylish high heels for women',
-      category: 'Shoes',
-      collection: 'HAE BY HAEKIM',
-      keywords: ['heels', 'shoes', 'women', 'formal'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p15',
+      categoryId: 17,
       name: "Crossbody\nBag",
-      image: 'assets/product/product5.png',
+      thumbnailUrl: 'assets/product/product5.png',
       price: 95,
       description: 'Compact crossbody bag',
-      category: 'Accessories',
-      collection: 'White collection',
-      keywords: ['bag', 'crossbody', 'fashion', 'accessory'],
-      featured: true,
+      brand: 'MaxFashion',
+      isFeatured: true,
     ),
     const ProductModel(
       id: 'p16',
+      categoryId: 4,
       name: "Polo\nShirt",
-      image: 'assets/product/product6.png',
+      thumbnailUrl: 'assets/product/product6.png',
       price: 60,
       description: 'Classic polo shirt for men',
-      category: 'Men',
-      collection: 'White collection',
-      keywords: ['polo', 'shirt', 'men', 'casual'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p17',
+      categoryId: 23,
       name: "Summer\nFlats",
-      image: 'assets/product/product1.png',
+      thumbnailUrl: 'assets/product/product1.png',
       price: 45,
       description: 'Comfortable summer flats',
-      category: 'Shoes',
-      collection: 'White collection',
-      keywords: ['flats', 'summer', 'shoes', 'casual'],
+      brand: 'MaxFashion',
     ),
     const ProductModel(
       id: 'p18',
+      categoryId: 6,
       name: "Kids\nShorts",
-      image: 'assets/product/product6.png',
+      thumbnailUrl: 'assets/product/product6.png',
       price: 20,
       description: 'Comfortable shorts for kids',
-      category: 'Kids',
-      collection: 'White collection',
-      keywords: ['kids', 'shorts', 'summer', 'casual'],
+      brand: 'MaxFashion',
     ),
   ];
 }

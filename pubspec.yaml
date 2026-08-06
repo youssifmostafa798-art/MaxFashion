@@ -53,6 +53,7 @@ flutter:
      - assets/svgs/
      - assets/texts/
      - assets/pop/
+     - assets/data/
     
      
 

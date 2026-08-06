@@ -1,0 +1,17 @@
+{
+  "name": "maxfashion-seeder",
+  "version": "1.0.0",
+  "description": "Production-quality JSON seeder for MaxFashion Supabase database",
+  "type": "module",
+  "scripts": {
+    "import:categories": "node import_categories.js",
+    "import:products": "node import_products.js",
+    "import:product-images": "node import_product_images.js",
+    "import:product-sizes": "node import_product_sizes.js",
+    "import:all": "node import_all.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "dotenv": "^16.4.7"
+  }
+}
