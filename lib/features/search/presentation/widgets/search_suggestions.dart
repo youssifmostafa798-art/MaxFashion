@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
-import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
@@ -178,12 +178,13 @@ class SuggestedProductsSection extends StatelessWidget {
   }
 }
 
-class PopularCategoriesSection extends StatelessWidget {
+class PopularCategoriesSection extends ConsumerWidget {
   const PopularCategoriesSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final categories = ref.watch(categoriesProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,10 +204,10 @@ class PopularCategoriesSection extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            itemCount: CategoryModel.categories.length,
+            itemCount: categories.length,
             separatorBuilder: (_, _) => SizedBox(width: 16.w),
             itemBuilder: (context, index) {
-              final cat = CategoryModel.categories[index];
+              final cat = categories[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(

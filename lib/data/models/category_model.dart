@@ -15,17 +15,20 @@ class CategoryModel {
 
   IconData get icon {
     final lower = name.toLowerCase();
-    if (lower == 'men') return Icons.male;
-    if (lower == 'women') return Icons.female;
-    if (lower == 'kids') return Icons.child_care;
-    if (lower == 'shoes') return Icons.shopping_bag_outlined;
+    if (lower == 'sunglasses') return Icons.wb_sunny_outlined;
+    if (lower == 'watches') return Icons.watch_outlined;
+    if (lower == 'boots') return Icons.hiking;
+    if (lower == 'loafers' || lower == 'running shoes') {
+      return Icons.directions_walk;
+    }
+    if (lower == 'sneakers') return Icons.sports_basketball;
     if (lower == 'accessories' || lower == 'bracelets' || lower == 'earrings' ||
         lower == 'necklaces' || lower == 'rings') {
-      return Icons.watch_outlined;
+      return Icons.diamond_outlined;
     }
-    if (lower == 'brands') return Icons.star_border;
-    if (lower == 'sale') return Icons.local_offer_outlined;
-    return Icons.category_outlined;
+    if (lower == 'bags') return Icons.shopping_bag_outlined;
+    if (lower == 'heels') return Icons.directions_walk;
+    return Icons.checkroom;
   }
 
   CategoryModel copyWith({
@@ -60,13 +63,4 @@ class CategoryModel {
     };
   }
 
-  static const List<CategoryModel> categories = [
-    CategoryModel(id: 1, name: 'Men', slug: 'men', imageUrl: ''),
-    CategoryModel(id: 2, name: 'Women', slug: 'women', imageUrl: ''),
-    CategoryModel(id: 3, name: 'Kids', slug: 'kids', imageUrl: ''),
-    CategoryModel(id: 4, name: 'Shoes', slug: 'shoes', imageUrl: ''),
-    CategoryModel(id: 5, name: 'Accessories', slug: 'accessories', imageUrl: ''),
-    CategoryModel(id: 6, name: 'Brands', slug: 'brands', imageUrl: ''),
-    CategoryModel(id: 7, name: 'Sale', slug: 'sale', imageUrl: ''),
-  ];
 }

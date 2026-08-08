@@ -71,7 +71,16 @@ class _ProductGridCardState extends State<ProductGridCard>
               children: [
                 Hero(
                   tag: 'product-image-${widget.product.id}',
-                  child: Image.asset(widget.product.image),
+                  child: ClipRect(
+                    child: AspectRatio(
+                      aspectRatio: 1.0,
+                      child: Image.asset(
+                        widget.product.image,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                  ),
                 ),
                 Positioned(
                   top: 8.w,
@@ -81,10 +90,14 @@ class _ProductGridCardState extends State<ProductGridCard>
               ],
             ),
             Gap(10.h),
-            CustomText(text: widget.product.name),
+            CustomText(
+              text: widget.product.name,
+              maxLines: 1,
+            ),
             CustomText(
               text: widget.product.description,
               color: colorScheme.onSurfaceVariant,
+              maxLines: 2,
             ),
             Gap(9.h),
             CustomText(

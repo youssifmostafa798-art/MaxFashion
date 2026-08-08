@@ -49,64 +49,65 @@ class _CardWidgetState extends State<CardWidget> {
           ),
         ),
         Gap(8.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Gap(8.h),
-            CustomText(
-              text: widget.products.name.toUpperCase(),
-              spacing: 5,
-              color: colorScheme.onSurface,
-            ),
-            Gap(10.h),
-            SizedBox(
-              width: 200.w,
-              child: CustomText(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Gap(8.h),
+              CustomText(
+                text: widget.products.name.toUpperCase(),
+                spacing: 5,
+                color: colorScheme.onSurface,
+                maxLines: 1,
+              ),
+              Gap(10.h),
+              CustomText(
                 text: widget.products.description,
                 size: 15,
                 color: colorScheme.onSurface,
+                maxLines: 2,
               ),
-            ),
-            Gap(15.h),
-            CustomText(
-              text: "\$ ${widget.products.price}",
-              size: 16,
-              weight: FontWeight.bold,
-              color: const Color(0xffDD8560),
-            ),
-            Gap(20.h),
-            if (widget.enableQty)
-              Row(
-                children: [
-                  _QtyButton(
-                    svg: 'assets/svgs/min.svg',
-                    onTap: () {
-                      setState(() {
-                        if (number > 1) number--;
-                        widget.onChanged(number);
-                      });
-                    },
-                  ),
-                  Gap(15.w),
-                  CustomText(
-                    text: number.toString(),
-                    size: 15,
-                    weight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                  Gap(15.w),
-                  _QtyButton(
-                    svg: 'assets/svgs/plus.svg',
-                    onTap: () {
-                      setState(() {
-                        number++;
-                        widget.onChanged(number);
-                      });
-                    },
-                  ),
-                ],
+                Gap(15.h),
+              CustomText(
+                text: "\$ ${widget.products.price}",
+                size: 16,
+                weight: FontWeight.bold,
+                color: const Color(0xffDD8560),
               ),
-          ],
+              Gap(20.h),
+              if (widget.enableQty)
+                Row(
+                  children: [
+                    _QtyButton(
+                      svg: 'assets/svgs/min.svg',
+                      onTap: () {
+                        setState(() {
+                          if (number > 1) number--;
+                          widget.onChanged(number);
+                        });
+                      },
+                    ),
+                    Gap(15.w),
+                    CustomText(
+                      text: number.toString(),
+                      size: 15,
+                      weight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                    Gap(15.w),
+                    _QtyButton(
+                      svg: 'assets/svgs/plus.svg',
+                      onTap: () {
+                        setState(() {
+                          number++;
+                          widget.onChanged(number);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
       ],
     );
