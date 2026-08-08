@@ -84,50 +84,53 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   ),
                 ),
                 Gap(10.h),
-                Row(
-                  children: widget.product.sizes.map((size) {
-                    final isSelected = selectedSize == size;
-                    return Padding(
-                      padding: EdgeInsets.only(right: 10.w),
-                      child: GestureDetector(
-                        onTap: () {
-                          HapticUtils.selection();
-                          setState(() {
-                            selectedSize = size;
-                          });
-                        },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        width: 48.w,
-                        height: 48.w,
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.onSurface
-                              : Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: widget.product.sizes.map((size) {
+                      final isSelected = selectedSize == size;
+                      return Padding(
+                        padding: EdgeInsets.only(right: 10.w),
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticUtils.selection();
+                            setState(() {
+                              selectedSize = size;
+                            });
+                          },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          width: 48.w,
+                          height: 48.w,
+                          decoration: BoxDecoration(
                             color: isSelected
                                 ? Theme.of(context).colorScheme.onSurface
-                                : Theme.of(context).colorScheme.outline,
-                            width: isSelected ? 1.5 : 1,
+                                : Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(10.r),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.onSurface
+                                  : Theme.of(context).colorScheme.outline,
+                              width: isSelected ? 1.5 : 1,
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: CustomText(
-                            text: size,
-                            size: 13,
-                            weight: FontWeight.w600,
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.surface
-                                : Theme.of(context).colorScheme.onSurface,
+                          child: Center(
+                            child: CustomText(
+                              text: size,
+                              size: 13,
+                              weight: FontWeight.w600,
+                              color: isSelected
+                                  ? Theme.of(context).colorScheme.surface
+                                  : Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              ),
+                    );
+                  }).toList(),
+                  ),
+                ),
               ],
               const PromoSection(),
               Gap(50.h),
