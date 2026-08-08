@@ -12,12 +12,14 @@ class CardWidget extends StatefulWidget {
     required this.onChanged,
     required this.enableQty,
     required this.qty,
+    this.showDescription = true,
   });
 
   final ProductModel products;
   final Function(int) onChanged;
   final bool enableQty;
   final int qty;
+  final bool showDescription;
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -60,14 +62,16 @@ class _CardWidgetState extends State<CardWidget> {
                 color: colorScheme.onSurface,
                 maxLines: 1,
               ),
-              Gap(10.h),
-              CustomText(
-                text: widget.products.description,
-                size: 15,
-                color: colorScheme.onSurface,
-                maxLines: 2,
-              ),
-                Gap(15.h),
+              if (widget.showDescription) ...[
+                Gap(10.h),
+                CustomText(
+                  text: widget.products.description,
+                  size: 15,
+                  color: colorScheme.onSurface,
+                  maxLines: 2,
+                ),
+              ],
+              Gap(15.h),
               CustomText(
                 text: "\$ ${widget.products.price}",
                 size: 16,

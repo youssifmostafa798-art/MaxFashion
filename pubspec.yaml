@@ -52,6 +52,7 @@ flutter:
     - assets/texts/
     - assets/pop/
     - assets/data/
+    - assets/products_supa/
     - assets/products_supa/men/accessories/sunglasses/
     - assets/products_supa/men/accessories/watches/
     - assets/products_supa/men/clothing/jeans/

@@ -72,7 +72,7 @@ class _HomeState extends ConsumerState<Home> {
                   child: Column(
                     children: [
                       Gap(100.h),
-                      Image.asset("assets/cover/cover1.png"),
+                      Image.asset("assets/products_supa/cover.png"),
                       Gap(20.h),
                       _ProductGrid(
                         products: products,

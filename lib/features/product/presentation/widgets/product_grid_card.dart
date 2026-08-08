@@ -33,9 +33,10 @@ class _ProductGridCardState extends State<ProductGridCard>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 200),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -59,10 +60,7 @@ class _ProductGridCardState extends State<ProductGridCard>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +71,7 @@ class _ProductGridCardState extends State<ProductGridCard>
                   tag: 'product-image-${widget.product.id}',
                   child: ClipRect(
                     child: AspectRatio(
-                      aspectRatio: 1.0,
+                      aspectRatio: 0.70,
                       child: Image.asset(
                         widget.product.image,
                         fit: BoxFit.cover,
@@ -90,10 +88,7 @@ class _ProductGridCardState extends State<ProductGridCard>
               ],
             ),
             Gap(10.h),
-            CustomText(
-              text: widget.product.name,
-              maxLines: 1,
-            ),
+            CustomText(text: widget.product.name, maxLines: 1),
             CustomText(
               text: widget.product.description,
               color: colorScheme.onSurfaceVariant,

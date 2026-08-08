@@ -63,6 +63,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               CardWidget(
                 products: widget.product,
                 enableQty: true,
+                showDescription: false,
                 qty: selectedQty,
                 onChanged: (v) {
                   HapticUtils.light();
@@ -72,6 +73,15 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 },
               ),
               Gap(16.h),
+              Text(
+                widget.product.description,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontFamily: 'Tenor_Sans',
+                  height: 1.4,
+                ),
+              ),
               if (widget.product.sizes.isNotEmpty) ...[
                 Align(
                   alignment: Alignment.centerLeft,

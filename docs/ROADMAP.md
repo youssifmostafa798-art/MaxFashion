@@ -112,28 +112,37 @@ This section reflects a snapshot of progress and should be updated as phases clo
 
 - ✓ Flutter project structure scaffolded.
 - ✓ UI Foundation established (design tokens, base widgets).
-- ✓ Splash Screen implemented.
+- ✓ All core screens built (Home, Product Listing, Product Detail, Search, Cart, Checkout, Orders, Wishlist, Profile, Settings).
 - ✓ Authentication UI (Login / Signup screens) built.
-- ✓ App Theme configured.
+- ✓ App Theme configured with light/dark support.
 - ✓ Centralized App Colors (no hardcoded colors in UI code).
 - ✓ flutter_screenutil integrated for responsive sizing.
-- ✓ Initial navigation flow wired between core screens.
+- ✓ Navigation flow wired between core screens.
+- ✓ Supabase project created and configured.
+- ✓ `supabase_flutter` and `flutter_dotenv` packages integrated.
+- ✓ `.env` files created (root and scripts).
+- ✓ Supabase initialized in `main.dart` with connection test in splash.
+- ✓ Full Supabase Authentication (signUp, signIn, signOut, session restore, email confirmation).
+- ✓ Profile CRUD on `profiles` table, avatar upload/remove via Supabase Storage.
+- ✓ `SupabaseProductRepository` created and wired into `productRepositoryProvider`.
+- ✓ SQL migrations for `categories`, `products`, `product_images`, `product_sizes`.
+- ✓ Import scripts for data seeding.
 
 ### 2.2 Current Focus
 
-**Now** — Finishing the complete UI before backend integration — all core screens should be visually complete and reviewed before Supabase work begins in Phase 5.
+**Now** — Completing Phase 3.3 (Products): verifying Supabase data population, migrating `categoriesProvider` to Supabase, replacing the hardcoded category lookup, and adding `cached_network_image` for network product images.
 
 ### 2.3 Visual Progress Summary
 
 | Area | Progress |
 |---|---|
-| Overall Roadmap Completion (Phases 1–16) | 20% |
-| UI Layer (Phases 1–4) | 55% |
-| Backend Integration (Phases 5–7) | 0% |
-| Core Shopping Features (Phases 8–13) | 0% |
+| Overall Roadmap Completion (Phases 1–16) | 45% |
+| UI Layer (Phases 1–4) | 90% |
+| Backend Integration (Phases 5–7) | 70% |
+| Core Shopping Features (Phases 8–13) | 30% |
 | Hardening & Release (Phases 14–16) | 0% |
 
-> Percentages are illustrative starting values — update them in Section 12 as each phase is checked off.
+> Percentages updated from audit — update them in Section 12 as each phase is checked off.
 
 ---
 
@@ -1213,21 +1222,23 @@ Ideas explicitly deferred past version 1.0 (see Section 1.7, Out of Scope). Capt
 
 Update this table as each phase progresses. Status suggestions: Not Started / In Progress / Blocked / Complete.
 
+> **Note:** The roadmap phases 1–16 below use the original roadmap numbering. The Supabase migration phases (3.1–3.6) described in the architecture document map to phases 5–13 below. The current implementation status is reflected in the Completed/In Progress columns.
+
 | # | Phase | Status | Progress % | Start Date | End Date | Notes |
 |---|---|---|---|---|---|---|
-| 1 | UI Completion | In Progress | 55% | | | |
-| 2 | UI Polish | Not Started | 0% | | | |
-| 3 | Navigation & User Experience | Not Started | 0% | | | |
-| 4 | Architecture Cleanup | Not Started | 0% | | | |
-| 5 | Supabase Setup | Not Started | 0% | | | |
-| 6 | Authentication | Not Started | 0% | | | |
-| 7 | Database Design | Not Started | 0% | | | |
-| 8 | Home, Categories & Products | Not Started | 0% | | | |
-| 9 | Search & Filters | Not Started | 0% | | | |
-| 10 | Wishlist | Not Started | 0% | | | |
-| 11 | Cart & Checkout | Not Started | 0% | | | |
-| 12 | Orders | Not Started | 0% | | | |
-| 13 | Profile | Not Started | 0% | | | |
+| 1 | UI Completion | Complete | 100% | | | All core screens built |
+| 2 | UI Polish | Complete | 90% | | | Skeletons, empty states, animations done |
+| 3 | Navigation & User Experience | Complete | 85% | | | Bottom nav working, some screens lack named routes |
+| 4 | Architecture Cleanup | Complete | 85% | | | Feature-first structure, repository pattern established |
+| 5 | Supabase Setup | Complete | 100% | | | Project created, `.env` configured, initialized |
+| 6 | Authentication | Complete | 95% | | | Full Supabase Auth, profiles CRUD, avatar upload |
+| 7 | Database Design | In Progress | 40% | | | Product tables migrated, cart/wishlist/orders tables not created |
+| 8 | Home, Categories & Products | In Progress | 60% | | | SupabaseProductRepository wired, categoriesProvider still local |
+| 9 | Search & Filters | In Progress | 50% | | | SupabaseSearchRepository exists, uses in-memory filter on cached data |
+| 10 | Wishlist | Not Started | 0% | | | Still uses SharedPreferences |
+| 11 | Cart & Checkout | Not Started | 0% | | | Still uses SharedPreferences |
+| 12 | Orders | Not Started | 0% | | | Still uses SharedPreferences |
+| 13 | Profile | Complete | 90% | | | Connected to Supabase profiles table |
 | 14 | Performance Optimization | Not Started | 0% | | | |
 | 15 | Testing | Not Started | 0% | | | |
 | 16 | Deployment | Not Started | 0% | | | |
