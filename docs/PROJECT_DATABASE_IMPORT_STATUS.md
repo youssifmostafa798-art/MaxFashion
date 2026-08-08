@@ -19,7 +19,7 @@
 
 | Phase | Name | Status | Notes |
 |-------|------|--------|-------|
-| 3.3 | Products | **PARTIALLY COMPLETE** | SQL migrations exist, `SupabaseProductRepository` wired, but `categoriesProvider` still local and database population unverified |
+| 3.3 | Products | **COMPLETE** | All product data verified in Supabase, categories migrated, dynamic category lookup, asset paths verified (251/251), `flutter analyze` PASS |
 
 ### Not Started Phases
 
@@ -99,13 +99,27 @@ The service role key bypasses RLS and is required for seed scripts. It must neve
 
 ## 4. DATABASE VERIFICATION
 
-### Important: Data Population Is UNVERIFIED
+### Data Population: VERIFIED ✅
 
-The SQL migrations exist in the project and the import scripts are configured, but **there is no concrete evidence** that the live Supabase database contains the product/category data. The database population status must be verified before proceeding.
+The live Supabase database has been verified and contains the expected data:
 
-### How to Verify
+```text
+categories      = 23  ✅
+products        = 251 ✅
+product_images  = 251 ✅
+product_sizes   = 997 ✅
+```
 
-Run these in the Supabase Dashboard SQL Editor:
+Additional integrity checks:
+- Foreign key integrity: **PASS** (0 invalid references)
+- Duplicate checks: **PASS** (0 duplicate IDs or product-size pairs)
+- RLS SELECT access: **PASS** (all 4 tables readable via anon key)
+- Asset integrity: **PASS** (251/251 asset paths exist in filesystem)
+- Product 188 filename mismatch: **FIXED** (`weman_blouses__2.jpg` → `weman_blouses_2.jpg`)
+
+### Verification Queries
+
+Run these in the Supabase Dashboard SQL Editor to re-verify:
 
 ```sql
 SELECT COUNT(*) AS category_count FROM categories;
@@ -116,12 +130,6 @@ SELECT COUNT(*) AS size_count FROM product_sizes;
 
 Expected counts: 23 categories, 251 products, 251 images, 997 sizes.
 
-### If Data Is Missing
-
-1. Verify table schemas exist (run the SQL from `001_products_schema.sql` if needed)
-2. Run `cd scripts && node import_all.js` to seed data
-3. Re-run the verification queries above
-
 ---
 
 ## 5. TABLE STATUS
@@ -129,10 +137,10 @@ Expected counts: 23 categories, 251 products, 251 images, 997 sizes.
 | Table | Schema in Project | Data in Live Supabase | RLS | Notes |
 |-------|-------------------|----------------------|-----|-------|
 | `profiles` | Yes (manual) | **Yes — working** | Yes | Fully functional (CRUD, avatar upload) |
-| `categories` | Yes (migration) | **UNVERIFIED** | Yes (migration) | 23 records expected |
-| `products` | Yes (migration) | **UNVERIFIED** | Yes (migration) | 251 records expected |
-| `product_images` | Yes (migration) | **UNVERIFIED** | Yes (migration) | 251 records expected |
-| `product_sizes` | Yes (migration) | **UNVERIFIED** | Yes (migration) | 997 records expected |
+| `categories` | Yes (migration) | **Yes — verified (23 records)** | Yes (migration) | Fully verified |
+| `products` | Yes (migration) | **Yes — verified (251 records)** | Yes (migration) | Fully verified |
+| `product_images` | Yes (migration) | **Yes — verified (251 records)** | Yes (migration) | Fully verified |
+| `product_sizes` | Yes (migration) | **Yes — verified (997 records)** | Yes (migration) | Fully verified |
 | `carts` | No | No | No | Not implemented (Phase 3.4) |
 | `cart_items` | No | No | No | Not implemented (Phase 3.4) |
 | `wishlist_items` | No | No | No | Not implemented (Phase 3.5) |
@@ -145,7 +153,7 @@ Expected counts: 23 categories, 251 products, 251 images, 997 sizes.
 | Bucket | Status | Used By |
 |--------|--------|---------|
 | `avatars` | **EXISTS and working** | Profile avatar upload (`SupabaseAuthRepository.uploadAvatar()`) |
-| Product images | NOT CREATED | Products reference `thumbnail_url` and `image_url` — hosting strategy TBD |
+| Product images | NOT CREATED | Product images use Flutter local asset paths (`assets/products_supa/...`) via `Image.asset()` — no Supabase Storage needed |
 
 ---
 

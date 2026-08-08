@@ -7,9 +7,9 @@
 
 ## 1. Current Phase
 
-### Phase 3.3 (Products) — PARTIALLY COMPLETE
+### Phase 3.3 (Products) — COMPLETE
 
-The project has fully completed **Phase 3.1** (Supabase Setup) and **Phase 3.2** (Authentication). **Phase 3.3** (Products) is partially complete — the `SupabaseProductRepository` exists and is wired into the provider, but the `categoriesProvider` still reads from local JSON and `ProductModel.category` has a hardcoded category ID → name mapping. **Phase 3.4** (Cart), **Phase 3.5** (Wishlist), and **Phase 3.6** (Orders) have not started.
+The project has fully completed **Phase 3.1** (Supabase Setup), **Phase 3.2** (Authentication), and **Phase 3.3** (Products). All product data is now served from Supabase — categories, products, product images, and product sizes are verified in the live database. Category resolution is dynamic via Supabase-loaded categories. Product images use Flutter local asset paths (`assets/products_supa/...`) loaded via `Image.asset`. **Phase 3.4** (Cart), **Phase 3.5** (Wishlist), and **Phase 3.6** (Orders) have not started.
 
 ---
 
@@ -19,7 +19,7 @@ The project has fully completed **Phase 3.1** (Supabase Setup) and **Phase 3.2**
 |-------|------|--------|
 | 3.1 | Supabase Setup | **COMPLETE** |
 | 3.2 | Authentication | **COMPLETE** |
-| 3.3 | Products | **PARTIALLY COMPLETE** |
+| 3.3 | Products | **COMPLETE** |
 | 3.4 | Cart | NOT STARTED |
 | 3.5 | Wishlist | NOT STARTED |
 | 3.6 | Orders | NOT STARTED |
@@ -72,11 +72,51 @@ The project has fully completed **Phase 3.1** (Supabase Setup) and **Phase 3.2**
 
 ---
 
-## 4. Partially Completed Work
+## 4. Completed Work
 
-### Phase 3.3 — Products 🔶 PARTIALLY COMPLETE
+### Phase 3.1 — Supabase Setup ✅ COMPLETE
 
-**Already implemented:**
+| Task | Status | Evidence |
+|------|--------|----------|
+| Supabase Project Setup | ✅ Done | Project exists at `https://tonctmdcntftugdskqmb.supabase.co` |
+| Add Supabase Package | ✅ Done | `supabase_flutter: ^2.9.1` in `pubspec.yaml` |
+| Add flutter_dotenv | ✅ Done | `flutter_dotenv: ^5.2.1` in `pubspec.yaml` |
+| Create `.env` (root) | ✅ Done | Contains `SUPABASE_URL` and `SUPABASE_ANON_KEY` |
+| Create `.env` (scripts) | ✅ Done | Contains `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Create `supabase.dart` | ✅ Done | `lib/core/config/supabase.dart` — `SupabaseClient get supabase => Supabase.instance.client` |
+| Initialize Supabase | ✅ Done | `lib/main.dart:12-15` — loads `.env`, validates keys, calls `Supabase.initialize()` |
+| Test Connection (Session Check) | ✅ Done | `lib/splash.dart:54-55` — checks `currentSession` and `currentUser` on launch |
+| Profiles Table Created | ✅ Done | Referenced in `supabase_auth_repository.dart` and `profile_model.dart` |
+| Avatars Storage Bucket | ✅ Done | Profile avatar upload works in `SupabaseAuthRepository.uploadAvatar()` |
+
+### Phase 3.2 — Authentication ✅ COMPLETE
+
+| Task | Status | Evidence |
+|------|--------|----------|
+| Supabase Auth (Sign Up) | ✅ Done | `SupabaseAuthRepository.signUp()` at `features/auth/data/repositories/supabase_auth_repository.dart` |
+| Supabase Auth (Sign In) | ✅ Done | `SupabaseAuthRepository.signIn()` |
+| Supabase Auth (Sign Out) | ✅ Done | `SupabaseAuthRepository.signOut()` |
+| Auth State Change Listener | ✅ Done | `_listenToAuthChanges()` in `data/providers/auth_provider.dart` |
+| Session Persistence & Restore | ✅ Done | Splash page checks `currentSession`, `AuthNotifier._restoreSession()` |
+| Profiles Table (Read/Write) | ✅ Done | `getProfile()`, `updateProfile()` in `SupabaseAuthRepository` |
+| Profile Auto-Creation on Signup | ✅ Done | `ensureProfileExists()` called after signup and email confirmation |
+| Auth Repository Interface | ✅ Done | `features/auth/domain/auth_repository_interface.dart` |
+| Supabase Auth Repository | ✅ Done | `features/auth/data/repositories/supabase_auth_repository.dart` (342 lines) |
+| Profile Model (Supabase) | ✅ Done | `features/auth/data/models/profile_model.dart` — maps `profiles` table |
+| Auth Providers (Riverpod) | ✅ Done | `supabaseClientProvider`, `authRepositoryProvider` in `features/auth/presentation/providers/auth_providers.dart` |
+| Auth State Provider (Riverpod) | ✅ Done | `authStateProvider` (StateNotifierProvider) in `data/providers/auth_provider.dart` |
+| Auth UI (Login/Signup/AuthPage) | ✅ Done | `features/auth/presentation/pages/` |
+| Profile View (Connected to Supabase) | ✅ Done | Profile page reads from `authStateProvider` |
+| Profile Edit (Connected to Supabase) | ✅ Done | Edit profile updates via `authStateProvider` |
+| Avatar Upload (Supabase Storage) | ✅ Done | Uploads to `avatars` bucket, updates `avatar_url` in `profiles` |
+| Avatar Remove (Supabase Storage) | ✅ Done | Removes from Storage and nulls `avatar_url` |
+| Email Confirmation Flow | ✅ Done | `isEmailConfirmationPending` flag in `AuthState` |
+
+**Minor notes (not blockers):**
+- `ensureProfileExists` accessed via `(_repository as dynamic).ensureProfileExists()` — fragile but functional
+- Forgot-password flow not implemented — not required for current phase
+
+### Phase 3.3 — Products ✅ COMPLETE
 
 | Task | Status | Evidence |
 |------|--------|----------|
@@ -96,17 +136,12 @@ The project has fully completed **Phase 3.1** (Supabase Setup) and **Phase 3.2**
 | SQL Migration: Seed Sizes | ✅ Done | `supabase/migrations/005_seed_product_sizes.sql` |
 | Import Scripts | ✅ Done | `scripts/import_*.js` (4 scripts + orchestrator) |
 | Local JSON Seed Data | ✅ Done | 23 categories, 251 products, 251 images, 997 sizes in `assets/data/` |
-
-**Remaining gaps:**
-
-| Gap | Severity | Notes |
-|-----|----------|-------|
-| `categoriesProvider` reads from local JSON | HIGH | `lib/data/providers/product_provider.dart:14-17` still uses `localProductDataSourceProvider`, not Supabase |
-| `ProductModel.category` has hardcoded mapping | MEDIUM | `lib/data/models/product_model.dart:63-87` — hardcoded `categoryId → name` map instead of dynamic lookup |
-| Database population unverified | HIGH | Cannot confirm categories/products/images/sizes are populated in live Supabase |
-| `cached_network_image` not in pubspec | MEDIUM | Product images are network URLs — need caching for performance |
-| `docs/SUPABASE_DATABASE_SCHEMA.md` missing | LOW | Required by roadmap — dedicated DB reference |
-| Product image hosting strategy unverified | MEDIUM | `thumbnail_url` and `image_url` fields exist but hosting approach unclear |
+| Supabase Data Population Verified | ✅ Done | categories=23, products=251, product_images=251, product_sizes=997 — all verified in live Supabase |
+| `categoriesProvider` Migrated | ✅ Done | Now reads from `SupabaseProductRepository` via `categoriesProvider` → `productRepositoryProvider` → Supabase categories table |
+| Dynamic Category Resolution | ✅ Done | Hardcoded `categoryId → name` map removed from `ProductModel`; resolution via `categoriesProvider` and `categoryNameById()` helper |
+| Product Asset Integrity Verified | ✅ Done | 251/251 asset paths exist in filesystem; Product 188 filename mismatch fixed (`weman_blouses__2.jpg` → `weman_blouses_2.jpg`) |
+| Image Strategy | ✅ Done | Product images use Flutter local asset paths (`assets/products_supa/...`) loaded via `Image.asset()`; `cached_network_image` NOT required |
+| `flutter analyze` PASS | ✅ Done | Zero issues |
 
 ---
 
@@ -145,7 +180,8 @@ Products:
   └── LocalProductRepository (kept as fallback, not currently used)
 
 Categories:
-  categoriesProvider → localProductDataSourceProvider → categories.json (LOCAL!)
+  categoriesProvider → productRepositoryProvider → SupabaseProductRepository
+    → Supabase categories table (dynamic lookup via categoryNameById)
 
 Authentication:
   AuthRepositoryInterface → SupabaseAuthRepository → Supabase Auth + profiles
@@ -161,7 +197,7 @@ Orders: OrdersRepository → OrdersStorage → SharedPreferences (local only)
 UI → Riverpod → Repository → Supabase
 ```
 
-Products are partially there. Categories, Cart, Wishlist, and Orders are still local.
+Products and Categories are now fully on this path. Cart, Wishlist, and Orders are still local.
 
 ---
 
@@ -183,10 +219,10 @@ supabase/migrations/
 | Table | Schema Exists | Data in Supabase | RLS |
 |-------|--------------|-------------------|-----|
 | `profiles` | Yes (manual) | Yes — working | Yes |
-| `categories` | Yes (migration) | **UNVERIFIED** | Yes (migration) |
-| `products` | Yes (migration) | **UNVERIFIED** | Yes (migration) |
-| `product_images` | Yes (migration) | **UNVERIFIED** | Yes (migration) |
-| `product_sizes` | Yes (migration) | **UNVERIFIED** | Yes (migration) |
+| `categories` | Yes (migration) | Yes — verified (23 records) | Yes (migration) |
+| `products` | Yes (migration) | Yes — verified (251 records) | Yes (migration) |
+| `product_images` | Yes (migration) | Yes — verified (251 records) | Yes (migration) |
+| `product_sizes` | Yes (migration) | Yes — verified (997 records) | Yes (migration) |
 | `carts` | No | No | No |
 | `cart_items` | No | No | No |
 | `wishlist_items` | No | No | No |
@@ -199,7 +235,7 @@ supabase/migrations/
 | Bucket | Status | Used By |
 |--------|--------|---------|
 | `avatars` | EXISTS | Profile avatar upload |
-| Product images | NOT CREATED | Products reference URLs — hosting strategy TBD |
+| Product images | NOT CREATED | Product images use Flutter local asset paths (`assets/products_supa/...`) via `Image.asset()` — no Supabase Storage needed |
 
 ---
 
@@ -207,29 +243,24 @@ supabase/migrations/
 
 | # | Issue | Severity | Location | Notes |
 |---|-------|----------|----------|-------|
-| 1 | **`categoriesProvider` reads from local JSON** | HIGH | `lib/data/providers/product_provider.dart:14-17` | Must migrate to Supabase before product display works correctly from Supabase |
-| 2 | **`ProductModel.category` has hardcoded mapping** | MEDIUM | `lib/data/models/product_model.dart:63-87` | Needs dynamic category lookup from fetched categories |
-| 3 | **Database population unverified** | HIGH | Supabase dashboard | Cannot confirm data exists in live database — need to verify before proceeding |
-| 4 | **`ensureProfileExists` accessed via dynamic cast** | MEDIUM | `lib/data/providers/auth_provider.dart:101,211-212` | Functional but fragile — not on `AuthRepositoryInterface` |
-| 5 | **`cached_network_image` not installed** | MEDIUM | `pubspec.yaml` | Product images are network URLs — need caching package |
-| 6 | **Legacy dead code** | LOW | `lib/data/services/fake_auth_service.dart`, `lib/data/repositories/auth_repository.dart` | Superseded by Supabase auth but not removed |
+| 1 | **`ensureProfileExists` accessed via dynamic cast** | MEDIUM | `lib/data/providers/auth_provider.dart:101,211-212` | Functional but fragile — not on `AuthRepositoryInterface` |
+| 2 | **Legacy dead code** | LOW | `lib/data/services/fake_auth_service.dart`, `lib/data/repositories/auth_repository.dart` | Superseded by Supabase auth but not removed |
 
 ---
 
 ## 9. Next Immediate Task
 
-### Complete Phase 3.3 — Products
+### Begin Phase 3.4 — Cart
 
-The immediate next tasks are:
+With Phase 3.3 (Products) complete, the next implementation phase is:
 
-1. **Verify Supabase data population** — Confirm categories, products, product_images, and product_sizes tables have data in the live Supabase database
-2. **Migrate `categoriesProvider`** — Change from `localProductDataSourceProvider` to fetching from Supabase `categories` table
-3. **Replace hardcoded `ProductModel.category`** — Use dynamic category lookup instead of hardcoded `categoryId → name` map
-4. **Add `cached_network_image`** — Install package for network image rendering and caching
-5. **Create `docs/SUPABASE_DATABASE_SCHEMA.md`** — Dedicated database reference document
-6. **Verify product image hosting** — Confirm how product images will be served (external URLs, Supabase Storage, etc.)
+1. **Design `carts` and `cart_items` tables** — Schema for cart management per authenticated user
+2. **Create SQL migrations** — Tables, RLS policies, indexes
+3. **Implement `SupabaseCartRepository`** — CRUD operations for cart items
+4. **Migrate cart providers** — From `SharedPreferences` to Supabase
+5. **Add authenticated-user ownership** — Cart tied to `auth.uid()`
 
-Only after Phase 3.3 is complete should work begin on Cart (Phase 3.4).
+Phase 3.5 (Wishlist) and Phase 3.6 (Orders) follow after Cart.
 
 ---
 
@@ -237,11 +268,11 @@ Only after Phase 3.3 is complete should work begin on Cart (Phase 3.4).
 
 | Metric | Value |
 |--------|-------|
-| Supabase tables in use | 1 (`profiles`) |
+| Supabase tables in use | 5 (`profiles`, `categories`, `products`, `product_images`, `product_sizes`) |
 | Supabase tables with migrations | 4 (`categories`, `products`, `product_images`, `product_sizes`) |
 | Supabase tables needed (future) | 6 (`carts`, `cart_items`, `wishlist_items`, `orders`, `order_items`, `addresses`) |
-| Features connected to Supabase | 2 (Auth, Profile) |
-| Features partially connected to Supabase | 1 (Products — repository wired, categories still local) |
+| Features connected to Supabase | 3 (Auth, Profile, Products) |
+| Features partially connected to Supabase | 0 |
 | Features using local-only storage | 4 (Cart, Wishlist, Orders, Addresses) |
 | Storage buckets in use | 1 (`avatars`) |
 

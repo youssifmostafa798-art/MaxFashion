@@ -11,9 +11,9 @@ Project Version: 1.0.0+1
 |----------|-----------|-------|
 | **Overall** | **78%** | Updated from audit |
 | UI | 92% | All core screens built |
-| Business Logic | 75% | Auth complete, products partially migrated |
+| Business Logic | 80% | Auth complete, products migrated to Supabase |
 | Architecture | 88% | Repository pattern established for products and auth |
-| Backend (Supabase) | 25% | Auth complete, products partially migrated, cart/wishlist/orders not started |
+| Backend (Supabase) | 40% | Auth complete, products complete, cart/wishlist/orders not started |
 | State Management | 82% | Riverpod used consistently |
 | Authentication | 95% | Fully connected to Supabase — minor dynamic cast issue |
 | Navigation | 75% | Bottom nav works, some screens lack named routes |
@@ -29,7 +29,7 @@ Project Version: 1.0.0+1
 |-------|------|--------|
 | 3.1 | Supabase Setup | **COMPLETE** |
 | 3.2 | Authentication | **COMPLETE** |
-| 3.3 | Products | **PARTIALLY COMPLETE** |
+| 3.3 | Products | **COMPLETE** |
 | 3.4 | Cart | NOT STARTED |
 | 3.5 | Wishlist | NOT STARTED |
 | 3.6 | Orders | NOT STARTED |
@@ -38,15 +38,11 @@ Project Version: 1.0.0+1
 
 - **Authentication** — Full Supabase Auth (signUp, signIn, signOut, session restore, email confirmation)
 - **Profiles** — CRUD operations on `profiles` table, avatar upload/remove via Supabase Storage
-- **Products (partial)** — `SupabaseProductRepository` exists and is wired into `productRepositoryProvider`, fetches products with images and sizes from Supabase
-
-### What Is Partially Migrated
-
-- **Products** — The `SupabaseProductRepository` is wired, but `categoriesProvider` still reads from local JSON and `ProductModel.category` has a hardcoded category ID → name mapping. Database population status is unverified.
+- **Products** — `SupabaseProductRepository` wired and fully operational; categories, products, product_images, product_sizes all verified in Supabase
+- **Categories** — `categoriesProvider` migrated to Supabase; dynamic category resolution via `categoryNameById()`
 
 ### What Is NOT Migrated (Still Local)
 
-- **Categories** — `categoriesProvider` reads from `localProductDataSourceProvider` (local JSON)
 - **Cart** — Uses `CartStorage` → `SharedPreferences`
 - **Wishlist** — Uses `WishlistNotifier` → `SharedPreferences` + local data
 - **Orders** — Uses `OrdersRepository` → `OrdersStorage` → `SharedPreferences`
@@ -66,13 +62,16 @@ Project Version: 1.0.0+1
 - Avatar upload/remove via Supabase Storage `avatars` bucket
 - Splash screen with session check
 
-### Products (Partially Connected)
+### Products (Supabase Connected)
 - `SupabaseProductRepository` exists and is wired into `productRepositoryProvider`
 - SQL migrations exist for `categories`, `products`, `product_images`, `product_sizes`
 - Import scripts exist for data seeding
-- Local JSON seed data: 23 categories, 251 products, 251 images, 997 sizes
-- `categoriesProvider` still reads from local JSON (gap)
-- `ProductModel.category` has hardcoded mapping (gap)
+- Local JSON seed data: 23 categories, 251 products, 251 images, 997 sizes in `assets/data/`
+- `categoriesProvider` migrated to Supabase — reads from `categories` table
+- Dynamic category resolution via `categoryNameById()` helper — no hardcoded mapping
+- Product images use Flutter local asset paths (`assets/products_supa/...`) via `Image.asset()`
+- 251/251 asset paths verified in filesystem; Product 188 filename mismatch fixed
+- `cached_network_image` NOT required — images are local assets, not network URLs
 
 ### Home Screen
 - Custom Appbar with centered logo and search bar
@@ -142,18 +141,10 @@ Project Version: 1.0.0+1
 
 ## Known Issues
 
-### High Priority
-| Issue | Location | Notes |
-|-------|----------|-------|
-| `categoriesProvider` reads from local JSON | `lib/data/providers/product_provider.dart:14-17` | Must migrate to Supabase for products to work end-to-end |
-| `ProductModel.category` has hardcoded mapping | `lib/data/models/product_model.dart:63-87` | Needs dynamic category lookup |
-| Database population unverified | Supabase dashboard | Need to confirm data exists in live database |
-
 ### Medium Priority
 | Issue | Location | Notes |
 |-------|----------|-------|
 | `ensureProfileExists` via dynamic cast | `lib/data/providers/auth_provider.dart` | Functional but fragile |
-| No `cached_network_image` package | `pubspec.yaml` | Product images need caching for network URLs |
 | Legacy dead code not removed | `fake_auth_service.dart`, `auth_repository.dart` | Superseded by Supabase auth |
 
 ### Low Priority
@@ -166,15 +157,15 @@ Project Version: 1.0.0+1
 
 ## Current Next Step
 
-**Complete Phase 3.3 — Products**
+**Begin Phase 3.4 — Cart**
 
-1. Verify Supabase data population (categories, products, product_images, product_sizes)
-2. Migrate `categoriesProvider` to Supabase
-3. Replace hardcoded `ProductModel.category` with dynamic lookup
-4. Add `cached_network_image` package
-5. Create `docs/SUPABASE_DATABASE_SCHEMA.md`
+1. Design `carts` and `cart_items` tables
+2. Create SQL migrations with RLS policies
+3. Implement `SupabaseCartRepository`
+4. Migrate cart providers from `SharedPreferences` to Supabase
+5. Add authenticated-user ownership
 
-Only after Phase 3.3 is complete should Cart (Phase 3.4) begin.
+Cart (Phase 3.4) is next, followed by Wishlist (Phase 3.5) and Orders (Phase 3.6).
 
 ---
 
@@ -185,4 +176,4 @@ Only after Phase 3.3 is complete should Cart (Phase 3.4) begin.
 3. **Theme-aware** — use `Theme.of(context).colorScheme` instead of hardcoded colors.
 4. **Skeleton loading** implemented for Home, Product Listing, Product Detail, Search, Orders, Wishlist.
 5. **flutter analyze passes clean** — zero warnings policy.
-6. **No network images yet** — all product images use local assets. Need `cached_network_image` for Supabase URLs.
+6. **Product images are local assets** — stored in `assets/products_supa/...`, loaded via `Image.asset()`. `cached_network_image` is NOT required for the current image strategy.

@@ -127,19 +127,24 @@ This section reflects a snapshot of progress and should be updated as phases clo
 - ✓ `SupabaseProductRepository` created and wired into `productRepositoryProvider`.
 - ✓ SQL migrations for `categories`, `products`, `product_images`, `product_sizes`.
 - ✓ Import scripts for data seeding.
+- ✓ Supabase data population verified (categories=23, products=251, product_images=251, product_sizes=997).
+- ✓ `categoriesProvider` migrated from local JSON to Supabase.
+- ✓ Hardcoded `ProductModel.category` mapping removed; dynamic category resolution implemented.
+- ✓ Product asset integrity verified (251/251 paths exist); Product 188 filename mismatch fixed.
+- ✓ Product images use Flutter local asset paths via `Image.asset()` — `cached_network_image` NOT required.
 
 ### 2.2 Current Focus
 
-**Now** — Completing Phase 3.3 (Products): verifying Supabase data population, migrating `categoriesProvider` to Supabase, replacing the hardcoded category lookup, and adding `cached_network_image` for network product images.
+**Now** — Beginning Phase 3.4 (Cart): designing `carts` and `cart_items` tables, creating SQL migrations, implementing `SupabaseCartRepository`, and migrating cart providers from SharedPreferences to Supabase.
 
 ### 2.3 Visual Progress Summary
 
 | Area | Progress |
 |---|---|
-| Overall Roadmap Completion (Phases 1–16) | 45% |
+| Overall Roadmap Completion (Phases 1–16) | 50% |
 | UI Layer (Phases 1–4) | 90% |
-| Backend Integration (Phases 5–7) | 70% |
-| Core Shopping Features (Phases 8–13) | 30% |
+| Backend Integration (Phases 5–7) | 75% |
+| Core Shopping Features (Phases 8–13) | 35% |
 | Hardening & Release (Phases 14–16) | 0% |
 
 > Percentages updated from audit — update them in Section 12 as each phase is checked off.
@@ -1232,9 +1237,9 @@ Update this table as each phase progresses. Status suggestions: Not Started / In
 | 4 | Architecture Cleanup | Complete | 85% | | | Feature-first structure, repository pattern established |
 | 5 | Supabase Setup | Complete | 100% | | | Project created, `.env` configured, initialized |
 | 6 | Authentication | Complete | 95% | | | Full Supabase Auth, profiles CRUD, avatar upload |
-| 7 | Database Design | In Progress | 40% | | | Product tables migrated, cart/wishlist/orders tables not created |
-| 8 | Home, Categories & Products | In Progress | 60% | | | SupabaseProductRepository wired, categoriesProvider still local |
-| 9 | Search & Filters | In Progress | 50% | | | SupabaseSearchRepository exists, uses in-memory filter on cached data |
+| 7 | Database Design | Complete | 80% | | | Product tables migrated and verified, cart/wishlist/orders tables not created |
+| 8 | Home, Categories & Products | Complete | 95% | | | SupabaseProductRepository wired, categoriesProvider migrated, asset integrity verified |
+| 9 | Search & Filters | In Progress | 55% | | | SupabaseSearchRepository exists, uses in-memory filter on cached data |
 | 10 | Wishlist | Not Started | 0% | | | Still uses SharedPreferences |
 | 11 | Cart & Checkout | Not Started | 0% | | | Still uses SharedPreferences |
 | 12 | Orders | Not Started | 0% | | | Still uses SharedPreferences |

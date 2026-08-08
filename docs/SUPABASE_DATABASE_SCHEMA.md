@@ -160,7 +160,28 @@ profiles
 | Bucket | Visibility | Purpose |
 |--------|-----------|---------|
 | `avatars` | Public read, owner write | Profile avatar images |
-| Product images | NOT CREATED | Product photography (hosting strategy TBD) |
+| Product images | NOT CREATED | Product images use Flutter local asset paths (`assets/products_supa/...`) loaded via `Image.asset()` — no Supabase Storage needed |
+
+---
+
+## Product Image Strategy
+
+Product images in the database (`products.thumbnail_url` and `product_images.image_url`) contain **Flutter local asset paths**, not network URLs.
+
+Example value:
+```text
+assets/products_supa/men/accessories/sunglasses/sunglasses_1.jpg
+```
+
+These are loaded in the Flutter UI via:
+```dart
+Image.asset(product.image)
+```
+
+Therefore:
+- `cached_network_image` is **NOT required** for product images.
+- No Supabase Storage bucket is needed for product images.
+- The `assets/products_supa/` directory must be declared in `pubspec.yaml` (it is).
 
 ---
 
