@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
@@ -34,7 +35,8 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final products = ref.watch(homeProductsProvider);
+    final products = ref.watch(filteredHomeProductsProvider);
+    final categories = ref.watch(categoriesProvider);
 
     if (_isLoading) {
       return const HomeSkeleton();
@@ -73,10 +75,14 @@ class _HomeState extends ConsumerState<Home> {
                       Gap(100.h),
                       Image.asset("assets/products_supa/cover.png"),
                       Gap(20.h),
-                      _ProductGrid(
-                        products: products,
-                        colorScheme: colorScheme,
-                      ),
+                      _CategoryFilter(categories: categories),
+                      Gap(16.h),
+                      products.isEmpty
+                          ? _EmptyProducts(colorScheme: colorScheme)
+                          : _ProductGrid(
+                              products: products,
+                              colorScheme: colorScheme,
+                            ),
                       Gap(5.h),
                       CustomText(
                         text: "You may also like".toUpperCase(),
@@ -109,6 +115,106 @@ class _HomeState extends ConsumerState<Home> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CategoryFilter extends StatelessWidget {
+  const _CategoryFilter({required this.categories});
+
+  final List<CategoryModel> categories;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: categories.length + 1,
+        separatorBuilder: (_, _) => Gap(8.w),
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return const _CategoryChip(label: 'All', categoryId: null);
+          }
+          final category = categories[index - 1];
+          return _CategoryChip(
+            label: category.name,
+            categoryId: category.id,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CategoryChip extends ConsumerWidget {
+  const _CategoryChip({required this.label, required this.categoryId});
+
+  final String label;
+  final int? categoryId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final selectedId = ref.watch(selectedCategoryProvider);
+    final isSelected = selectedId == categoryId;
+
+    return GestureDetector(
+      onTap: () {
+        HapticUtils.light();
+        ref.read(selectedCategoryProvider.notifier).state = categoryId;
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.onSurface
+              : colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        alignment: Alignment.center,
+        child: CustomText(
+          text: label.toUpperCase(),
+          size: 12,
+          color: isSelected
+              ? colorScheme.surface
+              : colorScheme.onSurface,
+          weight: isSelected ? FontWeight.bold : FontWeight.normal,
+          spacing: 2,
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyProducts extends StatelessWidget {
+  const _EmptyProducts({required this.colorScheme});
+
+  final ColorScheme colorScheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 40.h),
+      child: Center(
+        child: Column(
+          children: [
+            Icon(
+              Icons.inventory_2_outlined,
+              size: 48.w,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            Gap(16.h),
+            CustomText(
+              text: 'No products found',
+              size: 16,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }
