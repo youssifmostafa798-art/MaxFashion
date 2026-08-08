@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/search/presentation/widgets/highlighted_text.dart';
 
-class SearchResultsList extends StatelessWidget {
+class SearchResultsList extends ConsumerWidget {
   const SearchResultsList({
     super.key,
     required this.products,
@@ -19,10 +21,12 @@ class SearchResultsList extends StatelessWidget {
   final ValueChanged<ProductModel> onProductSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (products.isEmpty) {
       return _EmptyState(query: query);
     }
+
+    final categories = ref.watch(categoriesProvider);
 
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -30,8 +34,9 @@ class SearchResultsList extends StatelessWidget {
       itemBuilder: (context, index) {
         final product = products[index];
         return _SearchResultCard(
-          product: product, 
+          product: product,
           query: query,
+          categoryName: categoryNameById(categories, product.categoryId),
           onTap: () => onProductSelected(product),
         );
       },
@@ -41,12 +46,14 @@ class SearchResultsList extends StatelessWidget {
 
 class _SearchResultCard extends StatelessWidget {
   const _SearchResultCard({
-    required this.product, 
+    required this.product,
     required this.query,
+    required this.categoryName,
     required this.onTap,
   });
   final ProductModel product;
   final String query;
+  final String categoryName;
   final VoidCallback onTap;
 
   @override
@@ -90,7 +97,7 @@ class _SearchResultCard extends StatelessWidget {
                   ),
                   Gap(4.h),
                   CustomText(
-                    text: product.category,
+                    text: categoryName,
                     size: 12,
                     color: colorScheme.onSurfaceVariant,
                   ),

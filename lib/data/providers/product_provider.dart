@@ -12,9 +12,17 @@ final localProductDataSourceProvider = Provider<LocalProductDataSource>((ref) {
 });
 
 final categoriesProvider = Provider<List<CategoryModel>>((ref) {
-  final ds = ref.watch(localProductDataSourceProvider);
-  return ds.categories;
+  ref.watch(_productsLoaded);
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.categories;
 });
+
+String categoryNameById(List<CategoryModel> categories, int categoryId) {
+  for (final c in categories) {
+    if (c.id == categoryId) return c.name;
+  }
+  return '';
+}
 
 final _productsLoaded = StateProvider<bool>((ref) => false);
 
@@ -41,12 +49,14 @@ final featuredProductsProvider = Provider<List<ProductModel>>((ref) {
 final homeProductsProvider = Provider<List<ProductModel>>((ref) {
   ref.watch(_productsLoaded);
   final repo = ref.watch(productRepositoryProvider);
-  return repo.getHomeProducts(maxPerCategory: 2);
+  final categories = ref.watch(categoriesProvider);
+  return repo.getHomeProducts(categories: categories, maxPerCategory: 2);
 });
 
 final categoryProductsProvider =
     Provider.family<List<ProductModel>, String>((ref, category) {
   ref.watch(_productsLoaded);
   final repo = ref.watch(productRepositoryProvider);
-  return repo.getProductsByCategory(category);
+  final categories = ref.watch(categoriesProvider);
+  return repo.getProductsByCategory(category, categories: categories);
 });

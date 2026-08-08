@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/product_size_model.dart';
@@ -11,8 +12,11 @@ class SupabaseProductRepository implements ProductRepository {
   final SupabaseClient _client;
 
   List<ProductModel> _productsCache = [];
+  List<CategoryModel> _categoriesCache = [];
 
   List<ProductModel> get products => _productsCache;
+  @override
+  List<CategoryModel> get categories => _categoriesCache;
 
   static const _selectWithRelations =
       'id, category_id, name, description, price, discount_price, '
@@ -50,7 +54,20 @@ class SupabaseProductRepository implements ProductRepository {
     );
   }
 
+  Future<void> loadCategories() async {
+    final response = await _client
+        .from('categories')
+        .select('id, name, slug, image_url')
+        .order('id');
+
+    _categoriesCache = (response as List)
+        .map((row) => CategoryModel.fromJson(row as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<void> loadAll() async {
+    await loadCategories();
+
     final response = await _client
         .from('products')
         .select(_selectWithRelations)
@@ -64,10 +81,14 @@ class SupabaseProductRepository implements ProductRepository {
   List<ProductModel> getAllProducts() => _productsCache;
 
   @override
-  List<ProductModel> getProductsByCategory(String category) {
-    return _productsCache
-        .where((p) => p.category.toLowerCase() == category.toLowerCase())
-        .toList();
+  List<ProductModel> getProductsByCategory(
+    String category, {
+    List<CategoryModel> categories = const [],
+  }) {
+    return _productsCache.where((p) {
+      final name = _categoryName(categories, p.categoryId);
+      return name.toLowerCase() == category.toLowerCase();
+    }).toList();
   }
 
   @override
@@ -76,10 +97,13 @@ class SupabaseProductRepository implements ProductRepository {
   }
 
   @override
-  List<ProductModel> getHomeProducts({int maxPerCategory = 2}) {
+  List<ProductModel> getHomeProducts({
+    List<CategoryModel> categories = const [],
+    int maxPerCategory = 2,
+  }) {
     final Map<String, List<ProductModel>> byCategory = {};
     for (final p in _productsCache) {
-      final cat = p.category;
+      final cat = _categoryName(categories, p.categoryId);
       if (cat.isEmpty) continue;
       byCategory.putIfAbsent(cat, () => []).add(p);
     }
@@ -102,14 +126,25 @@ class SupabaseProductRepository implements ProductRepository {
     }
   }
 
+  String _categoryName(List<CategoryModel> categories, int categoryId) {
+    for (final c in categories) {
+      if (c.id == categoryId) return c.name;
+    }
+    return '';
+  }
+
   @override
-  List<ProductModel> searchProducts(String query) {
+  List<ProductModel> searchProducts(
+    String query, {
+    List<CategoryModel> categories = const [],
+  }) {
     final trimmed = query.trim().toLowerCase();
     if (trimmed.isEmpty) return [];
 
     return _productsCache.where((p) {
+      final categoryName = _categoryName(categories, p.categoryId);
       final searchable =
-          '${p.name} ${p.description} ${p.brand}'.toLowerCase();
+          '${p.name} $categoryName ${p.description} ${p.brand}'.toLowerCase();
       return searchable.contains(trimmed);
     }).toList();
   }

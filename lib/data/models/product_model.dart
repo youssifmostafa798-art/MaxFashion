@@ -32,35 +32,6 @@ class ProductModel {
 
   String get image => thumbnailUrl;
 
-  String get category {
-    const map = {
-      1: 'Sunglasses',
-      2: 'Watches',
-      3: 'Jeans',
-      4: 'Polos',
-      5: 'Shirts',
-      6: 'Shorts',
-      7: 'T-Shirts',
-      8: 'Boots',
-      9: 'Loafers',
-      10: 'Running Shoes',
-      11: 'Sneakers',
-      12: 'Accessories',
-      13: 'Bracelets',
-      14: 'Earrings',
-      15: 'Necklaces',
-      16: 'Rings',
-      17: 'Bags',
-      18: 'Blouses',
-      19: 'Crop Tops',
-      20: 'Dresses',
-      21: 'Skirts',
-      22: 'Wide Leg Pants',
-      23: 'Heels',
-    };
-    return map[categoryId] ?? '';
-  }
-
   bool get featured => isFeatured;
 
   String get collection => '';

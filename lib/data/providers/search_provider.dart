@@ -90,7 +90,8 @@ class SearchNotifier extends StateNotifier<SearchState> {
     state = state.copyWith(isLoading: true);
 
     final repo = ref.read(searchRepositoryProvider);
-    final results = repo.searchProducts(query, source: null);
+    final categories = ref.read(categoriesProvider);
+    final results = repo.searchProducts(query, source: null, categories: categories);
 
     state = state.copyWith(results: results, isLoading: false);
   }
