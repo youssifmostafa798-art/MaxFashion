@@ -26,13 +26,14 @@ class ProductDetailPage extends ConsumerStatefulWidget {
 
 class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   int selectedQty = 1;
-  late String selectedSize;
+  String? selectedSize;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    selectedSize = widget.product.sizes.first;
+    final sizes = widget.product.sizes;
+    selectedSize = sizes.isNotEmpty ? sizes.first : null;
     Future.delayed(const Duration(milliseconds: 400), () {
       if (mounted) setState(() => _isLoading = false);
     });
@@ -71,29 +72,30 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 },
               ),
               Gap(16.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: CustomText(
-                  text: "SIZE",
-                  size: 13,
-                  weight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  spacing: 2,
+              if (widget.product.sizes.isNotEmpty) ...[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomText(
+                    text: "SIZE",
+                    size: 13,
+                    weight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    spacing: 2,
+                  ),
                 ),
-              ),
-              Gap(10.h),
-              Row(
-                children: widget.product.sizes.map((size) {
-                  final isSelected = selectedSize == size;
-                  return Padding(
-                    padding: EdgeInsets.only(right: 10.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticUtils.selection();
-                        setState(() {
-                          selectedSize = size;
-                        });
-                      },
+                Gap(10.h),
+                Row(
+                  children: widget.product.sizes.map((size) {
+                    final isSelected = selectedSize == size;
+                    return Padding(
+                      padding: EdgeInsets.only(right: 10.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          HapticUtils.selection();
+                          setState(() {
+                            selectedSize = size;
+                          });
+                        },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         curve: Curves.easeInOut,
@@ -126,6 +128,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   );
                 }).toList(),
               ),
+              ],
               const PromoSection(),
               Gap(50.h),
               Row(
@@ -150,7 +153,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   final productId = CartItemModel.generateProductId(
                     widget.product.name,
                     widget.product.image,
-                    selectedSize,
+                    selectedSize ?? '',
                   );
                   ref
                       .read(cartProvider.notifier)
@@ -159,7 +162,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                           productId: productId,
                           productName: widget.product.name,
                           productImage: widget.product.image,
-                          selectedSize: selectedSize,
+                          selectedSize: selectedSize ?? '',
                           quantity: selectedQty,
                           unitPrice: widget.product.price,
                         ),

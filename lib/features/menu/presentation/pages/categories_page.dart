@@ -143,13 +143,29 @@ class _CategoryGrid extends StatelessWidget {
   const _CategoryGrid();
 
   static const _categories = [
-    _CategoryItem('Men', Icons.male),
-    _CategoryItem('Women', Icons.female),
-    _CategoryItem('Kids', Icons.child_care),
-    _CategoryItem('Shoes', Icons.shopping_bag_outlined),
+    _CategoryItem('Sunglasses', Icons.wb_sunny_outlined),
+    _CategoryItem('Watches', Icons.watch_outlined),
+    _CategoryItem('Jeans', Icons.checkroom),
+    _CategoryItem('Polos', Icons.checkroom),
+    _CategoryItem('Shirts', Icons.checkroom),
+    _CategoryItem('Shorts', Icons.checkroom),
+    _CategoryItem('T-Shirts', Icons.checkroom),
+    _CategoryItem('Boots', Icons.hiking),
+    _CategoryItem('Loafers', Icons.directions_walk),
+    _CategoryItem('Running Shoes', Icons.directions_run),
+    _CategoryItem('Sneakers', Icons.sports_basketball),
     _CategoryItem('Accessories', Icons.watch_outlined),
-    _CategoryItem('Brands', Icons.star_border),
-    _CategoryItem('Sale', Icons.local_offer_outlined),
+    _CategoryItem('Bracelets', Icons.diamond_outlined),
+    _CategoryItem('Earrings', Icons.diamond_outlined),
+    _CategoryItem('Necklaces', Icons.diamond_outlined),
+    _CategoryItem('Rings', Icons.diamond),
+    _CategoryItem('Bags', Icons.shopping_bag_outlined),
+    _CategoryItem('Blouses', Icons.checkroom),
+    _CategoryItem('Crop Tops', Icons.checkroom),
+    _CategoryItem('Dresses', Icons.checkroom),
+    _CategoryItem('Skirts', Icons.checkroom),
+    _CategoryItem('Wide Leg Pants', Icons.checkroom),
+    _CategoryItem('Heels', Icons.directions_walk),
   ];
 
   @override

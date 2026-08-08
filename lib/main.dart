@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,10 +10,21 @@ import 'package:max/core/router/app_router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await dotenv.load(fileName: '.env');
+
+  final supabaseUrl = dotenv.env['SUPABASE_URL'];
+  final supabaseAnonKey = dotenv.env['SUPABASE_ANON_KEY'];
+
+  if (supabaseUrl == null || supabaseUrl.isEmpty) {
+    throw Exception('SUPABASE_URL is missing from .env file');
+  }
+  if (supabaseAnonKey == null || supabaseAnonKey.isEmpty) {
+    throw Exception('SUPABASE_ANON_KEY is missing from .env file');
+  }
+
   await Supabase.initialize(
-    url: 'https://tonctmdcntftugdskqmb.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvbmN0bWRjbnRmdHVnZHNrcW1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2ODYyNTIsImV4cCI6MjEwMTI2MjI1Mn0.Gsuo7YaYZWAx5bB7MMU16qEPduU-vSWV4FyR07SB5Yc ',
+    url: supabaseUrl,
+    publishableKey: supabaseAnonKey,
   );
 
   runApp(const ProviderScope(child: MyApp()));

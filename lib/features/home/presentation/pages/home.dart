@@ -35,7 +35,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final products = ref.watch(featuredProductsProvider);
+    final products = ref.watch(homeProductsProvider);
 
     if (_isLoading) {
       return const HomeSkeleton();

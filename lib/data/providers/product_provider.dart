@@ -32,6 +32,12 @@ final featuredProductsProvider = Provider<List<ProductModel>>((ref) {
   return repo.getFeaturedProducts();
 });
 
+final homeProductsProvider = Provider<List<ProductModel>>((ref) {
+  ref.watch(_productsLoaded);
+  final repo = ref.watch(productRepositoryProvider);
+  return repo.getHomeProducts(maxPerCategory: 2);
+});
+
 final categoryProductsProvider =
     Provider.family<List<ProductModel>, String>((ref, category) {
   ref.watch(_productsLoaded);

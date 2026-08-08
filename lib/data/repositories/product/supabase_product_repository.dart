@@ -76,6 +76,24 @@ class SupabaseProductRepository implements ProductRepository {
   }
 
   @override
+  List<ProductModel> getHomeProducts({int maxPerCategory = 2}) {
+    final Map<String, List<ProductModel>> byCategory = {};
+    for (final p in _productsCache) {
+      final cat = p.category;
+      if (cat.isEmpty) continue;
+      byCategory.putIfAbsent(cat, () => []).add(p);
+    }
+
+    final result = <ProductModel>[];
+    for (final entry in byCategory.entries) {
+      final featured = entry.value.where((p) => p.featured).toList();
+      final pool = featured.isNotEmpty ? featured : entry.value;
+      result.addAll(pool.take(maxPerCategory));
+    }
+    return result;
+  }
+
+  @override
   ProductModel? getProductById(String id) {
     try {
       return _productsCache.firstWhere((p) => p.id == id);
