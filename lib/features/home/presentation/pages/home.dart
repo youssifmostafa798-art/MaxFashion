@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_text.dart';
-import 'package:max/data/models/cover_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
@@ -86,32 +85,7 @@ class _HomeState extends ConsumerState<Home> {
                       Gap(10.h),
                       Image.asset("assets/svgs/line.png", width: 190.w),
                       Gap(40.h),
-                      SizedBox(
-                        height: 500.h,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: CoverModel.covers.length,
-                          itemBuilder: (context, index) {
-                            final item = CoverModel.covers[index];
-                            return Padding(
-                              padding: EdgeInsets.all(8.0.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    item.image,
-                                    height: 350.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Gap(10.h),
-                                  CustomText(text: item.name.toUpperCase()),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+
                       about(context),
                       Gap(20.h),
                     ],
