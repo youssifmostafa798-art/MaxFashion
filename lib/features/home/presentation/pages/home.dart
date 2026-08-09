@@ -73,7 +73,7 @@ class _HomeState extends ConsumerState<Home> {
                   child: Column(
                     children: [
                       Gap(100.h),
-                      Image.asset("assets/products_supa/cover.png"),
+                      Image.asset("assets/products_supa/cover_1.png"),
                       Gap(20.h),
                       _CategoryFilter(categories: categories),
                       Gap(16.h),
@@ -139,10 +139,7 @@ class _CategoryFilter extends StatelessWidget {
             return const _CategoryChip(label: 'All', categoryId: null);
           }
           final category = categories[index - 1];
-          return _CategoryChip(
-            label: category.name,
-            categoryId: category.id,
-          );
+          return _CategoryChip(label: category.name, categoryId: category.id);
         },
       ),
     );
@@ -179,9 +176,7 @@ class _CategoryChip extends ConsumerWidget {
         child: CustomText(
           text: label.toUpperCase(),
           size: 12,
-          color: isSelected
-              ? colorScheme.surface
-              : colorScheme.onSurface,
+          color: isSelected ? colorScheme.surface : colorScheme.onSurface,
           weight: isSelected ? FontWeight.bold : FontWeight.normal,
           spacing: 2,
         ),
