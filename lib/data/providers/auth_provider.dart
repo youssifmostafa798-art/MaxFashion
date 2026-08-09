@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
@@ -64,20 +63,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final event = data.event;
       final session = data.session;
 
-      developer.log('[AuthProvider] onAuthStateChange: $event, session: ${session != null}');
-
-      if (_isSignUpInProgress) {
-        developer.log('[AuthProvider] signUp in progress — skipping auth event: $event');
-        return;
-      }
+      if (_isSignUpInProgress) return;
 
       if (event == supabase.AuthChangeEvent.signedIn && session != null) {
-        developer.log('[AuthProvider] User signed in via auth event');
         await _loadProfileFromSession();
-      } else if (event == supabase.AuthChangeEvent.tokenRefreshed && session != null) {
-        developer.log('[AuthProvider] Token refreshed');
       } else if (event == supabase.AuthChangeEvent.signedOut) {
-        developer.log('[AuthProvider] User signed out');
         if (mounted) {
           state = const AuthState();
         }
@@ -96,7 +86,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       if (profile == null) {
         if (_pendingFullName != null && _pendingPhoneNumber != null) {
-          developer.log('[AuthProvider] No profile found, creating from pending data');
           try {
             await (_repository as dynamic).ensureProfileExists(
               fullName: _pendingFullName!,
@@ -113,12 +102,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
               );
               _pendingFullName = null;
               _pendingPhoneNumber = null;
-              developer.log('[AuthProvider] Profile created and loaded after email confirmation');
               return;
             }
-          } catch (e) {
-            developer.log('[AuthProvider] Failed to create profile after confirmation: $e');
-          }
+          } catch (_) {}
         }
         state = state.copyWith(isLoading: false, clearUser: true);
         return;
@@ -132,9 +118,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       _pendingFullName = null;
       _pendingPhoneNumber = null;
-      developer.log('[AuthProvider] Profile loaded successfully: ${user.fullName}');
-    } catch (e) {
-      developer.log('[AuthProvider] Error loading profile: $e');
+    } catch (_) {
       if (mounted) {
         state = state.copyWith(isLoading: false, clearUser: true);
       }
@@ -158,29 +142,23 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> _restoreSession() async {
-    developer.log('[AuthProvider] Restoring session...');
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final userId = await _repository.getCurrentUserId();
       if (!mounted) return;
       if (userId == null) {
-        developer.log('[AuthProvider] No existing session');
         state = state.copyWith(isLoading: false, clearUser: true);
         return;
       }
-      developer.log('[AuthProvider] Found existing userId: $userId');
       final profile = await _repository.getProfile();
       if (!mounted) return;
       if (profile == null) {
-        developer.log('[AuthProvider] No profile found for userId');
         state = state.copyWith(isLoading: false, clearUser: true);
         return;
       }
       final user = _userFromProfile(profile);
       state = state.copyWith(user: user, isLoading: false);
-      developer.log('[AuthProvider] Session restored for: ${user.fullName}');
-    } catch (e) {
-      developer.log('[AuthProvider] Error restoring session: $e');
+    } catch (_) {
       if (mounted) {
         state = state.copyWith(isLoading: false, clearUser: true);
       }
@@ -194,7 +172,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
     String? profileImage,
   }) async {
-    developer.log('[AuthProvider] signUp started: $email');
     state = state.copyWith(isLoading: true, clearError: true);
     _isSignUpInProgress = true;
     try {
@@ -206,11 +183,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       if (!mounted) return;
 
-      developer.log('[AuthProvider] signUp repository call completed');
-
       final repo = _repository as dynamic;
       if (repo.isEmailConfirmationPending == true) {
-        developer.log('[AuthProvider] Email confirmation pending');
         _pendingFullName = fullName;
         _pendingPhoneNumber = phoneNumber;
         state = state.copyWith(
@@ -224,7 +198,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final profile = await _repository.getProfile();
       if (!mounted) return;
       if (profile == null) {
-        developer.log('[AuthProvider] signUp: profile is null after sign up — retrying creation');
         _pendingFullName = fullName;
         _pendingPhoneNumber = phoneNumber;
         try {
@@ -237,12 +210,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
           if (retryProfile != null) {
             final user = _userFromProfile(retryProfile);
             state = state.copyWith(user: user, isLoading: false);
-            developer.log('[AuthProvider] signUp successful after retry: ${user.fullName}');
             return;
           }
-        } catch (e) {
-          developer.log('[AuthProvider] Retry profile creation failed: $e');
-        }
+        } catch (_) {}
         state = state.copyWith(
           isLoading: false,
           emailConfirmationPending: true,
@@ -253,24 +223,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       final user = _userFromProfile(profile);
       state = state.copyWith(user: user, isLoading: false);
-      developer.log('[AuthProvider] signUp successful: ${user.fullName}');
     } on SocketException {
-      developer.log('[AuthProvider] signUp: SocketException');
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
         error: 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
-      developer.log('[AuthProvider] signUp: TimeoutException');
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
         error: 'Connection timed out. Please try again.',
       );
-    } catch (e, stackTrace) {
-      developer.log('[AuthProvider] signUp error: $e');
-      developer.log('[AuthProvider] stackTrace: $stackTrace');
+    } catch (e) {
       if (!mounted) return;
       state = state.copyWith(isLoading: false, error: _mapAuthError(e));
     } finally {
@@ -283,18 +248,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
     bool rememberMe = false,
   }) async {
-    developer.log('[AuthProvider] login started: $email');
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.signIn(email: email, password: password);
       if (!mounted) return;
 
-      developer.log('[AuthProvider] login repository call completed');
-
       final profile = await _repository.getProfile();
       if (!mounted) return;
       if (profile == null) {
-        developer.log('[AuthProvider] login: profile is null');
         state = state.copyWith(
           isLoading: false,
           clearUser: true,
@@ -304,24 +265,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
       final user = _userFromProfile(profile);
       state = state.copyWith(user: user, isLoading: false);
-      developer.log('[AuthProvider] login successful: ${user.fullName}');
     } on SocketException {
-      developer.log('[AuthProvider] login: SocketException');
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
         error: 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
-      developer.log('[AuthProvider] login: TimeoutException');
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
         error: 'Connection timed out. Please try again.',
       );
-    } catch (e, stackTrace) {
-      developer.log('[AuthProvider] login error: $e');
-      developer.log('[AuthProvider] stackTrace: $stackTrace');
+    } catch (e) {
       if (!mounted) return;
       state = state.copyWith(isLoading: false, error: _mapAuthError(e));
     }

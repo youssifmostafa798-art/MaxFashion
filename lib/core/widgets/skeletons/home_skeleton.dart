@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 
@@ -13,6 +14,7 @@ class HomeSkeleton extends StatelessWidget {
       child: Container(
         color: colorScheme.surface,
         child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,30 +29,87 @@ class HomeSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     SizedBox(height: 20.h),
-                    _buildProductGridSkeleton(colorScheme),
+                    SizedBox(
+                      height: 40.h,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 5,
+                        separatorBuilder: (_, _) => Gap(8.w),
+                        itemBuilder: (context, index) {
+                          return SkeletonBox(
+                            width: 70.w,
+                            height: 40.h,
+                            borderRadius: BorderRadius.circular(20.r),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    _buildProductGridSkeleton(),
+                    SizedBox(height: 5.h),
+                    Center(
+                      child: SkeletonBox(
+                        width: 140.w,
+                        height: 14.h,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Center(
+                      child: SkeletonBox(
+                        width: 190.w,
+                        height: 2.h,
+                      ),
+                    ),
+                    SizedBox(height: 40.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SkeletonBox(
+                          width: 24.w,
+                          height: 24.w,
+                          borderRadius: BorderRadius.circular(12.w),
+                        ),
+                        SizedBox(width: 30.w),
+                        SkeletonBox(
+                          width: 24.w,
+                          height: 24.w,
+                          borderRadius: BorderRadius.circular(12.w),
+                        ),
+                        SizedBox(width: 30.w),
+                        SkeletonBox(
+                          width: 24.w,
+                          height: 24.w,
+                          borderRadius: BorderRadius.circular(12.w),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 20.h),
                     Center(
                       child: SkeletonBox(
                         width: 190.w,
+                        height: 2.h,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Center(
+                      child: SkeletonBox(
+                        width: 200.w,
                         height: 14.h,
                       ),
                     ),
-                    SizedBox(height: 40.h),
-                    SizedBox(
-                      height: 350.h,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.all(8.0.w),
-                            child: SkeletonBox(
-                              width: 180.w,
-                              height: 350.h,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                          );
-                        },
+                    SizedBox(height: 20.h),
+                    Center(
+                      child: SkeletonBox(
+                        width: 190.w,
+                        height: 2.h,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Center(
+                      child: SkeletonBox(
+                        width: 220.w,
+                        height: 14.h,
                       ),
                     ),
                     SizedBox(height: 20.h),
@@ -64,7 +123,7 @@ class HomeSkeleton extends StatelessWidget {
     );
   }
 
-  Widget _buildProductGridSkeleton(ColorScheme colorScheme) {
+  Widget _buildProductGridSkeleton() {
     return GridView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -80,13 +139,16 @@ class HomeSkeleton extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SkeletonBox(
-              width: double.infinity,
-              height: 200.h,
-              borderRadius: BorderRadius.circular(4.r),
+            AspectRatio(
+              aspectRatio: 0.70,
+              child: SkeletonBox(
+                width: double.infinity,
+                height: double.infinity,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
             ),
             SizedBox(height: 10.h),
-            SkeletonBox(width: 100.w, height: 12.h),
+            SkeletonBox(width: double.infinity, height: 12.h),
             SizedBox(height: 6.h),
             SkeletonBox(width: 80.w, height: 10.h),
             SizedBox(height: 9.h),

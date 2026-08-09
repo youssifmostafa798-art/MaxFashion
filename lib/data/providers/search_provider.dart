@@ -12,13 +12,7 @@ final searchRepositoryProvider = Provider<SearchRepository>((ref) {
   return SupabaseSearchRepository(productRepo);
 });
 
-final searchQueryProvider = StateProvider<String>((ref) => '');
-
 enum SearchContextType { global, home, category, wishlist, cart, orders }
-
-final searchContextProvider = Provider<SearchContextType>((ref) {
-  return SearchContextType.global;
-});
 
 class SearchState {
   final String query;
@@ -159,8 +153,4 @@ class SearchNotifier extends StateNotifier<SearchState> {
 final searchProvider =
     StateNotifierProvider<SearchNotifier, SearchState>((ref) {
   return SearchNotifier(ref);
-});
-
-final highlightedQueryProvider = Provider<String>((ref) {
-  return ref.watch(searchProvider).query;
 });

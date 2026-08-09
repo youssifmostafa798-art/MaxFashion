@@ -60,7 +60,6 @@ class _CardWidgetState extends State<CardWidget> {
                 text: widget.products.name.toUpperCase(),
                 spacing: 5,
                 color: colorScheme.onSurface,
-                maxLines: 1,
               ),
               if (widget.showDescription) ...[
                 Gap(10.h),

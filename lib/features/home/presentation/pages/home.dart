@@ -9,9 +9,11 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
+import 'package:max/data/providers/home_content_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
 import 'package:max/core/widgets/skeletons/home_skeleton.dart';
+import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -22,23 +24,47 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
-  }
+  bool _coverImageReady = false;
+  String? _preloadedCoverUrl;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final products = ref.watch(filteredHomeProductsProvider);
     final categories = ref.watch(categoriesProvider);
+    final homeContentAsync = ref.watch(homeContentProvider);
+    final isProductsLoaded = ref.watch(productsLoaded);
 
-    if (_isLoading) {
+    ref.listen<AsyncValue<dynamic>>(homeContentProvider, (previous, next) {
+      next.whenData((homeContent) {
+        if (!mounted) return;
+        final coverUrl = homeContent?.coverUrl;
+        if (coverUrl != null && coverUrl.isNotEmpty) {
+          if (_preloadedCoverUrl == coverUrl) return;
+          _preloadedCoverUrl = coverUrl;
+          precacheImage(
+            NetworkImage(coverUrl),
+            context,
+          ).then((_) {
+            if (mounted) setState(() => _coverImageReady = true);
+          }).catchError((_) {
+            if (mounted) setState(() => _coverImageReady = true);
+          });
+        } else {
+          _preloadedCoverUrl = '';
+          if (!_coverImageReady) {
+            setState(() => _coverImageReady = true);
+          }
+        }
+      });
+      if (next.hasError) {
+        if (!_coverImageReady) {
+          if (mounted) setState(() => _coverImageReady = true);
+        }
+      }
+    });
+
+    if (!isProductsLoaded || !_coverImageReady) {
       return const HomeSkeleton();
     }
 
@@ -73,7 +99,7 @@ class _HomeState extends ConsumerState<Home> {
                   child: Column(
                     children: [
                       Gap(100.h),
-                      Image.asset("assets/products_supa/cover_1.png"),
+                      _HomeCover(homeContentAsync: homeContentAsync),
                       Gap(20.h),
                       _CategoryFilter(categories: categories),
                       Gap(16.h),
@@ -244,6 +270,65 @@ class _ProductGrid extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _HomeCover extends StatelessWidget {
+  const _HomeCover({required this.homeContentAsync});
+
+  final AsyncValue<dynamic> homeContentAsync;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return homeContentAsync.when(
+      loading: () => ShimmerEffect(
+        child: SkeletonBox(
+          width: double.infinity,
+          height: 200.h,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+      error: (_, _) => _buildFallback(colorScheme),
+      data: (homeContent) {
+        final coverUrl = homeContent?.coverUrl;
+        if (coverUrl == null || coverUrl.isEmpty) {
+          return _buildFallback(colorScheme);
+        }
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(12.r),
+          child: Image.network(
+            coverUrl,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return ShimmerEffect(
+                child: SkeletonBox(
+                  width: double.infinity,
+                  height: 200.h,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) =>
+                _buildFallback(colorScheme),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFallback(ColorScheme colorScheme) {
+    return Container(
+      width: double.infinity,
+      height: 200.h,
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
     );
   }
 }

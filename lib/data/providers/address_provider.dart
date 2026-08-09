@@ -65,13 +65,9 @@ final addressProvider =
 });
 
 final defaultAddressProvider = Provider<AddressModel?>((ref) {
-  final addresses = ref.watch(addressProvider);
-  if (addresses.isEmpty) return null;
-  try {
-    return addresses.firstWhere((a) => a.isDefault);
-  } catch (_) {
-    return addresses.first;
-  }
+  ref.watch(addressProvider);
+  final notifier = ref.read(addressProvider.notifier);
+  return notifier.defaultAddress;
 });
 
 final addressCountProvider = Provider<int>((ref) {

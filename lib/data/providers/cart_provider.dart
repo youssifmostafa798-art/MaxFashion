@@ -86,8 +86,3 @@ final cartSubtotalProvider = Provider<double>((ref) {
   final items = ref.watch(cartProvider);
   return items.fold(0.0, (sum, item) => sum + item.unitPrice * item.quantity);
 });
-
-final cartTotalProvider = Provider<double>((ref) {
-  final subtotal = ref.watch(cartSubtotalProvider);
-  return subtotal;
-});

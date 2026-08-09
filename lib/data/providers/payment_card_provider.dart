@@ -64,13 +64,9 @@ final paymentCardProvider =
 });
 
 final defaultPaymentCardProvider = Provider<PaymentCardModel?>((ref) {
-  final cards = ref.watch(paymentCardProvider);
-  if (cards.isEmpty) return null;
-  try {
-    return cards.firstWhere((c) => c.isDefault);
-  } catch (_) {
-    return cards.first;
-  }
+  ref.watch(paymentCardProvider);
+  final notifier = ref.read(paymentCardProvider.notifier);
+  return notifier.defaultCard;
 });
 
 final paymentCardCountProvider = Provider<int>((ref) {

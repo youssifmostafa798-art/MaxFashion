@@ -46,8 +46,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   @override
   Widget build(BuildContext context) {
-    final searchState = ref.watch(searchProvider);
-    final query = searchState.query;
+    final query = ref.watch(searchProvider.select((s) => s.query));
     final hasQuery = query.trim().isNotEmpty;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -94,7 +93,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: hasQuery
-            ? _buildSearchResults(searchState)
+            ? _buildSearchResults()
             : _buildDefaultContent(),
       ),
     );
@@ -120,7 +119,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     }
   }
 
-  Widget _buildSearchResults(SearchState searchState) {
+  Widget _buildSearchResults() {
+    final searchState = ref.watch(searchProvider);
     if (searchState.isLoading) {
       return const SearchSkeleton();
     }
@@ -140,7 +140,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
   }
 
   Widget _buildDefaultContent() {
-    final searchState = ref.watch(searchProvider);
+    final suggestedProducts = ref.watch(
+      searchProvider.select((s) => s.suggestedProducts),
+    );
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -156,7 +158,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
           ),
           SizedBox(height: 24.h),
           SuggestedProductsSection(
-            products: searchState.suggestedProducts,
+            products: suggestedProducts,
           ),
           SizedBox(height: 24.h),
           const PopularCategoriesSection(),

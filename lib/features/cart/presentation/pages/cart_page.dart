@@ -90,9 +90,8 @@ class _CartBottomSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final isCartEmpty = ref.watch(cartProvider.select((items) => items.isEmpty));
     final subtotal = ref.watch(cartSubtotalProvider);
-    final total = ref.watch(cartTotalProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -137,7 +136,7 @@ class _CartBottomSection extends ConsumerWidget {
                 color: colorScheme.onSurface,
               ),
               CustomText(
-                text: '\$${total.toStringAsFixed(2)}',
+                text: '\$${subtotal.toStringAsFixed(2)}',
                 size: 16,
                 weight: FontWeight.w700,
                 color: colorScheme.onSurface,
@@ -148,16 +147,17 @@ class _CartBottomSection extends ConsumerWidget {
           CustomButton(
             isSvg: true,
             title: "Checkout",
-            onTap: cartItems.isEmpty
+            onTap: isCartEmpty
                 ? null
                 : () {
                     HapticUtils.light();
+                    final cartItems = ref.read(cartProvider);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => PlaceOrder(
                           cartItems: cartItems,
-                          total: total,
+                          total: subtotal,
                         ),
                       ),
                     );
