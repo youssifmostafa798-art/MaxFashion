@@ -56,9 +56,10 @@ class _CardWidgetState extends State<CardWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gap(8.h),
+              //edit
               CustomText(
                 text: widget.products.name.toUpperCase(),
-                spacing: 5,
+                spacing: 2,
                 color: colorScheme.onSurface,
               ),
               if (widget.showDescription) ...[

@@ -12,8 +12,8 @@ import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/providers/home_content_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
-import 'package:max/core/widgets/skeletons/home_skeleton.dart';
 import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
+import 'package:max/core/widgets/skeletons/product_grid_skeleton.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -24,9 +24,6 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
-  bool _coverImageReady = false;
-  String? _preloadedCoverUrl;
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -34,39 +31,6 @@ class _HomeState extends ConsumerState<Home> {
     final categories = ref.watch(categoriesProvider);
     final homeContentAsync = ref.watch(homeContentProvider);
     final isProductsLoaded = ref.watch(productsLoaded);
-
-    ref.listen<AsyncValue<dynamic>>(homeContentProvider, (previous, next) {
-      next.whenData((homeContent) {
-        if (!mounted) return;
-        final coverUrl = homeContent?.coverUrl;
-        if (coverUrl != null && coverUrl.isNotEmpty) {
-          if (_preloadedCoverUrl == coverUrl) return;
-          _preloadedCoverUrl = coverUrl;
-          precacheImage(
-            NetworkImage(coverUrl),
-            context,
-          ).then((_) {
-            if (mounted) setState(() => _coverImageReady = true);
-          }).catchError((_) {
-            if (mounted) setState(() => _coverImageReady = true);
-          });
-        } else {
-          _preloadedCoverUrl = '';
-          if (!_coverImageReady) {
-            setState(() => _coverImageReady = true);
-          }
-        }
-      });
-      if (next.hasError) {
-        if (!_coverImageReady) {
-          if (mounted) setState(() => _coverImageReady = true);
-        }
-      }
-    });
-
-    if (!isProductsLoaded || !_coverImageReady) {
-      return const HomeSkeleton();
-    }
 
     return Scaffold(
       appBar: CustomAppbar(showBackButton: false, showSearchBar: true),
@@ -103,12 +67,14 @@ class _HomeState extends ConsumerState<Home> {
                       Gap(20.h),
                       _CategoryFilter(categories: categories),
                       Gap(16.h),
-                      products.isEmpty
-                          ? _EmptyProducts(colorScheme: colorScheme)
-                          : _ProductGrid(
-                              products: products,
-                              colorScheme: colorScheme,
-                            ),
+                      isProductsLoaded
+                          ? products.isEmpty
+                              ? _EmptyProducts(colorScheme: colorScheme)
+                              : _ProductGrid(
+                                  products: products,
+                                  colorScheme: colorScheme,
+                                )
+                          : const ProductGridSkeleton(),
                       Gap(5.h),
                       CustomText(
                         text: "You may also like".toUpperCase(),
@@ -144,6 +110,7 @@ class _HomeState extends ConsumerState<Home> {
       ),
     );
   }
+
 }
 
 class _CategoryFilter extends StatelessWidget {

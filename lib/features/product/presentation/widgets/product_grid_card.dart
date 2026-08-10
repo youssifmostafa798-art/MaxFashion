@@ -72,11 +72,16 @@ class _ProductGridCardState extends State<ProductGridCard>
                   child: ClipRect(
                     child: AspectRatio(
                       aspectRatio: 0.70,
-                      child: Image.asset(
-                        widget.product.image,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                      child: widget.product.image.isEmpty
+                          ? Container(
+                              width: double.infinity,
+                              color: colorScheme.surfaceContainerHighest,
+                            )
+                          : Image.asset(
+                              widget.product.image,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     ),
                   ),
                 ),
@@ -88,7 +93,7 @@ class _ProductGridCardState extends State<ProductGridCard>
               ],
             ),
             Gap(10.h),
-            CustomText(text: widget.product.name, maxLines: 1),
+            CustomText(text: widget.product.name, maxLines: 2),
             CustomText(
               text: widget.product.description,
               color: colorScheme.onSurfaceVariant,
