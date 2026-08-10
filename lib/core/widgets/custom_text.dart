@@ -11,6 +11,7 @@ class CustomText extends StatelessWidget {
     this.height = 1,
     this.spacing = 1,
     this.maxLines,
+    this.overflow,
   });
   final String text;
   final double size;
@@ -19,17 +20,18 @@ class CustomText extends StatelessWidget {
   final double height;
   final double spacing;
   final int? maxLines;
+  final TextOverflow? overflow;
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       maxLines: maxLines,
+      overflow: overflow ?? TextOverflow.ellipsis,
       style: TextStyle(
         letterSpacing: spacing,
         fontSize: size.sp,
         color: color ?? Theme.of(context).colorScheme.onSurface,
         fontWeight: weight,
-        overflow: TextOverflow.ellipsis,
         fontFamily: 'Tenor_Sans',
         height: height,
       ),

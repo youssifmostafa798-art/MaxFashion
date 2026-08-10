@@ -61,6 +61,7 @@ class _CardWidgetState extends State<CardWidget> {
                 text: widget.products.name.toUpperCase(),
                 spacing: 2,
                 color: colorScheme.onSurface,
+                overflow: TextOverflow.clip,
               ),
               if (widget.showDescription) ...[
                 Gap(10.h),
