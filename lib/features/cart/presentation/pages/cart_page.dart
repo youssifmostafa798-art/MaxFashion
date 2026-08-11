@@ -11,13 +11,45 @@ import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 
-class CartPage extends ConsumerWidget {
+class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+  ConsumerState<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends ConsumerState<CartPage> {
+  String? _lastShownError;
+
+  @override
+  Widget build(BuildContext context) {
+    final cartState = ref.watch(cartProvider);
     final colorScheme = Theme.of(context).colorScheme;
+
+    // Show error SnackBar when error changes
+    ref.listen<CartState>(cartProvider, (previous, next) {
+      if (next.error != null && next.error != _lastShownError) {
+        _lastShownError = next.error;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: CustomText(
+              text: next.error!,
+              size: 14,
+              color: colorScheme.surface,
+            ),
+            backgroundColor: colorScheme.error,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+          ),
+        );
+      }
+      if (next.error == null) {
+        _lastShownError = null;
+      }
+    });
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -34,19 +66,50 @@ class CartPage extends ConsumerWidget {
           weight: FontWeight.bold,
         ),
       ),
-      body: cartItems.isEmpty
-          ? _EmptyCart()
-          : _CartContent(),
+      body: cartState.isLoading
+          ? _CartLoading()
+          : cartState.items.isEmpty
+              ? _EmptyCart()
+              : _CartContent(cartState: cartState),
+    );
+  }
+}
+
+class _CartLoading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 40.w,
+            height: 40.w,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          CustomText(
+            text: 'Loading your bag...',
+            size: 14,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _CartContent extends ConsumerWidget {
-  const _CartContent();
+  const _CartContent({required this.cartState});
+
+  final CartState cartState;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cartItems = ref.watch(cartProvider);
+    final items = cartState.items;
 
     return Column(
       children: [
@@ -54,9 +117,10 @@ class _CartContent extends ConsumerWidget {
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            itemCount: cartItems.length,
+            itemCount: items.length,
             itemBuilder: (context, index) {
-              final item = cartItems[index];
+              final item = items[index];
+              final isUpdating = cartState.updatingItemId == item.id;
               return CartItemCard(
                 image: item.productImage,
                 title: item.productName,
@@ -64,6 +128,7 @@ class _CartContent extends ConsumerWidget {
                 quantity: item.quantity,
                 selectedColor: item.selectedColor,
                 selectedSize: item.selectedSize,
+                isUpdating: isUpdating,
                 onIncrement: () => ref
                     .read(cartProvider.notifier)
                     .incrementQuantity(index),
@@ -79,18 +144,20 @@ class _CartContent extends ConsumerWidget {
             },
           ),
         ),
-        _CartBottomSection(),
+        _CartBottomSection(isClearing: cartState.isClearing),
       ],
     );
   }
 }
 
 class _CartBottomSection extends ConsumerWidget {
-  const _CartBottomSection();
+  const _CartBottomSection({required this.isClearing});
+
+  final bool isClearing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCartEmpty = ref.watch(cartProvider.select((items) => items.isEmpty));
+    final isCartEmpty = ref.watch(cartProvider.select((s) => s.items.isEmpty));
     final subtotal = ref.watch(cartSubtotalProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -151,7 +218,7 @@ class _CartBottomSection extends ConsumerWidget {
                 ? null
                 : () {
                     HapticUtils.light();
-                    final cartItems = ref.read(cartProvider);
+                    final cartItems = ref.read(cartItemsProvider);
                     Navigator.push(
                       context,
                       MaterialPageRoute(

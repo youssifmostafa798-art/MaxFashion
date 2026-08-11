@@ -9,7 +9,6 @@ import 'package:max/features/wishlist/presentation/pages/wishlist_page.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/cart/presentation/pages/cart_page.dart';
-import 'package:max/features/checkout/presentation/pages/checkout.dart';
 import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/checkout/presentation/pages/add_address.dart';
 import 'package:max/features/checkout/presentation/pages/add_card.dart';
@@ -39,7 +38,6 @@ class AppRouter {
   static const String productListing = '/product-listing';
   static const String productDetail = '/product-detail';
   static const String cart = '/cart';
-  static const String checkout = '/checkout';
   static const String placeOrder = '/place-order';
   static const String addAddress = '/add-address';
   static const String addCard = '/add-card';
@@ -85,13 +83,6 @@ class AppRouter {
         );
       case cart:
         return _buildRoute(const CartPage(), settings, direction: _SlideDirection.right);
-      case checkout:
-        final ProductModel products = settings.arguments as ProductModel;
-        return _buildRoute(
-          Checkout(products: products),
-          settings,
-          direction: _SlideDirection.right,
-        );
       case placeOrder:
         final args = settings.arguments as Map<String, dynamic>;
         final cartItems = args['cartItems'] as List<CartItemModel>;

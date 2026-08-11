@@ -23,7 +23,7 @@ class OrderItemModel {
 
   factory OrderItemModel.fromCartItem(CartItemModel item) {
     return OrderItemModel(
-      productId: item.productId,
+      productId: item.productId.toString(),
       productName: item.productName,
       productImage: item.productImage,
       selectedColor: item.selectedColor,

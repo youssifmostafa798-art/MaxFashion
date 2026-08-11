@@ -16,6 +16,7 @@ class CartItemCard extends StatelessWidget {
     required this.onRemove,
     this.selectedColor,
     required this.selectedSize,
+    this.isUpdating = false,
   });
 
   final String image;
@@ -27,6 +28,7 @@ class CartItemCard extends StatelessWidget {
   final VoidCallback onRemove;
   final String? selectedColor;
   final String selectedSize;
+  final bool isUpdating;
 
   @override
   Widget build(BuildContext context) {
@@ -140,11 +142,12 @@ class CartItemCard extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: CustomText(text: '|', size: 12, color: colorScheme.onSurfaceVariant),
                           ),
-                        CustomText(
-                          text: 'Size: $selectedSize',
-                          size: 12,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                        if (selectedSize.isNotEmpty)
+                          CustomText(
+                            text: 'Size: $selectedSize',
+                            size: 12,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
                       ],
                     ),
                   ],
@@ -154,10 +157,12 @@ class CartItemCard extends StatelessWidget {
                       _buildQtyButton(
                         context: context,
                         icon: Icons.remove,
-                        onTap: () {
-                          HapticUtils.light();
-                          onDecrement();
-                        },
+                        onTap: isUpdating
+                            ? null
+                            : () {
+                                HapticUtils.light();
+                                onDecrement();
+                              },
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -167,22 +172,34 @@ class CartItemCard extends StatelessWidget {
                             scale: animation,
                             child: child,
                           ),
-                          child: CustomText(
-                            key: ValueKey(quantity),
-                            text: quantity.toString(),
-                            size: 14,
-                            weight: FontWeight.w600,
-                            color: colorScheme.onSurface,
-                          ),
+                          child: isUpdating
+                              ? SizedBox(
+                                  key: const ValueKey('loading'),
+                                  width: 14.w,
+                                  height: 14.w,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                )
+                              : CustomText(
+                                  key: ValueKey(quantity),
+                                  text: quantity.toString(),
+                                  size: 14,
+                                  weight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
                         ),
                       ),
                       _buildQtyButton(
                         context: context,
                         icon: Icons.add,
-                        onTap: () {
-                          HapticUtils.light();
-                          onIncrement();
-                        },
+                        onTap: isUpdating
+                            ? null
+                            : () {
+                                HapticUtils.light();
+                                onIncrement();
+                              },
                       ),
                     ],
                   ),
@@ -198,8 +215,9 @@ class CartItemCard extends StatelessWidget {
   Widget _buildQtyButton({
     required BuildContext context,
     required IconData icon,
-    required VoidCallback onTap,
+    required VoidCallback? onTap,
   }) {
+    final isDisabled = onTap == null;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -207,9 +225,22 @@ class CartItemCard extends StatelessWidget {
         height: 30.w,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Theme.of(context).colorScheme.outline),
+          border: Border.all(
+            color: isDisabled
+                ? Theme.of(context).colorScheme.outline.withValues(alpha: 0.4)
+                : Theme.of(context).colorScheme.outline,
+          ),
+          color: isDisabled
+              ? Theme.of(context).colorScheme.surface.withValues(alpha: 0.5)
+              : null,
         ),
-        child: Icon(icon, size: 16.w, color: Theme.of(context).colorScheme.onSurface),
+        child: Icon(
+          icon,
+          size: 16.w,
+          color: isDisabled
+              ? Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4)
+              : Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }

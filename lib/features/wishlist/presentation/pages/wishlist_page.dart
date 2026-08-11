@@ -91,20 +91,19 @@ class _WishlistContent extends ConsumerWidget {
             ref.read(wishlistProvider.notifier).remove(product.id);
           },
           onMoveToCart: () {
-            final defaultSize = product.sizes.first;
-            final productId = CartItemModel.generateProductId(
-              product.name,
-              product.image,
-              defaultSize,
+            final selectedSize =
+                product.sizes.isNotEmpty ? product.sizes.first : null;
+            final dbProductId = int.parse(
+              product.id.replaceFirst('p', ''),
             );
             ref
                 .read(cartProvider.notifier)
                 .addItem(
                   CartItemModel(
-                    productId: productId,
+                    productId: dbProductId,
                     productName: product.name,
                     productImage: product.image,
-                    selectedSize: defaultSize,
+                    selectedSize: selectedSize ?? '',
                     quantity: 1,
                     unitPrice: product.price,
                   ),

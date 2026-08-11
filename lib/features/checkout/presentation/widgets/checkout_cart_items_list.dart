@@ -58,7 +58,9 @@ class CheckoutCartItemsList extends StatelessWidget {
                       ),
                       SizedBox(height: 2.h),
                       CustomText(
-                        text: 'Size: ${item.selectedSize}  Qty: ${item.quantity}',
+                        text: item.selectedSize.isNotEmpty
+                            ? 'Size: ${item.selectedSize}  Qty: ${item.quantity}'
+                            : 'Qty: ${item.quantity}',
                         size: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),

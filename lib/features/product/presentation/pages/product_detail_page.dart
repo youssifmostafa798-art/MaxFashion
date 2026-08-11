@@ -163,16 +163,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 isSvg: true,
                 title: "Add to cart",
                 onTap: () {
-                  final productId = CartItemModel.generateProductId(
-                    widget.product.name,
-                    widget.product.image,
-                    selectedSize ?? '',
+                  final dbProductId = int.parse(
+                    widget.product.id.replaceFirst('p', ''),
                   );
                   ref
                       .read(cartProvider.notifier)
                       .addItem(
                         CartItemModel(
-                          productId: productId,
+                          productId: dbProductId,
                           productName: widget.product.name,
                           productImage: widget.product.image,
                           selectedSize: selectedSize ?? '',

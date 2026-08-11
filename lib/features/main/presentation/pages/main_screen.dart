@@ -47,7 +47,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cartCount = ref.watch(cartProvider.select((items) => items.length));
+    final cartCount = ref.watch(cartItemsProvider.select((items) => items.length));
     final wishlistCount = ref.watch(wishlistCountProvider);
 
     return Scaffold(
