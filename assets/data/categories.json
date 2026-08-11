@@ -1,140 +1,134 @@
 ﻿[
     {
-        "id": 1,
-        "name": "Sunglasses",
-        "slug": "sunglasses",
-        "image_url": "assets/products_supa/men/accessories/sunglasses/sunglasses_1.jpg"
+        "id":  1,
+        "name":  "Sunglasses",
+        "slug":  "sunglasses",
+        "image_url":  "assets/products_supa/men/accessories/sunglasses/sunglasses_1.jpg"
     },
     {
-        "id": 2,
-        "name": "Watches",
-        "slug": "watches",
-        "image_url": "assets/products_supa/men/accessories/watches/watches_1.jpg"
+        "id":  2,
+        "name":  "Watches",
+        "slug":  "watches",
+        "image_url":  "assets/products_supa/men/accessories/watches/watches_1.jpg"
     },
     {
-        "id": 3,
-        "name": "Jeans",
-        "slug": "jeans",
-        "image_url": "assets/products_supa/men/clothing/jeans/collections_jeans.jpg"
+        "id":  3,
+        "name":  "Jeans",
+        "slug":  "jeans",
+        "image_url":  "assets/products_supa/men/clothing/jeans/collections_jeans.jpg"
     },
     {
-        "id": 4,
-        "name": "Polos",
-        "slug": "polos",
-        "image_url": "assets/products_supa/men/clothing/polos/collection_polo.jpg"
+        "id":  4,
+        "name":  "Polos",
+        "slug":  "polos",
+        "image_url":  "assets/products_supa/men/clothing/polos/collection_polo.jpg"
     },
     {
-        "id": 5,
-        "name": "Shirts",
-        "slug": "shirts",
-        "image_url": "assets/products_supa/men/clothing/shirts/shirts_1.jpg"
+        "id":  5,
+        "name":  "Shirts",
+        "slug":  "shirts",
+        "image_url":  "assets/products_supa/men/clothing/shirts/shirts_1.jpg"
     },
     {
-        "id": 6,
-        "name": "Shorts",
-        "slug": "shorts",
-        "image_url": "assets/products_supa/men/clothing/shorts/shorts_1.jpg"
+        "id":  6,
+        "name":  "Shorts",
+        "slug":  "shorts",
+        "image_url":  "assets/products_supa/men/clothing/shorts/shorts_1.jpg"
     },
     {
-        "id": 7,
-        "name": "T-Shirts",
-        "slug": "t-shirts",
-        "image_url": "assets/products_supa/men/clothing/tshirts/collections_tshirts.jpg"
+        "id":  7,
+        "name":  "T-Shirts",
+        "slug":  "t-shirts",
+        "image_url":  "assets/products_supa/men/clothing/tshirts/collections_tshirts.jpg"
     },
     {
-        "id": 8,
-        "name": "Boots",
-        "slug": "boots",
-        "image_url": "assets/products_supa/men/shoes/boots/boots_1.jpg"
+        "id":  8,
+        "name":  "Boots",
+        "slug":  "boots",
+        "image_url":  "assets/products_supa/men/shoes/boots/boots_1.jpg"
     },
     {
-        "id": 9,
-        "name": "Loafers",
-        "slug": "loafers",
-        "image_url": "assets/products_supa/men/shoes/loafers/loafers_1.jpg"
+        "id":  9,
+        "name":  "Loafers",
+        "slug":  "loafers",
+        "image_url":  "assets/products_supa/men/shoes/loafers/loafers_1.jpg"
     },
     {
-        "id": 10,
-        "name": "Running Shoes",
-        "slug": "running-shoes",
-        "image_url": "assets/products_supa/men/shoes/running/running_1.jpg"
+        "id":  10,
+        "name":  "Running Shoes",
+        "slug":  "running-shoes",
+        "image_url":  "assets/products_supa/men/shoes/running/running_1.jpg"
     },
     {
-        "id": 11,
-        "name": "Sneakers",
-        "slug": "sneakers",
-        "image_url": "assets/products_supa/men/shoes/sneakers/sneakers_1.jpg"
+        "id":  11,
+        "name":  "Sneakers",
+        "slug":  "sneakers",
+        "image_url":  "assets/products_supa/men/shoes/sneakers/sneakers_1.jpg"
     },
     {
-        "id": 12,
-        "name": "Accessories",
-        "slug": "accessories",
-        "image_url": "assets/products_supa/women/accessories/accessories_all.png"
+        "id":  13,
+        "name":  "Bracelets",
+        "slug":  "bracelets",
+        "image_url":  "assets/products_supa/women/accessories/bracelets/bracelets_1.jpg"
     },
     {
-        "id": 13,
-        "name": "Bracelets",
-        "slug": "bracelets",
-        "image_url": "assets/products_supa/women/accessories/bracelets/bracelets_1.jpg"
+        "id":  14,
+        "name":  "Earrings",
+        "slug":  "earrings",
+        "image_url":  "assets/products_supa/women/accessories/earrings/earrings_1.jpg"
     },
     {
-        "id": 14,
-        "name": "Earrings",
-        "slug": "earrings",
-        "image_url": "assets/products_supa/women/accessories/earrings/earrings_1.jpg"
+        "id":  15,
+        "name":  "Necklaces",
+        "slug":  "necklaces",
+        "image_url":  "assets/products_supa/women/accessories/necklaces/necklaces_1.jpg"
     },
     {
-        "id": 15,
-        "name": "Necklaces",
-        "slug": "necklaces",
-        "image_url": "assets/products_supa/women/accessories/necklaces/necklaces_1.jpg"
+        "id":  16,
+        "name":  "Rings",
+        "slug":  "rings",
+        "image_url":  "assets/products_supa/women/accessories/rings/rings_1.jpg"
     },
     {
-        "id": 16,
-        "name": "Rings",
-        "slug": "rings",
-        "image_url": "assets/products_supa/women/accessories/rings/rings_1.jpg"
+        "id":  17,
+        "name":  "Bags",
+        "slug":  "bags",
+        "image_url":  "assets/products_supa/women/bags/bagss.png"
     },
     {
-        "id": 17,
-        "name": "Bags",
-        "slug": "bags",
-        "image_url": "assets/products_supa/women/bags/bagss.png"
+        "id":  18,
+        "name":  "Blouses",
+        "slug":  "blouses",
+        "image_url":  "assets/products_supa/women/clothing/blouses/weman_blouses_2.jpg"
     },
     {
-        "id": 18,
-        "name": "Blouses",
-        "slug": "blouses",
-        "image_url": "assets/products_supa/women/clothing/blouses/weman_blouses_2.jpg"
+        "id":  19,
+        "name":  "Crop Tops",
+        "slug":  "crop-tops",
+        "image_url":  "assets/products_supa/women/clothing/crop_tops/crop_tops_1.jpg"
     },
     {
-        "id": 19,
-        "name": "Crop Tops",
-        "slug": "crop-tops",
-        "image_url": "assets/products_supa/women/clothing/crop_tops/crop_tops_1.jpg"
+        "id":  20,
+        "name":  "Dresses",
+        "slug":  "dresses",
+        "image_url":  "assets/products_supa/women/clothing/dresses/dresses_1.jpg"
     },
     {
-        "id": 20,
-        "name": "Dresses",
-        "slug": "dresses",
-        "image_url": "assets/products_supa/women/clothing/dresses/dresses_1.jpg"
+        "id":  21,
+        "name":  "Skirts",
+        "slug":  "skirts",
+        "image_url":  "assets/products_supa/women/clothing/skirts/skirts_1.jpg"
     },
     {
-        "id": 21,
-        "name": "Skirts",
-        "slug": "skirts",
-        "image_url": "assets/products_supa/women/clothing/skirts/skirts_1.jpg"
+        "id":  22,
+        "name":  "Wide Leg Pants",
+        "slug":  "wide-leg-pants",
+        "image_url":  "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_1.jpg"
     },
     {
-        "id": 22,
-        "name": "Wide Leg Pants",
-        "slug": "wide-leg-pants",
-        "image_url": "assets/products_supa/women/clothing/wide_leg_pants/wide_leg_pants_1.jpg"
-    },
-    {
-        "id": 23,
-        "name": "Heels",
-        "slug": "heels",
-        "image_url": "assets/products_supa/women/shoes/heels/heels_1.jpg"
+        "id":  23,
+        "name":  "Heels",
+        "slug":  "heels",
+        "image_url":  "assets/products_supa/women/shoes/heels/heels_1.jpg"
     }
 ]

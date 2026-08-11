@@ -144,19 +144,6 @@
         "is_available":  true
     },
     {
-        "id":  13,
-        "category_id":  2,
-        "name":  "Ranger Survival Watch",
-        "description":  "Racing-inspired chronograph with carbon fiber dial and red accent hands. The rubber strap provides grip during high-speed activities.",
-        "price":  61.74,
-        "discount_price":  null,
-        "brand":  "MaxFashion",
-        "thumbnail_url":  "assets/products_supa/men/accessories/watches/watches.jpg",
-        "is_featured":  false,
-        "is_available":  true
-    },
-
-    {
         "id":  15,
         "category_id":  3,
         "name":  "Heritage selvedge raw",
@@ -288,7 +275,6 @@
         "is_featured":  false,
         "is_available":  true
     },
-
     {
         "id":  27,
         "category_id":  4,
@@ -601,7 +587,6 @@
         "is_featured":  false,
         "is_available":  true
     },
-
     {
         "id":  54,
         "category_id":  6,
@@ -674,7 +659,6 @@
         "is_featured":  false,
         "is_available":  true
     },
-
     {
         "id":  61,
         "category_id":  7,
@@ -1384,18 +1368,6 @@
         "is_available":  true
     },
     {
-        "id":  120,
-        "category_id":  12,
-        "name":  "Premium Gift Set",
-        "description":  "Premium gift set with luxury packaging, perfect for special occasions. Each accessory is crafted from materials that develop beautiful character over time.",
-        "price":  59.46,
-        "discount_price":  null,
-        "brand":  "MaxFashion",
-        "thumbnail_url":  "assets/products_supa/women/accessories/accessories_all.png",
-        "is_available":  true,
-        "is_featured":  true
-    },
-    {
         "id":  121,
         "category_id":  13,
         "name":  "Gold Chain Link Bracelet",
@@ -1970,18 +1942,6 @@
         "thumbnail_url":  "assets/products_supa/women/accessories/watches/women_watches_8.jpg",
         "is_featured":  false,
         "is_available":  true
-    },
-    {
-        "id":  169,
-        "category_id":  17,
-        "name":  "Drawstring Pouch Casual",
-        "description":  "Drawstring pouch bag with a soft, gathered closure. The casual silhouette pairs with weekend and vacation wardrobes.",
-        "price":  94.14,
-        "discount_price":  null,
-        "brand":  "MaxFashion",
-        "thumbnail_url":  "assets/products_supa/women/bags/bags.png",
-        "is_available":  true,
-        "is_featured":  true
     },
     {
         "id":  170,

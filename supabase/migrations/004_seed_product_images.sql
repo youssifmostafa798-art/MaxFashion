@@ -11,7 +11,6 @@ INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (9, 9,
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (10, 10, 'assets/products_supa/men/accessories/watches/watches_4.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (11, 11, 'assets/products_supa/men/accessories/watches/watches_5.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (12, 12, 'assets/products_supa/men/accessories/watches/watches_6.jpg', 1);
-INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (13, 13, 'assets/products_supa/men/accessories/watches/watches.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (14, 14, 'assets/products_supa/men/clothing/jeans/collections_jeans.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (15, 15, 'assets/products_supa/men/clothing/jeans/jeans_1.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (16, 16, 'assets/products_supa/men/clothing/jeans/jeans_10.jpg', 1);
@@ -118,7 +117,6 @@ INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (116, 
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (117, 117, 'assets/products_supa/men/shoes/sneakers/sneakers_7.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (118, 118, 'assets/products_supa/men/shoes/sneakers/sneakers_8.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (119, 119, 'assets/products_supa/men/shoes/sneakers/sneakers_9.jpg', 1);
-INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (120, 120, 'assets/products_supa/women/accessories/accessories_all.png', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (121, 121, 'assets/products_supa/women/accessories/bracelets/bracelets_1.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (122, 122, 'assets/products_supa/women/accessories/bracelets/bracelets_2.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (123, 123, 'assets/products_supa/women/accessories/bracelets/bracelets_3.jpg', 1);
@@ -167,7 +165,6 @@ INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (165, 
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (166, 166, 'assets/products_supa/women/accessories/watches/weman_watches_6.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (167, 167, 'assets/products_supa/women/accessories/watches/weman_watches_7.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (168, 168, 'assets/products_supa/women/accessories/watches/weman_watches_8.jpg', 1);
-INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (169, 169, 'assets/products_supa/women/bags/bagss.png', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (170, 170, 'assets/products_supa/women/bags/weman_bags_1.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (171, 171, 'assets/products_supa/women/bags/weman_bags_10.jpg', 1);
 INSERT INTO product_images (id, product_id, image_url, sort_order) VALUES (172, 172, 'assets/products_supa/women/bags/weman_bags_11.jpg', 1);

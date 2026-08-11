@@ -10,7 +10,6 @@ INSERT INTO categories (id, name, slug, image_url) VALUES (8, 'Boots', 'boots', 
 INSERT INTO categories (id, name, slug, image_url) VALUES (9, 'Loafers', 'loafers', 'assets/products_supa/men/shoes/loafers/loafers_1.jpg');
 INSERT INTO categories (id, name, slug, image_url) VALUES (10, 'Running Shoes', 'running-shoes', 'assets/products_supa/men/shoes/running/running_1.jpg');
 INSERT INTO categories (id, name, slug, image_url) VALUES (11, 'Sneakers', 'sneakers', 'assets/products_supa/men/shoes/sneakers/sneakers_1.jpg');
-INSERT INTO categories (id, name, slug, image_url) VALUES (12, 'Accessories', 'accessories', 'assets/products_supa/women/accessories/accessories_all.png');
 INSERT INTO categories (id, name, slug, image_url) VALUES (13, 'Bracelets', 'bracelets', 'assets/products_supa/women/accessories/bracelets/bracelets_1.jpg');
 INSERT INTO categories (id, name, slug, image_url) VALUES (14, 'Earrings', 'earrings', 'assets/products_supa/women/accessories/earrings/earrings_1.jpg');
 INSERT INTO categories (id, name, slug, image_url) VALUES (15, 'Necklaces', 'necklaces', 'assets/products_supa/women/accessories/necklaces/necklaces_1.jpg');
