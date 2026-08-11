@@ -2,6 +2,9 @@ import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_size_model.dart';
 
 class ProductModel {
+  static const String _storageBaseUrl =
+      'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
+
   final String id;
   final int categoryId;
   final String name;
@@ -30,7 +33,7 @@ class ProductModel {
     this.productSizes = const [],
   });
 
-  String get image => thumbnailUrl;
+  String get image => '$_storageBaseUrl/$thumbnailUrl';
 
   bool get featured => isFeatured;
 

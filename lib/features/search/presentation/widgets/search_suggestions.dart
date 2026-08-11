@@ -145,11 +145,20 @@ class SuggestedProductsSection extends StatelessWidget {
                           tag: 'product-image-${product.id}',
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8.r),
-                            child: Image.asset(
+                            child: Image.network(
                               product.image,
                               width: 100.w,
                               height: 100.h,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 100.w,
+                                height: 100.h,
+                                color: colorScheme.surfaceContainerHighest,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
                             ),
                           ),
                         ),

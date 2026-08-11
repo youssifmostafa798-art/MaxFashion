@@ -43,11 +43,19 @@ class _CardWidgetState extends State<CardWidget> {
       children: [
         Hero(
           tag: 'product-image-${widget.products.id}',
-          child: Image.asset(
+          child: Image.network(
             widget.products.image,
             width: 120.w,
             fit: BoxFit.cover,
-            cacheWidth: 120,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 120.w,
+              height: 120.w,
+              color: colorScheme.surfaceContainerHighest,
+              child: Icon(
+                Icons.image_outlined,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
         ),
         Gap(8.w),

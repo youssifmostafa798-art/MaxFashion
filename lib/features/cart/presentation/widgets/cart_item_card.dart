@@ -62,12 +62,20 @@ class CartItemCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
-              child: Image.asset(
+              child: Image.network(
                 image,
                 width: 90.w,
                 height: 110.h,
                 fit: BoxFit.cover,
-                cacheWidth: 90,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 90.w,
+                  height: 110.h,
+                  color: colorScheme.surfaceContainerHighest,
+                  child: Icon(
+                    Icons.image_outlined,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
             ),
             Gap(12.w),

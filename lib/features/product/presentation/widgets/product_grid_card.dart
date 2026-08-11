@@ -77,10 +77,18 @@ class _ProductGridCardState extends State<ProductGridCard>
                               width: double.infinity,
                               color: colorScheme.surfaceContainerHighest,
                             )
-                          : Image.asset(
+                          : Image.network(
                               widget.product.image,
                               fit: BoxFit.cover,
                               width: double.infinity,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: double.infinity,
+                                color: colorScheme.surfaceContainerHighest,
+                                child: Icon(
+                                  Icons.image_outlined,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
                             ),
                     ),
                   ),

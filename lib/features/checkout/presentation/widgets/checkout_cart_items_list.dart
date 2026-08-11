@@ -25,7 +25,7 @@ class CheckoutCartItemsList extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
-                  child: Image.asset(
+                  child: Image.network(
                     item.productImage,
                     width: 48.w,
                     height: 48.w,
