@@ -81,14 +81,15 @@ class _ProductGridCardState extends State<ProductGridCard>
                               widget.product.image,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                width: double.infinity,
-                                color: colorScheme.surfaceContainerHighest,
-                                child: Icon(
-                                  Icons.image_outlined,
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Container(
+                                    width: double.infinity,
+                                    color: colorScheme.surfaceContainerHighest,
+                                    child: Icon(
+                                      Icons.image_outlined,
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
                             ),
                     ),
                   ),
@@ -101,17 +102,18 @@ class _ProductGridCardState extends State<ProductGridCard>
               ],
             ),
             Gap(8.h),
-            CustomText(text: widget.product.name, maxLines: 2),
+            CustomText(text: widget.product.name, maxLines: 2, size: 14),
             CustomText(
               text: widget.product.description,
               color: colorScheme.onSurfaceVariant,
               maxLines: 2,
+              size: 13,
             ),
             Gap(8.h),
             CustomText(
               text: "\$ ${widget.product.price.toString()}",
               color: const Color(0xffDD8560),
-              size: 18,
+              size: 16,
             ),
           ],
         ),
