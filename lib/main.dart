@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/core/theme/app_theme.dart';
 import 'package:max/core/theme/theme_provider.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,7 +49,7 @@ class MyApp extends ConsumerWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: themeMode,
           themeAnimationDuration: const Duration(milliseconds: 300),
-          initialRoute: AppRouter.splash,
+          home: const SplashPage(),
           onGenerateRoute: AppRouter.onGenerateRoute,
         );
       },
