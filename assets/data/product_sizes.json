@@ -1,29 +1,5 @@
 [
-    {
-        "product_id": 14,
-        "size": "S",
-        "stock": 20
-    },
-    {
-        "product_id": 14,
-        "size": "M",
-        "stock": 18
-    },
-    {
-        "product_id": 14,
-        "size": "L",
-        "stock": 15
-    },
-    {
-        "product_id": 14,
-        "size": "XL",
-        "stock": 10
-    },
-    {
-        "product_id": 14,
-        "size": "XXL",
-        "stock": 5
-    },
+
     {
         "product_id": 15,
         "size": "S",
@@ -299,31 +275,7 @@
         "size": "XXL",
         "stock": 5
     },
-    {
-        "product_id": 26,
-        "size": "S",
-        "stock": 20
-    },
-    {
-        "product_id": 26,
-        "size": "M",
-        "stock": 18
-    },
-    {
-        "product_id": 26,
-        "size": "L",
-        "stock": 15
-    },
-    {
-        "product_id": 26,
-        "size": "XL",
-        "stock": 10
-    },
-    {
-        "product_id": 26,
-        "size": "XXL",
-        "stock": 5
-    },
+
     {
         "product_id": 27,
         "size": "S",
@@ -974,31 +926,7 @@
         "size": "XXL",
         "stock": 5
     },
-    {
-        "product_id": 53,
-        "size": "S",
-        "stock": 20
-    },
-    {
-        "product_id": 53,
-        "size": "M",
-        "stock": 18
-    },
-    {
-        "product_id": 53,
-        "size": "L",
-        "stock": 15
-    },
-    {
-        "product_id": 53,
-        "size": "XL",
-        "stock": 10
-    },
-    {
-        "product_id": 53,
-        "size": "XXL",
-        "stock": 5
-    },
+
     {
         "product_id": 54,
         "size": "S",
@@ -1149,31 +1077,7 @@
         "size": "XXL",
         "stock": 5
     },
-    {
-        "product_id": 60,
-        "size": "S",
-        "stock": 20
-    },
-    {
-        "product_id": 60,
-        "size": "M",
-        "stock": 18
-    },
-    {
-        "product_id": 60,
-        "size": "L",
-        "stock": 15
-    },
-    {
-        "product_id": 60,
-        "size": "XL",
-        "stock": 10
-    },
-    {
-        "product_id": 60,
-        "size": "XXL",
-        "stock": 5
-    },
+
     {
         "product_id": 61,
         "size": "S",

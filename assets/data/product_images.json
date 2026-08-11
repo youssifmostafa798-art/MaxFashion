@@ -77,12 +77,7 @@
         "image_url": "assets/products_supa/men/accessories/watches/watches.jpg",
         "sort_order": 1
     },
-    {
-        "id": 14,
-        "product_id": 14,
-        "image_url": "assets/products_supa/men/clothing/jeans/collections_jeans.jpg",
-        "sort_order": 1
-    },
+
     {
         "id": 15,
         "product_id": 15,
@@ -149,12 +144,7 @@
         "image_url": "assets/products_supa/men/clothing/jeans/jeans_9.jpg",
         "sort_order": 1
     },
-    {
-        "id": 26,
-        "product_id": 26,
-        "image_url": "assets/products_supa/men/clothing/polos/collection_polo.jpg",
-        "sort_order": 1
-    },
+
     {
         "id": 27,
         "product_id": 27,
@@ -311,12 +301,7 @@
         "image_url": "assets/products_supa/men/clothing/shirts/shirts_9.jpg",
         "sort_order": 1
     },
-    {
-        "id": 53,
-        "product_id": 53,
-        "image_url": "assets/products_supa/men/clothing/shirts/shirts.jpg",
-        "sort_order": 1
-    },
+
     {
         "id": 54,
         "product_id": 54,
@@ -353,12 +338,7 @@
         "image_url": "assets/products_supa/men/clothing/shorts/shorts_6.jpg",
         "sort_order": 1
     },
-    {
-        "id": 60,
-        "product_id": 60,
-        "image_url": "assets/products_supa/men/clothing/tshirts/collections_tshirts.jpg",
-        "sort_order": 1
-    },
+
     {
         "id": 61,
         "product_id": 61,
@@ -914,235 +894,235 @@
     {
         "id": 153,
         "product_id": 153,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_1.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_1.jpg",
         "sort_order": 1
     },
     {
         "id": 154,
         "product_id": 154,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_2.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_2.jpg",
         "sort_order": 1
     },
     {
         "id": 155,
         "product_id": 155,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_3.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_3.jpg",
         "sort_order": 1
     },
     {
         "id": 156,
         "product_id": 156,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_4.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_4.jpg",
         "sort_order": 1
     },
     {
         "id": 157,
         "product_id": 157,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_5.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_5.jpg",
         "sort_order": 1
     },
     {
         "id": 158,
         "product_id": 158,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_6.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_6.jpg",
         "sort_order": 1
     },
     {
         "id": 159,
         "product_id": 159,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_7.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_7.jpg",
         "sort_order": 1
     },
     {
         "id": 160,
         "product_id": 160,
-        "image_url": "assets/products_supa/women/accessories/sunglasses/weman_sunglasses_8.jpg",
+        "image_url": "assets/products_supa/women/accessories/sunglasses/women_sunglasses_8.jpg",
         "sort_order": 1
     },
     {
         "id": 161,
         "product_id": 161,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_1.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_1.jpg",
         "sort_order": 1
     },
     {
         "id": 162,
         "product_id": 162,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_2.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_2.jpg",
         "sort_order": 1
     },
     {
         "id": 163,
         "product_id": 163,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_3.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_3.jpg",
         "sort_order": 1
     },
     {
         "id": 164,
         "product_id": 164,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_4.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_4.jpg",
         "sort_order": 1
     },
     {
         "id": 165,
         "product_id": 165,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_5.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_5.jpg",
         "sort_order": 1
     },
     {
         "id": 166,
         "product_id": 166,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_6.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_6.jpg",
         "sort_order": 1
     },
     {
         "id": 167,
         "product_id": 167,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_7.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_7.jpg",
         "sort_order": 1
     },
     {
         "id": 168,
         "product_id": 168,
-        "image_url": "assets/products_supa/women/accessories/watches/weman_watches_8.jpg",
+        "image_url": "assets/products_supa/women/accessories/watches/women_watches_8.jpg",
         "sort_order": 1
     },
     {
         "id": 169,
         "product_id": 169,
-        "image_url": "assets/products_supa/women/bags/bagss.png",
+        "image_url": "assets/products_supa/women/bags/bags.png",
         "sort_order": 1
     },
     {
         "id": 170,
         "product_id": 170,
-        "image_url": "assets/products_supa/women/bags/weman_bags_1.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_1.jpg",
         "sort_order": 1
     },
     {
         "id": 171,
         "product_id": 171,
-        "image_url": "assets/products_supa/women/bags/weman_bags_10.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_10.jpg",
         "sort_order": 1
     },
     {
         "id": 172,
         "product_id": 172,
-        "image_url": "assets/products_supa/women/bags/weman_bags_11.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_11.jpg",
         "sort_order": 1
     },
     {
         "id": 173,
         "product_id": 173,
-        "image_url": "assets/products_supa/women/bags/weman_bags_12.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_12.jpg",
         "sort_order": 1
     },
     {
         "id": 174,
         "product_id": 174,
-        "image_url": "assets/products_supa/women/bags/weman_bags_13.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_13.jpg",
         "sort_order": 1
     },
     {
         "id": 175,
         "product_id": 175,
-        "image_url": "assets/products_supa/women/bags/weman_bags_14.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_14.jpg",
         "sort_order": 1
     },
     {
         "id": 176,
         "product_id": 176,
-        "image_url": "assets/products_supa/women/bags/weman_bags_15.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_15.jpg",
         "sort_order": 1
     },
     {
         "id": 177,
         "product_id": 177,
-        "image_url": "assets/products_supa/women/bags/weman_bags_16.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_16.jpg",
         "sort_order": 1
     },
     {
         "id": 178,
         "product_id": 178,
-        "image_url": "assets/products_supa/women/bags/weman_bags_17.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_17.jpg",
         "sort_order": 1
     },
     {
         "id": 179,
         "product_id": 179,
-        "image_url": "assets/products_supa/women/bags/weman_bags_18.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_18.jpg",
         "sort_order": 1
     },
     {
         "id": 180,
         "product_id": 180,
-        "image_url": "assets/products_supa/women/bags/weman_bags_2.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_2.jpg",
         "sort_order": 1
     },
     {
         "id": 181,
         "product_id": 181,
-        "image_url": "assets/products_supa/women/bags/weman_bags_3.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_3.jpg",
         "sort_order": 1
     },
     {
         "id": 182,
         "product_id": 182,
-        "image_url": "assets/products_supa/women/bags/weman_bags_4.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_4.jpg",
         "sort_order": 1
     },
     {
         "id": 183,
         "product_id": 183,
-        "image_url": "assets/products_supa/women/bags/weman_bags_5.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_5.jpg",
         "sort_order": 1
     },
     {
         "id": 184,
         "product_id": 184,
-        "image_url": "assets/products_supa/women/bags/weman_bags_6.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_6.jpg",
         "sort_order": 1
     },
     {
         "id": 185,
         "product_id": 185,
-        "image_url": "assets/products_supa/women/bags/weman_bags_7.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_7.jpg",
         "sort_order": 1
     },
     {
         "id": 186,
         "product_id": 186,
-        "image_url": "assets/products_supa/women/bags/weman_bags_8.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_8.jpg",
         "sort_order": 1
     },
     {
         "id": 187,
         "product_id": 187,
-        "image_url": "assets/products_supa/women/bags/weman_bags_9.jpg",
+        "image_url": "assets/products_supa/women/bags/women_bags_9.jpg",
         "sort_order": 1
     },
     {
         "id": 188,
         "product_id": 188,
-        "image_url": "assets/products_supa/women/clothing/blouses/weman_blouses_2.jpg",
+        "image_url": "assets/products_supa/women/clothing/blouses/women_blouses_2.jpg",
         "sort_order": 1
     },
     {
         "id": 189,
         "product_id": 189,
-        "image_url": "assets/products_supa/women/clothing/blouses/weman_blouses_1.jpg",
+        "image_url": "assets/products_supa/women/clothing/blouses/women_blouses_1.jpg",
         "sort_order": 1
     },
     {
         "id": 190,
         "product_id": 190,
-        "image_url": "assets/products_supa/women/clothing/blouses/weman_blouses_3.jpg",
+        "image_url": "assets/products_supa/women/clothing/blouses/women_blouses_3.jpg",
         "sort_order": 1
     },
     {
         "id": 191,
         "product_id": 191,
-        "image_url": "assets/products_supa/women/clothing/blouses/weman_blouses_4.jpg",
+        "image_url": "assets/products_supa/women/clothing/blouses/women_blouses_4.jpg",
         "sort_order": 1
     },
     {
@@ -1430,31 +1410,31 @@
     {
         "id": 239,
         "product_id": 239,
-        "image_url": "assets/products_supa/women/shoes/boots/weman_boots_1.jpg",
+        "image_url": "assets/products_supa/women/shoes/boots/women_boots_1.jpg",
         "sort_order": 1
     },
     {
         "id": 240,
         "product_id": 240,
-        "image_url": "assets/products_supa/women/shoes/boots/weman_boots_2.jpg",
+        "image_url": "assets/products_supa/women/shoes/boots/women_boots_2.jpg",
         "sort_order": 1
     },
     {
         "id": 241,
         "product_id": 241,
-        "image_url": "assets/products_supa/women/shoes/boots/weman_boots_3.jpg",
+        "image_url": "assets/products_supa/women/shoes/boots/women_boots_3.jpg",
         "sort_order": 1
     },
     {
         "id": 242,
         "product_id": 242,
-        "image_url": "assets/products_supa/women/shoes/boots/weman_boots_4.jpg",
+        "image_url": "assets/products_supa/women/shoes/boots/women_boots_4.jpg",
         "sort_order": 1
     },
     {
         "id": 243,
         "product_id": 243,
-        "image_url": "assets/products_supa/women/shoes/boots/weman_boots_5.jpg",
+        "image_url": "assets/products_supa/women/shoes/boots/women_boots_5.jpg",
         "sort_order": 1
     },
     {
