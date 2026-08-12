@@ -14,7 +14,7 @@
 | 3.3 | Products | ✅ Completed | `001_products_schema.sql` – `005_seed_product_sizes.sql` |
 | 3.4 | Cart | ✅ Completed | `009_cart_items_schema.sql` |
 | 3.5 | Wishlist | ✅ Completed | `010_wishlist_items_schema.sql` |
-| 3.6 | Orders | ❌ Not Started | — |
+| 3.6 | Orders | ✅ Completed | `011_orders_schema.sql` |
 | — | Addresses | ❌ Not Started | — |
 
 ---
@@ -31,6 +31,8 @@
 | `cart_items` | User cart items | User-owned (full CRUD) | ✅ In use |
 | `wishlist_items` | User wishlist items | User-owned (SELECT/INSERT/DELETE) | ✅ In use |
 | `home_content` | Home page cover image | Public read (active only) | ✅ In use |
+| `orders` | User orders | User-owned (full CRUD) | ✅ In use |
+| `order_items` | Order line items | User-owned (via orders) | ✅ In use |
 
 ### Table Schemas (Reference)
 
@@ -98,6 +100,33 @@
 | `created_at` | TIMESTAMPTZ | DEFAULT now() |
 | `updated_at` | TIMESTAMPTZ | DEFAULT now() |
 
+#### orders
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK, DEFAULT gen_random_uuid() |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `order_number` | TEXT | NOT NULL, UNIQUE |
+| `total_price` | NUMERIC(10,2) | NOT NULL |
+| `status` | TEXT | NOT NULL, DEFAULT 'processing' |
+| `delivery_address` | TEXT | NOT NULL |
+| `payment_method` | TEXT | NOT NULL |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+
+#### order_items
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK, DEFAULT gen_random_uuid() |
+| `order_id` | UUID | FK → orders(id) ON DELETE CASCADE |
+| `product_id` | BIGINT | FK → products(id) ON DELETE SET NULL |
+| `product_name` | TEXT | NOT NULL |
+| `product_image` | TEXT | NOT NULL, DEFAULT '' |
+| `selected_color` | TEXT | Nullable |
+| `selected_size` | TEXT | NOT NULL, DEFAULT 'S' |
+| `quantity` | INTEGER | NOT NULL, DEFAULT 1, CHECK >= 1 |
+| `unit_price` | NUMERIC(10,2) | NOT NULL |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+
 ---
 
 ## Storage Buckets
@@ -127,6 +156,14 @@
 | `wishlist_items` | Users can insert own wishlist items | INSERT | `auth.uid() = user_id` |
 | `wishlist_items` | Users can delete own wishlist items | DELETE | `auth.uid() = user_id` |
 | `home_content` | Anyone can view active home content | SELECT | `is_active = true` |
+| `orders` | Users can view own orders | SELECT | `auth.uid() = user_id` |
+| `orders` | Users can insert own orders | INSERT | `auth.uid() = user_id` |
+| `orders` | Users can update own orders | UPDATE | `auth.uid() = user_id` |
+| `orders` | Users can delete own orders | DELETE | `auth.uid() = user_id` |
+| `order_items` | Users can view own order items | SELECT | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
+| `order_items` | Users can insert own order items | INSERT | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
+| `order_items` | Users can update own order items | UPDATE | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
+| `order_items` | Users can delete own order items | DELETE | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
 
 ---
 
@@ -143,6 +180,7 @@
 | Cart | `SupabaseCartRepository` | `cart_items` | ✅ Complete |
 | Wishlist | `SupabaseWishlistRepository` | `wishlist_items` | ✅ Complete |
 | Search | `SupabaseSearchRepository` | In-memory filter of Supabase cache | ✅ Complete |
+| Orders | `SupabaseOrderRepository` | `orders` + `order_items` | ✅ Complete |
 
 ---
 
@@ -150,7 +188,6 @@
 
 | Feature | Storage | Key | Notes |
 |---------|---------|-----|-------|
-| Orders | SharedPreferences | `orders` | JSON array of order objects. **Next to migrate (Phase 3.6).** |
 | Addresses | SharedPreferences | `saved_addresses` | JSON array. Used by checkout. |
 | Payment Cards | SharedPreferences | `saved_payment_cards` | JSON array. Consider third-party processor for PCI compliance. |
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
@@ -172,6 +209,7 @@
 | 008 | `008_sync_cleanup.sql` | Remove stale records (3 products, 1 category) |
 | 009 | `009_cart_items_schema.sql` | cart_items table + RLS |
 | 010 | `010_wishlist_items_schema.sql` | wishlist_items table + RLS |
+| 011 | `011_orders_schema.sql` | orders + order_items tables + RLS |
 
 ---
 
@@ -179,7 +217,6 @@
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Orders tables (`orders` + `order_items`) | 🔴 High | New tables | Create tables, RLS, `SupabaseOrdersRepository` |
 | Addresses table | 🔴 High | New table | Create table, RLS, `SupabaseAddressRepository` |
 | Forgot Password | 🔴 High | Feature | Supabase `resetPasswordForEmail()` flow |
 | Product image gallery | 🟠 Medium | Feature | Only single thumbnail displayed; productImages list unused in UI |
@@ -192,16 +229,13 @@
 
 ## Next Supabase-Related Step
 
-**Phase 3.6 — Orders Migration**
+**Address Migration**
 
-1. Create `orders` table in Supabase (id, user_id, total_price, status, delivery_address, payment_method, created_at, updated_at)
-2. Create `order_items` table (id, order_id FK, product_id FK, product_name, product_image, selected_size, quantity, unit_price)
-3. Add RLS policies (user-owned)
-4. Create SQL migration `011_orders_schema.sql`
-5. Create `SupabaseOrdersRepository` implementing an abstract `OrdersRepository` interface
-6. Update `ordersProvider` to use the new repository
-7. Migrate order creation in `PlaceOrder` page to save to Supabase instead of SharedPreferences
-8. Remove `OrdersStorage` (SharedPreferences service)
+1. Create `addresses` table in Supabase
+2. Add RLS policies (user-owned)
+3. Create `SupabaseAddressRepository`
+4. Update `addressProvider` to use Supabase
+5. Remove SharedPreferences persistence
 
 ---
 

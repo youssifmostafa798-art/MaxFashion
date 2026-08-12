@@ -54,12 +54,12 @@ lib/
 │   ├── providers/                     # 9 Riverpod providers
 │   ├── repositories/                  # Abstract + Supabase implementations
 │   │   ├── cart/                      # CartRepository, SupabaseCartRepository
-│   │   ├── wishlist/                  # WishlistRepository, SupabaseWishlistRepository
+│   │   ├── orders/                    # OrderRepository, SupabaseOrderRepository
 │   │   ├── product/                   # ProductRepository, SupabaseProductRepository
 │   │   ├── search/                    # SearchRepository, SupabaseSearchRepository
-│   │   ├── orders_repository.dart     # OrdersRepository (SharedPreferences)
+│   │   ├── wishlist/                  # WishlistRepository, SupabaseWishlistRepository
 │   │   └── home_content_repository.dart
-│   └── services/                      # PaymentCardStorage, OrdersStorage
+│   └── services/                      # OrdersMigrationService, PaymentCardStorage
 └── features/
     ├── auth/                          # Auth (data/domain/presentation)
     ├── cart/                          # Cart UI
@@ -111,11 +111,13 @@ FavoriteButton → wishlistProvider → WishlistNotifier.toggle()
   → WishlistState (List<ProductModel>)
 ```
 
-### Orders (Local)
+### Orders (Supabase)
 ```
 PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
-  → OrdersRepository.addOrder()
-  → OrdersStorage.saveOrders() → SharedPreferences
+  → SupabaseOrderRepository.addOrder()
+  → Supabase orders table
+  → Supabase order_items table
+  → OrdersState (List<OrderModel>)
 ```
 
 ### Search
@@ -168,6 +170,8 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `cart_items` | User cart items | User-owned |
 | `wishlist_items` | User wishlist items | User-owned |
 | `home_content` | Home page cover image | Public read (active only) |
+| `orders` | User orders | User-owned |
+| `order_items` | Order line items | User-owned (via orders) |
 
 ### Storage
 
@@ -180,16 +184,17 @@ EditProfilePage → AuthNotifier.updateProfile()
 
 ```
 supabase/migrations/
-├── 001_products_schema.sql      — Schema for categories, products, product_images, product_sizes + RLS
-├── 002_seed_categories.sql      — INSERT 23 categories
-├── 003_seed_products.sql        — INSERT 251 products
-├── 004_seed_product_images.sql  — INSERT 251 images
-├── 005_seed_product_sizes.sql   — INSERT 977 sizes
-├── 006_home_content.sql         — home_content table + seed
+├── 001_products_schema.sql          — Schema for categories, products, product_images, product_sizes + RLS
+├── 002_seed_categories.sql          — INSERT 23 categories
+├── 003_seed_products.sql            — INSERT 251 products
+├── 004_seed_product_images.sql      — INSERT 251 images
+├── 005_seed_product_sizes.sql       — INSERT 977 sizes
+├── 006_home_content.sql             — home_content table + seed
 ├── 007_product_images_storage_policies.sql — Storage RLS for product-images bucket
-├── 008_sync_cleanup.sql         — Remove stale records (3 products, 1 category)
-├── 009_cart_items_schema.sql    — cart_items table + RLS
-└── 010_wishlist_items_schema.sql — wishlist_items table + RLS
+├── 008_sync_cleanup.sql             — Remove stale records (3 products, 1 category)
+├── 009_cart_items_schema.sql        — cart_items table + RLS
+├── 010_wishlist_items_schema.sql    — wishlist_items table + RLS
+└── 011_orders_schema.sql            — orders + order_items tables + RLS
 ```
 
 ---
@@ -208,7 +213,10 @@ supabase/migrations/
 | `cartSubtotalProvider` | Provider | `data/providers/cart_provider.dart` |
 | `wishlistProvider` | StateNotifierProvider | `data/providers/wishlist_provider.dart` |
 | `wishlistCountProvider` | Provider | `data/providers/wishlist_provider.dart` |
+| `orderRepositoryProvider` | Provider | `data/providers/orders_provider.dart` |
+| `ordersMigrationServiceProvider` | Provider | `data/providers/orders_provider.dart` |
 | `ordersProvider` | StateNotifierProvider | `data/providers/orders_provider.dart` |
+| `ordersCountProvider` | Provider | `data/providers/orders_provider.dart` |
 | `addressProvider` | StateNotifierProvider | `data/providers/address_provider.dart` |
 | `paymentCardProvider` | StateNotifierProvider | `data/providers/payment_card_provider.dart` |
 | `searchProvider` | StateNotifierProvider | `data/providers/search_provider.dart` |

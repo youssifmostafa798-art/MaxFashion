@@ -25,7 +25,7 @@
 | Settings | ✅ Complete | None | SharedPreferences |
 | Dark/Light Theme | ✅ Complete | None | SharedPreferences |
 | Wishlist | ✅ Complete | Supabase wishlist_items | Supabase |
-| Orders | ✅ Complete | None | SharedPreferences |
+| Orders | ✅ Complete | Supabase orders + order_items | Supabase |
 | Addresses | ✅ Complete | None | SharedPreferences |
 | Payment Cards | ✅ Complete | None | SharedPreferences |
 | Promo Code | ⚠️ UI Only | None | None |
@@ -211,8 +211,8 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 ### Checkout
 
 **Status:** ✅ Completed (UI + order creation)
-**Backend:** Mixed (cart from Supabase, orders/addresses/cards from SharedPreferences)
-**Persistence:** Mixed
+**Backend:** Supabase (cart, orders, order_items)
+**Persistence:** Supabase
 
 **Implementation:**
 - Place Order page with shipping address, payment method, cart items, total
@@ -220,8 +220,8 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 - Payment card entry via `flutter_credit_card` widget
 - Saved card selection with visual indicator
 - Order validation (requires address and payment method)
-- Order creation: converts cart items to order items, saves to SharedPreferences
-- Cart clearing after order placement
+- Order creation: converts cart items to order items, saves to Supabase `orders` + `order_items` tables
+- Cart clearing after successful order creation (with proper error handling)
 - Order success dialog
 
 **Key Files:**
@@ -229,8 +229,6 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 - `lib/features/checkout/presentation/pages/add_address.dart`
 - `lib/features/checkout/presentation/pages/add_card.dart`
 - `lib/features/checkout/presentation/widgets/order_success_dialog.dart`
-
-**Note:** Orders created during checkout are saved to SharedPreferences (not Supabase). This will be migrated in Phase 3.6.
 
 ---
 
@@ -263,26 +261,36 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 
 ### Orders
 
-**Status:** ✅ Completed (local only)
-**Backend:** None
-**Persistence:** SharedPreferences
+**Status:** ✅ Completed
+**Backend:** Supabase orders + order_items tables
+**Persistence:** Supabase
 
 **Implementation:**
-- Order creation from cart items
-- Order persistence via SharedPreferences
+- `SupabaseOrderRepository` — full CRUD (load, add, update status)
+- `orders` table with RLS policies (user-owned)
+- `order_items` table with RLS policies (user-owned via orders)
+- Order creation from cart items with historical snapshot preservation
 - Order history page with list view, order cards, empty state
 - Order details page with order ID, date, status chip, product list, totals, timeline
 - Order status enum: processing, shipped, delivered, cancelled
 - Orders count provider for badge display
+- Local SharedPreferences orders migrated via `OrdersMigrationService`
 
 **Key Files:**
+- `lib/data/repositories/orders/order_repository.dart` (interface)
+- `lib/data/repositories/orders/supabase_order_repository.dart`
 - `lib/data/providers/orders_provider.dart`
-- `lib/data/repositories/orders_repository.dart`
-- `lib/data/services/orders_storage.dart`
+- `lib/data/services/orders_migration_service.dart`
 - `lib/features/orders/presentation/pages/orders_page.dart`
 - `lib/features/orders/presentation/pages/order_details_page.dart`
 
-**Remaining:** Migrate to Supabase `orders` + `order_items` tables (Phase 3.6).
+**Data Flow:**
+```
+PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
+  → SupabaseOrderRepository.addOrder()
+  → Supabase orders table
+  → Supabase order_items table
+```
 
 ---
 
@@ -467,6 +475,39 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 | `updated_at` | TIMESTAMPTZ | DEFAULT now() |
 
 **RLS:** Anyone can view active home content.
+
+#### orders
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK, DEFAULT gen_random_uuid() |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `order_number` | TEXT | NOT NULL, UNIQUE |
+| `total_price` | NUMERIC(10,2) | NOT NULL |
+| `status` | TEXT | NOT NULL, DEFAULT 'processing' |
+| `delivery_address` | TEXT | NOT NULL |
+| `payment_method` | TEXT | NOT NULL |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+
+**RLS:** User can only SELECT/INSERT/UPDATE/DELETE their own orders.
+**Indexes:** UNIQUE on order_number; indexes on user_id and created_at (DESC).
+
+#### order_items
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK, DEFAULT gen_random_uuid() |
+| `order_id` | UUID | FK → orders(id) ON DELETE CASCADE |
+| `product_id` | BIGINT | FK → products(id) ON DELETE SET NULL |
+| `product_name` | TEXT | NOT NULL |
+| `product_image` | TEXT | NOT NULL, DEFAULT '' |
+| `selected_color` | TEXT | Nullable |
+| `selected_size` | TEXT | NOT NULL, DEFAULT 'S' |
+| `quantity` | INTEGER | NOT NULL, DEFAULT 1, CHECK >= 1 |
+| `unit_price` | NUMERIC(10,2) | NOT NULL |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
+
+**RLS:** User can only SELECT/INSERT/UPDATE/DELETE order items from their own orders (via orders table).
+**Indexes:** Indexes on order_id and product_id.
 
 ### Storage Policies
 

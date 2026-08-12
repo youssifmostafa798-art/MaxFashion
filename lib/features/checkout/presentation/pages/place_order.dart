@@ -129,7 +129,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     return true;
   }
 
-  void _placeOrderAndConfirm() {
+  Future<void> _placeOrderAndConfirm() async {
     if (!_validateOrder()) return;
 
     final orderItems = widget.cartItems
@@ -155,9 +155,22 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
       status: OrderStatus.processing,
     );
 
-    ref.read(ordersProvider.notifier).addOrder(order);
-    ref.read(cartProvider.notifier).clear();
-    showOrderSuccessDialog(context: context, orderId: order.orderId);
+    try {
+      await ref.read(ordersProvider.notifier).addOrder(order);
+      if (!mounted) return;
+      ref.read(cartProvider.notifier).clear();
+      showOrderSuccessDialog(context: context, orderId: order.orderId);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to place order. Please try again.'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 
   String _buildPaymentString() {

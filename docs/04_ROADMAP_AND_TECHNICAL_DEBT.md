@@ -11,7 +11,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Orders Migration to Supabase | ❌ Not Started | Create `orders` + `order_items` tables, `SupabaseOrdersRepository`, migrate from SharedPreferences |
+| Orders Migration to Supabase | ✅ Completed | Created `orders` + `order_items` tables, `SupabaseOrderRepository`, migrated from SharedPreferences |
 | Address Migration to Supabase | ❌ Not Started | Create `addresses` table, migrate from SharedPreferences |
 | Forgot Password | ❌ Not Implemented | Supabase password reset email flow |
 
@@ -111,19 +111,7 @@ The following files have been **deleted** from the codebase but are still refere
 
 ## Next Steps (Recommended Order)
 
-### 1. Phase 3.6 — Orders Migration (Next)
-
-**Why:** Orders depend on cart (source of items) and auth (user_id).
-
-**Tasks:**
-1. Create `orders` and `order_items` tables in Supabase
-2. Add RLS policies (user-owned)
-3. Create `SupabaseOrdersRepository`
-4. Update `ordersProvider` to use Supabase
-5. Migrate order creation in checkout to Supabase
-6. Remove SharedPreferences persistence
-
-### 2. Address Migration
+### 1. Address Migration
 
 **Why:** Addresses are used by checkout, should be per-user.
 
@@ -134,7 +122,7 @@ The following files have been **deleted** from the codebase but are still refere
 4. Update `addressProvider` to use Supabase
 5. Remove SharedPreferences persistence
 
-### 4. Forgot Password
+### 2. Forgot Password
 
 **Why:** Important auth feature, relatively simple with Supabase.
 
@@ -173,7 +161,7 @@ The following files have been **deleted** from the codebase but are still refere
 | Home Content | Supabase | Supabase | ✅ Done |
 | Cart | Supabase | Supabase | ✅ Done |
 | Wishlist | Supabase | Supabase | ✅ Done |
-| Orders | SharedPreferences | Supabase | ❌ Not Started |
+| Orders | SharedPreferences | Supabase | ✅ Done |
 | Addresses | SharedPreferences | Supabase | ❌ Not Started |
 | Payment Cards | SharedPreferences | Third-party? | ❌ Not Started |
 | Theme | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |

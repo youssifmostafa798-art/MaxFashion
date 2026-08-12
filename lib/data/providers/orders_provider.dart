@@ -1,19 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/data/models/order_model.dart';
-import 'package:max/data/repositories/orders_repository.dart';
+import 'package:max/data/repositories/orders/order_repository.dart';
+import 'package:max/data/repositories/orders/supabase_order_repository.dart';
+import 'package:max/data/services/orders_migration_service.dart';
 
-final ordersRepositoryProvider = Provider<OrdersRepository>((ref) {
-  return OrdersRepository();
+final orderRepositoryProvider = Provider<OrderRepository>((ref) {
+  return SupabaseOrderRepository();
+});
+
+final ordersMigrationServiceProvider = Provider<OrdersMigrationService>((ref) {
+  return OrdersMigrationService();
 });
 
 class OrdersNotifier extends StateNotifier<List<OrderModel>> {
-  final OrdersRepository _repository;
+  final OrderRepository _repository;
+  final OrdersMigrationService _migrationService;
 
-  OrdersNotifier(this._repository) : super([]) {
-    _loadOrders();
+  OrdersNotifier(this._repository, this._migrationService) : super([]) {
+    _migrateAndLoad();
   }
 
-  Future<void> _loadOrders() async {
+  Future<void> _migrateAndLoad() async {
+    final isMigrated = await _migrationService.isMigrated;
+    if (!isMigrated) {
+      await _migrationService.migrate();
+    }
     await _repository.loadOrders();
     state = _repository.getOrders();
   }
@@ -35,8 +46,9 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
 
 final ordersProvider =
     StateNotifierProvider<OrdersNotifier, List<OrderModel>>((ref) {
-  final repository = ref.watch(ordersRepositoryProvider);
-  return OrdersNotifier(repository);
+  final repository = ref.watch(orderRepositoryProvider);
+  final migrationService = ref.watch(ordersMigrationServiceProvider);
+  return OrdersNotifier(repository, migrationService);
 });
 
 final ordersCountProvider = Provider<int>((ref) {
