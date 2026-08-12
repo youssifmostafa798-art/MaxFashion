@@ -97,7 +97,6 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> removeItem(int productId, String? color, String? size) async {
-    state = state.copyWith(clearError: true);
     try {
       final item = state.items.firstWhere(
         (e) =>
@@ -106,8 +105,7 @@ class CartNotifier extends StateNotifier<CartState> {
             e.selectedSize == size,
       );
       if (item.id == null) return;
-      state = state.copyWith(updatingItemId: item.id);
-      await _repository.removeItem(item.id!);
+
       final newItems = state.items
           .where(
             (e) =>
@@ -118,9 +116,12 @@ class CartNotifier extends StateNotifier<CartState> {
           .toList();
       state = state.copyWith(
         items: newItems,
-        clearUpdatingItemId: true,
         clearError: true,
       );
+
+      await _repository.removeItem(item.id!);
+
+      state = state.copyWith(clearUpdatingItemId: true, clearError: true);
     } catch (e) {
       state = state.copyWith(
         clearUpdatingItemId: true,

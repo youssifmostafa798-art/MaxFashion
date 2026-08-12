@@ -7,6 +7,7 @@ import 'package:max/core/utils/haptic_utils.dart';
 class CartItemCard extends StatelessWidget {
   const CartItemCard({
     super.key,
+    required this.itemId,
     required this.image,
     required this.title,
     required this.price,
@@ -19,6 +20,7 @@ class CartItemCard extends StatelessWidget {
     this.isUpdating = false,
   });
 
+  final String? itemId;
   final String image;
   final String title;
   final double price;
@@ -35,7 +37,7 @@ class CartItemCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Dismissible(
-      key: ValueKey('$title-$selectedSize-$selectedColor'),
+      key: ValueKey(itemId),
       direction: DismissDirection.endToStart,
       onDismissed: (_) {
         HapticUtils.medium();

@@ -122,6 +122,7 @@ class _CartContent extends ConsumerWidget {
               final item = items[index];
               final isUpdating = cartState.updatingItemId == item.id;
               return CartItemCard(
+                itemId: item.id,
                 image: item.productImage,
                 title: item.productName,
                 price: item.unitPrice,
