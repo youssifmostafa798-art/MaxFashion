@@ -11,6 +11,10 @@ final authStateProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(ref.read(authRepositoryProvider));
 });
 
+final currentUserIdProvider = Provider<String?>((ref) {
+  return ref.watch(authStateProvider).user?.id;
+});
+
 class AuthState {
   final UserModel? user;
   final bool isLoading;

@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/data/models/order_model.dart';
 
 class OrdersMigrationService {
-  static const String _migrationKey = 'orders_migrated_to_supabase';
+  static const String _migrationKeyPrefix = 'orders_migrated_to_supabase_';
   static const String _ordersKey = 'orders';
 
   final SupabaseClient _client;
@@ -14,8 +14,10 @@ class OrdersMigrationService {
       : _client = client ?? Supabase.instance.client;
 
   Future<bool> get isMigrated async {
+    final user = _client.auth.currentUser;
+    if (user == null) return false;
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_migrationKey) ?? false;
+    return prefs.getBool('$_migrationKeyPrefix${user.id}') ?? false;
   }
 
   Future<OrdersMigrationResult> migrate() async {
@@ -29,13 +31,14 @@ class OrdersMigrationService {
     }
 
     final userId = user.id;
+    final migrationKey = '$_migrationKeyPrefix$userId';
 
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString(_ordersKey);
 
     if (jsonString == null || jsonString.isEmpty) {
       result.localOrdersFound = 0;
-      await prefs.setBool(_migrationKey, true);
+      await prefs.setBool(migrationKey, true);
       return result;
     }
 
@@ -47,7 +50,7 @@ class OrdersMigrationService {
     result.localOrdersFound = localOrders.length;
 
     if (localOrders.isEmpty) {
-      await prefs.setBool(_migrationKey, true);
+      await prefs.setBool(migrationKey, true);
       return result;
     }
 
@@ -108,7 +111,7 @@ class OrdersMigrationService {
     }
 
     if (result.failed == 0) {
-      await prefs.setBool(_migrationKey, true);
+      await prefs.setBool(migrationKey, true);
     }
 
     return result;

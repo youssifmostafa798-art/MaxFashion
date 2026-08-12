@@ -60,9 +60,13 @@ class SupabaseCartRepository implements CartRepository {
 
   @override
   Future<List<CartItemModel>> loadCart() async {
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) throw Exception('User not authenticated');
+
     final response = await _client
         .from('cart_items')
         .select(_selectWithProduct)
+        .eq('user_id', userId)
         .order('created_at');
 
     return (response as List)

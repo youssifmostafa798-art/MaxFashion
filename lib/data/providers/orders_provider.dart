@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/data/models/order_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/repositories/orders/order_repository.dart';
 import 'package:max/data/repositories/orders/supabase_order_repository.dart';
 import 'package:max/data/services/orders_migration_service.dart';
@@ -21,22 +22,40 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
   }
 
   Future<void> _migrateAndLoad() async {
-    final isMigrated = await _migrationService.isMigrated;
-    if (!isMigrated) {
-      await _migrationService.migrate();
+    try {
+      final isMigrated = await _migrationService.isMigrated;
+      if (!mounted) return;
+      if (!isMigrated) {
+        await _migrationService.migrate();
+        if (!mounted) return;
+      }
+      await _repository.loadOrders();
+      if (!mounted) return;
+      state = _repository.getOrders();
+    } catch (_) {
+      if (!mounted) return;
+      state = [];
     }
-    await _repository.loadOrders();
-    state = _repository.getOrders();
   }
 
   Future<void> addOrder(OrderModel order) async {
-    await _repository.addOrder(order);
-    state = _repository.getOrders();
+    try {
+      await _repository.addOrder(order);
+      if (!mounted) return;
+      state = _repository.getOrders();
+    } catch (_) {
+      rethrow;
+    }
   }
 
   Future<void> updateOrderStatus(String orderId, OrderStatus status) async {
-    await _repository.updateOrderStatus(orderId, status);
-    state = _repository.getOrders();
+    try {
+      await _repository.updateOrderStatus(orderId, status);
+      if (!mounted) return;
+      state = _repository.getOrders();
+    } catch (_) {
+      rethrow;
+    }
   }
 
   OrderModel? getOrderById(String orderId) {
@@ -48,6 +67,7 @@ final ordersProvider =
     StateNotifierProvider<OrdersNotifier, List<OrderModel>>((ref) {
   final repository = ref.watch(orderRepositoryProvider);
   final migrationService = ref.watch(ordersMigrationServiceProvider);
+  ref.watch(currentUserIdProvider);
   return OrdersNotifier(repository, migrationService);
 });
 

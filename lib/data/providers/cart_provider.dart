@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/repositories/cart/cart_repository.dart';
 import 'package:max/data/repositories/cart/supabase_cart_repository.dart';
 
@@ -54,11 +55,14 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> _loadCart() async {
+    if (!mounted) return;
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final items = await _repository.loadCart();
+      if (!mounted) return;
       state = state.copyWith(items: items, isLoading: false);
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         items: [],
         isLoading: false,
@@ -68,9 +72,11 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> addItem(CartItemModel item) async {
+    if (!mounted) return;
     state = state.copyWith(isAdding: true, clearError: true);
     try {
       final added = await _repository.addItem(item);
+      if (!mounted) return;
       final currentItems = state.items;
       final index = currentItems.indexWhere(
         (e) =>
@@ -89,6 +95,7 @@ class CartNotifier extends StateNotifier<CartState> {
       }
       state = state.copyWith(items: newItems, isAdding: false, clearError: true);
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         isAdding: false,
         error: 'Could not add item to cart. Please try again.',
@@ -97,6 +104,7 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> removeItem(int productId, String? color, String? size) async {
+    if (!mounted) return;
     try {
       final item = state.items.firstWhere(
         (e) =>
@@ -120,9 +128,10 @@ class CartNotifier extends StateNotifier<CartState> {
       );
 
       await _repository.removeItem(item.id!);
-
+      if (!mounted) return;
       state = state.copyWith(clearUpdatingItemId: true, clearError: true);
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         clearUpdatingItemId: true,
         error: 'Could not remove item. Please try again.',
@@ -131,6 +140,7 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> incrementQuantity(int index) async {
+    if (!mounted) return;
     if (index < 0 || index >= state.items.length) return;
     final item = state.items[index];
     if (item.id == null) return;
@@ -138,6 +148,7 @@ class CartNotifier extends StateNotifier<CartState> {
     try {
       final updated =
           await _repository.updateQuantity(item.id!, item.quantity + 1);
+      if (!mounted) return;
       final newItems = [
         ...state.items.sublist(0, index),
         updated,
@@ -149,6 +160,7 @@ class CartNotifier extends StateNotifier<CartState> {
         clearError: true,
       );
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         clearUpdatingItemId: true,
         error: 'Could not update quantity. Please try again.',
@@ -157,6 +169,7 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> decrementQuantity(int index) async {
+    if (!mounted) return;
     if (index < 0 || index >= state.items.length) return;
     final item = state.items[index];
     if (item.quantity <= 1) return;
@@ -165,6 +178,7 @@ class CartNotifier extends StateNotifier<CartState> {
     try {
       final updated =
           await _repository.updateQuantity(item.id!, item.quantity - 1);
+      if (!mounted) return;
       final newItems = [
         ...state.items.sublist(0, index),
         updated,
@@ -176,6 +190,7 @@ class CartNotifier extends StateNotifier<CartState> {
         clearError: true,
       );
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         clearUpdatingItemId: true,
         error: 'Could not update quantity. Please try again.',
@@ -184,15 +199,18 @@ class CartNotifier extends StateNotifier<CartState> {
   }
 
   Future<void> clear() async {
+    if (!mounted) return;
     state = state.copyWith(isClearing: true, clearError: true);
     try {
       await _repository.clearCart();
+      if (!mounted) return;
       state = state.copyWith(
         items: [],
         isClearing: false,
         clearError: true,
       );
     } catch (e) {
+      if (!mounted) return;
       state = state.copyWith(
         isClearing: false,
         error: 'Could not clear cart. Please try again.',
@@ -204,6 +222,7 @@ class CartNotifier extends StateNotifier<CartState> {
 final cartProvider =
     StateNotifierProvider<CartNotifier, CartState>((ref) {
   final repository = ref.watch(cartRepositoryProvider);
+  ref.watch(currentUserIdProvider);
   return CartNotifier(repository);
 });
 
