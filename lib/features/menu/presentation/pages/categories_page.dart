@@ -5,6 +5,8 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/core/widgets/category_grid_card.dart';
+import 'package:max/core/widgets/skeletons/category_grid_skeleton.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
@@ -152,7 +154,7 @@ class _CategoryGrid extends ConsumerWidget {
     final categories = ref.watch(categoriesProvider);
 
     if (categories.isEmpty) {
-      return const SizedBox.shrink();
+      return const CategoryGridSkeleton();
     }
 
     return GridView.builder(
@@ -166,22 +168,22 @@ class _CategoryGrid extends ConsumerWidget {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        return _CategoryItemWidget(category: categories[index], index: index);
+        return _CategoryItemWrapper(category: categories[index], index: index);
       },
     );
   }
 }
 
-class _CategoryItemWidget extends StatefulWidget {
-  const _CategoryItemWidget({required this.category, required this.index});
+class _CategoryItemWrapper extends StatefulWidget {
+  const _CategoryItemWrapper({required this.category, required this.index});
   final CategoryModel category;
   final int index;
 
   @override
-  State<_CategoryItemWidget> createState() => _CategoryItemWidgetState();
+  State<_CategoryItemWrapper> createState() => _CategoryItemWrapperState();
 }
 
-class _CategoryItemWidgetState extends State<_CategoryItemWidget>
+class _CategoryItemWrapperState extends State<_CategoryItemWrapper>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -216,51 +218,21 @@ class _CategoryItemWidgetState extends State<_CategoryItemWidget>
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final category = widget.category;
-
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: GestureDetector(
+        child: CategoryGridCard(
+          category: widget.category,
           onTap: () {
             HapticUtils.light();
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductListingPage(category: category.name),
+                builder: (_) => ProductListingPage(category: widget.category.name),
               ),
             );
           },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 64.w,
-                height: 64.w,
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
-                  child: Image.asset(
-                    category.iconAssetPath,
-                    width: 64.w,
-                    height: 64.w,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(height: 6.h),
-              CustomText(
-                text: category.name,
-                size: 11,
-                color: colorScheme.onSurface,
-              ),
-            ],
-          ),
         ),
       ),
     );

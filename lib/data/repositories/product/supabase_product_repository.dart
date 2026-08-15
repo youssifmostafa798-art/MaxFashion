@@ -57,7 +57,7 @@ class SupabaseProductRepository implements ProductRepository {
   Future<void> loadCategories() async {
     final response = await _client
         .from('categories')
-        .select('id, name, slug, image_url, icon_name, display_order, is_active')
+        .select('id, name, slug, icon_name, display_order, is_active')
         .order('display_order');
 
     _categoriesCache = (response as List)

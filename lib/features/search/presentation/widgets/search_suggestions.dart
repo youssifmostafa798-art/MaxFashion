@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gap/flutter_gap.dart';
+import 'package:max/core/widgets/category_chip_card.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/skeletons/category_chips_skeleton.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
@@ -208,56 +210,32 @@ class PopularCategoriesSection extends ConsumerWidget {
           ),
         ),
         Gap(12.h),
-        SizedBox(
-          height: 90.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            itemCount: categories.length,
-            separatorBuilder: (_, _) => SizedBox(width: 16.w),
-            itemBuilder: (context, index) {
-              final cat = categories[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductListingPage(category: cat.name),
-                    ),
-                  );
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 56.w,
-                      height: 56.w,
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(14.r),
+        if (categories.isEmpty)
+          const CategoryChipsSkeleton()
+        else
+          SizedBox(
+            height: 90.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: categories.length,
+              separatorBuilder: (_, _) => SizedBox(width: 16.w),
+              itemBuilder: (context, index) {
+                final cat = categories[index];
+                return CategoryChipCard(
+                  category: cat,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProductListingPage(category: cat.name),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(14.r),
-                        child: Image.asset(
-                          cat.iconAssetPath,
-                          width: 56.w,
-                          height: 56.w,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Gap(6.h),
-                    CustomText(
-                      text: cat.name,
-                      size: 11,
-                      color: colorScheme.onSurface,
-                    ),
-                  ],
-                ),
-              );
-            },
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }

@@ -2,7 +2,6 @@ class CategoryModel {
   final int id;
   final String name;
   final String slug;
-  final String imageUrl;
   final String iconName;
   final int displayOrder;
   final bool isActive;
@@ -11,7 +10,6 @@ class CategoryModel {
     required this.id,
     required this.name,
     required this.slug,
-    required this.imageUrl,
     required this.iconName,
     this.displayOrder = 0,
     this.isActive = true,
@@ -23,7 +21,6 @@ class CategoryModel {
     int? id,
     String? name,
     String? slug,
-    String? imageUrl,
     String? iconName,
     int? displayOrder,
     bool? isActive,
@@ -32,7 +29,6 @@ class CategoryModel {
       id: id ?? this.id,
       name: name ?? this.name,
       slug: slug ?? this.slug,
-      imageUrl: imageUrl ?? this.imageUrl,
       iconName: iconName ?? this.iconName,
       displayOrder: displayOrder ?? this.displayOrder,
       isActive: isActive ?? this.isActive,
@@ -44,7 +40,6 @@ class CategoryModel {
       id: json['id'] as int,
       name: json['name'] as String,
       slug: json['slug'] as String,
-      imageUrl: json['image_url'] as String,
       iconName: json['icon_name'] as String? ?? '',
       displayOrder: json['display_order'] as int? ?? 0,
       isActive: json['is_active'] as bool? ?? true,
@@ -56,7 +51,6 @@ class CategoryModel {
       'id': id,
       'name': name,
       'slug': slug,
-      'image_url': imageUrl,
       'icon_name': iconName,
       'display_order': displayOrder,
       'is_active': isActive,
