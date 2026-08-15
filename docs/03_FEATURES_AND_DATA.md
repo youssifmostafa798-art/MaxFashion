@@ -1,7 +1,7 @@
 # 03 — Features & Data
 
 > **MaxFashion — Feature-by-Feature Status & Data Architecture**
-> Last Updated: August 12, 2026
+> Last Updated: August 15, 2026
 
 ---
 
@@ -49,7 +49,7 @@
 - Email confirmation flow supported
 - Session restore on app start via `splash.dart`
 - Auth state listener for token refresh and sign-out events
-- Guest mode (bypass auth)
+- `ensureProfileExists` creates profile if missing after auth
 - Error handling with user-friendly messages
 
 **Key Files:**
@@ -110,11 +110,11 @@ LoginPage → authStateProvider → AuthNotifier.login()
 
 **Implementation:**
 - `SupabaseProductRepository` fetches products with joined images and sizes
-- 251 products, 23 categories, 251 images, 977 sizes in live Supabase
+- 248 products, 22 categories in live Supabase (after migration 008 cleanup)
 - Product detail page with size selection, quantity, add to cart
 - Product listing page with category filtering
 - Product grid card with hero animation, favorite button
-- Images use local asset paths (`assets/products_supa/...`) via `Image.asset()`
+- Images served from Supabase Storage `product-images` bucket via `Image.network()`
 
 **Key Files:**
 - `lib/data/repositories/product/supabase_product_repository.dart`
@@ -142,7 +142,7 @@ Home → filteredHomeProductsProvider → productRepositoryProvider
 - Categories loaded from Supabase via `categoriesProvider`
 - Dynamic category resolution via `categoryNameById()` helper
 - Home page: horizontal category filter chips with "All" option
-- Menu page: category grid (4 columns) with icons
+- Menu page: category grid (4 columns) with icons from `assets/categories_icons/`
 
 **Key Files:**
 - `lib/data/providers/product_provider.dart` — `categoriesProvider`
@@ -308,10 +308,13 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - Search results with highlighted query text
 - Search skeleton loading state
 - `SupabaseSearchRepository` searches in-memory cached products
+- Note: 3 search implementations exist (SupabaseSearchRepository, SupabaseProductRepository.searchProducts, ProductSearchMatcher) — should be consolidated
 
 **Key Files:**
 - `lib/data/providers/search_provider.dart`
 - `lib/data/repositories/search/supabase_search_repository.dart`
+- `lib/data/repositories/product/supabase_product_repository.dart`
+- `lib/data/repositories/product/product_search_matcher.dart`
 - `lib/features/search/presentation/pages/search_screen.dart`
 
 ---
@@ -326,13 +329,14 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - Add/Edit/Delete addresses, set default
 - AddressCard with edit/delete/set-default actions
 - Empty addresses state
+- **NOT user-scoped** — addresses stored globally in SharedPreferences, not per-user
 
 **Key Files:**
 - `lib/data/providers/address_provider.dart`
 - `lib/features/profile/presentation/pages/addresses_page.dart`
 - `lib/features/checkout/presentation/pages/add_address.dart`
 
-**Remaining:** Migrate to Supabase `addresses` table.
+**Remaining:** Migrate to Supabase `addresses` table for cross-device sync and user isolation.
 
 ---
 
@@ -346,6 +350,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - Add cards, delete with confirmation, set default
 - Duplicate card detection, card brand auto-detection
 - Credit card form via `flutter_credit_card` widget
+- **NOT user-scoped** — cards stored globally in SharedPreferences, not per-user
 
 **Key Files:**
 - `lib/data/providers/payment_card_provider.dart`
@@ -353,7 +358,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - `lib/features/profile/presentation/pages/payment_methods_page.dart`
 - `lib/features/checkout/presentation/pages/add_card.dart`
 
-**Remaining:** Consider third-party payment processor for PCI compliance.
+**Remaining:** Consider third-party payment processor for PCI compliance. Migrate to Supabase or secure storage.
 
 ---
 
@@ -400,9 +405,12 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 | `id` | BIGINT | PK |
 | `name` | TEXT | NOT NULL, UNIQUE |
 | `slug` | TEXT | NOT NULL, UNIQUE |
-| `image_url` | TEXT | NOT NULL, DEFAULT '' |
+| `icon_name` | TEXT | NOT NULL, DEFAULT '' |
+| `display_order` | INTEGER | DEFAULT 0 |
+| `is_active` | BOOLEAN | DEFAULT true |
 
 **RLS:** Public read access.
+**Note:** `image_url` column was dropped in migration 013. Categories now use `icon_name` to reference PNG icons in `assets/categories_icons/`.
 
 #### products
 | Column | Type | Constraint |
@@ -515,14 +523,18 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - SELECT: Public (anon + authenticated)
 - INSERT/UPDATE/DELETE: Service role only (no client writes)
 
+#### avatars bucket
+- SELECT: Public (anon + authenticated)
+- INSERT/UPDATE/DELETE: Authenticated users (own avatar only)
+
 ### Seed Data
 
 | Table | Records | Source |
 |-------|---------|--------|
-| categories | 23 | `002_seed_categories.sql` |
-| products | 251 | `003_seed_products.sql` |
-| product_images | 251 | `004_seed_product_images.sql` |
-| product_sizes | 977 | `005_seed_product_sizes.sql` |
+| categories | 23 (initial) → 22 (after cleanup) | `002_seed_categories.sql` |
+| products | 251 (initial) → 248 (after cleanup) | `003_seed_products.sql` |
+| product_images | 251 (initial) → 248 (after cleanup) | `004_seed_product_images.sql` |
+| product_sizes | 977 (initial) | `005_seed_product_sizes.sql` |
 
 ---
 
@@ -531,16 +543,12 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 ### Product Images
 - Path: `assets/products_supa/`
 - Structure: `{gender}/{category_type}/{subcategory}/{image}.jpg`
-- Loaded via: `Image.asset(product.image)`
-- `cached_network_image` NOT required
+- Note: These bundled images are legacy from the pre-Supabase era. Product images are now served from Supabase Storage via `Image.network()`. These assets may be removable to reduce APK size.
 
-### Local JSON Data (Legacy/Reference)
-- `assets/data/categories.json` — 23 categories
-- `assets/data/products.json` — 251 products
-- `assets/data/product_images.json` — 251 images
-- `assets/data/product_sizes.json` — 997 sizes
-
-These JSON files are loaded by `LocalProductDataSource` as a fallback data source. The primary source is Supabase.
+### Category Icons
+- Path: `assets/categories_icons/`
+- Used by: `CategoryModel.iconAssetPath` → `assets/categories_icons/{iconName}`
+- Referenced by categories table `icon_name` column
 
 ### Other Assets
 - `assets/cover/` — Cover images

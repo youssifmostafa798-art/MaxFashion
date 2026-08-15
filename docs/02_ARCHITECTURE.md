@@ -1,7 +1,7 @@
 # 02 — Architecture
 
 > **MaxFashion — System Architecture & Technical Design**
-> Last Updated: August 12, 2026
+> Last Updated: August 15, 2026
 
 ---
 
@@ -22,7 +22,7 @@ UI (Pages/Widgets)
 | Layer | Location | Responsibility |
 |-------|----------|---------------|
 | Presentation | `lib/features/*/presentation/` | Pages, widgets, feature-level providers |
-| Data | `lib/data/` | Models, providers, repositories, services, datasources |
+| Data | `lib/data/` | Models, providers, repositories, services |
 | Core | `lib/core/` | Shared utilities, theme, routing, widgets, constants |
 
 ### Key Design Decisions
@@ -42,14 +42,13 @@ lib/
 ├── main.dart                          # App entry, Supabase init, ProviderScope
 ├── splash.dart                        # Animated splash with session check
 ├── core/
-│   ├── config/                        # Supabase client getter
+│   ├── config/                        # (empty)
 │   ├── constants/                     # App constants, asset paths
 │   ├── router/                        # AppRouter (22 named routes)
 │   ├── theme/                         # AppColors, AppTheme, ThemeProvider, ThemeStorage
 │   ├── utils/                         # Validators, formatters, haptics, ID generator
 │   └── widgets/                       # 18+ reusable widgets + skeletons
 ├── data/
-│   ├── datasources/local/             # LocalProductDataSource (JSON fallback)
 │   ├── models/                        # 11 data models
 │   ├── providers/                     # 9 Riverpod providers
 │   ├── repositories/                  # Abstract + Supabase implementations
@@ -163,7 +162,7 @@ EditProfilePage → AuthNotifier.updateProfile()
 | Table | Purpose | RLS |
 |-------|---------|-----|
 | `profiles` | User profile (extends auth.users) | User-owned |
-| `categories` | Product categories | Public read |
+| `categories` | Product categories (with icon_name, display_order) | Public read |
 | `products` | Core catalog items | Public read |
 | `product_images` | Multiple images per product | Public read |
 | `product_sizes` | Size/stock per product | Public read |
@@ -194,7 +193,9 @@ supabase/migrations/
 ├── 008_sync_cleanup.sql             — Remove stale records (3 products, 1 category)
 ├── 009_cart_items_schema.sql        — cart_items table + RLS
 ├── 010_wishlist_items_schema.sql    — wishlist_items table + RLS
-└── 011_orders_schema.sql            — orders + order_items tables + RLS
+├── 011_orders_schema.sql            — orders + order_items tables + RLS
+├── 012_dynamic_categories.sql       — Dynamic category support
+└── 013_drop_categories_image_url.sql — Drop image_url from categories
 ```
 
 ---
@@ -204,6 +205,7 @@ supabase/migrations/
 | Provider | Type | File |
 |----------|------|------|
 | `authStateProvider` | StateNotifierProvider | `data/providers/auth_provider.dart` |
+| `currentUserIdProvider` | Provider | `data/providers/auth_provider.dart` |
 | `productRepositoryProvider` | Provider | `data/providers/product_provider.dart` |
 | `allProductsProvider` | Provider | `data/providers/product_provider.dart` |
 | `categoriesProvider` | Provider | `data/providers/product_provider.dart` |
@@ -223,6 +225,10 @@ supabase/migrations/
 | `homeContentProvider` | FutureProvider | `data/providers/home_content_provider.dart` |
 | `themeProvider` | StateNotifierProvider | `core/theme/theme_provider.dart` |
 
+### Auth-Aware Provider Invalidation
+
+All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`) watch `currentUserIdProvider` to auto-invalidate when the user changes. This prevents cross-account data leakage.
+
 ---
 
 ## Key Models
@@ -231,7 +237,7 @@ supabase/migrations/
 |-------|------|--------|
 | `UserModel` | `data/models/user_model.dart` | id, fullName, email, phoneNumber, profileImage, memberSince, dateOfBirth, gender, country, bio |
 | `ProductModel` | `data/models/product_model.dart` | id, categoryId, name, description, price, discountPrice, brand, thumbnailUrl, isFeatured, isAvailable, productImages, productSizes |
-| `CategoryModel` | `data/models/category_model.dart` | id, name, slug, imageUrl |
+| `CategoryModel` | `data/models/category_model.dart` | id, name, slug, iconName, displayOrder, isActive |
 | `CartItemModel` | `data/models/cart_item_model.dart` | id, productId, productName, productImage, selectedColor, selectedSize, quantity, unitPrice, createdAt, updatedAt |
 | `OrderModel` | `data/models/order_model.dart` | orderId, orderDate, items, totalPrice, paymentMethod, deliveryAddress, status |
 | `OrderItemModel` | `data/models/order_item_model.dart` | productId, productName, productImage, selectedColor, selectedSize, quantity, unitPrice |

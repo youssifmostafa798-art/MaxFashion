@@ -1,7 +1,7 @@
 # 01 — Project Status
 
 > **MaxFashion — Current Application State**
-> Audit Date: August 12, 2026
+> Audit Date: August 15, 2026
 > Project Version: 1.0.0+1
 
 ---
@@ -12,13 +12,13 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 
 | Area | Status |
 |------|--------|
-| **Overall** | **~90% complete** |
+| **Overall** | **~88% complete** |
 | UI | ~95% — All core screens built with skeleton loading |
 | Business Logic | ~94% — Auth, products, cart, wishlist, orders fully on Supabase |
 | Architecture | ~94% — Repository pattern established |
 | Backend (Supabase) | ~85% — Auth, products, cart, wishlist, orders, home content migrated |
 | State Management | ~90% — Riverpod used consistently |
-| Testing | 0% — No tests yet |
+| Testing | 0% — No tests beyond minimal smoke test |
 
 ---
 
@@ -63,12 +63,14 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - Profile CRUD on `profiles` table
 - Avatar upload/remove via Supabase Storage `avatars` bucket
 - Auth state listener for token refresh and sign-out events
+- `ensureProfileExists` creates profile if missing after auth
 
 ### Products
 - `SupabaseProductRepository` — fetches products with joined `product_images` and `product_sizes`
 - `categoriesProvider` — reads from Supabase `categories` table
 - Dynamic category resolution via `categoryNameById()` helper
-- 251 products, 23 categories, 251 images, 977 sizes in live Supabase
+- 248 products, 22 categories in live Supabase (after migration 008 cleanup)
+- Product images served from Supabase Storage `product-images` bucket
 
 ### Cart
 - `SupabaseCartRepository` — full CRUD (load, add, update quantity, remove, clear)
@@ -85,7 +87,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 ### Home Content
 - `SupabaseHomeContentRepository` — fetches active home content
 - `home_content` table with cover image URL
-- Cover image loaded via `Image.network()` from URL
+- Cover image loaded via `Image.network()` from Supabase Storage URL
 
 ### Orders
 - `SupabaseOrderRepository` — full CRUD (load, add, update status)
@@ -112,10 +114,10 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Table | Records | RLS | Status |
 |-------|---------|-----|--------|
 | `profiles` | varies | ✅ User-owned | ✅ In use |
-| `categories` | 23 | ✅ Public read | ✅ In use |
-| `products` | 251 | ✅ Public read | ✅ In use |
-| `product_images` | 251 | ✅ Public read | ✅ In use |
-| `product_sizes` | 977 | ✅ Public read | ✅ In use |
+| `categories` | 22 | ✅ Public read | ✅ In use |
+| `products` | 248 | ✅ Public read | ✅ In use |
+| `product_images` | 248 | ✅ Public read | ✅ In use |
+| `product_sizes` | ~970 | ✅ Public read | ✅ In use |
 | `cart_items` | varies | ✅ User-owned | ✅ In use |
 | `wishlist_items` | varies | ✅ User-owned | ✅ In use |
 | `home_content` | 1 | ✅ Public read (active) | ✅ In use |
@@ -140,10 +142,12 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 5. **Wishlist migrated to Supabase** — `SupabaseWishlistRepository` replaced SharedPreferences persistence. The `wishlist_items` table has full RLS with user ownership and product joins.
 6. **Home content migrated to Supabase** — `home_content` table stores cover image URL.
 7. **Legacy code removed** — `fake_auth_service.dart`, `auth_repository.dart` (data layer), `local_product_repository.dart`, `local_search_repository.dart`, `cart_storage.dart`, `cover_model.dart` have all been deleted.
-8. **SQL migration 008** cleaned up stale records (products 13, 120, 169 and category 12), leaving 244 products and 22 categories.
+8. **SQL migration 008** cleaned up stale records (products 13, 120, 169 and category 12), leaving 248 products and 22 categories.
 9. **SQL migration 009** created `cart_items` table with RLS policies.
 10. **SQL migration 010** created `wishlist_items` table with RLS policies.
 11. **SQL migration 011** created `orders` and `order_items` tables with RLS policies.
+12. **SQL migration 012** added dynamic category support.
+13. **SQL migration 013** dropped `image_url` column from `categories` table (replaced by `icon_name`).
 
 ---
 
@@ -152,20 +156,29 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Issue | Severity | Status |
 |-------|----------|--------|
 | `ensureProfileExists` accessed via dynamic cast | Medium | Open |
+| `isEmailConfirmationPending` accessed via dynamic cast | Medium | Open |
+| 28 silently swallowed exceptions (`catch (_) {}`) | Medium | Open |
+| Hardcoded Supabase URL in ProductModel and repositories | Low | Open |
 | Forgot-password not implemented | Low | Open |
 | Promo code UI exists but non-functional | Low | Open |
 | "Shop By" menu items are static UI only | Low | Open |
 | Some screens use Navigator.push instead of named routes | Low | Open |
 | Duplicate unique index on orders.order_number | Low | Open (cosmetic) |
+| Dead `collection` and `keywords` getters in ProductModel | Low | Open |
+| 3 duplicate search implementations | Low | Open |
+| Bundled product images in assets/products_supa/ may bloat APK | Low | Open |
 
 ---
 
 ## Next Steps (Priority Order)
 
 1. **Address Migration** — Create `addresses` table, migrate from SharedPreferences
-2. **Forgot Password** — Implement Supabase password reset flow
-3. **Cleanup** — Remove any remaining dead code, fix dynamic cast issue
-4. **Testing** — Add unit and widget tests
+2. **Payment Card Migration** — Create `payment_cards` table or use third-party processor
+3. **Forgot Password** — Implement Supabase password reset flow
+4. **Fix Dynamic Casts** — Add `ensureProfileExists` and `isEmailConfirmationPending` to `AuthRepositoryInterface`
+5. **Exception Cleanup** — Audit and fix silently swallowed exceptions
+6. **Dead Code Removal** — Remove `collection`/`keywords` getters, consolidate search implementations
+7. **Testing** — Add unit and widget tests
 
 ---
 

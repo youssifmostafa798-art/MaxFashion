@@ -1,7 +1,7 @@
 # 05 — Supabase Migration Status
 
 > **MaxFashion — Current Supabase Implementation & Migration Reference**
-> Last Updated: August 12, 2026
+> Last Updated: August 15, 2026
 
 ---
 
@@ -16,6 +16,7 @@
 | 3.5 | Wishlist | ✅ Completed | `010_wishlist_items_schema.sql` |
 | 3.6 | Orders | ✅ Completed | `011_orders_schema.sql` |
 | — | Addresses | ❌ Not Started | — |
+| — | Payment Cards | ❌ Not Started | — |
 
 ---
 
@@ -24,7 +25,7 @@
 | Table | Purpose | RLS | Status |
 |-------|---------|-----|--------|
 | `profiles` | User profile (extends auth.users) | User-owned (SELECT/UPDATE own row) | ✅ In use |
-| `categories` | Product categories | Public read | ✅ In use |
+| `categories` | Product categories (with icon_name, display_order) | Public read | ✅ In use |
 | `products` | Core catalog items | Public read | ✅ In use |
 | `product_images` | Multiple images per product | Public read | ✅ In use |
 | `product_sizes` | Size/stock per product | Public read, UNIQUE(product_id, size) | ✅ In use |
@@ -56,7 +57,11 @@
 | `id` | BIGINT | PK |
 | `name` | TEXT | NOT NULL, UNIQUE |
 | `slug` | TEXT | NOT NULL, UNIQUE |
-| `image_url` | TEXT | NOT NULL, DEFAULT '' |
+| `icon_name` | TEXT | NOT NULL, DEFAULT '' |
+| `display_order` | INTEGER | DEFAULT 0 |
+| `is_active` | BOOLEAN | DEFAULT true |
+
+**Note:** `image_url` column was dropped in migration 013. Categories now use `icon_name` to reference PNG icons in `assets/categories_icons/`.
 
 #### products
 | Column | Type | Constraint |
@@ -71,6 +76,24 @@
 | `thumbnail_url` | TEXT | DEFAULT '' |
 | `is_featured` | BOOLEAN | DEFAULT false |
 | `is_available` | BOOLEAN | DEFAULT true |
+
+#### product_images
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGINT | PK |
+| `product_id` | BIGINT | FK → products(id) ON DELETE CASCADE |
+| `image_url` | TEXT | NOT NULL |
+| `sort_order` | INTEGER | DEFAULT 1 |
+
+#### product_sizes
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGSERIAL | PK |
+| `product_id` | BIGINT | FK → products(id) ON DELETE CASCADE |
+| `size` | TEXT | NOT NULL |
+| `stock` | INTEGER | DEFAULT 0 |
+
+UNIQUE on (product_id, size).
 
 #### cart_items
 | Column | Type | Constraint |
@@ -188,8 +211,8 @@
 
 | Feature | Storage | Key | Notes |
 |---------|---------|-----|-------|
-| Addresses | SharedPreferences | `saved_addresses` | JSON array. Used by checkout. |
-| Payment Cards | SharedPreferences | `saved_payment_cards` | JSON array. Consider third-party processor for PCI compliance. |
+| Addresses | SharedPreferences | `saved_addresses` | JSON array. Used by checkout. NOT user-scoped. |
+| Payment Cards | SharedPreferences | `saved_payment_cards` | JSON array. NOT user-scoped. Consider third-party processor for PCI compliance. |
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
 | Recent Searches | SharedPreferences | `recent_searches` | Intentionally local. |
 
@@ -210,6 +233,8 @@
 | 009 | `009_cart_items_schema.sql` | cart_items table + RLS |
 | 010 | `010_wishlist_items_schema.sql` | wishlist_items table + RLS |
 | 011 | `011_orders_schema.sql` | orders + order_items tables + RLS |
+| 012 | `012_dynamic_categories.sql` | Dynamic category support |
+| 013 | `013_drop_categories_image_url.sql` | Drop image_url from categories table |
 
 ---
 
@@ -217,13 +242,14 @@
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Addresses table | 🔴 High | New table | Create table, RLS, `SupabaseAddressRepository` |
-| Forgot Password | 🔴 High | Feature | Supabase `resetPasswordForEmail()` flow |
-| Product image gallery | 🟠 Medium | Feature | Only single thumbnail displayed; productImages list unused in UI |
-| Order cancellation UI | 🟠 Medium | Feature | No cancellation flow from user side |
-| Delivery option | 🟠 Medium | Feature | Hardcoded to "Pickup at store" only |
-| Product reviews/ratings | 🟡 Low | Feature | No code found |
-| Push notifications | 🟡 Low | Feature | No code found |
+| Addresses table | Critical | New table | Create table, RLS, `SupabaseAddressRepository`, migrate from SharedPreferences |
+| Payment Cards table | Critical | New table | Create table, RLS, `SupabasePaymentCardRepository`, migrate from SharedPreferences |
+| Forgot Password | Critical | Feature | Supabase `resetPasswordForEmail()` flow |
+| Product image gallery | High | Feature | Only single thumbnail displayed; productImages list unused in UI |
+| Order cancellation UI | High | Feature | No cancellation flow from user side |
+| Delivery option | High | Feature | Hardcoded to "Pickup at store" only |
+| Product reviews/ratings | Medium | Feature | No code found |
+| Push notifications | Medium | Feature | No code found |
 
 ---
 
@@ -236,6 +262,15 @@
 3. Create `SupabaseAddressRepository`
 4. Update `addressProvider` to use Supabase
 5. Remove SharedPreferences persistence
+6. Add migration from local SharedPreferences to Supabase
+
+**Payment Card Migration**
+
+1. Create `payment_cards` table in Supabase (or use secure vault)
+2. Add RLS policies (user-owned)
+3. Create `SupabasePaymentCardRepository`
+4. Update `paymentCardProvider` to use Supabase
+5. Remove `PaymentCardStorage` SharedPreferences persistence
 
 ---
 
