@@ -52,7 +52,7 @@ flutter:
     - assets/svgs/
     - assets/texts/
     - assets/pop/
-    - assets/data/
+    - assets/categories_icons/
     - assets/products_supa/
     - assets/products_supa/men/accessories/sunglasses/
     - assets/products_supa/men/accessories/watches/

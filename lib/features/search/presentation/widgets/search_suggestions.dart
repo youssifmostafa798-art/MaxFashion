@@ -236,10 +236,14 @@ class PopularCategoriesSection extends ConsumerWidget {
                         color: colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(14.r),
                       ),
-                      child: Icon(
-                        cat.icon,
-                        color: colorScheme.onSurface,
-                        size: 24.w,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14.r),
+                        child: Image.asset(
+                          cat.iconAssetPath,
+                          width: 56.w,
+                          height: 56.w,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Gap(6.h),

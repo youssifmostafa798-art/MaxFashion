@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/data/models/category_model.dart';
+import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
 
 class CategoriesPage extends StatefulWidget {
@@ -93,9 +95,8 @@ class _SearchBar extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const SearchScreen(
-              searchContext: SearchContextType.category,
-            ),
+            builder: (_) =>
+                const SearchScreen(searchContext: SearchContextType.category),
           ),
         );
       },
@@ -109,7 +110,11 @@ class _SearchBar extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(left: 14.w),
-              child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
+              child: Icon(
+                Icons.search,
+                color: colorScheme.onSurfaceVariant,
+                size: 20.w,
+              ),
             ),
             SizedBox(width: 10.w),
             CustomText(
@@ -139,41 +144,21 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-class _CategoryGrid extends StatelessWidget {
+class _CategoryGrid extends ConsumerWidget {
   const _CategoryGrid();
 
-  static const _categories = [
-    _CategoryItem('Sunglasses', Icons.wb_sunny_outlined),
-    _CategoryItem('Watches', Icons.watch_outlined),
-    _CategoryItem('Jeans', Icons.checkroom),
-    _CategoryItem('Polos', Icons.checkroom),
-    _CategoryItem('Shirts', Icons.checkroom),
-    _CategoryItem('Shorts', Icons.checkroom),
-    _CategoryItem('T-Shirts', Icons.checkroom),
-    _CategoryItem('Boots', Icons.hiking),
-    _CategoryItem('Loafers', Icons.directions_walk),
-    _CategoryItem('Running Shoes', Icons.directions_run),
-    _CategoryItem('Sneakers', Icons.sports_basketball),
-    _CategoryItem('Accessories', Icons.watch_outlined),
-    _CategoryItem('Bracelets', Icons.diamond_outlined),
-    _CategoryItem('Earrings', Icons.diamond_outlined),
-    _CategoryItem('Necklaces', Icons.diamond_outlined),
-    _CategoryItem('Rings', Icons.diamond),
-    _CategoryItem('Bags', Icons.shopping_bag_outlined),
-    _CategoryItem('Blouses', Icons.checkroom),
-    _CategoryItem('Crop Tops', Icons.checkroom),
-    _CategoryItem('Dresses', Icons.checkroom),
-    _CategoryItem('Skirts', Icons.checkroom),
-    _CategoryItem('Wide Leg Pants', Icons.checkroom),
-    _CategoryItem('Heels', Icons.directions_walk),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categories = ref.watch(categoriesProvider);
+
+    if (categories.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _categories.length,
+      itemCount: categories.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 16.h,
@@ -181,18 +166,15 @@ class _CategoryGrid extends StatelessWidget {
         childAspectRatio: 0.85,
       ),
       itemBuilder: (context, index) {
-        return _CategoryItemWidget(
-          cat: _categories[index],
-          index: index,
-        );
+        return _CategoryItemWidget(category: categories[index], index: index);
       },
     );
   }
 }
 
 class _CategoryItemWidget extends StatefulWidget {
-  const _CategoryItemWidget({required this.cat, required this.index});
-  final _CategoryItem cat;
+  const _CategoryItemWidget({required this.category, required this.index});
+  final CategoryModel category;
   final int index;
 
   @override
@@ -235,7 +217,8 @@ class _CategoryItemWidgetState extends State<_CategoryItemWidget>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bool isSale = widget.cat.label == 'Sale';
+    final category = widget.category;
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
@@ -246,7 +229,7 @@ class _CategoryItemWidgetState extends State<_CategoryItemWidget>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => ProductListingPage(category: widget.cat.label),
+                builder: (_) => ProductListingPage(category: category.name),
               ),
             );
           },
@@ -257,22 +240,24 @@ class _CategoryItemWidgetState extends State<_CategoryItemWidget>
                 width: 64.w,
                 height: 64.w,
                 decoration: BoxDecoration(
-                  color: isSale
-                      ? AppColors.accent.withValues(alpha: 0.08)
-                      : colorScheme.surfaceContainerHighest,
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
-                child: Icon(
-                  widget.cat.icon,
-                  color: isSale ? AppColors.accent : colorScheme.onSurface,
-                  size: 28.w,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Image.asset(
+                    category.iconAssetPath,
+                    width: 64.w,
+                    height: 64.w,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               SizedBox(height: 6.h),
               CustomText(
-                text: widget.cat.label,
+                text: category.name,
                 size: 11,
-                color: isSale ? AppColors.accent : colorScheme.onSurface,
+                color: colorScheme.onSurface,
               ),
             ],
           ),
@@ -331,7 +316,11 @@ class _ShopByList extends StatelessWidget {
                     color: colorScheme.onSurface,
                   ),
                 ),
-                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant, size: 20.w),
+                Icon(
+                  Icons.chevron_right,
+                  color: colorScheme.onSurfaceVariant,
+                  size: 20.w,
+                ),
               ],
             ),
           ),
@@ -339,13 +328,6 @@ class _ShopByList extends StatelessWidget {
       }).toList(),
     );
   }
-}
-
-class _CategoryItem {
-  final String label;
-  final IconData icon;
-
-  const _CategoryItem(this.label, this.icon);
 }
 
 class _ShopByItem {

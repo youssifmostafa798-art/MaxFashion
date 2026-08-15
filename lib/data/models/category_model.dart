@@ -1,47 +1,41 @@
-import 'package:flutter/material.dart';
-
 class CategoryModel {
   final int id;
   final String name;
   final String slug;
   final String imageUrl;
+  final String iconName;
+  final int displayOrder;
+  final bool isActive;
 
   const CategoryModel({
     required this.id,
     required this.name,
     required this.slug,
     required this.imageUrl,
+    required this.iconName,
+    this.displayOrder = 0,
+    this.isActive = true,
   });
 
-  IconData get icon {
-    final lower = name.toLowerCase();
-    if (lower == 'sunglasses') return Icons.wb_sunny_outlined;
-    if (lower == 'watches') return Icons.watch_outlined;
-    if (lower == 'boots') return Icons.hiking;
-    if (lower == 'loafers' || lower == 'running shoes') {
-      return Icons.directions_walk;
-    }
-    if (lower == 'sneakers') return Icons.sports_basketball;
-    if (lower == 'accessories' || lower == 'bracelets' || lower == 'earrings' ||
-        lower == 'necklaces' || lower == 'rings') {
-      return Icons.diamond_outlined;
-    }
-    if (lower == 'bags') return Icons.shopping_bag_outlined;
-    if (lower == 'heels') return Icons.directions_walk;
-    return Icons.checkroom;
-  }
+  String get iconAssetPath => 'assets/categories_icons/$iconName';
 
   CategoryModel copyWith({
     int? id,
     String? name,
     String? slug,
     String? imageUrl,
+    String? iconName,
+    int? displayOrder,
+    bool? isActive,
   }) {
     return CategoryModel(
       id: id ?? this.id,
       name: name ?? this.name,
       slug: slug ?? this.slug,
       imageUrl: imageUrl ?? this.imageUrl,
+      iconName: iconName ?? this.iconName,
+      displayOrder: displayOrder ?? this.displayOrder,
+      isActive: isActive ?? this.isActive,
     );
   }
 
@@ -51,6 +45,9 @@ class CategoryModel {
       name: json['name'] as String,
       slug: json['slug'] as String,
       imageUrl: json['image_url'] as String,
+      iconName: json['icon_name'] as String? ?? '',
+      displayOrder: json['display_order'] as int? ?? 0,
+      isActive: json['is_active'] as bool? ?? true,
     );
   }
 
@@ -60,7 +57,9 @@ class CategoryModel {
       'name': name,
       'slug': slug,
       'image_url': imageUrl,
+      'icon_name': iconName,
+      'display_order': displayOrder,
+      'is_active': isActive,
     };
   }
-
 }

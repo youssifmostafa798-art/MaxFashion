@@ -1,17 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:max/data/datasources/local/local_product_data_source.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/product/product_repository.dart';
 import 'package:max/data/repositories/product/supabase_product_repository.dart';
-
-final localProductDataSourceProvider = Provider<LocalProductDataSource>((ref) {
-  final ds = LocalProductDataSource();
-  ds.load();
-  return ds;
-});
 
 final categoriesProvider = Provider<List<CategoryModel>>((ref) {
   ref.watch(productsLoaded);
@@ -42,8 +34,10 @@ final allProductsProvider = Provider<List<ProductModel>>((ref) {
   return repo.getAllProducts();
 });
 
-final categoryProductsProvider =
-    Provider.family<List<ProductModel>, String>((ref, category) {
+final categoryProductsProvider = Provider.family<List<ProductModel>, String>((
+  ref,
+  category,
+) {
   ref.watch(productsLoaded);
   final repo = ref.watch(productRepositoryProvider);
   final categories = ref.watch(categoriesProvider);
