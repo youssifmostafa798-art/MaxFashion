@@ -20,12 +20,14 @@ class AuthState {
   final bool isLoading;
   final String? error;
   final bool emailConfirmationPending;
+  final bool resetCodeVerified;
 
   const AuthState({
     this.user,
     this.isLoading = false,
     this.error,
     this.emailConfirmationPending = false,
+    this.resetCodeVerified = false,
   });
 
   bool get isAuthenticated => user != null;
@@ -37,6 +39,7 @@ class AuthState {
     bool clearUser = false,
     bool clearError = false,
     bool? emailConfirmationPending,
+    bool? resetCodeVerified,
   }) {
     return AuthState(
       user: clearUser ? null : (user ?? this.user),
@@ -44,6 +47,7 @@ class AuthState {
       error: clearError ? null : (error ?? this.error),
       emailConfirmationPending:
           emailConfirmationPending ?? this.emailConfirmationPending,
+      resetCodeVerified: resetCodeVerified ?? this.resetCodeVerified,
     );
   }
 }
@@ -331,6 +335,103 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   void clearError() {
     state = state.copyWith(clearError: true);
+  }
+
+  void clearResetCodeVerified() {
+    state = state.copyWith(resetCodeVerified: false);
+  }
+
+  Future<void> sendResetCode({required String email}) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      await _repository.sendResetCode(email: email);
+      if (!mounted) return;
+      state = state.copyWith(isLoading: false);
+    } on SocketException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'No internet connection. Please check your network.',
+      );
+    } on TimeoutException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Connection timed out. Please try again.',
+      );
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(isLoading: false, error: _mapAuthError(e));
+    }
+  }
+
+  Future<void> verifyResetCode({
+    required String email,
+    required String code,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final isValid = await _repository.verifyResetCode(
+        email: email,
+        code: code,
+      );
+      if (!mounted) return;
+      if (isValid) {
+        state = state.copyWith(isLoading: false, resetCodeVerified: true);
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          error: 'Invalid or expired code. Please try again.',
+        );
+      }
+    } on SocketException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'No internet connection. Please check your network.',
+      );
+    } on TimeoutException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Connection timed out. Please try again.',
+      );
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(isLoading: false, error: _mapAuthError(e));
+    }
+  }
+
+  Future<void> resetPasswordWithCode({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      await _repository.resetPasswordWithCode(
+        email: email,
+        code: code,
+        newPassword: newPassword,
+      );
+      if (!mounted) return;
+      state = state.copyWith(isLoading: false);
+    } on SocketException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'No internet connection. Please check your network.',
+      );
+    } on TimeoutException {
+      if (!mounted) return;
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Connection timed out. Please try again.',
+      );
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(isLoading: false, error: _mapAuthError(e));
+    }
   }
 
   String _mapAuthError(Object e) {

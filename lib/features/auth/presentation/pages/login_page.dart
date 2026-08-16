@@ -139,12 +139,17 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        fontSize: AppTextStyles.fontSize13,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRouter.forgotPassword);
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          fontSize: AppTextStyles.fontSize13,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ),

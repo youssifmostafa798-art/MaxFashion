@@ -23,10 +23,7 @@ Future<void> main() async {
     throw Exception('SUPABASE_ANON_KEY is missing from .env file');
   }
 
-  await Supabase.initialize(
-    url: supabaseUrl,
-    publishableKey: supabaseAnonKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseAnonKey);
 
   runApp(const ProviderScope(child: MyApp()));
 }

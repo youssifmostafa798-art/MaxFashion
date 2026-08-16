@@ -20,6 +20,9 @@ import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/pages/payment_methods_page.dart';
 import 'package:max/features/settings/presentation/pages/settings_page.dart';
 import 'package:max/features/menu/presentation/pages/categories_page.dart';
+import 'package:max/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:max/features/auth/presentation/pages/verify_reset_code_page.dart';
+import 'package:max/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/models/order_model.dart';
@@ -49,6 +52,9 @@ class AppRouter {
   static const String paymentMethods = '/payment-methods';
   static const String settings = '/settings';
   static const String categories = '/categories';
+  static const String forgotPassword = '/forgot-password';
+  static const String verifyResetCode = '/verify-reset-code';
+  static const String resetPassword = '/reset-password';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -122,6 +128,22 @@ class AppRouter {
         return _buildRoute(const SettingsPage(), settings, direction: _SlideDirection.right);
       case categories:
         return _buildRoute(const CategoriesPage(), settings, direction: _SlideDirection.right);
+      case forgotPassword:
+        return _buildRoute(const ForgotPasswordPage(), settings, direction: _SlideDirection.right);
+      case verifyResetCode:
+        final String email = settings.arguments as String;
+        return _buildRoute(
+          VerifyResetCodePage(email: email),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case resetPassword:
+        final args = settings.arguments as Map<String, String>;
+        return _buildRoute(
+          ResetPasswordPage(email: args['email']!, code: args['code']!),
+          settings,
+          direction: _SlideDirection.right,
+        );
       default:
         return _buildRoute(const SplashPage(), settings);
     }

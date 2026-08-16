@@ -35,4 +35,17 @@ abstract class AuthRepositoryInterface {
   Future<ProfileModel> removeAvatar();
 
   Future<ProfileModel> updateAvatarUrl(String url);
+
+  Future<void> sendResetCode({required String email});
+
+  Future<bool> verifyResetCode({
+    required String email,
+    required String code,
+  });
+
+  Future<void> resetPasswordWithCode({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 }

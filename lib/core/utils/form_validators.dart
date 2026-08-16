@@ -1,7 +1,7 @@
 class FormValidators {
   const FormValidators._();
 
-  static final _emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+  static final _emailRegex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
