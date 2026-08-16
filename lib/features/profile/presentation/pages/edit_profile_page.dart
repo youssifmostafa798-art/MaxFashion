@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -184,9 +183,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   avatarUrl: state.avatarUrl,
                   onTap: state.isAvatarLoading
                       ? null
-                      : () => ref
-                          .read(editProfileProvider.notifier)
-                          .pickImage(),
+                      : () =>
+                            ref.read(editProfileProvider.notifier).pickImage(),
                   radius: 55,
                   showCameraIcon: true,
                 ),
@@ -262,13 +260,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       label: 'PHONE NUMBER',
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\(\)\s]')),
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'[0-9+\-\(\)\s]'),
+                        ),
                         LengthLimitingTextInputFormatter(20),
                       ],
                       validator: (value) {
                         if (value != null && value.trim().isNotEmpty) {
-                          final cleaned =
-                              value.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+                          final cleaned = value.replaceAll(
+                            RegExp(r'[\s\-\(\)]'),
+                            '',
+                          );
                           if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(cleaned)) {
                             return 'Please enter a valid phone number';
                           }
@@ -280,8 +282,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           .updatePhoneNumber(value),
                     ),
                     GestureDetector(
-                      onTap: () => _pickDate(
-                          ref.read(editProfileProvider.notifier)),
+                      onTap: () =>
+                          _pickDate(ref.read(editProfileProvider.notifier)),
                       child: AbsorbPointer(
                         child: ProfileFormField(
                           controller: _dobController,
@@ -318,8 +320,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       },
                       onChanged: (value) => ref
                           .read(editProfileProvider.notifier)
-                          .updateCountry(
-                              value.trim().isEmpty ? null : value),
+                          .updateCountry(value.trim().isEmpty ? null : value),
                     ),
                     ProfileFormField(
                       controller: _bioController,

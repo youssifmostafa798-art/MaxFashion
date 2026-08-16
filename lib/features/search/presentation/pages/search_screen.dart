@@ -129,6 +129,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       products: searchState.results,
       query: searchState.query,
       onProductSelected: (product) async {
+        ref.read(searchProvider.notifier).addRecentSearch(searchState.query);
         await Navigator.push(
           context,
           MaterialPageRoute(builder: (c) => ProductDetailPage(product: product)),

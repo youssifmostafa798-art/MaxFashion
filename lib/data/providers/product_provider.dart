@@ -54,6 +54,12 @@ final shuffledProductsProvider = Provider<List<ProductModel>>((ref) {
   return shuffled;
 });
 
+final sessionSuggestedProductsProvider = Provider<List<ProductModel>>((ref) {
+  ref.watch(productsLoaded);
+  final products = ref.watch(shuffledProductsProvider);
+  return products.take(10).toList();
+});
+
 final filteredHomeProductsProvider = Provider<List<ProductModel>>((ref) {
   final selectedCategoryId = ref.watch(selectedCategoryProvider);
   final products = ref.watch(shuffledProductsProvider);

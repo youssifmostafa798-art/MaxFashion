@@ -8,5 +8,4 @@ abstract class SearchRepository {
     List<CategoryModel> categories = const [],
   });
   List<ProductModel> getPopularProducts();
-  List<ProductModel> getSuggestedProducts();
 }

@@ -61,8 +61,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
   }
 
   void _loadSuggested() {
-    final repo = ref.read(searchRepositoryProvider);
-    final suggested = repo.getSuggestedProducts();
+    final suggested = ref.read(sessionSuggestedProductsProvider);
     state = state.copyWith(suggestedProducts: suggested);
   }
 

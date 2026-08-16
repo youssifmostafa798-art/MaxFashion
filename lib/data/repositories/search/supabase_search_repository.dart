@@ -37,11 +37,4 @@ class SupabaseSearchRepository implements SearchRepository {
   List<ProductModel> getPopularProducts() {
     return _productRepo.getAllProducts().take(4).toList();
   }
-
-  @override
-  List<ProductModel> getSuggestedProducts() {
-    final all = _productRepo.getAllProducts();
-    if (all.length <= 3) return all;
-    return all.sublist(0, 3);
-  }
 }
