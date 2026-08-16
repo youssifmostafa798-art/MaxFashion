@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:max/core/utils/id_generator.dart';
 
 class AddressModel {
@@ -86,17 +85,6 @@ class AddressModel {
       label: (json['label'] as String?) ?? 'Home',
       isDefault: json['isDefault'] as bool? ?? false,
     );
-  }
-
-  static String encodeList(List<AddressModel> addresses) {
-    return jsonEncode(addresses.map((a) => a.toJson()).toList());
-  }
-
-  static List<AddressModel> decodeList(String encoded) {
-    final List<dynamic> list = jsonDecode(encoded) as List<dynamic>;
-    return list
-        .map((item) => AddressModel.fromJson(item as Map<String, dynamic>))
-        .toList();
   }
 
   static String generateId() => IdGenerator.generate();

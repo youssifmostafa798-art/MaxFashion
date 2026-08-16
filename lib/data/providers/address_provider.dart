@@ -1,24 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/address_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
+import 'package:max/data/repositories/address/address_repository.dart';
+import 'package:max/data/repositories/address/supabase_address_repository.dart';
 
-const _addressesKey = 'saved_addresses';
+final addressRepositoryProvider = Provider<AddressRepository>((ref) {
+  return SupabaseAddressRepository();
+});
 
 class AddressNotifier extends StateNotifier<List<AddressModel>> {
-  AddressNotifier() : super([]) {
+  final AddressRepository _repository;
+
+  AddressNotifier(this._repository) : super([]) {
     _load();
   }
 
   Future<void> _load() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_addressesKey);
-    if (raw == null) return;
-    state = AddressModel.decodeList(raw);
-  }
-
-  Future<void> _save() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_addressesKey, AddressModel.encodeList(state));
+    try {
+      final addresses = await _repository.loadAddresses();
+      if (!mounted) return;
+      state = addresses;
+    } catch (_) {
+      if (!mounted) return;
+      state = [];
+    }
   }
 
   AddressModel? get defaultAddress {
@@ -29,39 +34,61 @@ class AddressNotifier extends StateNotifier<List<AddressModel>> {
     }
   }
 
-  void add(AddressModel address) {
-    if (state.isEmpty) {
-      state = [address.copyWith(isDefault: true)];
-    } else {
-      state = [...state, address];
+  Future<void> add(AddressModel address) async {
+    try {
+      final isFirst = state.isEmpty;
+      final toAdd = isFirst ? address.copyWith(isDefault: true) : address;
+      final added = await _repository.addAddress(toAdd);
+      if (!mounted) return;
+      state = [...state, added];
+    } catch (_) {
+      rethrow;
     }
-    _save();
   }
 
-  void update(AddressModel updated) {
-    state = state.map((a) => a.id == updated.id ? updated : a).toList();
-    _save();
-  }
-
-  void remove(String id) {
-    final wasDefault = state.any((a) => a.id == id && a.isDefault);
-    final remaining = state.where((a) => a.id != id).toList();
-    if (wasDefault && remaining.isNotEmpty) {
-      remaining[0] = remaining[0].copyWith(isDefault: true);
+  Future<void> update(AddressModel updated) async {
+    try {
+      final result = await _repository.updateAddress(updated);
+      if (!mounted) return;
+      state = state.map((a) => a.id == result.id ? result : a).toList();
+    } catch (_) {
+      rethrow;
     }
-    state = remaining;
-    _save();
   }
 
-  void setDefault(String id) {
-    state = state.map((a) => a.copyWith(isDefault: a.id == id)).toList();
-    _save();
+  Future<void> remove(String id) async {
+    try {
+      await _repository.deleteAddress(id);
+      if (!mounted) return;
+      final wasDefault = state.any((a) => a.id == id && a.isDefault);
+      final remaining = state.where((a) => a.id != id).toList();
+      if (wasDefault && remaining.isNotEmpty) {
+        await _repository.setDefault(remaining.first.id);
+        if (!mounted) return;
+        remaining[0] = remaining[0].copyWith(isDefault: true);
+      }
+      state = remaining;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> setDefault(String id) async {
+    try {
+      await _repository.setDefault(id);
+      if (!mounted) return;
+      state = state.map((a) => a.copyWith(isDefault: a.id == id)).toList();
+    } catch (_) {
+      rethrow;
+    }
   }
 }
 
 final addressProvider =
     StateNotifierProvider<AddressNotifier, List<AddressModel>>((ref) {
-  return AddressNotifier();
+  final repository = ref.watch(addressRepositoryProvider);
+  ref.watch(currentUserIdProvider);
+  return AddressNotifier(repository);
 });
 
 final defaultAddressProvider = Provider<AddressModel?>((ref) {

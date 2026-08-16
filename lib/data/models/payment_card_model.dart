@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:max/core/utils/id_generator.dart';
 
 class PaymentCardModel {
@@ -72,17 +71,6 @@ class PaymentCardModel {
       isDefault: json['isDefault'] as bool? ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
-  }
-
-  static String encodeList(List<PaymentCardModel> cards) {
-    return jsonEncode(cards.map((c) => c.toJson()).toList());
-  }
-
-  static List<PaymentCardModel> decodeList(String encoded) {
-    final List<dynamic> list = jsonDecode(encoded) as List<dynamic>;
-    return list
-        .map((item) => PaymentCardModel.fromJson(item as Map<String, dynamic>))
-        .toList();
   }
 
   static String generateId() => IdGenerator.generate();
