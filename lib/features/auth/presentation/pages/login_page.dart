@@ -67,7 +67,11 @@ class _LoginPageState extends ConsumerState<LoginPage>
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next.user != null && !next.isLoading) {
         if (mounted) {
-          Navigator.pushReplacementNamed(context, AppRouter.main);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRouter.main,
+            (route) => false,
+          );
         }
         return;
       }
