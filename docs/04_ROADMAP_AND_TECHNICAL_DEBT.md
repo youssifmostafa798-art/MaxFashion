@@ -1,19 +1,11 @@
 # 04 — Roadmap & Technical Debt
 
 > **MaxFashion — Remaining Work, Known Issues & Technical Debt**
-> Last Updated: August 15, 2026
+> Last Updated: August 16, 2026
 
 ---
 
 ## Remaining Features
-
-### Critical — Required Before Production
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Address Migration to Supabase | ❌ Not Started | Create `addresses` table, migrate from SharedPreferences |
-| Payment Card Migration | ❌ Not Started | Create `payment_cards` table or use third-party processor |
-| Forgot Password | ❌ Not Implemented | Supabase password reset email flow |
 
 ### High Priority — Important Missing Functionality
 
@@ -56,16 +48,15 @@
 
 | Issue | Affected Feature | Status | Notes |
 |-------|-----------------|--------|-------|
-| `ensureProfileExists` via dynamic cast | Authentication | Open | `lib/data/providers/auth_provider.dart:94` — accessed via `(_repository as dynamic)` — fragile but functional |
+| `ensureProfileExists` via dynamic cast | Authentication | Open | `lib/data/providers/auth_provider.dart` — accessed via `(_repository as dynamic)` — fragile but functional |
 | `isEmailConfirmationPending` via dynamic cast | Authentication | Open | Same file — not on `AuthRepositoryInterface` |
-| 28 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider (5), orders_provider (3), wishlist_provider (1), payment_card_provider (1), address_provider (1), supabase_product_repository (1), supabase_order_repository (1), supabase_auth_repository (1), place_order (1), edit_profile_provider (2) |
+| 28 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider, orders_provider, wishlist_provider, payment_card_provider, address_provider, supabase_product_repository, supabase_order_repository, supabase_auth_repository, place_order, edit_profile_provider |
 | Hardcoded Supabase URL | Products, Cart, Orders | Open | `_storageBaseUrl` hardcoded in ProductModel, SupabaseCartRepository, SupabaseOrderRepository instead of using .env config |
 
 ### Low Priority
 
 | Issue | Affected Feature | Status | Notes |
 |-------|-----------------|--------|-------|
-| Forgot-password not implemented | Auth | Open | UI label exists in login page but no tap handler |
 | Some screens lack named routes | Navigation | Open | Accessed via `Navigator.push(MaterialPageRoute(...))` directly |
 | Promo section non-functional | Checkout | Open | UI exists but no input field or logic |
 | "Shop By" items static | Menu | Open | No filtering logic behind New Arrivals, Trending, etc. |
@@ -92,18 +83,19 @@ The following files have been **deleted** from the codebase but may still be ref
 | `lib/data/services/cart_storage.dart` | ❌ DELETED | SharedPreferences cart — superseded by SupabaseCartRepository |
 | `lib/data/models/cover_model.dart` | ❌ DELETED | Unused cover model |
 | `lib/data/datasources/local/` | ❌ DELETED | LocalProductDataSource directory — removed from codebase |
+| `lib/data/services/payment_card_storage.dart` | ❌ DELETED | SharedPreferences payment cards — superseded by SupabasePaymentCardRepository |
 
 ### Code Quality Issues
 
 | Issue | Location | Severity |
 |-------|----------|----------|
-| Dynamic cast for `ensureProfileExists` | `lib/data/providers/auth_provider.dart:94` | Medium |
-| Dynamic cast for `isEmailConfirmationPending` | `lib/data/providers/auth_provider.dart:190` | Medium |
+| Dynamic cast for `ensureProfileExists` | `lib/data/providers/auth_provider.dart` | Medium |
+| Dynamic cast for `isEmailConfirmationPending` | `lib/data/providers/auth_provider.dart` | Medium |
 | 28 silently swallowed exceptions | Multiple files (see Known Issues) | Medium |
-| Hardcoded Supabase storage URL | `lib/data/models/product_model.dart:5`, `lib/data/repositories/cart/supabase_cart_repository.dart:13`, `lib/data/repositories/orders/supabase_order_repository.dart:13` | Low |
+| Hardcoded Supabase storage URL | `lib/data/models/product_model.dart`, `lib/data/repositories/cart/supabase_cart_repository.dart`, `lib/data/repositories/orders/supabase_order_repository.dart` | Low |
 | Mixed navigation patterns (named routes vs Navigator.push) | Various | Low |
-| Dead `collection` getter returns empty string | `lib/data/models/product_model.dart:40` | Low |
-| Dead `keywords` getter returns empty list | `lib/data/models/product_model.dart:42` | Low |
+| Dead `collection` getter returns empty string | `lib/data/models/product_model.dart` | Low |
+| Dead `keywords` getter returns empty list | `lib/data/models/product_model.dart` | Low |
 | 3 duplicate search implementations | `supabase_search_repository.dart`, `supabase_product_repository.dart`, `product_search_matcher.dart` | Low |
 | `discountPrice` always null in seed data | Supabase seed data | Low |
 | Bundled product images may bloat APK | `assets/products_supa/` | Low |
@@ -126,40 +118,7 @@ The following files have been **deleted** from the codebase but may still be ref
 
 ## Next Steps (Recommended Order)
 
-### 1. Address Migration
-
-**Why:** Addresses are used by checkout, should be per-user and cross-device.
-
-**Tasks:**
-1. Create `addresses` table in Supabase
-2. Add RLS policies (user-owned)
-3. Create `SupabaseAddressRepository`
-4. Update `addressProvider` to use Supabase
-5. Remove SharedPreferences persistence
-6. Add migration from local SharedPreferences to Supabase
-
-### 2. Payment Card Migration
-
-**Why:** Payment cards should be per-user and cross-device.
-
-**Tasks:**
-1. Create `payment_cards` table in Supabase (or use secure vault)
-2. Add RLS policies (user-owned)
-3. Create `SupabasePaymentCardRepository`
-4. Update `paymentCardProvider` to use Supabase
-5. Remove `PaymentCardStorage` SharedPreferences persistence
-
-### 3. Forgot Password
-
-**Why:** Important auth feature, relatively simple with Supabase.
-
-**Tasks:**
-1. Add `resetPassword()` to `AuthRepositoryInterface`
-2. Implement in `SupabaseAuthRepository` using `supabase.auth.resetPasswordForEmail()`
-3. Add UI for password reset flow
-4. Handle email sent confirmation
-
-### 4. Fix Dynamic Casts & Exception Handling
+### 1. Fix Dynamic Casts & Exception Handling
 
 **Why:** Type safety and debuggability.
 
@@ -169,7 +128,7 @@ The following files have been **deleted** from the codebase but may still be ref
 3. Audit 28 silently swallowed exceptions — at minimum add logging
 4. Consider adding a global error handler
 
-### 5. Cleanup & Polish
+### 2. Cleanup & Polish
 
 **Tasks:**
 - Remove dead `collection` and `keywords` getters from ProductModel
@@ -180,6 +139,18 @@ The following files have been **deleted** from the codebase but may still be ref
 - Load menu categories from Supabase
 - Remove or verify bundled `assets/products_supa/` images
 - Remove any remaining dead code
+
+### 3. Real Payment Gateway
+
+**Why:** Credit card form exists but no actual payment processing.
+
+### 4. Order Cancellation UI
+
+**Why:** Users cannot cancel orders from the app.
+
+### 5. Product Image Gallery
+
+**Why:** Only single thumbnail is displayed; productImages list exists but is unused in UI.
 
 ### 6. Testing
 
@@ -201,9 +172,10 @@ The following files have been **deleted** from the codebase but may still be ref
 | Home Content | Supabase | Supabase | ✅ Done |
 | Cart | Supabase | Supabase | ✅ Done |
 | Wishlist | Supabase | Supabase | ✅ Done |
-| Orders | SharedPreferences | Supabase | ✅ Done |
-| Addresses | SharedPreferences | Supabase | ❌ Not Started |
-| Payment Cards | SharedPreferences | Supabase / Third-party | ❌ Not Started |
+| Orders | Supabase | Supabase | ✅ Done |
+| Addresses | Supabase | Supabase | ✅ Done |
+| Payment Cards | Supabase | Supabase | ✅ Done |
+| OTP Password Recovery | Supabase (Edge Functions) | Supabase (Edge Functions) | ✅ Done |
 | Theme | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |
 | Recent Searches | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |
 

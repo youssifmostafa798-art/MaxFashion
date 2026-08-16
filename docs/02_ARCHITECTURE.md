@@ -1,7 +1,7 @@
 # 02 — Architecture
 
 > **MaxFashion — System Architecture & Technical Design**
-> Last Updated: August 15, 2026
+> Last Updated: August 16, 2026
 
 ---
 
@@ -13,7 +13,7 @@ MaxFashion follows a **feature-first, hybrid Clean Architecture** pattern with R
 UI (Pages/Widgets)
   → Riverpod Providers (StateNotifier / StateProvider / Provider)
     → Repositories (Abstract interfaces + Supabase implementations)
-      → Supabase Client (PostgreSQL + Storage + Auth)
+      → Supabase Client (PostgreSQL + Storage + Auth + Edge Functions)
         → Supabase Backend
 ```
 
@@ -32,6 +32,7 @@ UI (Pages/Widgets)
 3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (22 named routes).
 4. **ScreenUtil** — Design size 375x812, all sizing via `.w`, `.h`, `.r`, `.sp`.
 5. **Theme-aware** — `Theme.of(context).colorScheme` used throughout, no hardcoded colors.
+6. **Auth-Aware Providers** — All user-scoped providers watch `currentUserIdProvider` to auto-invalidate on login/logout, preventing cross-account data leakage.
 
 ---
 
@@ -42,7 +43,6 @@ lib/
 ├── main.dart                          # App entry, Supabase init, ProviderScope
 ├── splash.dart                        # Animated splash with session check
 ├── core/
-│   ├── config/                        # (empty)
 │   ├── constants/                     # App constants, asset paths
 │   ├── router/                        # AppRouter (22 named routes)
 │   ├── theme/                         # AppColors, AppTheme, ThemeProvider, ThemeStorage
@@ -50,17 +50,28 @@ lib/
 │   └── widgets/                       # 18+ reusable widgets + skeletons
 ├── data/
 │   ├── models/                        # 11 data models
-│   ├── providers/                     # 9 Riverpod providers
+│   ├── providers/                     # 9+ Riverpod providers
 │   ├── repositories/                  # Abstract + Supabase implementations
+│   │   ├── address/                   # AddressRepository, SupabaseAddressRepository
 │   │   ├── cart/                      # CartRepository, SupabaseCartRepository
 │   │   ├── orders/                    # OrderRepository, SupabaseOrderRepository
+│   │   ├── payment_card/              # PaymentCardRepository, SupabasePaymentCardRepository
 │   │   ├── product/                   # ProductRepository, SupabaseProductRepository
 │   │   ├── search/                    # SearchRepository, SupabaseSearchRepository
 │   │   ├── wishlist/                  # WishlistRepository, SupabaseWishlistRepository
-│   │   └── home_content_repository.dart
-│   └── services/                      # OrdersMigrationService, PaymentCardStorage
+│   │   ├── home_content_repository.dart
+│   │   └── supabase_home_content_repository.dart
+│   └── services/                      # OrdersMigrationService
 └── features/
     ├── auth/                          # Auth (data/domain/presentation)
+    │   ├── data/repositories/         # SupabaseAuthRepository
+    │   ├── data/models/               # ProfileModel
+    │   ├── domain/                    # AuthRepositoryInterface
+    │   └── presentation/
+    │       ├── pages/                 # AuthPage, LoginPage, SignupPage, ForgotPasswordPage,
+    │       │                          # VerifyResetCodePage, ResetPasswordPage
+    │       ├── providers/             # auth_providers.dart (DI)
+    │       └── widgets/               # CustomAuthButton, CustomAuthTextField
     ├── cart/                          # Cart UI
     ├── checkout/                      # Checkout, PlaceOrder, AddAddress, AddCard
     ├── home/                          # Home page
@@ -84,6 +95,24 @@ LoginPage → authStateProvider → AuthNotifier.login()
   → SupabaseAuthRepository.signIn() → Supabase Auth
   → SupabaseAuthRepository.getProfile() → Supabase profiles table
   → AuthState (UserModel)
+```
+
+### OTP Password Recovery
+```
+ForgotPasswordPage → authStateProvider → AuthNotifier.sendResetCode()
+  → SupabaseAuthRepository.sendResetCode()
+  → Supabase Edge Function 'send-reset-code'
+  → password_reset_codes table + Resend API email
+
+VerifyResetCodePage → authStateProvider → AuthNotifier.verifyResetCode()
+  → SupabaseAuthRepository.verifyResetCode()
+  → Supabase Edge Function 'reset-password'
+  → Verifies code (unused, not expired, attempts < 5)
+
+ResetPasswordPage → authStateProvider → AuthNotifier.resetPasswordWithCode()
+  → SupabaseAuthRepository.resetPasswordWithCode()
+  → Supabase Edge Function 'reset-password'
+  → Updates password via admin API, marks code as used
 ```
 
 ### Products
@@ -117,6 +146,22 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
   → Supabase orders table
   → Supabase order_items table
   → OrdersState (List<OrderModel>)
+```
+
+### Addresses (Supabase)
+```
+AddressesPage → addressProvider → AddressNotifier.load()
+  → SupabaseAddressRepository.loadAddresses()
+  → Supabase addresses table
+  → AddressState (List<AddressModel>)
+```
+
+### Payment Cards (Supabase)
+```
+PaymentMethodsPage → paymentCardProvider → PaymentCardNotifier.load()
+  → SupabasePaymentCardRepository.loadCards()
+  → Supabase payment_cards table
+  → PaymentCardState (List<PaymentCardModel>)
 ```
 
 ### Search
@@ -157,6 +202,13 @@ EditProfilePage → AuthNotifier.updateProfile()
 - Email confirmation flow supported
 - Session persistence via Supabase SDK (automatic)
 
+### OTP Password Recovery
+- Two Supabase Edge Functions (Deno/TypeScript):
+  - `send-reset-code` — generates 6-digit OTP, stores in `password_reset_codes`, sends via Resend API
+  - `reset-password` — verifies OTP code, updates password via admin API
+- `password_reset_codes` table with rate limiting (60s cooldown) and attempt limiting (max 5)
+- `cleanup_expired_codes()` SQL function for automatic cleanup
+
 ### Database Tables
 
 | Table | Purpose | RLS |
@@ -171,6 +223,9 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `home_content` | Home page cover image | Public read (active only) |
 | `orders` | User orders | User-owned |
 | `order_items` | Order line items | User-owned (via orders) |
+| `addresses` | User shipping addresses | User-owned |
+| `payment_cards` | Saved payment methods | User-owned |
+| `password_reset_codes` | OTP codes for password reset | Anonymous (for unauthenticated flow) |
 
 ### Storage
 
@@ -195,7 +250,21 @@ supabase/migrations/
 ├── 010_wishlist_items_schema.sql    — wishlist_items table + RLS
 ├── 011_orders_schema.sql            — orders + order_items tables + RLS
 ├── 012_dynamic_categories.sql       — Dynamic category support
-└── 013_drop_categories_image_url.sql — Drop image_url from categories
+├── 013_drop_categories_image_url.sql — Drop image_url from categories
+├── 014_addresses_schema.sql         — addresses table + RLS
+├── 015_payment_cards_schema.sql     — payment_cards table + RLS
+├── 016_create_password_reset_codes.sql — password_reset_codes table + cleanup function
+└── 017_otp_security_hardening.sql   — Rate limiting columns for OTP security
+```
+
+### Edge Functions
+
+```
+supabase/functions/
+├── send-reset-code/
+│   └── index.ts                     — Sends 6-digit OTP via Resend API
+└── reset-password/
+    └── index.ts                     — Verifies OTP and resets password via admin API
 ```
 
 ---
@@ -219,15 +288,27 @@ supabase/migrations/
 | `ordersMigrationServiceProvider` | Provider | `data/providers/orders_provider.dart` |
 | `ordersProvider` | StateNotifierProvider | `data/providers/orders_provider.dart` |
 | `ordersCountProvider` | Provider | `data/providers/orders_provider.dart` |
+| `addressRepositoryProvider` | Provider | `data/providers/address_provider.dart` |
 | `addressProvider` | StateNotifierProvider | `data/providers/address_provider.dart` |
+| `defaultAddressProvider` | Provider | `data/providers/address_provider.dart` |
+| `addressCountProvider` | Provider | `data/providers/address_provider.dart` |
+| `paymentCardRepositoryProvider` | Provider | `data/providers/payment_card_provider.dart` |
 | `paymentCardProvider` | StateNotifierProvider | `data/providers/payment_card_provider.dart` |
+| `defaultPaymentCardProvider` | Provider | `data/providers/payment_card_provider.dart` |
+| `paymentCardCountProvider` | Provider | `data/providers/payment_card_provider.dart` |
 | `searchProvider` | StateNotifierProvider | `data/providers/search_provider.dart` |
 | `homeContentProvider` | FutureProvider | `data/providers/home_content_provider.dart` |
 | `themeProvider` | StateNotifierProvider | `core/theme/theme_provider.dart` |
+| `authRepositoryProvider` | Provider | `features/auth/presentation/providers/auth_providers.dart` |
 
 ### Auth-Aware Provider Invalidation
 
-All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`) watch `currentUserIdProvider` to auto-invalidate when the user changes. This prevents cross-account data leakage.
+All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`, `addressProvider`, `paymentCardProvider`) watch `currentUserIdProvider` to auto-invalidate when the user changes. This prevents cross-account data leakage.
+
+**Defense in depth (3 layers):**
+1. **Application layer:** Explicit `user_id` filters in all Supabase queries
+2. **Database layer:** RLS policies enforce `auth.uid() = user_id`
+3. **Lifecycle layer:** `mounted` checks prevent state updates after disposal
 
 ---
 
@@ -261,7 +342,7 @@ All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`)
 | You | `ProfilePage` | Wishlist count |
 
 ### Named Routes (22)
-`/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`
+`/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`, `/forgot-password`, `/verify-reset-code`, `/reset-password`
 
 ---
 

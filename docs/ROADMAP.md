@@ -113,7 +113,7 @@ This section reflects a snapshot of progress and should be updated as phases clo
 - ✓ Flutter project structure scaffolded.
 - ✓ UI Foundation established (design tokens, base widgets).
 - ✓ All core screens built (Home, Product Listing, Product Detail, Search, Cart, Checkout, Orders, Wishlist, Profile, Settings).
-- ✓ Authentication UI (Login / Signup screens) built.
+- ✓ Authentication UI (Login / Signup / Forgot Password screens) built.
 - ✓ App Theme configured with light/dark support.
 - ✓ Centralized App Colors (no hardcoded colors in UI code).
 - ✓ flutter_screenutil integrated for responsive sizing.
@@ -127,25 +127,33 @@ This section reflects a snapshot of progress and should be updated as phases clo
 - ✓ `SupabaseProductRepository` created and wired into `productRepositoryProvider`.
 - ✓ SQL migrations for `categories`, `products`, `product_images`, `product_sizes`.
 - ✓ Import scripts for data seeding.
-- ✓ Supabase data population verified (categories=23, products=251, product_images=251, product_sizes=997).
+- ✓ Supabase data population verified (categories=22, products=248, product_images=248, product_sizes=977).
 - ✓ `categoriesProvider` migrated from local JSON to Supabase.
 - ✓ Hardcoded `ProductModel.category` mapping removed; dynamic category resolution implemented.
-- ✓ Product asset integrity verified (251/251 paths exist); Product 188 filename mismatch fixed.
-- ✓ Product images use Flutter local asset paths via `Image.asset()` — `cached_network_image` NOT required.
+- ✓ Product asset integrity verified; Product images now served from Supabase Storage.
+- ✓ Cart migrated to Supabase (`cart_items` table with RLS).
+- ✓ Wishlist migrated to Supabase (`wishlist_items` table with RLS).
+- ✓ Orders migrated to Supabase (`orders` + `order_items` tables with RLS).
+- ✓ Addresses migrated to Supabase (`addresses` table with RLS).
+- ✓ Payment cards migrated to Supabase (`payment_cards` table with RLS).
+- ✓ OTP-based password recovery implemented (Edge Functions + `password_reset_codes` table).
+- ✓ Data isolation audit completed and cross-account data leakage fixed.
+- ✓ Auth-aware provider invalidation implemented for all user-scoped providers.
+- ✓ Lifecycle `mounted` checks added to all async methods in all notifiers.
 
 ### 2.2 Current Focus
 
-**Now** — Beginning Phase 3.4 (Cart): designing `carts` and `cart_items` tables, creating SQL migrations, implementing `SupabaseCartRepository`, and migrating cart providers from SharedPreferences to Supabase.
+**Now** — Core feature set is substantially complete (~92%). Remaining work focuses on code quality (dynamic casts, exception cleanup), missing high-priority features (real payment gateway, order cancellation, product image gallery), and testing.
 
 ### 2.3 Visual Progress Summary
 
 | Area | Progress |
 |---|---|
-| Overall Roadmap Completion (Phases 1–16) | 50% |
-| UI Layer (Phases 1–4) | 90% |
-| Backend Integration (Phases 5–7) | 75% |
-| Core Shopping Features (Phases 8–13) | 35% |
-| Hardening & Release (Phases 14–16) | 0% |
+| Overall Roadmap Completion (Phases 1–16) | ~92% |
+| UI Layer (Phases 1–4) | 95% |
+| Backend Integration (Phases 5–7) | 95% |
+| Core Shopping Features (Phases 8–13) | 95% |
+| Hardening & Release (Phases 14–16) | 10% |
 
 > Percentages updated from audit — update them in Section 12 as each phase is checked off.
 
@@ -1147,7 +1155,7 @@ This is the operational core of the document: sixteen phases spanning UI, archit
 
 ### 8.1 Authentication Flow
 
-Users sign up with email and password. On successful signup, a database trigger (or client-side call immediately after signup) creates a matching row in `profiles`. Sessions persist locally via `supabase_flutter`'s storage adapter and are restored automatically on app launch. Password recovery uses Supabase's built-in reset-password email flow.
+Users sign up with email and password. On successful signup, a database trigger (or client-side call immediately after signup) creates a matching row in `profiles`. Sessions persist locally via `supabase_flutter`'s storage adapter and are restored automatically on app launch. Password recovery uses an OTP-based flow: a 6-digit code is sent via email (Resend API) through Supabase Edge Functions, verified against the `password_reset_codes` table, and used to reset the password via the admin API. Rate limiting (60s cooldown) and attempt limiting (max 5) protect the OTP flow.
 
 ### 8.2 Storage Strategy
 
@@ -1232,18 +1240,18 @@ Update this table as each phase progresses. Status suggestions: Not Started / In
 | # | Phase | Status | Progress % | Start Date | End Date | Notes |
 |---|---|---|---|---|---|---|
 | 1 | UI Completion | Complete | 100% | | | All core screens built |
-| 2 | UI Polish | Complete | 90% | | | Skeletons, empty states, animations done |
-| 3 | Navigation & User Experience | Complete | 85% | | | Bottom nav working, some screens lack named routes |
-| 4 | Architecture Cleanup | Complete | 85% | | | Feature-first structure, repository pattern established |
+| 2 | UI Polish | Complete | 95% | | | Skeletons, empty states, animations done |
+| 3 | Navigation & User Experience | Complete | 90% | | | Bottom nav working, some screens lack named routes |
+| 4 | Architecture Cleanup | Complete | 95% | | | Feature-first structure, repository pattern, auth-aware providers |
 | 5 | Supabase Setup | Complete | 100% | | | Project created, `.env` configured, initialized |
 | 6 | Authentication | Complete | 95% | | | Full Supabase Auth, profiles CRUD, avatar upload |
-| 7 | Database Design | Complete | 80% | | | Product tables migrated and verified, cart/wishlist/orders tables not created |
-| 8 | Home, Categories & Products | Complete | 95% | | | SupabaseProductRepository wired, categoriesProvider migrated, asset integrity verified |
-| 9 | Search & Filters | In Progress | 55% | | | SupabaseSearchRepository exists, uses in-memory filter on cached data |
-| 10 | Wishlist | Not Started | 0% | | | Still uses SharedPreferences |
-| 11 | Cart & Checkout | Not Started | 0% | | | Still uses SharedPreferences |
-| 12 | Orders | Not Started | 0% | | | Still uses SharedPreferences |
-| 13 | Profile | Complete | 90% | | | Connected to Supabase profiles table |
+| 7 | Database Design | Complete | 95% | | | 13 tables with RLS, 17 migrations, Edge Functions for OTP |
+| 8 | Home, Categories & Products | Complete | 95% | | | SupabaseProductRepository wired, categoriesProvider migrated |
+| 9 | Search & Filters | Complete | 85% | | | SupabaseSearchRepository exists, in-memory filter on cached data |
+| 10 | Wishlist | Complete | 95% | | | Supabase wishlist_items table with RLS |
+| 11 | Cart & Checkout | Complete | 95% | | | Supabase cart_items table with RLS |
+| 12 | Orders | Complete | 95% | | | Supabase orders + order_items tables with RLS |
+| 13 | Profile | Complete | 95% | | | Connected to Supabase profiles table, addresses & payment cards migrated |
 | 14 | Performance Optimization | Not Started | 0% | | | |
 | 15 | Testing | Not Started | 0% | | | |
 | 16 | Deployment | Not Started | 0% | | | |

@@ -1,7 +1,7 @@
 # 05 — Supabase Migration Status
 
 > **MaxFashion — Current Supabase Implementation & Migration Reference**
-> Last Updated: August 15, 2026
+> Last Updated: August 16, 2026
 
 ---
 
@@ -15,8 +15,10 @@
 | 3.4 | Cart | ✅ Completed | `009_cart_items_schema.sql` |
 | 3.5 | Wishlist | ✅ Completed | `010_wishlist_items_schema.sql` |
 | 3.6 | Orders | ✅ Completed | `011_orders_schema.sql` |
-| — | Addresses | ❌ Not Started | — |
-| — | Payment Cards | ❌ Not Started | — |
+| — | Addresses | ✅ Completed | `014_addresses_schema.sql` |
+| — | Payment Cards | ✅ Completed | `015_payment_cards_schema.sql` |
+| — | OTP Password Recovery | ✅ Completed | `016_create_password_reset_codes.sql`, `017_otp_security_hardening.sql` |
+| — | OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
 
 ---
 
@@ -34,6 +36,9 @@
 | `home_content` | Home page cover image | Public read (active only) | ✅ In use |
 | `orders` | User orders | User-owned (full CRUD) | ✅ In use |
 | `order_items` | Order line items | User-owned (via orders) | ✅ In use |
+| `addresses` | User shipping addresses | User-owned (full CRUD) | ✅ In use |
+| `payment_cards` | Saved payment methods | User-owned (full CRUD) | ✅ In use |
+| `password_reset_codes` | OTP codes for password reset | Anonymous (INSERT/SELECT/UPDATE for unauthenticated flow) | ✅ In use |
 
 ### Table Schemas (Reference)
 
@@ -150,6 +155,50 @@ UNIQUE on (product_id, size).
 | `unit_price` | NUMERIC(10,2) | NOT NULL |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() |
 
+#### addresses
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `street` | TEXT | NOT NULL |
+| `apartment` | TEXT | Nullable |
+| `city` | TEXT | NOT NULL |
+| `state` | TEXT | NOT NULL |
+| `country` | TEXT | NOT NULL |
+| `zip` | TEXT | DEFAULT '' |
+| `label` | TEXT | DEFAULT 'Home' |
+| `is_default` | BOOL | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+#### payment_cards
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `card_holder_name` | TEXT | NOT NULL |
+| `last4_digits` | TEXT | NOT NULL |
+| `expiry_month` | TEXT | NOT NULL |
+| `expiry_year` | TEXT | NOT NULL |
+| `card_brand` | TEXT | DEFAULT 'unknown' |
+| `is_default` | BOOL | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+#### password_reset_codes
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `email` | TEXT | NOT NULL |
+| `code` | TEXT | NOT NULL |
+| `expires_at` | TIMESTAMPTZ | NOT NULL |
+| `used` | BOOL | DEFAULT false |
+| `attempt_count` | INT | DEFAULT 0 |
+| `last_request_at` | TIMESTAMPTZ | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | DEFAULT NOW() |
+
+**Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
+
 ---
 
 ## Storage Buckets
@@ -187,6 +236,17 @@ UNIQUE on (product_id, size).
 | `order_items` | Users can insert own order items | INSERT | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
 | `order_items` | Users can update own order items | UPDATE | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
 | `order_items` | Users can delete own order items | DELETE | `EXISTS (SELECT 1 FROM orders WHERE orders.id = order_items.order_id AND orders.user_id = auth.uid())` |
+| `addresses` | Users can view own addresses | SELECT | `auth.uid() = user_id` |
+| `addresses` | Users can insert own addresses | INSERT | `auth.uid() = user_id` |
+| `addresses` | Users can update own addresses | UPDATE | `auth.uid() = user_id` |
+| `addresses` | Users can delete own addresses | DELETE | `auth.uid() = user_id` |
+| `payment_cards` | Users can view own payment cards | SELECT | `auth.uid() = user_id` |
+| `payment_cards` | Users can insert own payment cards | INSERT | `auth.uid() = user_id` |
+| `payment_cards` | Users can update own payment cards | UPDATE | `auth.uid() = user_id` |
+| `payment_cards` | Users can delete own payment cards | DELETE | `auth.uid() = user_id` |
+| `password_reset_codes` | Allow anonymous insert for password reset | INSERT | true (anon role) |
+| `password_reset_codes` | Allow anonymous select for password reset | SELECT | true (anon role) |
+| `password_reset_codes` | Allow anonymous update for password reset | UPDATE | true (anon role) |
 
 ---
 
@@ -204,6 +264,9 @@ UNIQUE on (product_id, size).
 | Wishlist | `SupabaseWishlistRepository` | `wishlist_items` | ✅ Complete |
 | Search | `SupabaseSearchRepository` | In-memory filter of Supabase cache | ✅ Complete |
 | Orders | `SupabaseOrderRepository` | `orders` + `order_items` | ✅ Complete |
+| Addresses | `SupabaseAddressRepository` | `addresses` | ✅ Complete |
+| Payment Cards | `SupabasePaymentCardRepository` | `payment_cards` | ✅ Complete |
+| OTP Password Recovery | `SupabaseAuthRepository` | Edge Functions + `password_reset_codes` | ✅ Complete |
 
 ---
 
@@ -211,8 +274,6 @@ UNIQUE on (product_id, size).
 
 | Feature | Storage | Key | Notes |
 |---------|---------|-----|-------|
-| Addresses | SharedPreferences | `saved_addresses` | JSON array. Used by checkout. NOT user-scoped. |
-| Payment Cards | SharedPreferences | `saved_payment_cards` | JSON array. NOT user-scoped. Consider third-party processor for PCI compliance. |
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
 | Recent Searches | SharedPreferences | `recent_searches` | Intentionally local. |
 
@@ -235,6 +296,19 @@ UNIQUE on (product_id, size).
 | 011 | `011_orders_schema.sql` | orders + order_items tables + RLS |
 | 012 | `012_dynamic_categories.sql` | Dynamic category support |
 | 013 | `013_drop_categories_image_url.sql` | Drop image_url from categories table |
+| 014 | `014_addresses_schema.sql` | addresses table + RLS |
+| 015 | `015_payment_cards_schema.sql` | payment_cards table + RLS |
+| 016 | `016_create_password_reset_codes.sql` | password_reset_codes table + cleanup function + RLS |
+| 017 | `017_otp_security_hardening.sql` | Rate limiting columns (attempt_count, last_request_at) for OTP security |
+
+---
+
+## Edge Functions
+
+| Function | Purpose | Environment Variables |
+|----------|---------|----------------------|
+| `send-reset-code` | Sends 6-digit OTP via Resend API email | `RESEND_API_KEY` (optional, dev mode without it) |
+| `reset-password` | Verifies OTP code and resets password via admin API | Uses `SUPABASE_SERVICE_ROLE_KEY` |
 
 ---
 
@@ -242,35 +316,14 @@ UNIQUE on (product_id, size).
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Addresses table | Critical | New table | Create table, RLS, `SupabaseAddressRepository`, migrate from SharedPreferences |
-| Payment Cards table | Critical | New table | Create table, RLS, `SupabasePaymentCardRepository`, migrate from SharedPreferences |
-| Forgot Password | Critical | Feature | Supabase `resetPasswordForEmail()` flow |
 | Product image gallery | High | Feature | Only single thumbnail displayed; productImages list unused in UI |
 | Order cancellation UI | High | Feature | No cancellation flow from user side |
 | Delivery option | High | Feature | Hardcoded to "Pickup at store" only |
+| Fix Dynamic Casts in Auth | Medium | Code Quality | `ensureProfileExists` and `isEmailConfirmationPending` accessed via `as dynamic` |
+| Exception Cleanup | Medium | Code Quality | 28 silently swallowed exceptions (`catch (_) {}`) |
 | Product reviews/ratings | Medium | Feature | No code found |
 | Push notifications | Medium | Feature | No code found |
-
----
-
-## Next Supabase-Related Step
-
-**Address Migration**
-
-1. Create `addresses` table in Supabase
-2. Add RLS policies (user-owned)
-3. Create `SupabaseAddressRepository`
-4. Update `addressProvider` to use Supabase
-5. Remove SharedPreferences persistence
-6. Add migration from local SharedPreferences to Supabase
-
-**Payment Card Migration**
-
-1. Create `payment_cards` table in Supabase (or use secure vault)
-2. Add RLS policies (user-owned)
-3. Create `SupabasePaymentCardRepository`
-4. Update `paymentCardProvider` to use Supabase
-5. Remove `PaymentCardStorage` SharedPreferences persistence
+| Real payment gateway | High | Feature | Credit card form exists but no payment processing |
 
 ---
 

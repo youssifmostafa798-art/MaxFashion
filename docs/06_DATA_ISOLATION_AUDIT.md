@@ -1,9 +1,9 @@
 # 06 - Data Isolation Audit
 
 > **Date:** 2026-08-12
-> **Last Updated:** 2026-08-12 (Lifecycle race condition fix)
+> **Last Updated:** 2026-08-16 (Address & Payment Card migration to Supabase)
 > **Severity:** Critical (P0) - Cross-account data leakage
-> **Scope:** Orders, Wishlist, Cart (post Phase 3.5/3.6 migration)
+> **Scope:** Orders, Wishlist, Cart, Addresses, Payment Cards
 
 ---
 
@@ -72,6 +72,28 @@
 | UPDATE policy | PASS | `USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id)` |
 | DELETE policy | PASS | `USING (auth.uid() = user_id)` |
 
+### 2.5 Addresses Table (`014_addresses_schema.sql`)
+
+| Check | Status | Details |
+|-------|--------|---------|
+| `user_id` column exists | PASS | `user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE` |
+| RLS enabled | PASS | `ALTER TABLE addresses ENABLE ROW LEVEL SECURITY` |
+| SELECT policy | PASS | `USING (auth.uid() = user_id)` |
+| INSERT policy | PASS | `WITH CHECK (auth.uid() = user_id)` |
+| UPDATE policy | PASS | `USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id)` |
+| DELETE policy | PASS | `USING (auth.uid() = user_id)` |
+
+### 2.6 Payment Cards Table (`015_payment_cards_schema.sql`)
+
+| Check | Status | Details |
+|-------|--------|---------|
+| `user_id` column exists | PASS | `user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE` |
+| RLS enabled | PASS | `ALTER TABLE payment_cards ENABLE ROW LEVEL SECURITY` |
+| SELECT policy | PASS | `USING (auth.uid() = user_id)` |
+| INSERT policy | PASS | `WITH CHECK (auth.uid() = user_id)` |
+| UPDATE policy | PASS | `USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id)` |
+| DELETE policy | PASS | `USING (auth.uid() = user_id)` |
+
 **Database Verdict:** All table schemas, foreign keys, and RLS policies are correctly implemented. The database layer provides proper data isolation.
 
 ---
@@ -107,6 +129,25 @@
 | `clearCart()` | `.eq('user_id', userId)` | PASS | Deletes only user's cart items |
 | `_findExistingItem()` | `.eq('user_id', userId)` | PASS | Filters by authenticated user |
 
+### 3.4 SupabaseAddressRepository
+
+| Method | User Filter | Status | Notes |
+|--------|-------------|--------|-------|
+| `loadAddresses()` | `.eq('user_id', userId)` | PASS | Filters by authenticated user |
+| `addAddress()` | `'user_id': userId` in insert | PASS | Stores authenticated user's ID |
+| `updateAddress()` | `.eq('id', addressId).eq('user_id', userId)` | PASS | Double filter: id + user_id |
+| `deleteAddress()` | `.eq('id', addressId).eq('user_id', userId)` | PASS | Double filter: id + user_id |
+| `setDefault()` | `.eq('user_id', userId)` | PASS | Updates within user scope |
+
+### 3.5 SupabasePaymentCardRepository
+
+| Method | User Filter | Status | Notes |
+|--------|-------------|--------|-------|
+| `loadCards()` | `.eq('user_id', userId)` | PASS | Filters by authenticated user |
+| `addCard()` | `'user_id': userId` in insert | PASS | Stores authenticated user's ID |
+| `deleteCard()` | `.eq('id', cardId).eq('user_id', userId)` | PASS | Double filter: id + user_id |
+| `setDefault()` | `.eq('user_id', userId)` | PASS | Updates within user scope |
+
 **Repository Verdict:** All Supabase repositories correctly use `auth.uid()` for data isolation. The `loadCart()` method was the only one missing an explicit user_id filter (defense in depth).
 
 ---
@@ -121,10 +162,14 @@ App Launch
   -> User A logs in
   -> ordersProvider created, _migrateAndLoad() runs, loads User A's orders
   -> wishlistProvider created, _load() runs, loads User A's wishlist
+  -> addressProvider created, _load() runs, loads User A's addresses
+  -> paymentCardProvider created, _load() runs, loads User A's cards
   -> User A logs out (authStateProvider resets, but data providers persist!)
   -> User B logs in
   -> ordersProvider STILL holds User A's orders in memory (BUG!)
   -> wishlistProvider STILL holds User A's wishlist in memory (BUG!)
+  -> addressProvider STILL holds User A's addresses in memory (BUG!)
+  -> paymentCardProvider STILL holds User A's cards in memory (BUG!)
 ```
 
 ### 4.2 Provider Changes Applied
@@ -134,6 +179,8 @@ App Launch
 | `ordersProvider` | Independent | Watches `currentUserIdProvider` | Auto-invalidates on auth change |
 | `wishlistProvider` | Independent | Watches `currentUserIdProvider` | Auto-invalidates on auth change |
 | `cartProvider` | Independent | Watches `currentUserIdProvider` | Auto-invalidates on auth change |
+| `addressProvider` | Independent | Watches `currentUserIdProvider` | Auto-invalidates on auth change |
+| `paymentCardProvider` | Independent | Watches `currentUserIdProvider` | Auto-invalidates on auth change |
 
 **New Provider Added:**
 ```dart
@@ -147,7 +194,7 @@ This provider derives the current user's ID from auth state. When the user logs 
 ### 4.3 How the Fix Works
 
 1. `currentUserIdProvider` watches `authStateProvider` and exposes `user?.id`
-2. `ordersProvider`, `wishlistProvider`, and `cartProvider` all `ref.watch(currentUserIdProvider)`
+2. `ordersProvider`, `wishlistProvider`, `cartProvider`, `addressProvider`, and `paymentCardProvider` all `ref.watch(currentUserIdProvider)`
 3. When auth state changes (logout/login), `currentUserIdProvider` emits a new value
 4. Riverpod detects the dependency change and **invalidates** the data providers
 5. The data providers are **recreated**, calling their constructors
@@ -181,10 +228,10 @@ This provider derives the current user's ID from auth state. When the user logs 
 |---------|-----|-------------|--------|-------|
 | SharedPreferences | `orders` | No | KNOWN DEBT | Legacy local orders (pre-migration) |
 | SharedPreferences | `orders_migrated_to_supabase_*` | Yes (after fix) | FIXED | Per-user migration flag |
-| SharedPreferences | `saved_payment_cards` | No | KNOWN DEBT | Not yet migrated to Supabase |
-| SharedPreferences | `saved_addresses` | No | KNOWN DEBT | Not yet migrated to Supabase |
-| SharedPreferences | `search_history` | No | LOW RISK | Non-sensitive, cosmetic only |
+| SharedPreferences | `recent_searches` | No | LOW RISK | Non-sensitive, cosmetic only |
 | SharedPreferences | `theme_mode` | No | OK | App-wide preference, not user data |
+
+**Note:** `saved_addresses` and `saved_payment_cards` SharedPreferences keys are no longer used — both features have been migrated to Supabase with user-scoped RLS policies.
 
 ---
 
@@ -238,12 +285,6 @@ This provider derives the current user's ID from auth state. When the user logs 
 | `updateOrderStatus()` | 1 (`updateOrderStatus()`) | After await + catch | **FIXED** |
 | `getOrderById()` | 0 (synchronous) | N/A | OK |
 
-**Protected Code Paths:**
-- Constructor calls `_migrateAndLoad()` → async chain protected
-- Auth change during migration → `mounted` check prevents crash
-- Auth change during addOrder → `mounted` check prevents crash
-- Auth change during updateOrderStatus → `mounted` check prevents crash
-
 ### 8.2 WishlistNotifier - Race Condition Analysis
 
 | Method | Await Points | Mounted Check | Status |
@@ -253,12 +294,6 @@ This provider derives the current user's ID from auth state. When the user logs 
 | `remove()` | 0 (fire-and-forget) | N/A | **FIXED** (added `.catchError`) |
 | `toggle()` | 0 (delegates) | N/A | OK |
 | `isWishlisted()` | 0 (synchronous) | N/A | OK |
-
-**Protected Code Paths:**
-- Constructor calls `_load()` → async chain protected
-- Auth change during load → `mounted` check prevents crash
-- Fire-and-forget `addToWishlist()` → `.catchError` prevents unhandled exceptions
-- Fire-and-forget `removeFromWishlist()` → `.catchError` prevents unhandled exceptions
 
 ### 8.3 CartNotifier - Race Condition Analysis
 
@@ -271,12 +306,26 @@ This provider derives the current user's ID from auth state. When the user logs 
 | `decrementQuantity()` | 1 (`updateQuantity()`) | After await + catch | **FIXED** |
 | `clear()` | 1 (`clearCart()`) | After await + catch | **FIXED** |
 
-**Protected Code Paths:**
-- Constructor calls `_loadCart()` → async chain protected
-- Auth change during any cart operation → `mounted` check prevents crash
-- All 6 async methods protected with dual `mounted` checks (before initial state update + after each await)
+### 8.4 AddressNotifier - Race Condition Analysis
 
-### 8.4 Mounted Check Pattern Applied
+| Method | Await Points | Mounted Check | Status |
+|--------|-------------|---------------|--------|
+| `_load()` | 1 (`loadAddresses()`) | After await + catch | **FIXED** |
+| `add()` | 1 (`addAddress()`) | After await + catch | **FIXED** |
+| `update()` | 1 (`updateAddress()`) | After await + catch | **FIXED** |
+| `remove()` | 2 (`deleteAddress()`, `setDefault()`) | After each await + catch | **FIXED** |
+| `setDefault()` | 1 (`setDefault()`) | After await + catch | **FIXED** |
+
+### 8.5 PaymentCardNotifier - Race Condition Analysis
+
+| Method | Await Points | Mounted Check | Status |
+|--------|-------------|---------------|--------|
+| `_load()` | 1 (`loadCards()`) | After await + catch | **FIXED** |
+| `add()` | 1 (`addCard()`) | After await + catch | **FIXED** |
+| `remove()` | 2 (`deleteCard()`, `setDefault()`) | After each await + catch | **FIXED** |
+| `setDefault()` | 1 (`setDefault()`) | After await + catch | **FIXED** |
+
+### 8.6 Mounted Check Pattern Applied
 
 ```dart
 // Pattern 1: Constructor-called async method
@@ -366,6 +415,16 @@ void remove(String id) {
 - **Expected:** Cart operation completes or fails gracefully, new user sees empty cart
 - **Status:** PROTECTED by `mounted` checks in all cart methods
 
+### Scenario 11: Address operations during account switch
+- **Trigger:** Add/edit address, quickly switch accounts
+- **Expected:** Address operation completes or fails gracefully, new user sees their own addresses
+- **Status:** PROTECTED by `mounted` checks in all address methods
+
+### Scenario 12: Payment card operations during account switch
+- **Trigger:** Add/delete card, quickly switch accounts
+- **Expected:** Card operation completes or fails gracefully, new user sees their own cards
+- **Status:** PROTECTED by `mounted` checks in all payment card methods
+
 ---
 
 ## 10. Every Applied Fix
@@ -418,18 +477,26 @@ void remove(String id) {
   - `decrementQuantity()`: 2 mounted checks (before initial update + after await) + 1 in catch
   - `clear()`: 2 mounted checks (before initial update + after await) + 1 in catch
 
+### Fix 10: `lib/data/providers/address_provider.dart` (Auth-Aware + Lifecycle Protection)
+- **Added** `import 'package:max/data/providers/auth_provider.dart'`
+- **Added** `ref.watch(currentUserIdProvider)` in `addressProvider`
+- **Added** `if (!mounted) return;` checks in all async methods (`_load`, `add`, `update`, `remove`, `setDefault`)
+
+### Fix 11: `lib/data/providers/payment_card_provider.dart` (Auth-Aware + Lifecycle Protection)
+- **Added** `import 'package:max/data/providers/auth_provider.dart'`
+- **Added** `ref.watch(currentUserIdProvider)` in `paymentCardProvider`
+- **Added** `if (!mounted) return;` checks in all async methods (`_load`, `add`, `remove`, `setDefault`)
+
+### Fix 12: Migration to Supabase (Addresses & Payment Cards)
+- **Addresses:** `SupabaseAddressRepository` replaced SharedPreferences persistence. `addresses` table with RLS created via migration 014.
+- **Payment Cards:** `SupabasePaymentCardRepository` replaced `PaymentCardStorage` (SharedPreferences). `payment_cards` table with RLS created via migration 015. `PaymentCardStorage` deleted.
+
 ---
 
 ## 11. Remaining Technical Debt
 
 | Issue | Severity | Description | Recommended Fix |
 |-------|----------|-------------|-----------------|
-| Payment cards not user-scoped | HIGH | `PaymentCardStorage` uses global SharedPreferences key `saved_payment_cards`. All accounts on a device share cards. | Migrate payment cards to Supabase with `user_id` column and RLS. |
-| Addresses not user-scoped | HIGH | `AddressNotifier` uses global SharedPreferences key `saved_addresses`. All accounts on a device share addresses. | Migrate addresses to Supabase with `user_id` column and RLS. |
-| Address provider not auth-aware | MEDIUM | `addressProvider` is a `StateNotifierProvider` that persists across auth changes (same pattern as BUG-1). | Add `ref.watch(currentUserIdProvider)` to `addressProvider`. |
-| Payment card provider not auth-aware | MEDIUM | `paymentCardProvider` persists across auth changes. | Add `ref.watch(currentUserIdProvider)` to `paymentCardProvider`. |
-| Address provider no lifecycle protection | MEDIUM | `AddressNotifier` has async `_load()` without `mounted` checks. | Add `mounted` checks like CartNotifier. |
-| Payment card provider no lifecycle protection | MEDIUM | `PaymentCardNotifier` has async `_load()` without `mounted` checks. | Add `mounted` checks like CartNotifier. |
 | Search history not user-scoped | LOW | `SharedPreferences` key `search_history` is global. | Low priority - non-sensitive cosmetic data. |
 | No `deleteOrder` in repository | LOW | Orders cannot be deleted by the user. May be intentional (admin-only). | Consider adding if user-initiated cancellation is needed. |
 
@@ -441,20 +508,24 @@ To verify the fixes are working:
 
 1. **Fresh install** or clear app data
 2. **Sign in as User A** (or create Account A)
-3. Add items to wishlist, place an order, add items to cart
-4. **Navigate to Orders/Wishlist/Cart** and confirm data appears
+3. Add items to wishlist, place an order, add items to cart, add addresses, add payment cards
+4. **Navigate to Orders/Wishlist/Cart/Addresses/PaymentMethods** and confirm data appears
 5. **Log out** via Settings
 6. **Sign in as User B** (new account)
 7. **Navigate to Orders** - should be empty
 8. **Navigate to Wishlist** - should be empty
 9. **Navigate to Cart** - should be empty
-10. **Log out**, **log back in as User A** - confirm User A's data is still intact
+10. **Navigate to Addresses** - should be empty
+11. **Navigate to Payment Methods** - should be empty
+12. **Log out**, **log back in as User A** - confirm User A's data is still intact
 
 **Lifecycle Verification:**
-11. **Open Orders page** (triggers async load), **immediately log out** - verify no crash
-12. **Open Cart page** (triggers async load), **immediately log out** - verify no crash
-13. **Rapid login/logout** 5+ times - verify no crashes or state corruption
-14. **Place an order**, **immediately log out** during network request - verify no crash
+13. **Open Orders page** (triggers async load), **immediately log out** - verify no crash
+14. **Open Cart page** (triggers async load), **immediately log out** - verify no crash
+15. **Open Addresses page** (triggers async load), **immediately log out** - verify no crash
+16. **Open Payment Methods page** (triggers async load), **immediately log out** - verify no crash
+17. **Rapid login/logout** 5+ times - verify no crashes or state corruption
+18. **Place an order**, **immediately log out** during network request - verify no crash
 
 ---
 
@@ -489,12 +560,28 @@ currentUserIdProvider (emits new userId or null)
         |         _load() runs with mounted checks
         |
         +-----> cartProvider (invalidated -> disposed -> recreated)
+        |              |
+        |              v
+        |         CartNotifier (new instance)
+        |              |
+        |              v
+        |         _loadCart() runs with mounted checks
+        |
+        +-----> addressProvider (invalidated -> disposed -> recreated)
+        |              |
+        |              v
+        |         AddressNotifier (new instance)
+        |              |
+        |              v
+        |         _load() runs with mounted checks
+        |
+        +-----> paymentCardProvider (invalidated -> disposed -> recreated)
                        |
                        v
-                  CartNotifier (new instance)
+                  PaymentCardNotifier (new instance)
                        |
                        v
-                  _loadCart() runs with mounted checks
+                  _load() runs with mounted checks
 ```
 
 **Defense in depth (3 layers):**

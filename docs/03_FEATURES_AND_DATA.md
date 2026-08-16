@@ -1,7 +1,7 @@
 # 03 — Features & Data
 
 > **MaxFashion — Feature-by-Feature Status & Data Architecture**
-> Last Updated: August 15, 2026
+> Last Updated: August 16, 2026
 
 ---
 
@@ -19,17 +19,17 @@
 | Product Listing | ✅ Complete | Supabase | Supabase |
 | Product Details | ✅ Complete | Supabase | Supabase |
 | Cart | ✅ Complete | Supabase cart_items | Supabase |
-| Checkout | ✅ Complete | Mixed | Mixed |
+| Checkout | ✅ Complete | Supabase (cart, orders, order_items) | Supabase |
 | Search | ✅ Complete | In-memory (Supabase cache) | SharedPreferences (recent) |
 | Menu / Categories | ✅ Complete | Supabase | Supabase |
 | Settings | ✅ Complete | None | SharedPreferences |
 | Dark/Light Theme | ✅ Complete | None | SharedPreferences |
 | Wishlist | ✅ Complete | Supabase wishlist_items | Supabase |
 | Orders | ✅ Complete | Supabase orders + order_items | Supabase |
-| Addresses | ✅ Complete | None | SharedPreferences |
-| Payment Cards | ✅ Complete | None | SharedPreferences |
+| Addresses | ✅ Complete | Supabase addresses | Supabase |
+| Payment Cards | ✅ Complete | Supabase payment_cards | Supabase |
+| OTP Password Recovery | ✅ Complete | Supabase Edge Functions + password_reset_codes | Supabase |
 | Promo Code | ⚠️ UI Only | None | None |
-| Forgot Password | ❌ Not Implemented | — | — |
 | Product Reviews | ❌ Not Implemented | — | — |
 | Push Notifications | ❌ Not Implemented | — | — |
 | Real Payment Gateway | ❌ Not Implemented | — | — |
@@ -63,6 +63,52 @@
 LoginPage → authStateProvider → AuthNotifier.login()
   → SupabaseAuthRepository.signIn() → Supabase Auth
   → SupabaseAuthRepository.getProfile() → profiles table
+```
+
+---
+
+### OTP Password Recovery
+
+**Status:** ✅ Completed
+**Backend:** Supabase Edge Functions + `password_reset_codes` table
+**Persistence:** Supabase
+
+**Implementation:**
+- 3-page UI flow: ForgotPasswordPage → VerifyResetCodePage → ResetPasswordPage
+- `sendResetCode()` calls `send-reset-code` Edge Function (sends 6-digit OTP via Resend API)
+- `verifyResetCode()` calls `reset-password` Edge Function to verify code
+- `resetPasswordWithCode()` calls `reset-password` Edge Function to update password
+- `password_reset_codes` table stores OTP codes with expiry, attempt limiting, and rate limiting
+- Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
+- Dev mode: If no RESEND_API_KEY configured, codes are logged to console
+- `cleanup_expired_codes()` SQL function for automatic cleanup of expired codes
+
+**Key Files:**
+- `lib/features/auth/presentation/pages/forgot_password_page.dart`
+- `lib/features/auth/presentation/pages/verify_reset_code_page.dart`
+- `lib/features/auth/presentation/pages/reset_password_page.dart`
+- `lib/features/auth/data/repositories/supabase_auth_repository.dart` — `sendResetCode()`, `verifyResetCode()`, `resetPasswordWithCode()`
+- `supabase/functions/send-reset-code/index.ts`
+- `supabase/functions/reset-password/index.ts`
+- `supabase/migrations/016_create_password_reset_codes.sql`
+- `supabase/migrations/017_otp_security_hardening.sql`
+
+**Data Flow:**
+```
+ForgotPasswordPage → authStateProvider → AuthNotifier.sendResetCode()
+  → SupabaseAuthRepository.sendResetCode()
+  → Supabase Edge Function 'send-reset-code'
+  → password_reset_codes table + Resend API email
+
+VerifyResetCodePage → authStateProvider → AuthNotifier.verifyResetCode()
+  → SupabaseAuthRepository.verifyResetCode()
+  → Supabase Edge Function 'reset-password'
+  → Verifies code (unused, not expired, attempts < 5)
+
+ResetPasswordPage → authStateProvider → AuthNotifier.resetPasswordWithCode()
+  → SupabaseAuthRepository.resetPasswordWithCode()
+  → Supabase Edge Function 'reset-password'
+  → Updates password via admin API, marks code as used
 ```
 
 ---
@@ -190,6 +236,7 @@ Home → filteredHomeProductsProvider → productRepositoryProvider
 - Empty cart state, checkout navigation
 - Cart badge on bottom navigation bar
 - Total calculation via providers
+- Auth-aware provider (watches `currentUserIdProvider`)
 
 **Key Files:**
 - `lib/data/repositories/cart/supabase_cart_repository.dart`
@@ -248,6 +295,7 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 - Wishlist page with list view, swipe-to-delete, empty state
 - Favorite button on product grid cards and detail pages (animated heart)
 - "Move to Cart" adds item to cart with default size
+- Auth-aware provider (watches `currentUserIdProvider`)
 
 **Key Files:**
 - `lib/data/repositories/wishlist/wishlist_repository.dart` (interface)
@@ -275,6 +323,7 @@ ProductDetailPage → cartProvider → CartNotifier.addItem()
 - Order status enum: processing, shipped, delivered, cancelled
 - Orders count provider for badge display
 - Local SharedPreferences orders migrated via `OrdersMigrationService`
+- Auth-aware provider (watches `currentUserIdProvider`)
 
 **Key Files:**
 - `lib/data/repositories/orders/order_repository.dart` (interface)
@@ -321,44 +370,51 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 
 ### Address Management
 
-**Status:** ✅ Completed (local only)
-**Backend:** None
-**Persistence:** SharedPreferences
+**Status:** ✅ Completed
+**Backend:** Supabase addresses table
+**Persistence:** Supabase
 
 **Implementation:**
+- `SupabaseAddressRepository` — full CRUD (load, add, update, delete, setDefault)
+- `addresses` table with RLS policies (user-owned)
 - Add/Edit/Delete addresses, set default
 - AddressCard with edit/delete/set-default actions
 - Empty addresses state
-- **NOT user-scoped** — addresses stored globally in SharedPreferences, not per-user
+- Default address management with automatic reassignment on delete
+- Auth-aware provider (watches `currentUserIdProvider`)
+- Lifecycle `mounted` checks in all async methods
 
 **Key Files:**
+- `lib/data/repositories/address/address_repository.dart` (interface)
+- `lib/data/repositories/address/supabase_address_repository.dart`
 - `lib/data/providers/address_provider.dart`
 - `lib/features/profile/presentation/pages/addresses_page.dart`
 - `lib/features/checkout/presentation/pages/add_address.dart`
-
-**Remaining:** Migrate to Supabase `addresses` table for cross-device sync and user isolation.
 
 ---
 
 ### Payment Card Management
 
-**Status:** ✅ Completed (local only)
-**Backend:** None
-**Persistence:** SharedPreferences
+**Status:** ✅ Completed
+**Backend:** Supabase payment_cards table
+**Persistence:** Supabase
 
 **Implementation:**
+- `SupabasePaymentCardRepository` — full CRUD (load, add, delete, setDefault)
+- `payment_cards` table with RLS policies (user-owned)
 - Add cards, delete with confirmation, set default
 - Duplicate card detection, card brand auto-detection
 - Credit card form via `flutter_credit_card` widget
-- **NOT user-scoped** — cards stored globally in SharedPreferences, not per-user
+- Default card management with automatic reassignment on delete
+- Auth-aware provider (watches `currentUserIdProvider`)
+- Lifecycle `mounted` checks in all async methods
 
 **Key Files:**
+- `lib/data/repositories/payment_card/payment_card_repository.dart` (interface)
+- `lib/data/repositories/payment_card/supabase_payment_card_repository.dart`
 - `lib/data/providers/payment_card_provider.dart`
-- `lib/data/services/payment_card_storage.dart`
 - `lib/features/profile/presentation/pages/payment_methods_page.dart`
 - `lib/features/checkout/presentation/pages/add_card.dart`
-
-**Remaining:** Consider third-party payment processor for PCI compliance. Migrate to Supabase or secure storage.
 
 ---
 
@@ -516,6 +572,58 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 
 **RLS:** User can only SELECT/INSERT/UPDATE/DELETE order items from their own orders (via orders table).
 **Indexes:** Indexes on order_id and product_id.
+
+#### addresses
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `street` | TEXT | NOT NULL |
+| `apartment` | TEXT | Nullable |
+| `city` | TEXT | NOT NULL |
+| `state` | TEXT | NOT NULL |
+| `country` | TEXT | NOT NULL |
+| `zip` | TEXT | DEFAULT '' |
+| `label` | TEXT | DEFAULT 'Home' |
+| `is_default` | BOOL | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+**RLS:** User can only SELECT/INSERT/UPDATE/DELETE their own addresses.
+**Indexes:** Indexes on user_id and created_at (DESC). Partial index on (user_id, is_default) WHERE is_default.
+
+#### payment_cards
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users(id) ON DELETE CASCADE |
+| `card_holder_name` | TEXT | NOT NULL |
+| `last4_digits` | TEXT | NOT NULL |
+| `expiry_month` | TEXT | NOT NULL |
+| `expiry_year` | TEXT | NOT NULL |
+| `card_brand` | TEXT | DEFAULT 'unknown' |
+| `is_default` | BOOL | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+**RLS:** User can only SELECT/INSERT/UPDATE/DELETE their own payment cards.
+**Indexes:** Indexes on user_id and created_at (DESC). Partial index on (user_id, is_default) WHERE is_default.
+
+#### password_reset_codes
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | UUID | PK |
+| `email` | TEXT | NOT NULL |
+| `code` | TEXT | NOT NULL |
+| `expires_at` | TIMESTAMPTZ | NOT NULL |
+| `used` | BOOL | DEFAULT false |
+| `attempt_count` | INT | DEFAULT 0 |
+| `last_request_at` | TIMESTAMPTZ | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | DEFAULT NOW() |
+
+**RLS:** Anonymous INSERT/SELECT/UPDATE for unauthenticated password reset flow.
+**Indexes:** Partial index on (email, used) WHERE used = FALSE.
+**Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 
 ### Storage Policies
 
