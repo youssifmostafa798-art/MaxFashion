@@ -5,7 +5,7 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/core/utils/haptic_utils.dart';
-import 'package:max/core/widgets/guest_prompt_dialog.dart';
+import 'package:max/core/widgets/dialog/guest_prompt_dialog.dart';
 
 class FavoriteButton extends ConsumerWidget {
   const FavoriteButton({

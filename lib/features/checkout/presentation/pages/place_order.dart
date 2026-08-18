@@ -22,7 +22,7 @@ import 'package:max/features/checkout/presentation/widgets/order_success_dialog.
 import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/checkout/presentation/widgets/saved_card_tile.dart';
 import 'package:max/features/checkout/presentation/widgets/selected_payment_display.dart';
-import 'package:max/features/checkout/presentation/widgets/validation_dialog.dart';
+import 'package:max/core/widgets/dialog/app_message_dialog.dart';
 import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 
 import 'package:max/core/utils/card_utils.dart';
@@ -112,7 +112,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
   bool _validateOrder() {
     final defaultAddr = ref.read(defaultAddressProvider);
     if (defaultAddr == null) {
-      showValidationDialog(
+      AppMessageDialog.show(
         context: context,
         title: 'MISSING INFORMATION',
         message: 'Please add a shipping address',
@@ -120,7 +120,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
       return false;
     }
     if (savedCard == null) {
-      showValidationDialog(
+      AppMessageDialog.show(
         context: context,
         title: 'MISSING INFORMATION',
         message: 'Please select a payment method',

@@ -9,7 +9,7 @@ import 'package:max/core/widgets/header.dart';
 import 'package:max/data/models/payment_card_model.dart';
 import 'package:max/data/providers/payment_card_provider.dart';
 import 'package:max/features/checkout/presentation/pages/add_card.dart';
-import 'package:max/core/widgets/confirm_delete_dialog.dart';
+import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/core/utils/card_utils.dart';
 
 import 'package:max/features/profile/presentation/widgets/payment_card_tile.dart';
@@ -65,14 +65,18 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
   }
 
   void _deleteCard(PaymentCardModel card) {
-    showConfirmDeleteDialog(
+    AppConfirmationDialog.show(
       context: context,
-      emoji: '\ud83d\udcb3',
       title: 'Delete Card?',
-      onDelete: () {
+      message: 'This action cannot be undone.',
+      icon: Icons.credit_card_off_outlined,
+      confirmLabel: 'DELETE',
+      isDestructive: true,
+    ).then((confirmed) {
+      if (confirmed) {
         ref.read(paymentCardProvider.notifier).remove(card.id);
-      },
-    );
+      }
+    });
   }
 
   void _setDefaultCard(PaymentCardModel card) {

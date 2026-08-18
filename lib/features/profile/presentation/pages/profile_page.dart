@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
-import 'package:max/core/widgets/guest_prompt_dialog.dart';
+import 'package:max/core/widgets/dialog/guest_prompt_dialog.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';

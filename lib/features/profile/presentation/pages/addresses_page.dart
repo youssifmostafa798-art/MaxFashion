@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/widgets/confirm_delete_dialog.dart';
+import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/header.dart';
@@ -41,14 +41,18 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
   }
 
   void _deleteAddress(AddressModel address) {
-    showConfirmDeleteDialog(
+    AppConfirmationDialog.show(
       context: context,
-      emoji: '\ud83d\uddd1\ufe0f',
       title: 'Delete Address?',
-      onDelete: () {
+      message: 'This action cannot be undone.',
+      icon: Icons.delete_outline,
+      confirmLabel: 'DELETE',
+      isDestructive: true,
+    ).then((confirmed) {
+      if (confirmed) {
         ref.read(addressProvider.notifier).remove(address.id);
-      },
-    );
+      }
+    });
   }
 
   void _setDefault(AddressModel address) {

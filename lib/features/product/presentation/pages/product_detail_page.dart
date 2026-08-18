@@ -15,7 +15,7 @@ import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_colors.dart';
-import 'package:max/core/widgets/guest_prompt_dialog.dart';
+import 'package:max/core/widgets/dialog/guest_prompt_dialog.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});

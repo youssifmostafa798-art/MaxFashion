@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
-import 'package:max/core/widgets/success_dialog.dart';
+import 'package:max/core/widgets/dialog/success_dialog.dart';
+import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:max/features/profile/presentation/widgets/profile_avatar_widget.dart';
 import 'package:max/features/profile/presentation/widgets/profile_form_section.dart';
@@ -99,27 +100,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final state = ref.read(editProfileProvider);
     if (!state.hasChanges) return true;
 
-    final result = await showDialog<bool>(
+    final result = await AppConfirmationDialog.show(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Discard Changes?'),
-        content: const Text(
-          'You have unsaved changes. Are you sure you want to leave?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Discard'),
-          ),
-        ],
-      ),
+      title: 'Discard Changes?',
+      message: 'You have unsaved changes. Are you sure you want to leave?',
+      icon: Icons.warning_amber_rounded,
+      confirmLabel: 'Discard',
+      isDestructive: true,
     );
 
-    return result ?? false;
+    return result;
   }
 
   @override
