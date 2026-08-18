@@ -16,6 +16,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+// CORS: Allow-Origin is set to * because this is a Flutter mobile app.
+// Mobile HTTP clients do not enforce CORS restrictions.
+// If a web version is added, restrict to specific origins.
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -129,10 +132,11 @@ serve(async (req) => {
     // Send email via Resend
     const resendApiKey = Deno.env.get("RESEND_API_KEY") ?? "";
     if (!resendApiKey) {
-      // If no email API configured, log the code for development
+      // No email API configured — log code server-side for development only.
+      // NEVER return the code in the API response (security: OTP leakage).
       console.log(`[DEV MODE] Reset code for ${email}: ${code}`);
       return new Response(
-        JSON.stringify({ success: true, message: "Reset code sent.", _devCode: code }),
+        JSON.stringify({ success: true, message: "Reset code sent." }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

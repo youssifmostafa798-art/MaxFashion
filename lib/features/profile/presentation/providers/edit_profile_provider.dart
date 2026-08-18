@@ -101,6 +101,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   }
 
   final Ref _ref;
+  bool _isPickerActive = false;
 
   AuthRepositoryInterface get _repository =>
       _ref.read(authRepositoryProvider);
@@ -157,18 +158,25 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
   }
 
   Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 512,
-      maxHeight: 512,
-      imageQuality: 80,
-    );
-    if (pickedFile == null) return;
-
-    state = state.copyWith(isAvatarLoading: true, clearError: true);
+    if (_isPickerActive) return;
+    _isPickerActive = true;
 
     try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 80,
+      );
+
+      if (pickedFile == null) {
+        _isPickerActive = false;
+        return;
+      }
+
+      state = state.copyWith(isAvatarLoading: true, clearError: true);
+
       final url = await _repository.uploadAvatar(File(pickedFile.path));
       if (!mounted) return;
       state = state.copyWith(
@@ -182,17 +190,33 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
         isAvatarLoading: false,
         error: e.toString(),
       );
+    } finally {
+      _isPickerActive = false;
     }
   }
 
   Future<void> removeAvatar() async {
     state = state.copyWith(isAvatarLoading: true, clearError: true);
 
+    // Capture before async gap — authStateProvider lives for app lifetime
+    final authNotifier = _ref.read(authStateProvider.notifier);
+    final currentUser = _ref.read(authStateProvider).user;
+
     try {
       final profile = await _repository.removeAvatar();
+
+      // Always sync authStateProvider — global state, not page-scoped.
+      // This must run even if EditProfilePage was disposed during the await.
+      if (currentUser != null) {
+        authNotifier.setUser(currentUser.copyWith(clearProfileImage: true));
+      }
+
       if (!mounted) return;
+      final shouldClearAvatar =
+          profile.avatarUrl == null || profile.avatarUrl!.isEmpty;
       state = state.copyWith(
         avatarUrl: profile.avatarUrl,
+        clearAvatarUrl: shouldClearAvatar,
         isAvatarLoading: false,
         hasChanges: true,
       );

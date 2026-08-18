@@ -259,17 +259,29 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
     required String email,
     required String code,
   }) async {
-    final response = await _client
-        .from('password_reset_codes')
-        .select()
-        .eq('email', email.toLowerCase())
-        .eq('code', code)
-        .eq('used', false)
-        .gt('expires_at', DateTime.now().toUtc().toIso8601String())
-        .lt('attempt_count', 5)
-        .maybeSingle();
+    try {
+      final response = await _client.functions.invoke(
+        'verify-reset-code',
+        body: {
+          'email': email.toLowerCase(),
+          'code': code,
+        },
+      );
 
-    return response != null;
+      if (response.status == 200) {
+        return true;
+      }
+
+      final errorData = response.data;
+      final errorMessage = errorData?['error'] as String? ?? 'Invalid verification code.';
+      throw Exception(errorMessage);
+    } on FunctionException catch (e) {
+      final details = e.details;
+      if (details is Map && details['error'] != null) {
+        throw Exception(details['error'] as String);
+      }
+      throw Exception('Failed to verify code. Please try again.');
+    }
   }
 
   @override
@@ -278,62 +290,22 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
     required String code,
     required String newPassword,
   }) async {
-    // Verify code is still valid (check used, expired, and attempt limit)
-    final validCode = await _client
-        .from('password_reset_codes')
-        .select()
-        .eq('email', email.toLowerCase())
-        .eq('code', code)
-        .eq('used', false)
-        .gt('expires_at', DateTime.now().toUtc().toIso8601String())
-        .lt('attempt_count', 5)
-        .maybeSingle();
+    // Always use the Edge Function for password reset.
+    // This ensures OTP verification is enforced for ALL users,
+    // including authenticated users. No bypass is allowed.
+    final response = await _client.functions.invoke(
+      'reset-password',
+      body: {
+        'email': email.toLowerCase(),
+        'code': code,
+        'new_password': newPassword,
+      },
+    );
 
-    if (validCode == null) {
-      // Check if code exists but has too many attempts
-      final existingCode = await _client
-          .from('password_reset_codes')
-          .select('attempt_count')
-          .eq('email', email.toLowerCase())
-          .eq('code', code)
-          .eq('used', false)
-          .maybeSingle();
-
-      if (existingCode != null && (existingCode['attempt_count'] as int? ?? 0) >= 5) {
-        throw Exception('Too many attempts. Please request a new code.');
-      }
-
-      throw Exception('Invalid verification code.');
+    if (response.status != 200) {
+      final errorData = response.data;
+      final errorMessage = errorData?['error'] as String? ?? 'Failed to update password.';
+      throw Exception(errorMessage);
     }
-
-    // Find user by email and update password
-    final userId = _auth.currentUser?.id;
-    if (userId != null) {
-      // User is logged in (e.g., from email confirmation flow)
-      await _auth.updateUser(UserAttributes(password: newPassword));
-    } else {
-      // Use admin API via Edge Function
-      final response = await _client.functions.invoke(
-        'reset-password',
-        body: {
-          'email': email.toLowerCase(),
-          'code': code,
-          'new_password': newPassword,
-        },
-      );
-
-      if (response.status != 200) {
-        final errorData = response.data;
-        final errorMessage = errorData?['error'] as String? ?? 'Failed to update password.';
-        throw Exception(errorMessage);
-      }
-    }
-
-    // Mark code as used
-    await _client
-        .from('password_reset_codes')
-        .update({'used': true})
-        .eq('email', email.toLowerCase())
-        .eq('code', code);
   }
 }

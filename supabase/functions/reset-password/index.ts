@@ -1,5 +1,8 @@
 // supabase/functions/reset-password/index.ts
-// Supabase Edge Function to reset password using verified OTP code
+// Supabase Edge Function to update password after OTP verification
+//
+// This function performs defense-in-depth OTP validation and updates the password.
+// The primary OTP verification and attempt tracking is handled by verify-reset-code.
 //
 // To deploy:
 //   supabase functions deploy reset-password
@@ -39,7 +42,8 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Verify the code (check used, expired, and attempt limit)
+    // Defense-in-depth: Verify the code is valid (not used, not expired, matches)
+    // Note: attempt_count is NOT incremented here — it's handled by verify-reset-code
     const { data: codeRecord, error: queryError } = await supabase
       .from("password_reset_codes")
       .select()
@@ -47,35 +51,11 @@ serve(async (req) => {
       .eq("code", code)
       .eq("used", false)
       .gt("expires_at", new Date().toISOString())
-      .lt("attempt_count", 5)
       .maybeSingle();
 
     if (queryError || !codeRecord) {
-      // Check if code exists but has too many attempts
-      const { data: existingCode } = await supabase
-        .from("password_reset_codes")
-        .select("attempt_count")
-        .eq("email", email.toLowerCase())
-        .eq("code", code)
-        .eq("used", false)
-        .maybeSingle();
-
-      if (existingCode && existingCode.attempt_count >= 5) {
-        // Mark code as used (invalid)
-        await supabase
-          .from("password_reset_codes")
-          .update({ used: true })
-          .eq("email", email.toLowerCase())
-          .eq("code", code);
-
-        return new Response(
-          JSON.stringify({ error: "Too many attempts. Please request a new code." }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-
       return new Response(
-        JSON.stringify({ error: "Invalid verification code." }),
+        JSON.stringify({ error: "Invalid or expired verification code." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -113,7 +93,7 @@ serve(async (req) => {
       );
     }
 
-    // Mark code as used
+    // Mark code as used (consumed)
     await supabase
       .from("password_reset_codes")
       .update({ used: true })

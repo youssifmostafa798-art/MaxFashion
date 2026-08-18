@@ -15,10 +15,10 @@
 | 3.4 | Cart | ✅ Completed | `009_cart_items_schema.sql` |
 | 3.5 | Wishlist | ✅ Completed | `010_wishlist_items_schema.sql` |
 | 3.6 | Orders | ✅ Completed | `011_orders_schema.sql` |
-| — | Addresses | ✅ Completed | `014_addresses_schema.sql` |
-| — | Payment Cards | ✅ Completed | `015_payment_cards_schema.sql` |
-| — | OTP Password Recovery | ✅ Completed | `016_create_password_reset_codes.sql`, `017_otp_security_hardening.sql` |
-| — | OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
+| 3.7 | Addresses | ✅ Completed | `014_addresses_schema.sql` |
+| 3.8 | Payment Cards | ✅ Completed | `015_payment_cards_schema.sql` |
+| 3.9 | OTP Password Recovery | ✅ Completed | `016_create_password_reset_codes.sql`, `017_otp_security_hardening.sql` |
+| 3.10| OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
 
 ---
 
@@ -215,6 +215,7 @@ UNIQUE on (product_id, size).
 | Table | Policy | Operation | Condition |
 |-------|--------|-----------|-----------|
 | `profiles` | Users can view own profile | SELECT | `auth.uid() = id` |
+| `profiles` | Users can insert own profile | INSERT | `auth.uid() = id` |
 | `profiles` | Users can update own profile | UPDATE | `auth.uid() = id` |
 | `categories` | Public read access | SELECT | true |
 | `products` | Public read access | SELECT | true |
@@ -300,6 +301,8 @@ UNIQUE on (product_id, size).
 | 015 | `015_payment_cards_schema.sql` | payment_cards table + RLS |
 | 016 | `016_create_password_reset_codes.sql` | password_reset_codes table + cleanup function + RLS |
 | 017 | `017_otp_security_hardening.sql` | Rate limiting columns (attempt_count, last_request_at) for OTP security |
+| 018 | `018_profiles_schema.sql` | profiles table formalization + RLS + updated_at trigger |
+| 019 | `019_avatars_storage.sql` | avatars bucket + storage policies (public read, owner write) |
 
 ---
 

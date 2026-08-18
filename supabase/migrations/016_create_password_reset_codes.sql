@@ -1,5 +1,9 @@
 -- Password Reset Codes table for OTP-based password recovery
 -- Run this in Supabase SQL Editor or as a migration
+--
+-- SECURITY: RLS is enabled with NO client-side policies.
+-- All access is via Edge Functions using the service_role key (bypasses RLS).
+-- The anon role has NO access to this table.
 
 CREATE TABLE IF NOT EXISTS password_reset_codes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -26,27 +30,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- RLS policies
+-- ============================================================
+-- RLS: Service-role only (no client-side access)
+-- ============================================================
+-- All operations (INSERT, SELECT, UPDATE, DELETE) are performed
+-- by Edge Functions using the service_role key, which bypasses RLS.
+-- The anon and authenticated roles have NO policies on this table.
+-- ============================================================
 ALTER TABLE password_reset_codes ENABLE ROW LEVEL SECURITY;
-
--- Allow anonymous inserts (for requesting reset codes)
-CREATE POLICY "Allow anonymous insert for password reset"
-  ON password_reset_codes
-  FOR INSERT
-  TO anon
-  WITH CHECK (true);
-
--- Allow anonymous selects (for verifying codes)
-CREATE POLICY "Allow anonymous select for password reset"
-  ON password_reset_codes
-  FOR SELECT
-  TO anon
-  USING (true);
-
--- Allow anonymous updates (for marking codes as used)
-CREATE POLICY "Allow anonymous update for password reset"
-  ON password_reset_codes
-  FOR UPDATE
-  TO anon
-  USING (true)
-  WITH CHECK (true);

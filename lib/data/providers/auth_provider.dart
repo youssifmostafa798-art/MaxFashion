@@ -333,6 +333,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  void setUser(UserModel user) {
+    if (!mounted) return;
+    state = state.copyWith(user: user);
+  }
+
   void clearError() {
     state = state.copyWith(clearError: true);
   }
