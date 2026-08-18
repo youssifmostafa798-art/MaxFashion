@@ -40,7 +40,7 @@
 | `order_items` | Order line items | User-owned (via orders) | ✅ In use |
 | `addresses` | User shipping addresses | User-owned (full CRUD) | ✅ In use |
 | `payment_cards` | Saved payment methods | User-owned (full CRUD) | ✅ In use |
-| `password_reset_codes` | OTP codes for password reset | ⚠️ **Anon access (security issue)** | ✅ In use |
+| `password_reset_codes` | OTP codes for password reset | ✅ Service-role only (no anon policies) | ✅ In use |
 
 ### Table Schemas (Reference)
 
@@ -201,7 +201,7 @@ UNIQUE on (product_id, size).
 
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 
-**⚠️ SECURITY ISSUE:** Migration 016 creates anon INSERT/SELECT/UPDATE policies. These were never removed. Edge Functions use service_role which bypasses RLS, but the anon policies allow any unauthenticated client to read all reset codes.
+**⚠️ SECURITY NOTE:** Migration 016 creates RLS with NO client-side policies. The anon and authenticated roles have NO policies on this table. Edge Functions use service_role which bypasses RLS. This is correctly secured.
 
 ---
 
@@ -249,9 +249,7 @@ UNIQUE on (product_id, size).
 | `payment_cards` | Users can insert own payment cards | INSERT | `auth.uid() = user_id` |
 | `payment_cards` | Users can update own payment cards | UPDATE | `auth.uid() = user_id` |
 | `payment_cards` | Users can delete own payment cards | DELETE | `auth.uid() = user_id` |
-| `password_reset_codes` | ⚠️ Allow anonymous insert for password reset | INSERT | true (anon role) |
-| `password_reset_codes` | ⚠️ Allow anonymous select for password reset | SELECT | true (anon role) |
-| `password_reset_codes` | ⚠️ Allow anonymous update for password reset | UPDATE | true (anon role) |
+| `password_reset_codes` | No client-side policies (service-role only) | N/A | N/A |
 
 ---
 
@@ -267,7 +265,7 @@ UNIQUE on (product_id, size).
 | Home Content | `SupabaseHomeContentRepository` | `home_content` | ✅ Complete |
 | Cart | `SupabaseCartRepository` | `cart_items` | ✅ Complete |
 | Wishlist | `SupabaseWishlistRepository` | `wishlist_items` | ✅ Complete |
-| Search | `SupabaseSearchRepository` | In-memory filter of Supabase cache | 🟡 Partial |
+| Search | `SupabaseSearchRepository` | `search_products` RPC (full-text search) | ✅ Complete |
 | Orders | `SupabaseOrderRepository` | `orders` + `order_items` | ✅ Complete |
 | Addresses | `SupabaseAddressRepository` | `addresses` | ✅ Complete |
 | Payment Cards | `SupabasePaymentCardRepository` | `payment_cards` | ✅ Complete |
@@ -282,6 +280,7 @@ UNIQUE on (product_id, size).
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
 | Recent Searches | SharedPreferences | `recent_searches` | ⚠️ Not per-user — shared across accounts. |
 | Orders Migration Flag | SharedPreferences | `orders_migrated_to_supabase_{userId}` | Per-user migration flag. |
+| Search | Supabase RPC | `search_products` | Full-text search via RPC. Recent searches stored locally (not per-user). |
 
 ---
 
@@ -304,10 +303,11 @@ UNIQUE on (product_id, size).
 | 013 | `013_drop_categories_image_url.sql` | Drop image_url from categories |
 | 014 | `014_addresses_schema.sql` | addresses table + RLS |
 | 015 | `015_payment_cards_schema.sql` | payment_cards table + RLS |
-| 016 | `016_create_password_reset_codes.sql` | password_reset_codes table + cleanup function + RLS |
+| 016 | `016_create_password_reset_codes.sql` | password_reset_codes table + cleanup function + RLS (service-role only) |
 | 017 | `017_otp_security_hardening.sql` | Rate limiting columns (attempt_count, last_request_at) |
 | 018 | `018_profiles_schema.sql` | profiles table formalization + RLS + updated_at trigger |
 | 019 | `019_avatars_storage.sql` | avatars bucket + storage policies (public read, owner write) |
+| 020 | `020_full_text_search.sql` | pg_trgm extension, search_vector column, search_products RPC function |
 
 ---
 
@@ -325,22 +325,21 @@ UNIQUE on (product_id, size).
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Fix `password_reset_codes` RLS | **CRITICAL** | Security | Remove anon policies — edge functions use service_role |
+| Fix Auth Interface | **HIGH** | Code Quality | `ensureProfileExists` accessed via `as dynamic` |
+| Add mounted check in logout | **HIGH** | Code Quality | Missing in auth_provider.dart logout method |
+| Implement router auth guards | **HIGH** | Security | All 24 routes accessible without auth |
+| Scope recent searches by user | **HIGH** | Data Isolation | SharedPreferences key is global |
+| Fix OrderModel serialization | HIGH | Code Quality | Status as int, camelCase keys vs snake_case DB |
+| Fix PaymentCardModel serialization | HIGH | Code Quality | camelCase JSON keys vs snake_case DB columns |
+| Fix CartItemModel serialization | MEDIUM | Code Quality | Extra non-DB fields in toJson |
+| Fix ProductModel ID | HIGH | Code Quality | ID as String with 'p' prefix — DB is BIGINT |
+| Exception Cleanup | MEDIUM | Code Quality | 24 silently swallowed exceptions |
 | Product image gallery | High | Feature | Only single thumbnail displayed |
 | Order cancellation UI | High | Feature | No cancellation flow from user side |
 | Delivery option | High | Feature | Hardcoded to "Pickup at store" only |
-| Fix Dynamic Casts in Auth | Medium | Code Quality | `ensureProfileExists` accessed via `as dynamic` |
-| Exception Cleanup | Medium | Code Quality | 28 silently swallowed exceptions |
 | Product reviews/ratings | Medium | Feature | No code found |
 | Push notifications | Medium | Feature | No code found |
 | Real payment gateway | High | Feature | Credit card form exists but no payment processing |
-| Fix OrderModel serialization | High | Code Quality | Status as int, camelCase keys vs snake_case DB |
-| Fix PaymentCardModel serialization | High | Code Quality | camelCase JSON keys vs snake_case DB columns |
-| Fix CartItemModel serialization | Medium | Code Quality | Extra non-DB fields in toJson |
-| Fix ProductModel ID | High | Code Quality | ID as String with 'p' prefix — DB is BIGINT |
-| Implement router auth guards | High | Security | All 22 routes accessible without auth |
-| Scope recent searches by user | High | Data Isolation | SharedPreferences key is global |
-| Implement real search | High | Feature | Client-side only, no Supabase text search |
 
 ---
 

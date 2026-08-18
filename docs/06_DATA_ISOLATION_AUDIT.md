@@ -497,7 +497,7 @@ void remove(String id) {
 
 | Issue | Severity | Description | Recommended Fix |
 |-------|----------|-------------|-----------------|
-| Search history not user-scoped | LOW | `SharedPreferences` key `search_history` is global. | Low priority - non-sensitive cosmetic data. |
+| Search history not user-scoped | LOW | `SharedPreferences` key `recent_searches` is global. | Low priority - non-sensitive cosmetic data. |
 | No `deleteOrder` in repository | LOW | Orders cannot be deleted by the user. May be intentional (admin-only). | Consider adding if user-initiated cancellation is needed. |
 
 ---

@@ -7,6 +7,7 @@ import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/theme/theme_provider.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/providers/auth_provider.dart';
+import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
 import 'package:max/features/settings/presentation/widgets/settings_section.dart';
 import 'package:max/features/settings/presentation/widgets/settings_tile.dart';
 
@@ -166,6 +167,7 @@ class SettingsPage extends ConsumerWidget {
       return;
     }
     await ref.read(authStateProvider.notifier).logout();
+    ref.invalidate(editProfileProvider);
     if (context.mounted) {
       Navigator.of(
         context,

@@ -29,7 +29,7 @@ UI (Pages/Widgets)
 
 1. **Repository Pattern** — Abstract interfaces for all data access. Supabase implementations are wired via Riverpod providers.
 2. **Riverpod** — All state management uses `StateNotifierProvider`, `StateProvider`, or `Provider`.
-3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (22 named routes).
+3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (24 named routes).
 4. **ScreenUtil** — Design size 375x812, all sizing via `.w`, `.h`, `.r`, `.sp`.
 5. **Theme-aware** — `Theme.of(context).colorScheme` used throughout, no hardcoded colors.
 6. **Auth-Aware Providers** — All user-scoped providers watch `currentUserIdProvider` to auto-invalidate on login/logout, preventing cross-account data leakage.
@@ -44,7 +44,7 @@ lib/
 ├── splash.dart                        # Animated splash with session check
 ├── core/
 │   ├── constants/                     # App constants, asset paths
-│   ├── router/                        # AppRouter (22 named routes)
+│   ├── router/                        # AppRouter (24 named routes)
 │   ├── theme/                         # AppColors, AppTheme, ThemeProvider, ThemeStorage
 │   ├── utils/                         # Validators, formatters, haptics, ID generator
 │   └── widgets/                       # 18+ reusable widgets + skeletons
@@ -169,7 +169,7 @@ PaymentMethodsPage → paymentCardProvider → PaymentCardNotifier.load()
 SearchScreen → searchProvider → SearchNotifier.onQueryChanged()
   → (250ms debounce)
   → SupabaseSearchRepository.searchProducts()
-  → In-memory filter of Supabase-cached products
+  → Supabase RPC `search_products` (full-text search with trigram matching)
   → SearchState (results)
 ```
 
@@ -209,7 +209,7 @@ EditProfilePage → AuthNotifier.updateProfile()
   - `reset-password` — verifies OTP code again (defense-in-depth), updates password via admin API, marks code as used
 - `password_reset_codes` table with rate limiting (60s cooldown) and attempt limiting (max 5)
 - `cleanup_expired_codes()` SQL function for automatic cleanup
-- ⚠️ **Security:** RLS still grants anon INSERT/SELECT/UPDATE on `password_reset_codes`
+- ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
 
 ### Database Tables
 
@@ -227,7 +227,7 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `order_items` | Order line items | User-owned (via orders) |
 | `addresses` | User shipping addresses | User-owned |
 | `payment_cards` | Saved payment methods | User-owned |
-| `password_reset_codes` | OTP codes for password reset | ⚠️ Anon access (security issue — needs fix) |
+| `password_reset_codes` | OTP codes for password reset | ✅ Service-role only (no anon policies) |
 
 ### Storage
 
@@ -255,10 +255,11 @@ supabase/migrations/
 ├── 013_drop_categories_image_url.sql — Drop image_url from categories
 ├── 014_addresses_schema.sql         — addresses table + RLS
 ├── 015_payment_cards_schema.sql     — payment_cards table + RLS
-├── 016_create_password_reset_codes.sql — password_reset_codes table + cleanup function + RLS
+├── 016_create_password_reset_codes.sql — password_reset_codes table + cleanup function + RLS (service-role only)
 ├── 017_otp_security_hardening.sql   — Rate limiting columns (attempt_count, last_request_at)
 ├── 018_profiles_schema.sql          — profiles table formalization + RLS + updated_at trigger
-└── 019_avatars_storage.sql          — avatars bucket + storage policies
+├── 019_avatars_storage.sql          — avatars bucket + storage policies
+└── 020_full_text_search.sql         — pg_trgm extension, search_vector column, search_products RPC function
 ```
 
 ### Edge Functions
@@ -347,7 +348,7 @@ All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`,
 | Cart | `CartPage` | Cart count |
 | You | `ProfilePage` | Wishlist count |
 
-### Named Routes (22)
+### Named Routes (24)
 `/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`, `/forgot-password`, `/verify-reset-code`, `/reset-password`
 
 ---

@@ -11,7 +11,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Fix `password_reset_codes` RLS | ❌ Not Started | **SECURITY VULNERABILITY** — Anon policies grant SELECT/INSERT/UPDATE on all reset codes. Edge functions use service_role but client-side anon access allows reading all OTP codes. |
+| ~~Fix `password_reset_codes` RLS~~ | ✅ Verified Secure | Migration 016 correctly has NO anon policies. Edge functions use service_role which bypasses RLS. |
 
 ### High Priority — Important Missing Functionality
 
@@ -27,12 +27,13 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Fix Dynamic Casts in Auth | ❌ Not Started | `ensureProfileExists` and `isEmailConfirmationPending` accessed via `as dynamic` |
-| Exception Cleanup | ❌ Not Started | 28 silently swallowed exceptions (`catch (_) {}`) |
+| Add mounted check in logout | ❌ Not Started | Missing in auth_provider.dart logout method |
+| Exception Cleanup | ❌ Not Started | 24 silently swallowed exceptions (`catch (_) {}`) |
 | Promo Code Logic | ⚠️ UI Only | Section exists but no input field or application logic |
 | "Shop By" Filtering | ⚠️ UI Only | New Arrivals, Trending, Best Sellers, Online Exclusive — static UI, no filtering |
 | Product Reviews/Ratings | ❌ Not Implemented | No code found |
 | Push Notifications | ❌ Not Implemented | No code found |
-| Consolidate Search Logic | ❌ Not Started | 3 duplicate search implementations should be merged |
+| Consolidate Search Logic | ⚠️ Partial | 3 search implementations exist; search itself is functional via Supabase RPC |
 | Menu Categories Dynamic Loading | ⚠️ Hardcoded | CategoriesPage has hardcoded items (should load from Supabase) |
 
 ### Low Priority — Optional Polish
@@ -56,7 +57,8 @@
 |-------|-----------------|--------|-------|
 | `ensureProfileExists` via dynamic cast | Authentication | Open | `lib/data/providers/auth_provider.dart` — accessed via `(_repository as dynamic)` — fragile but functional |
 | `isEmailConfirmationPending` via dynamic cast | Authentication | Open | Same file — not on `AuthRepositoryInterface` |
-| 28 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider, orders_provider, wishlist_provider, payment_card_provider, address_provider, supabase_product_repository, supabase_order_repository, supabase_auth_repository, place_order, edit_profile_provider |
+| Missing mounted check in logout | Authentication | Open | `auth_provider.dart:299` — `state = const AuthState()` without `mounted` check after `signOut()` |
+| 24 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider, orders_provider, wishlist_provider, payment_card_provider, address_provider, supabase_product_repository, supabase_order_repository, supabase_auth_repository, place_order, edit_profile_provider |
 | Hardcoded Supabase URL | Products, Cart, Orders | Open | `_storageBaseUrl` hardcoded in ProductModel, SupabaseCartRepository, SupabaseOrderRepository instead of using .env config |
 
 ### Low Priority
@@ -97,7 +99,7 @@ The following files have been **deleted** from the codebase but may still be ref
 |-------|----------|----------|
 | Dynamic cast for `ensureProfileExists` | `lib/data/providers/auth_provider.dart` | Medium |
 | Dynamic cast for `isEmailConfirmationPending` | `lib/data/providers/auth_provider.dart` | Medium |
-| 28 silently swallowed exceptions | Multiple files (see Known Issues) | Medium |
+| 24 silently swallowed exceptions | Multiple files (see Known Issues) | Medium |
 | Hardcoded Supabase storage URL | `lib/data/models/product_model.dart`, `lib/data/repositories/cart/supabase_cart_repository.dart`, `lib/data/repositories/orders/supabase_order_repository.dart` | Low |
 | Mixed navigation patterns (named routes vs Navigator.push) | Various | Low |
 | Dead `collection` getter returns empty string | `lib/data/models/product_model.dart` | Low |
@@ -112,7 +114,7 @@ The following files have been **deleted** from the codebase but may still be ref
 |-------|-------|
 | Some navigation uses Navigator.push | While routing uses named routes — mixed approach |
 | Cart items join product data on every load | Could be optimized with caching |
-| Search is in-memory not live Supabase query | Products loaded once into cache, search filters locally |
+| Search uses Supabase RPC (full-text search) | Recent searches still stored locally (not per-user) |
 
 ### Unused Dependencies
 
@@ -131,8 +133,9 @@ The following files have been **deleted** from the codebase but may still be ref
 **Tasks:**
 1. Add `ensureProfileExists()` and `isEmailConfirmationPending` to `AuthRepositoryInterface`
 2. Remove `as dynamic` casts from `auth_provider.dart`
-3. Audit 28 silently swallowed exceptions — at minimum add logging
-4. Consider adding a global error handler
+3. Add `mounted` check in `logout()` method
+4. Audit 24 silently swallowed exceptions — at minimum add logging
+5. Consider adding a global error handler
 
 ### 2. Cleanup & Polish
 
@@ -183,7 +186,7 @@ The following files have been **deleted** from the codebase but may still be ref
 | Payment Cards | Supabase | Supabase | ✅ Done |
 | OTP Password Recovery | Supabase (Edge Functions) | Supabase (Edge Functions) | ✅ Done |
 | Theme | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |
-| Recent Searches | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |
+| Recent Searches | SharedPreferences | SharedPreferences | ⚠️ Not per-user — shared across accounts |
 
 ---
 

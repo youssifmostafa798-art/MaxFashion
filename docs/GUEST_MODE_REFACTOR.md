@@ -115,7 +115,7 @@ The previous Guest Mode implementation was minimal and broken:
 ### New Files
 | File | Purpose |
 |------|---------|
-| `lib/core/widgets/guest_prompt_dialog.dart` | Reusable dialog with Sign In / Create Account / Cancel options |
+| `lib/core/widgets/dialog/guest_prompt_dialog.dart` | Reusable dialog with Sign In / Create Account / Cancel options |
 
 ## Files Intentionally Not Modified
 

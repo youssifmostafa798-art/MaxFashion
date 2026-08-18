@@ -448,7 +448,7 @@ This is the operational core of the document: sixteen phases spanning UI, archit
 - ☐ Every core screen reviewed against the Section 6 design guidelines.
 - ☐ No TODO placeholders left in shipped screens.
 
-> **Note:** This is the current focus phase (Section 2.2). Prioritize correctness of layout over pixel-perfect polish; polish is Phase 2.
+> **Note:** This phase is complete. Prioritize correctness of layout over pixel-perfect polish; polish is Phase 2.
 
 ---
 
@@ -1245,9 +1245,9 @@ Update this table as each phase progresses. Status suggestions: Not Started / In
 | 4 | Architecture Cleanup | Complete | 95% | | | Feature-first structure, repository pattern, auth-aware providers |
 | 5 | Supabase Setup | Complete | 100% | | | Project created, `.env` configured, initialized |
 | 6 | Authentication | Complete | 95% | | | Full Supabase Auth, profiles CRUD, avatar upload |
-| 7 | Database Design | Complete | 95% | | | 13 tables with RLS, 17 migrations, Edge Functions for OTP |
+| 7 | Database Design | Complete | 95% | | | 13 tables with RLS, 20 migrations, Edge Functions for OTP |
 | 8 | Home, Categories & Products | Complete | 95% | | | SupabaseProductRepository wired, categoriesProvider migrated |
-| 9 | Search & Filters | Complete | 85% | | | SupabaseSearchRepository exists, in-memory filter on cached data |
+| 9 | Search & Filters | Complete | 85% | | | SupabaseSearchRepository uses search_products RPC (full-text search) |
 | 10 | Wishlist | Complete | 95% | | | Supabase wishlist_items table with RLS |
 | 11 | Cart & Checkout | Complete | 95% | | | Supabase cart_items table with RLS |
 | 12 | Orders | Complete | 95% | | | Supabase orders + order_items tables with RLS |

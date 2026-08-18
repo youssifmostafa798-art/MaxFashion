@@ -280,5 +280,6 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
 
 final editProfileProvider =
     StateNotifierProvider<EditProfileNotifier, EditProfileState>((ref) {
+  ref.watch(currentUserIdProvider);
   return EditProfileNotifier(ref);
 });

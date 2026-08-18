@@ -9,6 +9,7 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/dialog/success_dialog.dart';
 import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/features/profile/presentation/providers/edit_profile_provider.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/profile/presentation/widgets/profile_avatar_widget.dart';
 import 'package:max/features/profile/presentation/widgets/profile_form_section.dart';
 
@@ -30,6 +31,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late final TextEditingController _bioController;
 
   bool _isInitialized = false;
+  String? _lastSyncedUserId;
 
   static const _genders = ['Male', 'Female', 'Other', 'Prefer not to say'];
 
@@ -58,6 +60,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   void _syncControllers(EditProfileState state) {
+    final currentUserId = ref.read(authStateProvider).user?.id;
+    if (currentUserId != _lastSyncedUserId) {
+      _isInitialized = false;
+    }
     if (!_isInitialized) {
       _firstNameController.text = state.firstName;
       _lastNameController.text = state.lastName;
@@ -66,6 +72,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       _countryController.text = state.country ?? '';
       _bioController.text = state.bio ?? '';
       _updateDobController(state.dateOfBirth);
+      _lastSyncedUserId = currentUserId;
       _isInitialized = true;
     }
   }

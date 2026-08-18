@@ -56,7 +56,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Home Content | ✅ | ✅ home_content table | ❌ | ✅ Completed |
 | Cart | ✅ | ✅ cart_items table | ❌ | ✅ Completed |
 | Wishlist | ✅ | ✅ wishlist_items table | ❌ | ✅ Completed |
-| Search | ✅ | ✅ in-memory (Supabase cache) | ✅ Recent searches | 🟡 Partial |
+| Search | ✅ | ✅ Supabase RPC (full-text search) | ✅ Recent searches (not per-user) | 🟡 Partial |
 | Orders | ✅ | ✅ orders + order_items tables | ❌ | ✅ Completed |
 | Addresses | ✅ | ✅ addresses table | ❌ | ✅ Completed |
 | Payment Cards | ✅ | ✅ payment_cards table | ❌ | ✅ Completed |
@@ -83,7 +83,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - `password_reset_codes` table stores OTP codes with expiry, attempt limiting, and rate limiting
 - 3-page UI flow: ForgotPasswordPage → VerifyResetCodePage → ResetPasswordPage
 - Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
-- ⚠️ **CRITICAL:** `password_reset_codes` table RLS still grants anon SELECT/INSERT/UPDATE access
+- ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
 
 ### Products
 - `SupabaseProductRepository` — fetches products with joined `product_images` and `product_sizes`
@@ -162,7 +162,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | `order_items` | varies | ✅ User-owned (via orders) | ✅ In use |
 | `addresses` | varies | ✅ User-owned | ✅ In use |
 | `payment_cards` | varies | ✅ User-owned | ✅ In use |
-| `password_reset_codes` | varies | ⚠️ Anon access (security issue) | ✅ In use |
+| `password_reset_codes` | varies | ✅ Service-role only (no anon policies) | ✅ In use |
 
 ### Storage Buckets
 
@@ -209,17 +209,16 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 
 | Issue | Severity | Status |
 |-------|----------|--------|
-| `password_reset_codes` RLS grants anon SELECT/INSERT/UPDATE | **CRITICAL** | Open |
 | `ensureProfileExists` accessed via dynamic cast | Medium | Open |
 | `isEmailConfirmationPending` accessed via dynamic cast | Medium | Open |
-| 28 silently swallowed exceptions (`catch (_) {}`) | Medium | Open |
-| No router auth guards — all 22 routes accessible without auth | High | Open |
+| Missing mounted check in logout | Medium | Open |
+| 24 silently swallowed exceptions (`catch (_) {}`) | Medium | Open |
+| No router auth guards — all 24 routes accessible without auth | High | Open |
 | OrderModel serialization: status as int, camelCase keys | High | Open |
 | PaymentCardModel serialization: camelCase keys vs snake_case DB | High | Open |
 | CartItemModel serialization: extra non-DB fields in toJson | High | Open |
 | ProductModel ID as String with 'p' prefix | High | Open |
 | Recent searches not per-user | High | Open |
-| Search is client-side, not real Supabase query | High | Open |
 | Hardcoded Supabase URL in 3 files | Low | Open |
 | Promo code UI exists but non-functional | Low | Open |
 | "Shop By" menu items are static UI only | Low | Open |
@@ -230,18 +229,16 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 
 ## Next Steps (Priority Order)
 
-1. **Fix `password_reset_codes` RLS** — Remove anon policies (CRITICAL security fix)
-2. **Fix Auth Interface** — Add methods to interface, remove `as dynamic` casts
-3. **Fix Model Serialization** — OrderModel, PaymentCardModel, CartItemModel, ProductModel
-4. **Implement Router Auth Guards** — Protect user-scoped routes
-5. **Scope Recent Searches** — Key by user ID, clear on logout
-6. **Implement Real Search** — Use Supabase text search
-7. **Fix Error Handling** — Wishlist, product providers
-8. **Remove Fake Loading Delays** — Use real AsyncValue states
-9. **Real Payment Gateway** — Credit card form exists but no payment processing
-10. **Order Cancellation UI** — No cancellation flow from user side
-11. **Product Image Gallery** — Only single thumbnail displayed
-12. **Testing** — Add unit and widget tests
+1. **Fix Auth Interface** — Add methods to interface, remove `as dynamic` casts
+2. **Fix Model Serialization** — OrderModel, PaymentCardModel, CartItemModel, ProductModel
+3. **Implement Router Auth Guards** — Protect user-scoped routes
+4. **Scope Recent Searches** — Key by user ID, clear on logout
+5. **Fix Error Handling** — Wishlist, product providers
+6. **Remove Fake Loading Delays** — Use real AsyncValue states
+7. **Real Payment Gateway** — Credit card form exists but no payment processing
+8. **Order Cancellation UI** — No cancellation flow from user side
+9. **Product Image Gallery** — Only single thumbnail displayed
+10. **Testing** — Add unit and widget tests
 
 ---
 

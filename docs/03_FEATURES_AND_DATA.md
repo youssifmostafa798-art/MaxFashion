@@ -20,7 +20,7 @@
 | Product Details | ✅ Complete | Supabase | Supabase |
 | Cart | ✅ Complete | Supabase cart_items | Supabase |
 | Checkout | ✅ Complete | Supabase (cart, orders, order_items) | Supabase |
-| Search | ✅ Complete | In-memory (Supabase cache) | SharedPreferences (recent) |
+| Search | ✅ Complete | Supabase RPC (full-text search) | SharedPreferences (recent, not per-user) |
 | Menu / Categories | ✅ Complete | Supabase | Supabase |
 | Settings | ✅ Complete | None | SharedPreferences |
 | Dark/Light Theme | ✅ Complete | None | SharedPreferences |
@@ -82,7 +82,7 @@ LoginPage → authStateProvider → AuthNotifier.login()
 - Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
 - Dev mode: If no RESEND_API_KEY configured, codes are logged to console
 - `cleanup_expired_codes()` SQL function for automatic cleanup of expired codes
-- ⚠️ **Security:** `password_reset_codes` RLS still grants anon INSERT/SELECT/UPDATE access
+- ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
 
 **Key Files:**
 - `lib/features/auth/presentation/pages/forgot_password_page.dart`
@@ -348,8 +348,8 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 ### Search
 
 **Status:** ✅ Completed
-**Backend:** In-memory (filters Supabase-cached products)
-**Persistence:** SharedPreferences (recent searches only)
+**Backend:** Supabase RPC (full-text search with trigram matching)
+**Persistence:** SharedPreferences (recent searches, not per-user)
 
 **Implementation:**
 - Debounced search (250ms)
@@ -358,7 +358,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - Context-aware search (global, home, category, wishlist, cart, orders)
 - Search results with highlighted query text
 - Search skeleton loading state
-- `SupabaseSearchRepository` searches in-memory cached products
+- `SupabaseSearchRepository` uses `search_products` RPC with full-text search via migration 020
 - Note: 3 search implementations exist (SupabaseSearchRepository, SupabaseProductRepository.searchProducts, ProductSearchMatcher) — should be consolidated
 
 **Key Files:**
@@ -623,7 +623,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 | `last_request_at` | TIMESTAMPTZ | DEFAULT NOW() |
 | `created_at` | TIMESTAMPTZ | DEFAULT NOW() |
 
-**RLS:** ⚠️ Anonymous INSERT/SELECT/UPDATE for unauthenticated password reset flow — **security issue, needs removal**.
+**RLS:** ✅ Service-role only (no anon policies). Edge functions use service_role which bypasses RLS.
 **Indexes:** Partial index on (email, used) WHERE used = FALSE.
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 
@@ -641,10 +641,10 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 
 | Table | Records | Source |
 |-------|---------|--------|
-| categories | 23 (initial) → 22 (after cleanup) | `002_seed_categories.sql` |
-| products | 251 (initial) → 248 (after cleanup) | `003_seed_products.sql` |
-| product_images | 251 (initial) → 248 (after cleanup) | `004_seed_product_images.sql` |
-| product_sizes | 977 (initial) | `005_seed_product_sizes.sql` |
+| categories | 22 (initial) → 22 (after cleanup) | `002_seed_categories.sql` |
+| products | 249 (initial) → 248 (after cleanup) | `003_seed_products.sql` |
+| product_images | 250 (initial) → 248 (after cleanup) | `004_seed_product_images.sql` |
+| product_sizes | 998 (initial) | `005_seed_product_sizes.sql` |
 
 ---
 
