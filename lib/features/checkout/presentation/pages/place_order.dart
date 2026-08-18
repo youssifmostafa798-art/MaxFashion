@@ -19,6 +19,7 @@ import 'package:max/features/checkout/presentation/widgets/checkout_address_sect
 import 'package:max/features/checkout/presentation/widgets/checkout_cart_items_list.dart';
 import 'package:max/features/checkout/presentation/widgets/checkout_container.dart';
 import 'package:max/features/checkout/presentation/widgets/order_success_dialog.dart';
+import 'package:max/features/orders/presentation/pages/orders_page.dart';
 import 'package:max/features/checkout/presentation/widgets/saved_card_tile.dart';
 import 'package:max/features/checkout/presentation/widgets/selected_payment_display.dart';
 import 'package:max/features/checkout/presentation/widgets/validation_dialog.dart';
@@ -155,11 +156,22 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
       status: OrderStatus.processing,
     );
 
+    final result = await showOrderSuccessDialog(
+      context: context,
+      orderId: order.orderId,
+    );
+    if (!mounted) return;
+
+    if (result != OrderDialogResult.confirmed) return;
+
     try {
       await ref.read(ordersProvider.notifier).addOrder(order);
       if (!mounted) return;
       ref.read(cartProvider.notifier).clear();
-      showOrderSuccessDialog(context: context, orderId: order.orderId);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const OrdersPage()),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

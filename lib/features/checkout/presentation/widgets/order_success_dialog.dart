@@ -5,13 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/custom_button.dart';
-import 'package:max/features/orders/presentation/pages/orders_page.dart';
 
-void showOrderSuccessDialog({
+enum OrderDialogResult { confirmed, cancelled }
+
+Future<OrderDialogResult?> showOrderSuccessDialog({
   required BuildContext context,
   required String orderId,
 }) {
-  showDialog(
+  return showDialog<OrderDialogResult>(
     barrierDismissible: false,
     context: context,
     builder: (context) {
@@ -28,7 +29,7 @@ void showOrderSuccessDialog({
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, OrderDialogResult.cancelled);
                     },
                     child: const Icon(CupertinoIcons.clear),
                   ),
@@ -86,13 +87,7 @@ void showOrderSuccessDialog({
                         isSvg: false,
                         title: "SUBMIT",
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const OrdersPage(),
-                            ),
-                          );
+                          Navigator.pop(context, OrderDialogResult.confirmed);
                         },
                       ),
                     ),
@@ -102,8 +97,7 @@ void showOrderSuccessDialog({
                         isSvg: false,
                         title: "CANCEL",
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                          Navigator.pop(context, OrderDialogResult.cancelled);
                         },
                       ),
                     ),
