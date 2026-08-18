@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_text_styles.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/features/auth/presentation/widgets/custom_auth_button.dart';
 
-class AuthPage extends StatefulWidget {
+class AuthPage extends ConsumerStatefulWidget {
   const AuthPage({super.key});
 
   @override
-  State<AuthPage> createState() => _AuthPageState();
+  ConsumerState<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage>
+class _AuthPageState extends ConsumerState<AuthPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -83,6 +85,7 @@ class _AuthPageState extends State<AuthPage>
                   GestureDetector(
                     onTap: () {
                       HapticUtils.light();
+                      ref.read(authStateProvider.notifier).enterGuestMode();
                       Navigator.pushReplacementNamed(context, AppRouter.main);
                     },
                     child: Text(

@@ -81,7 +81,8 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cards = ref.watch(paymentCardProvider);
+    final cardsState = ref.watch(paymentCardProvider);
+    final cards = cardsState.items;
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),

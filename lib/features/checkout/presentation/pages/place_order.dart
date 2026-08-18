@@ -188,7 +188,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     final authState = ref.watch(authStateProvider);
     final user = authState.user;
     final hasAddress = defaultAddress != null;
-    final savedCards = ref.watch(paymentCardProvider);
+    final savedCardsState = ref.watch(paymentCardProvider);
+    final savedCards = savedCardsState.items;
     final defaultCard = ref.watch(defaultPaymentCardProvider);
 
     if (_selectedSavedCard == null && savedCard == null && defaultCard != null) {

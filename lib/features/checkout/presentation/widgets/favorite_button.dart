@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/widgets/guest_prompt_dialog.dart';
 
 class FavoriteButton extends ConsumerWidget {
   const FavoriteButton({
@@ -18,12 +20,20 @@ class FavoriteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isWishlisted = ref.watch(
-      wishlistProvider.select((items) => items.any((p) => p.id == product.id)),
+      wishlistProvider.select((state) => state.items.any((p) => p.id == product.id)),
     );
+    final isGuest = ref.watch(authStateProvider.select((s) => s.isGuest));
 
     return GestureDetector(
       onTap: () {
         HapticUtils.selection();
+        if (isGuest) {
+          showGuestPromptDialog(
+            context: context,
+            message: 'Sign in to save your favorite products.',
+          );
+          return;
+        }
         ref.read(wishlistProvider.notifier).toggle(product);
       },
       child: AnimatedSwitcher(

@@ -11,10 +11,12 @@ import 'package:max/features/checkout/presentation/widgets/promo_section.dart';
 import 'package:max/features/checkout/presentation/widgets/added_to_cart_dialog.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/widgets/skeletons/product_detail_skeleton.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/widgets/guest_prompt_dialog.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -163,6 +165,14 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 isSvg: true,
                 title: "Add to cart",
                 onTap: () {
+                  final isGuest = ref.read(authStateProvider).isGuest;
+                  if (isGuest) {
+                    showGuestPromptDialog(
+                      context: context,
+                      message: 'Sign in to add items to your bag.',
+                    );
+                    return;
+                  }
                   final dbProductId = int.parse(
                     widget.product.id.replaceFirst('p', ''),
                   );

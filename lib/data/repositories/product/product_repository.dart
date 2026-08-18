@@ -3,6 +3,7 @@ import 'package:max/data/models/product_model.dart';
 
 abstract class ProductRepository {
   List<CategoryModel> get categories;
+  Future<void> loadAll();
   List<ProductModel> getAllProducts();
   List<ProductModel> getProductsByCategory(
     String category, {
@@ -14,8 +15,4 @@ abstract class ProductRepository {
     int maxPerCategory = 2,
   });
   ProductModel? getProductById(String id);
-  List<ProductModel> searchProducts(
-    String query, {
-    List<CategoryModel> categories = const [],
-  });
 }

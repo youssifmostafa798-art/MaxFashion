@@ -1,11 +1,18 @@
-import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 
+class SearchResult {
+  final List<ProductModel> products;
+  final int totalCount;
+
+  const SearchResult({required this.products, required this.totalCount});
+}
+
 abstract class SearchRepository {
-  List<ProductModel> searchProducts(
+  Future<SearchResult> searchProducts(
     String query, {
-    List<ProductModel>? source,
-    List<CategoryModel> categories = const [],
+    int limit = 20,
+    int offset = 0,
   });
-  List<ProductModel> getPopularProducts();
+
+  Future<List<ProductModel>> getPopularProducts();
 }

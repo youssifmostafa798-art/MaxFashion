@@ -1,797 +1,326 @@
 # Supabase Remaining Work
 
-> **Generated:** Mon Aug 17 2026
-> **Audit scope:** Entire Flutter project — every file in lib/, supabase/, assets/, scripts/, docs/
+> **Generated:** Mon Aug 18 2026
+> **Audit scope:** Entire Flutter project — every file in lib/, supabase/, docs/
+> **Previous audit:** Aug 17, 2026
 > **Rule:** Code is truth. Documentation is secondary.
 
 ---
 
-## Project Status
+## Current Status
 
-Overall migration progress:
+The MaxFashion app has **~92% of Supabase migration completed**. All major features (auth, products, cart, wishlist, orders, addresses, payment cards, home content, OTP password recovery) are connected to Supabase with working CRUD, RLS, and auth-aware providers. Migrations 018 (profiles) and 019 (avatars storage) now exist. A third edge function (`verify-reset-code`) has been added.
 
-- **Completed:**
-  - Core product catalog (categories, products, images, sizes) fully in Supabase with seed data
-  - Cart items — Supabase CRUD with RLS, auth-aware provider
-  - Wishlist items — Supabase CRUD with RLS, auth-aware provider
-  - Orders + order items — Supabase CRUD with RLS, auth-aware provider
-  - Addresses — Supabase CRUD with RLS, auth-aware provider
-  - Payment cards — Supabase CRUD with RLS, auth-aware provider
-  - Auth — signup, login, logout, password reset (OTP), profile update via Supabase
-  - Home content — Supabase-backed cover image
-  - Product images — uploaded to Supabase Storage (`product-images` bucket)
-  - Avatar upload — Supabase Storage (`avatars` bucket)
-  - 17 SQL migrations, 13 tables, 2 edge functions
-
-- **Partially completed:**
-  - User profile — code uses `profiles` table but **no migration exists** for it
-  - Search — repository named `SupabaseSearchRepository` but queries are **entirely client-side**
-  - Order model serialization — model fields don't match DB columns; `toJson`/`fromJson` broken
-  - Payment card model serialization — all JSON keys are camelCase, DB uses snake_case
-  - Cart item model — UI-layer DTO, not a DB mirror; `toJson` sends non-existent columns
-  - Auth interface — `ensureProfileExists` and `isEmailConfirmationPending` not in abstract interface, forced `as dynamic` casts
-
-- **Not started:**
-  - `profiles` table migration
-  - `avatars` bucket RLS migration
-  - Per-user recent searches (currently shared across all users on device)
-  - Promo code feature
-  - Notifications preference sync
-  - Language selection persistence
-  - Router auth guards
-  - Database indexes for text search
+Remaining work is primarily **code quality** (model serialization mismatches, `as dynamic` casts), **security hardening** (password_reset_codes RLS policies still grant anon access), and **UX improvements** (router auth guards, per-user recent searches, real search).
 
 ---
 
-## Remaining Features
+## Completed Work
 
-| Feature | Current Implementation | Supabase Status | Priority |
-| -------- | --------------------- | ---------------- | -------- |
-| Product catalog | Supabase read + Storage | Fully migrated | Done |
-| Categories | Supabase read | Fully migrated | Done |
-| Home cover | Supabase read | Fully migrated | Done |
-| Cart | Supabase CRUD | Fully migrated | Done |
-| Wishlist | Supabase CRUD | Fully migrated | Done |
-| Orders | Supabase CRUD | Fully migrated (model issues) | Done |
-| Addresses | Supabase CRUD | Fully migrated (model issues) | Done |
-| Payment cards | Supabase CRUD | Fully migrated (model issues) | Done |
-| Auth (signup/login/logout) | Supabase Auth | Fully migrated | Done |
-| Password reset (OTP) | Edge functions + DB | Migrated (security issues) | Done |
-| Profile view/edit | Supabase via auth repo | Migrated (no migration file) | HIGH |
-| Product search | Client-side filter | **Fake Supabase** — needs real DB search | HIGH |
-| Recent searches | SharedPreferences | **Not per-user** — data leaks between accounts | HIGH |
-| Router auth guards | None | **All routes open** — guests access protected screens | HIGH |
-| Password reset RLS | 3 anon policies on `password_reset_codes` | **FIXED** — All anon policies removed (Phase 1) | ✅ Fixed |
-| Order model serialization | camelCase + int status | **Broken** — `toJson` sends wrong types | CRITICAL |
-| Payment card model serialization | camelCase keys | **Broken** — won't round-trip to DB | CRITICAL |
-| Cart item model serialization | Extra non-DB fields in `toJson` | **Broken** — sends non-existent columns | CRITICAL |
-| Product model ID | Prefixed string `'p123'` | **Broken** — `toJson` sends invalid ID | CRITICAL |
-| Profile migration | Code references `profiles` table | **FIXED** — Migration created (Phase 2) | ✅ Fixed |
-| Promo codes | Static UI only | **Not implemented** | LOW |
-| Notifications toggle | Local StateProvider | **Not synced** to Supabase | LOW |
-| Language selector | Placeholder SnackBar | **Not implemented** | LOW |
-| Shop By list | Hardcoded, no handlers | **Dead UI** | LOW |
-| Guest mode | "Continue as Guest" navigates to main | **Broken** — all user-scoped providers fail for null user | MEDIUM |
+### Phase 3.1 — Supabase Setup
+- **What:** Supabase project initialized, SDK configured in `main.dart`, `.env` loaded via `flutter_dotenv`
+- **Files:** `lib/main.dart`, `.env`
+- **Status:** ✅ Verified — `Supabase.initialize()` in `main()`
 
----
+### Phase 3.2 — Authentication
+- **What:** Full Supabase Auth integration: signUp, signIn, signOut, session restore, profile CRUD, avatar upload
+- **Files:** `supabase_auth_repository.dart`, `auth_provider.dart`, `profile_model.dart`
+- **Status:** ✅ Verified — Repository implements `AuthRepositoryInterface`, auth state listener active
 
-## Detailed Audit
+### Phase 3.3 — Products
+- **What:** Product catalog with categories, products, images, sizes — all from Supabase with joins
+- **Files:** `supabase_product_repository.dart`, `product_provider.dart`, migrations 001-005, 008
+- **Status:** ✅ Verified — `loadAll()` fetches categories + products with relations
 
----
+### Phase 3.4 — Cart
+- **What:** Full cart CRUD via Supabase `cart_items` table with RLS and auth-aware provider
+- **Files:** `supabase_cart_repository.dart`, `cart_provider.dart`, migration 009
+- **Status:** ✅ Verified — `loadCart()` has explicit `user_id` filter, all CRUD methods authenticated
 
-### 1. Product Model Serialization
+### Phase 3.5 — Wishlist
+- **What:** Full wishlist CRUD via Supabase `wishlist_items` table with RLS and auth-aware provider
+- **Files:** `supabase_wishlist_repository.dart`, `wishlist_provider.dart`, migration 010
+- **Status:** ✅ Verified — Duplicate detection, product joins, mounted checks
 
-**Current implementation:** `ProductModel` in `lib/data/models/product_model.dart`
+### Phase 3.6 — Orders
+- **What:** Full orders CRUD via Supabase `orders` + `order_items` tables with RLS and auth-aware provider
+- **Files:** `supabase_order_repository.dart`, `orders_provider.dart`, `orders_migration_service.dart`, migration 011
+- **Status:** ✅ Verified — Migration service migrates legacy SharedPreferences orders to Supabase per-user
 
-**Files involved:**
-- `lib/data/models/product_model.dart:1-113`
-- `lib/data/repositories/cart/supabase_cart_repository.dart` (references ProductModel)
-- `lib/data/repositories/wishlist/supabase_wishlist_repository.dart` (references ProductModel)
-- `lib/data/repositories/product/supabase_product_repository.dart` (reads products)
+### Phase 3.7 — Addresses
+- **What:** Full address CRUD via Supabase `addresses` table with RLS and auth-aware provider
+- **Files:** `supabase_address_repository.dart`, `address_provider.dart`, migration 014
+- **Status:** ✅ Verified — Default address management with automatic reassignment on delete
 
-**Problems found:**
-1. **Line 84:** `id: 'p${json['id']}'` — DB stores `BIGINT`, model converts to string with `'p'` prefix. Any `toJson` call sends `'p123'` which fails DB writes.
-2. **Line 101:** `toJson` returns the prefixed string ID — broken for any Supabase write operation.
-3. **Lines 5-6:** Hardcoded Supabase storage URL `https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images`.
+### Phase 3.8 — Payment Cards
+- **What:** Full payment card CRUD via Supabase `payment_cards` table with RLS and auth-aware provider
+- **Files:** `supabase_payment_card_repository.dart`, `payment_card_provider.dart`, migration 015
+- **Status:** ✅ Verified — Default card management, duplicate detection, auth-aware provider
 
-**Missing Supabase components:** None — reads work. Writes are broken.
+### Phase 3.9 — OTP Password Recovery
+- **What:** 3-page OTP flow with Edge Functions, `password_reset_codes` table, rate limiting, attempt limiting
+- **Files:** `send-reset-code/index.ts`, `verify-reset-code/index.ts`, `reset-password/index.ts`, migrations 016-017
+- **Status:** ✅ Verified — 3 Edge Functions, 60s cooldown, max 5 attempts, 10-min expiry
 
-**Required migrations:** None.
+### Phase 3.10 — OTP Security Hardening
+- **What:** Added `attempt_count` and `last_request_at` columns to `password_reset_codes`
+- **Files:** `017_otp_security_hardening.sql`
+- **Status:** ✅ Verified — Columns present, enforced in Edge Functions
 
-**Required changes:**
-- Change `id` field from `String` to `int` (matching `BIGINT`), or handle prefix only in UI layer
-- Remove hardcoded storage URL — use env variable or constant
-- Fix `toJson` to send raw integer ID
+### Profiles Table Migration (Phase 2)
+- **What:** Formal `profiles` table migration with RLS, FK to `auth.users`, `updated_at` trigger
+- **Files:** `018_profiles_schema.sql`
+- **Status:** ✅ Verified — Migration file exists with IF NOT EXISTS, RLS with owner-only access
 
-**Estimated complexity:** Medium (cascading changes to cart, wishlist, order item models that reference `productId` as `String`)
+### Avatars Storage Migration (Phase 2)
+- **What:** `avatars` bucket creation + storage policies (public read, authenticated write/delete)
+- **Files:** `019_avatars_storage.sql`
+- **Status:** ✅ Verified — 4 storage policies: public SELECT, authenticated INSERT/UPDATE/DELETE
 
-**Recommended execution order:** 1st — blocks correct serialization in 4 other models
+### Data Isolation Audit & Fix
+- **What:** Fixed cross-account data leakage via `currentUserIdProvider`, lifecycle `mounted` checks, per-user migration flags
+- **Files:** `auth_provider.dart`, `orders_provider.dart`, `wishlist_provider.dart`, `cart_provider.dart`, `address_provider.dart`, `payment_card_provider.dart`, `orders_migration_service.dart`
+- **Status:** ✅ Verified — All 5 user-scoped providers watch `currentUserIdProvider`, all notifiers have `mounted` checks
 
----
-
-### 2. Order Model Serialization
-
-**Current implementation:** `OrderModel` in `lib/data/models/order_model.dart`
-
-**Files involved:**
-- `lib/data/models/order_model.dart:1-81`
-- `lib/data/models/order_item_model.dart:1-76`
-- `lib/data/repositories/orders/supabase_order_repository.dart:1-180`
-- `lib/data/providers/orders_provider.dart:1-76`
-
-**Problems found:**
-1. **Line 67:** `status: status.index` — serializes `OrderStatus` enum as `int` index. DB column is `TEXT` (`'processing'`, `'shipped'`, etc.).
-2. **Line 79:** `fromJson` reads `status` as `OrderStatus.values[json['status']]` — crashes on DB text values.
-3. **Lines 69-80:** All `fromJson` keys are camelCase (`orderId`, `totalPrice`, `orderDate`), but DB uses snake_case (`id`, `total_price`, `created_at`).
-4. **Missing fields:** `user_id`, `order_number`, `updated_at` not in model.
-5. **Name mismatches:** Model `orderId` vs DB `id`; model `orderDate` vs DB `created_at`.
-
-**OrderItemModel issues:**
-1. **Line 4:** `productId` is `String` but DB `product_id` is `BIGINT`.
-2. **Missing fields:** `id`, `order_id`, `created_at`.
-3. **Lines 66-75:** `fromJson` uses camelCase keys.
-
-**Required changes:**
-- Serialize `OrderStatus` as `.name` (string), not `.index` (int)
-- Rename fields or add `@JsonKey` annotations for snake_case mapping
-- Add missing fields (`order_number`, `updated_at`)
-- Fix `OrderItemModel.productId` to `int`
-
-**Estimated complexity:** Medium-High (touches repository, provider, and all order-related UI)
+### Avatar Race Condition Fix
+- **What:** Fixed avatar deletion race condition where `setUser()` was killed by `mounted` guard
+- **Files:** `edit_profile_provider.dart`
+- **Status:** ✅ Verified — Auth notifier captured before async gap, `setUser()` runs unconditionally
 
 ---
 
-### 3. Payment Card Model Serialization
+## Partially Completed
 
-**Current implementation:** `PaymentCardModel` in `lib/data/models/payment_card_model.dart`
+### Search Repository
+- **What:** `SupabaseSearchRepository` exists but performs **zero Supabase queries** — all search is client-side filtering of in-memory cached products
+- **Files:** `supabase_search_repository.dart`, `search_provider.dart`
+- **Remaining:** Implement real Supabase text search (ilike or full-text search), add `products.name` index
+- **Priority:** HIGH
 
-**Files involved:**
-- `lib/data/models/payment_card_model.dart:1-77`
-- `lib/data/repositories/payment_card/supabase_payment_card_repository.dart:1-116`
-- `lib/data/providers/payment_card_provider.dart:1-102`
+### Recent Searches
+- **What:** Search history persisted in SharedPreferences but **not scoped per user** — shared across all accounts on device
+- **Files:** `search_provider.dart:129-141`
+- **Remaining:** Key by user ID, clear on logout, or migrate to Supabase
+- **Priority:** HIGH
 
-**Problems found:**
-1. **Lines 50-61:** `toJson` sends camelCase keys (`cardHolderName`, `last4Digits`, `expiryMonth`, etc.).
-2. **Lines 63-73:** `fromJson` reads camelCase keys.
-3. **DB columns** are snake_case (`card_holder_name`, `last4_digits`, `expiry_month`, etc.).
-4. **Result:** Every `fromJson` returns null/empty for all fields when reading from Supabase. Every `toJson` sends non-existent column names.
-
-**Missing fields:** `user_id`, `updated_at`.
-
-**Required changes:**
-- Add `@JsonKey(name: '...')` annotations for every field, or rename to snake_case and map in repository
-- Add missing fields
-
-**Estimated complexity:** Low (isolated to one model file + repository mapping)
+### Auth Interface
+- **What:** `ensureProfileExists` and `isEmailConfirmationPending` implemented on `SupabaseAuthRepository` but **NOT declared on `AuthRepositoryInterface`**
+- **Files:** `auth_repository_interface.dart`, `supabase_auth_repository.dart:67`, `auth_provider.dart:98,194,212`
+- **Remaining:** Add methods to interface, remove `as dynamic` casts
+- **Priority:** HIGH
 
 ---
 
-### 4. Cart Item Model Serialization
-
-**Current implementation:** `CartItemModel` in `lib/data/models/cart_item_model.dart`
-
-**Files involved:**
-- `lib/data/models/cart_item_model.dart:1-78`
-- `lib/data/repositories/cart/supabase_cart_repository.dart:1-162`
-- `lib/data/providers/cart_provider.dart:1-236`
-
-**Problems found:**
-1. **Lines 57-66:** `toJson` sends `product_name`, `product_image`, `selected_color`, `selected_size`, `unit_price` — none of these columns exist in the `cart_items` table.
-2. **Lines 68-77:** `fromJson` expects these same non-existent columns.
-3. **Model is a UI-layer DTO** with joined data (`productName`, `productImage`, `unitPrice`), not a DB mirror.
-4. **Name mismatch:** DB column `size` vs model field `selectedSize`.
-5. **Missing:** `user_id` field.
-
-**Note:** The repository (`supabase_cart_repository.dart`) handles the join correctly for reads, but `toJson` is broken for writes. Currently, writes work because the repository constructs the insert payload directly rather than using `model.toJson()`.
-
-**Required changes:**
-- Separate DB model from UI model, or add a `toInsertJson()` method that only sends DB columns
-- Ensure `fromJson` maps DB columns correctly for the repository's read path
-
-**Estimated complexity:** Medium
-
----
-
-### 5. Profile Table — Missing Migration
-
-**Current implementation:** `ProfileModel` in `lib/features/auth/data/models/profile_model.dart`
-
-**Files involved:**
-- `lib/features/auth/data/models/profile_model.dart:1-125`
-- `lib/features/auth/data/repositories/supabase_auth_repository.dart:58` (INSERT), `:130-160` (UPDATE)
-- `lib/data/providers/auth_provider.dart` (reads profile)
-
-**Problems found:**
-1. **No SQL migration file exists** for the `profiles` table. It was likely created manually in the Supabase dashboard.
-2. **Cannot audit RLS policies** without the schema definition.
-3. **Cannot verify** whether RLS is enabled, whether policies use `auth.uid()`, or whether the table has proper constraints.
-4. The `ProfileModel` uses `fromMap`/`toMap` (inconsistent with other models using `fromJson`/`toJson`).
-
-**Missing Supabase components:**
-- Migration file for `profiles` table
-- RLS policies (SELECT/INSERT/UPDATE/DELETE with owner-only access)
-- Indexes on `id` (primary key, likely already indexed)
-- Foreign key to `auth.users(id)`
-
-**Required migrations:**
-- `018_profiles_schema.sql` — CREATE TABLE, RLS policies, foreign key, trigger for `updated_at`
-
-**Estimated complexity:** Low (table likely exists; just needs formal migration)
-
-**Recommended execution order:** 2nd — security-critical
-
----
-
-### 6. Avatars Storage Bucket — Missing Migration
-
-**Current implementation:** Upload in `supabase_auth_repository.dart:170-174`
-
-**Files involved:**
-- `lib/features/auth/data/repositories/supabase_auth_repository.dart:170-174`
-
-**Problems found:**
-1. No migration defines the `avatars` bucket or its RLS policies.
-2. Code uses `getPublicUrl()` (line 174), suggesting the bucket is public — but this is not verified in migrations.
-3. No INSERT/UPDATE/DELETE policies defined for authenticated users.
-
-**Required migrations:**
-- `019_avatars_storage.sql` — Bucket creation, RLS policies (public read, owner write)
-
-**Estimated complexity:** Low
-
----
-
-### 7. Search Repository — Fake Supabase Implementation
-
-**Current implementation:** `SupabaseSearchRepository` in `lib/data/repositories/search/supabase_search_repository.dart`
-
-**Files involved:**
-- `lib/data/repositories/search/supabase_search_repository.dart:1-40`
-- `lib/data/repositories/product/product_search_matcher.dart:1-41` (dead code)
-- `lib/data/providers/search_provider.dart:1-155`
-
-**Problems found:**
-1. **`SupabaseSearchRepository` does zero Supabase queries.** It delegates to `_productRepo.getAllProducts()` (all products loaded in memory) and filters client-side.
-2. **`product_search_matcher.dart`** contains in-memory search logic — entire file is dead code (never imported).
-3. **`getPopularProducts()`** (line 37-39) returns the first 4 products with no popularity logic — dead code.
-4. **No database-level text search** — performance degrades as product count grows.
-
-**Missing Supabase components:**
-- Supabase full-text search query (using `to_tsvector`/`to_tsquery` or `ilike`)
-- Database index for product name search
-- Server-side search with pagination
-
-**Required migrations:**
-- Index on `products.name` for text search
-- Optionally: full-text search column with GIN index
-
-**Estimated complexity:** Medium
-
----
-
-### 8. Recent Searches — Not Per-User
-
-**Current implementation:** `SearchNotifier` in `lib/data/providers/search_provider.dart`
-
-**Files involved:**
-- `lib/data/providers/search_provider.dart:129-141`
-
-**Problems found:**
-1. **SharedPreferences key `recent_searches`** is global — shared across all users on the same device.
-2. When User A logs out and User B logs in, User B sees User A's recent searches.
-3. `searchProvider` does NOT watch `currentUserIdProvider` — not reset on auth state change.
-
-**Required changes:**
-- Key recent searches by user ID (e.g., `recent_searches_{userId}`)
-- Clear recent searches on logout
-- Or migrate to Supabase `profiles` table as a JSON field
-
-**Estimated complexity:** Low
-
----
-
-### 9. Router — No Auth Guards
-
-**Current implementation:** `AppRouter` in `lib/core/router/app_router.dart`
-
-**Files involved:**
-- `lib/core/router/app_router.dart:1-198`
-- All screens accessible via named routes
-
-**Problems found:**
-1. **No route guards** — all 22 routes are accessible without authentication.
-2. Guest users can navigate to: cart, wishlist, orders, addresses, payment methods, edit profile, order details.
-3. These screens call Supabase with `auth.uid()` which is null for guests — operations silently fail or throw errors.
-4. No redirect to login when unauthenticated user accesses protected routes.
-
-**Required changes:**
-- Add auth guard middleware in `onGenerateRoute`
-- Define which routes require authentication
-- Redirect to auth page for protected routes when user is null
-
-**Estimated complexity:** Medium
-
----
-
-### 10. Password Reset RLS — CRITICAL Security Vulnerability
-
-**Current implementation:** `password_reset_codes` table RLS in `016_create_password_reset_codes.sql`
-
-**Files involved:**
-- `supabase/migrations/016_create_password_reset_codes.sql:30-53`
-- `supabase/functions/send-reset-code/index.ts`
-- `supabase/functions/reset-password/index.ts`
-
-**Problems found:**
-1. **Line 40-44:** `SELECT` policy `USING (true)` to `anon` — **any unauthenticated user can read ALL reset codes for ALL emails.**
-2. **Line 47-52:** `UPDATE` policy `USING (true) WITH CHECK (true)` to `anon` — **anyone can update ANY record** (mark codes as used, change values).
-3. **Line 35-38:** `INSERT` policy to `anon` — anyone can insert (needed for edge function, but edge functions use service role anyway).
-
-**Attack scenario:**
-1. Attacker calls `password_reset_codes` API (anon key, no auth)
-2. Reads all active codes: `SELECT * FROM password_reset_codes WHERE used = false`
-3. Gets the 6-digit code for any email
-4. Uses it to reset that user's password
-
-**Required changes:**
-- Remove all 3 `anon` policies
-- Edge functions already use service-role key — no client-side access needed
-- Or: restrict to service-role only with no client policies
-
-**Estimated complexity:** Low (SQL-only fix)
-
-**Recommended execution order:** 1st — CRITICAL security fix
-
----
-
-### 11. Edge Function Security Issues
-
-**Files involved:**
-- `supabase/functions/send-reset-code/index.ts`
-- `supabase/functions/reset-password/index.ts`
-
-**Problems found:**
-
-#### send-reset-code
-1. **Line 135-136:** `_devCode` returned in response body — **removed** ✅ Fixed Phase 1.
-2. **Line 20:** CORS `*` — reviewed, safe for Flutter mobile app.
-3. **Line 55:** `listUsers()` is O(n) — not yet fixed.
-4. **Lines 107-120:** OTP stored as plaintext — not yet fixed.
-
-#### reset-password
-1. **Lines 43-81:** `attempt_count` is checked (`< 5`) and **now incremented on failed attempts** ✅ Fixed Phase 1.
-2. **Line 84:** `listUsers()` is O(n) — not yet fixed.
-3. **CORS `*`** — reviewed, safe for Flutter mobile app.
-
-**Required changes:**
-- Remove `_devCode` from response
-- Increment `attempt_count` on failed verification
-- Hash OTP codes before storage
-- Replace `listUsers()` with direct query
-- Tighten CORS to specific origins
-
-**Estimated complexity:** Low-Medium
-
----
-
-### 12. Auth Provider — Unsafe Dynamic Casts
-
-**Current implementation:** `AuthNotifier` in `lib/data/providers/auth_provider.dart`
-
-**Files involved:**
-- `lib/data/providers/auth_provider.dart:98, 194, 212`
-- `lib/features/auth/domain/auth_repository_interface.dart` (missing methods)
-- `lib/features/auth/data/repositories/supabase_auth_repository.dart:67` (has the methods)
-
-**Problems found:**
-1. **Lines 98, 212:** `(_repository as dynamic).ensureProfileExists(...)` — `ensureProfileExists` is on `SupabaseAuthRepository` but NOT in `AuthRepositoryInterface`.
-2. **Line 194:** `final repo = _repository as dynamic; if (repo.isEmailConfirmationPending == true)` — same issue.
-3. **Line 299:** `state = const AuthState();` after `await _repository.signOut()` without `mounted` check.
-
-**Required changes:**
-- Add `ensureProfileExists` and `isEmailConfirmationPending` to `AuthRepositoryInterface`
-- Remove `as dynamic` casts
-- Add `mounted` check before state assignment in `logout()`
-
-**Estimated complexity:** Low
-
----
-
-### 13. Wishlist Provider — Silent Error Swallowing
-
-**Current implementation:** `WishlistNotifier` in `lib/data/providers/wishlist_provider.dart`
-
-**Files involved:**
-- `lib/data/providers/wishlist_provider.dart:52, 59`
-
-**Problems found:**
-1. **Line 52:** `_repository.addToWishlist(dbProductId).catchError((_) {})` — errors silently swallowed.
-2. **Line 59:** `_repository.removeFromWishlist(dbProductId).catchError((_) {})` — same.
-3. If network fails, UI shows item as wishlisted/unwishlisted but server state is different — user sees a lie.
-
-**Required changes:**
-- Add proper error handling with state rollback
-- Show error SnackBar on failure
-- Revert optimistic UI update on error
-
-**Estimated complexity:** Low
-
----
-
-### 14. Product Provider — No Error Handling on Load
-
-**Current implementation:** `product_provider.dart`
-
-**Files involved:**
-- `lib/data/providers/product_provider.dart:24-27`
-
-**Problems found:**
-1. **Line 25:** `repo.loadAll().then((_) { ... })` — no `.catchError()`.
-2. If `loadAll()` fails, `productsLoaded` stays `false` forever — UI shows loading skeleton indefinitely.
-
-**Required changes:**
-- Add `.catchError()` or use `try/catch` with `AsyncValue`
-- Expose error state to UI
-
-**Estimated complexity:** Low
-
----
-
-### 15. Hardcoded Supabase Storage URLs
-
-**Files involved:**
-- `lib/data/models/product_model.dart:5-6`
-- `lib/data/repositories/cart/supabase_cart_repository.dart:12`
-- `lib/data/repositories/orders/supabase_order_repository.dart:13`
-
-**Problems found:**
-1. All three contain `https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images`.
-2. If the Supabase project URL changes, three files must be updated.
-
-**Required changes:**
-- Extract to a single constant in `app_constants.dart` or read from `.env`
-
-**Estimated complexity:** Low
-
----
-
-### 16. Fake Loading Delays
-
-**Files involved:**
-- `lib/features/orders/presentation/pages/orders_page.dart:25` (600ms)
-- `lib/features/wishlist/presentation/pages/wishlist_page.dart:27` (600ms)
-- `lib/features/product/presentation/pages/product_detail_page.dart:37` (400ms)
-- `lib/features/product/presentation/pages/product_listing_page.dart:30` (500ms)
-
-**Problems found:**
-1. These pages use `Future.delayed` with fake durations to simulate loading, even though data is fetched from Supabase.
-2. The actual Supabase fetch may be faster or slower than the fake delay.
-3. Creates inconsistent UX — user waits longer than necessary on fast connections.
-
-**Required changes:**
-- Remove fake delays
-- Use real `AsyncValue` states from providers
-
-**Estimated complexity:** Low
-
----
-
-### 17. Guest Mode — Broken User-Scoped Features
-
-**Current implementation:** `auth_page.dart` "Continue as Guest" button
-
-**Files involved:**
-- `lib/features/auth/presentation/pages/auth_page.dart:86` (navigates to main without login)
-- `lib/data/providers/cart_provider.dart` (uses `currentUserIdProvider` — null for guests)
-- `lib/data/providers/wishlist_provider.dart` (same)
-- `lib/data/providers/orders_provider.dart` (same)
-- `lib/data/providers/address_provider.dart` (same)
-- `lib/data/providers/payment_card_provider.dart` (same)
-
-**Problems found:**
-1. Guest navigates to main screen with null user.
-2. All user-scoped providers receive `null` as user ID.
-3. Supabase queries with `user_id = null` return empty or fail.
-4. Guest can attempt to add to cart, wishlist, place order — all fail silently or throw errors.
-5. No UI feedback tells the guest they need to sign in.
-
-**Required changes:**
-- Either: block guest access to user-scoped features with "Sign in required" prompt
-- Or: implement local-only guest cart/wishlist with migration on login
-- Or: remove guest mode entirely
-
-**Estimated complexity:** Medium-High
-
----
-
-### 18. Orders Provider — No Loading State
-
-**Files involved:**
-- `lib/data/providers/orders_provider.dart:1-76`
-
-**Problems found:**
-1. State is `List<OrderModel>` — no `isLoading` or `error` field.
-2. UI cannot distinguish between "still loading" and "empty orders".
-3. Same issue in `AddressProvider`, `PaymentCardProvider`, `WishlistProvider`.
-
-**Required changes:**
-- Wrap state in a record/class with `isLoading`, `error`, and `data` fields
-- Or use `AsyncValue<List<T>>` pattern
-
-**Estimated complexity:** Medium
-
----
-
-### 19. Dead Code
-
-**Files involved:**
-- `lib/data/repositories/product/product_search_matcher.dart:1-41` — entire file, never imported
-- `lib/data/repositories/product/product_repository.dart:11` — `getFeaturedProducts()`, never called
-- `lib/data/repositories/product/product_repository.dart:12-15` — `getHomeProducts()`, never called
-- `lib/data/repositories/search/supabase_search_repository.dart:37-39` — `getPopularProducts()`, never called
-
-**Required changes:**
-- Delete dead files and methods
-
-**Estimated complexity:** Low
-
----
-
-### 20. Missing Database Indexes
-
-**Current state:** 24 indexes defined across 9 tables.
-
-**Missing indexes:**
-
-| Table | Suggested Index | Reason |
-|---|---|---|
-| `categories` | `idx_categories_display_order` | UI orders by `display_order` (added in migration 012) |
-| `products` | `idx_products_name` | Search by product name |
-| `profiles` | (needs migration first) | Cannot audit without schema |
-
-**Estimated complexity:** Low (SQL-only)
-
----
-
-### 21. Missing RLS Policies
-
-| Table | Status | Issue |
-|---|---|---|
-| `profiles` | **FIXED** — RLS with owner-only access (Phase 2) | ✅ Fixed |
-| `password_reset_codes` | **FIXED** — No client policies; service-role only | ✅ Fixed Phase 1 |
-| `categories` | OK | Read-only, public |
-| `products` | OK | Read-only, public |
-| `product_images` | OK | Read-only, public |
-| `product_sizes` | OK | Read-only, public |
-| `home_content` | OK | Read-only, active only |
-| `cart_items` | OK | Owner-only CRUD |
-| `wishlist_items` | OK | Owner-only (no UPDATE, acceptable) |
-| `orders` | OK | Owner-only CRUD |
-| `order_items` | OK | Owner-only via parent join |
-| `addresses` | OK | Owner-only CRUD |
-| `payment_cards` | OK | Owner-only CRUD |
-
----
-
-### 22. Cross-Account Data Leakage Risks
-
-| Risk | Location | Severity |
-|---|---|---|
-| Recent searches shared across users | `search_provider.dart:132,141` | HIGH |
-| `password_reset_codes` readable by anyone | `016_create_password_reset_codes.sql:40-44` | **FIXED** — All anon policies removed (Phase 1) |
-| Guest user operations with null user ID | Multiple providers | MEDIUM |
-
-All other user-scoped data (cart, wishlist, orders, addresses, payment cards) properly filters by `auth.uid() = user_id` in both RLS and repository code.
-
----
-
-### 23. Auth Synchronization Issues
-
-| Issue | Location | Severity |
-|---|---|---|
-| No router auth guards | `app_router.dart` | HIGH |
-| Missing `mounted` check in logout | `auth_provider.dart:299` | MEDIUM |
-| `as dynamic` casts in auth provider | `auth_provider.dart:98,194,212` | HIGH |
-| Search provider not reset on logout | `search_provider.dart:152-155` | MEDIUM |
-| Product state persists across logout | `product_provider.dart` (global) | LOW |
-
----
-
-### 24. Features That Can Fail After Logout/Login
-
-| Feature | Failure Mode | Fix Required |
-|---|---|---|
-| Cart page | Supabase query with null user_id returns empty/error | Auth guard + provider reset |
-| Wishlist page | Same | Auth guard + provider reset |
-| Orders page | Same | Auth guard + provider reset |
-| Addresses page | Same | Auth guard + provider reset |
-| Payment methods page | Same | Auth guard + provider reset |
-| Edit profile | Same | Auth guard + provider reset |
-| Place order | Order insert fails with null user_id | Auth guard |
-| Product detail add-to-cart | Cart insert fails silently | Auth guard or guest cart |
-
----
-
-## Hidden Technical Debt
-
-1. **ProductModel ID as String with prefix** — The `'p'` prefix pattern is used throughout the codebase (cart, wishlist, order items). Changing `ProductModel.id` to `int` requires updating every place that compares or passes product IDs. This is a **cross-cutting concern** affecting 6+ files.
-
-2. **Dual model pattern** — `CartItemModel`, `OrderItemModel` are UI-layer DTOs with joined data, not DB mirrors. The repository layer manually constructs Supabase payloads instead of using `model.toJson()`. This works but is fragile — if someone calls `model.toJson()` for a write, it breaks.
-
-3. **No formal profiles schema** — The `profiles` table was created outside migrations. This means: no version control, no reproducibility, no audit trail, no ability to spin up a fresh dev environment from migrations alone.
-
-4. **`as dynamic` casts in auth** — 3 occurrences in `auth_provider.dart` bypass the type system. If `SupabaseAuthRepository` changes its method signatures, these fail at runtime with no compile-time warning.
-
-5. **Repositories with mutable state** — `supabase_order_repository.dart` (line 93) and `supabase_product_repository.dart` (lines 14-15) maintain internal caches. Repositories should be stateless; caching belongs in the provider layer.
-
-6. **Inconsistent model patterns** — `ProfileModel` uses `fromMap`/`toMap`; all others use `fromJson`/`toJson`. Some models handle snake_case mapping; others don't.
-
-7. **No error boundaries** — Most screens delegate error handling to providers, but some providers (wishlist, product) silently swallow errors. There's no global error handling strategy.
-
-8. **SharedPreferences for recent searches** — Device-level persistence for user-level data. The data model doesn't account for multi-user scenarios.
-
----
-
-## TODO (Tomorrow's Work)
+## Remaining Work
 
 ### CRITICAL Priority
 
-- [x] **Fix `password_reset_codes` RLS** — Remove all 3 anon policies. Edge functions use service role. No client access needed. (`016_create_password_reset_codes.sql`) ✅ Fixed Phase 1
-- [x] **Add `profiles` table migration** — Formalize the table with RLS, foreign key to `auth.users`, trigger for `updated_at`. (`018_profiles_schema.sql`) ✅ Created Phase 2
-- [x] **Add `avatars` bucket migration** — Bucket config + RLS policies (public read, authenticated write). (`019_avatars_storage.sql`) ✅ Created Phase 2
-- [x] **Increment `attempt_count` in `reset-password` edge function** — Brute-force protection is currently useless. (`reset-password/index.ts`) ✅ Fixed Phase 1
-- [x] **Remove `_devCode` from `send-reset-code` response** — OTP leak in dev mode. (`send-reset-code/index.ts`) ✅ Fixed Phase 1
+| Task | Description | Files | Status |
+|------|-------------|-------|--------|
+| Fix `password_reset_codes` RLS | Remove all 3 anon policies (SELECT/INSERT/UPDATE). Edge functions use service_role which bypasses RLS. Client-side anon access is a **security vulnerability**. | `016_create_password_reset_codes.sql` | ❌ **NOT DONE** — Previous docs claimed fixed; migration still has anon policies |
 
 ### HIGH Priority
 
-- [ ] **Fix OrderModel serialization** — Serialize status as `.name` (string), rename fields to snake_case or add `@JsonKey` annotations. (`order_model.dart`, `order_item_model.dart`)
-- [ ] **Fix PaymentCardModel serialization** — Add `@JsonKey(name: '...')` for all fields. (`payment_card_model.dart`)
-- [ ] **Fix CartItemModel serialization** — Add `toInsertJson()` for DB writes, keep `toJson()` for UI. (`cart_item_model.dart`)
-- [ ] **Fix ProductModel ID** — Change `id` from `String` to `int`, remove `'p'` prefix, update all consumers. (`product_model.dart` + 6 files)
-- [ ] **Add `ensureProfileExists` and `isEmailConfirmationPending` to `AuthRepositoryInterface`** — Remove `as dynamic` casts. (`auth_repository_interface.dart`, `auth_provider.dart`)
-- [ ] **Add `mounted` check in `logout()`** — `auth_provider.dart:299`.
-- [ ] **Implement router auth guards** — Define protected routes, redirect unauthenticated users. (`app_router.dart`)
-- [ ] **Scope recent searches by user** — Key by user ID, clear on logout. (`search_provider.dart`)
-- [ ] **Implement real search** — Use Supabase `ilike` or full-text search. (`supabase_search_repository.dart`, `020_search_index.sql`)
+| Task | Description | Files | Status |
+|------|-------------|-------|--------|
+| Fix OrderModel serialization | Status serialized as `int` (`.index`) but DB uses `TEXT`. `fromJson` uses camelCase keys but DB is snake_case. | `order_model.dart`, `order_item_model.dart` | ❌ Not started |
+| Fix PaymentCardModel serialization | All JSON keys camelCase (`cardHolderName`) but DB columns snake_case (`card_holder_name`). `fromJson`/`toJson` broken. | `payment_card_model.dart` | ❌ Not started |
+| Fix CartItemModel serialization | `toJson` sends non-DB columns (`product_name`, `product_image`, `selected_size`, `unit_price`). Model is UI-layer DTO. | `cart_item_model.dart` | ❌ Not started |
+| Fix ProductModel ID | `id` is `String` with `'p'` prefix (`'p123'`) but DB is `BIGINT`. `toJson` sends invalid ID. | `product_model.dart` + 6 consumers | ❌ Not started |
+| Fix Auth interface | Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`. Remove 3 `as dynamic` casts. | `auth_repository_interface.dart`, `auth_provider.dart` | ❌ Not started |
+| Add mounted check in logout | `auth_provider.dart:299` — `state = const AuthState()` without `mounted` check after `signOut()`. | `auth_provider.dart` | ❌ Not started |
+| Implement router auth guards | All 22 routes accessible without auth. Guests can reach cart, wishlist, orders, etc. | `app_router.dart` | ❌ Not started |
+| Scope recent searches by user | `SharedPreferences` key `recent_searches` is global. User B sees User A's searches. | `search_provider.dart` | ❌ Not started |
+| Implement real search | Use Supabase `ilike` or full-text search. Add `products.name` index. | `supabase_search_repository.dart`, migration | ❌ Not started |
 
 ### MEDIUM Priority
 
-- [ ] **Fix wishlist error handling** — Roll back optimistic UI on failure, show error. (`wishlist_provider.dart:52,59`)
-- [ ] **Fix product provider error handling** — Add `.catchError()` to `loadAll()`. (`product_provider.dart:25`)
-- [ ] **Remove fake loading delays** — Use real `AsyncValue` states. (4 screen files)
-- [ ] **Extract hardcoded storage URL** — Move to `app_constants.dart`. (`product_model.dart:5-6`, `supabase_cart_repository.dart:12`, `supabase_order_repository.dart:13`)
-- [ ] **Add loading state to Orders/Address/PaymentCard/Wishlist providers** — Wrap in record with `isLoading`/`error`. (4 provider files)
-- [ ] **Handle guest mode** — Either block user-scoped features or implement local guest storage. (`auth_page.dart`, multiple providers)
-- [ ] **Hash OTP codes** — Store hashed, not plaintext. (`send-reset-code/index.ts`)
-- [ ] **Replace `listUsers()` with direct query** — Both edge functions. (`send-reset-code/index.ts`, `reset-password/index.ts`)
-- [ ] **Tighten CORS on edge functions** — Replace `*` with specific origins.
+| Task | Description | Files | Status |
+|------|-------------|-------|--------|
+| Fix wishlist error handling | `addToWishlist`/`removeFromWishlist` silently swallow errors. Optimistic UI not rolled back on failure. | `wishlist_provider.dart:52,59` | ❌ Not started |
+| Fix product provider error handling | `loadAll().then(...)` has no `.catchError()`. If load fails, `productsLoaded` stays false forever. | `product_provider.dart:25` | ❌ Not started |
+| Remove fake loading delays | 4 screens use `Future.delayed` with fake durations instead of real `AsyncValue` states. | `orders_page.dart`, `wishlist_page.dart`, `product_detail_page.dart`, `product_listing_page.dart` | ❌ Not started |
+| Extract hardcoded storage URL | 3 files contain `https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images`. | `product_model.dart:5-6`, `supabase_cart_repository.dart:12`, `supabase_order_repository.dart:13` | ❌ Not started |
+| Add loading state to providers | Orders, Address, PaymentCard, Wishlist providers have no `isLoading`/`error` state. | 4 provider files | ❌ Not started |
+| Handle guest mode | "Continue as Guest" navigates to main with null user. All user-scoped features fail silently. | `auth_page.dart`, multiple providers | ❌ Not started |
+| Hash OTP codes | Store hashed, not plaintext in `password_reset_codes`. | `send-reset-code/index.ts` | ❌ Not started |
+| Replace `listUsers()` with direct query | Both `send-reset-code` and `reset-password` use O(n) `listUsers()`. | 2 Edge Function files | ❌ Not started |
+| Tighten CORS | Both Edge Functions use `CORS *`. | 2 Edge Function files | ❌ Not started |
 
 ### LOW Priority
 
-- [ ] **Delete dead code** — `product_search_matcher.dart`, `getFeaturedProducts()`, `getHomeProducts()`, `getPopularProducts()`.
-- [ ] **Add `categories.display_order` index** — Used for UI ordering.
-- [ ] **Add `products.name` index** — For text search.
-- [ ] **Add `created_at`/`updated_at` to HomeContentModel** — Missing fields.
-- [ ] **Add `id` to ProductSizeModel** — Missing field.
-- [ ] **Standardize model patterns** — Either all use `fromMap`/`toMap` or all use `fromJson`/`toJson` with snake_case mapping.
-- [ ] **Implement promo codes** — Currently static UI. (`promo_section.dart`)
-- [ ] **Implement notifications preference** — Sync to Supabase. (`settings_page.dart`)
-- [ ] **Implement language selector** — Currently placeholder. (`settings_page.dart`)
-- [ ] **Implement Shop By handlers** — Currently dead UI. (`categories_page.dart:245-250`)
-- [ ] **Automate `cleanup_expired_codes()`** — Database cron job or trigger. (`password_reset_codes`)
-- [ ] **Add CSRF protection to edge functions.**
-- [ ] **Add `DELETE` policy for `password_reset_codes`** — Or automate cleanup.
+| Task | Description | Files | Status |
+|------|-------------|-------|--------|
+| Delete dead code | `product_search_matcher.dart` (never imported), `getFeaturedProducts()`, `getHomeProducts()`, `getPopularProducts()`. | Multiple | ❌ Not started |
+| Add `categories.display_order` index | Used for UI ordering. | Migration | ❌ Not started |
+| Add `products.name` index | For text search. | Migration | ❌ Not started |
+| Standardize model patterns | `ProfileModel` uses `fromMap`/`toMap`; others use `fromJson`/`toJson`. | Multiple models | ❌ Not started |
+| Implement promo codes | Static UI only, no logic. | `promo_section.dart` | ❌ Not started |
+| Implement notifications toggle | Local StateProvider, not synced to Supabase. | `settings_page.dart` | ❌ Not started |
+| Implement language selector | Placeholder SnackBar. | `settings_page.dart` | ❌ Not started |
+| Implement Shop By handlers | Hardcoded items, no filtering logic. | `categories_page.dart` | ❌ Not started |
+| Automate `cleanup_expired_codes()` | Database cron job or trigger. | Migration | ❌ Not started |
 
 ---
 
-## Execution Plan
+## Needs Verification
 
-### Day 1 — CRITICAL Security + Schema (5 tasks)
+| Item | Why | How to Verify |
+|------|-----|---------------|
+| `password_reset_codes` RLS policies in production | Migration 016 creates anon policies. Cannot verify if a separate manual fix was applied in Supabase dashboard. | Run `SELECT * FROM pg_policies WHERE tablename = 'password_reset_codes';` on live database |
+| Edge Function deployment status | Cannot verify if all 3 Edge Functions are deployed to production. | Check Supabase dashboard or run `supabase functions list` |
+| `RESEND_API_KEY` configuration | Cannot verify if the secret is set in Edge Function secrets. | Check Supabase dashboard Edge Function secrets |
+| `verify-reset-code` Edge Function | Exists in code but was never documented in any doc file. Unknown when it was added. | Git history |
 
-**Morning:**
-- [ ] Fix `password_reset_codes` RLS — remove anon policies
-- [ ] Create `018_profiles_schema.sql` migration — table, RLS, foreign key, trigger
-- [ ] Create `019_avatars_storage.sql` migration — bucket config, RLS policies
+---
 
-**Afternoon:**
-- [ ] Fix `reset-password` edge function — increment `attempt_count`
-- [ ] Fix `send-reset-code` edge function — remove `_devCode`, hash OTP
+## Obsolete Work
 
-### Day 2 — Model Serialization Fixes (5 tasks)
+| Item | Reason |
+|------|--------|
+| "Profile table missing migration" | ✅ **RESOLVED** — `018_profiles_schema.sql` now exists |
+| "Avatars bucket missing migration" | ✅ **RESOLVED** — `019_avatars_storage.sql` now exists |
+| "Reset password RLS — removed anon policies" | ❌ **INCORRECT** — Previous docs claimed this was fixed in Phase 1. Migration 016 still has anon policies. This is still an open security issue. |
+| 5-day execution plan from Aug 17 | Superseded by this document |
 
-**Morning:**
-- [ ] Fix `OrderModel` — status as string, snake_case keys, missing fields
-- [ ] Fix `OrderItemModel` — product_id as int, snake_case keys, missing fields
-- [ ] Fix `PaymentCardModel` — `@JsonKey` annotations for all fields
+---
 
-**Afternoon:**
-- [ ] Fix `CartItemModel` — add `toInsertJson()`, fix field names
-- [ ] Fix `ProductModel` — change `id` to `int`, remove prefix, update all consumers (cart, wishlist, order item references)
+## Today — 2026-08-18
 
-### Day 3 — Auth & Security (5 tasks)
+Based on the current codebase state, the following was verified as completed prior to today:
 
-**Morning:**
-- [ ] Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`
-- [ ] Remove `as dynamic` casts in `auth_provider.dart`
-- [ ] Add `mounted` check in `logout()`
+1. **Profiles migration** (`018_profiles_schema.sql`) — exists with RLS, FK, trigger
+2. **Avatars storage migration** (`019_avatars_storage.sql`) — exists with 4 storage policies
+3. **Verify-reset-code Edge Function** (`verify-reset-code/index.ts`) — exists with attempt limiting (max 5)
+4. **All 19 SQL migrations** — present in `supabase/migrations/`
+5. **All 3 Edge Functions** — present in `supabase/functions/`
+6. **All Supabase repositories** — implemented with user_id filters and auth checks
+7. **All auth-aware providers** — watch `currentUserIdProvider`
+8. **Data isolation audit fixes** — all mounted checks, lifecycle protections in place
+9. **Avatar race condition fix** — auth notifier captured before async gap
 
-**Afternoon:**
-- [ ] Implement router auth guards in `app_router.dart`
-- [ ] Scope `searchProvider` recent searches by user ID, clear on logout
+**No new code was written today.** This was a documentation synchronization audit.
 
-### Day 4 — Search & Error Handling (5 tasks)
+---
 
-**Morning:**
-- [ ] Implement real Supabase search in `supabase_search_repository.dart`
-- [ ] Add `products.name` index migration
-- [ ] Fix wishlist error handling — rollback on failure
+## Tomorrow — 2026-08-19
 
-**Afternoon:**
-- [ ] Fix product provider error handling — add catchError
-- [ ] Remove fake loading delays from 4 screens
+Recommended next work (ordered by priority and dependency):
 
-### Day 5 — Polish & Cleanup (remaining tasks)
+### 1. Fix `password_reset_codes` RLS (CRITICAL)
+- Remove anon policies from `password_reset_codes`
+- Verify on live database
+- File: `016_create_password_reset_codes.sql` (or apply directly in dashboard)
 
-**Morning:**
-- [ ] Extract hardcoded storage URL to constant
-- [ ] Add loading state to 4 providers (Orders, Address, PaymentCard, Wishlist)
-- [ ] Delete dead code files and methods
+### 2. Fix Auth Interface (HIGH — unblocks clean auth)
+- Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`
+- Remove 3 `as dynamic` casts from `auth_provider.dart`
+- Add `mounted` check in `logout()`
+- Files: `auth_repository_interface.dart`, `auth_provider.dart`
 
-**Afternoon:**
-- [ ] Handle guest mode (block user-scoped features or implement guest storage)
-- [ ] Add missing model fields (HomeContentModel timestamps, ProductSizeModel id)
-- [ ] Tighten CORS on edge functions
-- [ ] Final review and testing
+### 3. Fix Model Serialization (HIGH — blocks correct DB writes)
+- Fix `OrderModel` — status as string, snake_case keys
+- Fix `PaymentCardModel` — add `@JsonKey` annotations
+- Fix `CartItemModel` — add `toInsertJson()` for DB writes
+- Fix `ProductModel` — change `id` from String to int
+- Files: 4 model files + consumers
+
+### 4. Implement Router Auth Guards (HIGH — security)
+- Define protected routes
+- Redirect unauthenticated users to auth page
+- File: `app_router.dart`
+
+### 5. Scope Recent Searches (HIGH — data isolation)
+- Key SharedPreferences by user ID
+- Clear on logout
+- File: `search_provider.dart`
+
+### 6. Implement Real Search (MEDIUM)
+- Use Supabase `ilike` or full-text search
+- Add `products.name` index
+- Files: `supabase_search_repository.dart`, new migration
+
+---
+
+## Recommended Execution Order
+
+```
+Day 1: CRITICAL + Auth
+  Morning:  Fix password_reset_codes RLS (CRITICAL)
+  Afternoon: Fix auth interface + mounted check + router auth guards
+
+Day 2: Model Serialization
+  Morning:  Fix OrderModel + OrderItemModel
+  Afternoon: Fix PaymentCardModel + CartItemModel + ProductModel
+
+Day 3: Search + Providers
+  Morning:  Scope recent searches by user + implement real search
+  Afternoon: Fix error handling in wishlist + product providers
+
+Day 4: Polish
+  Morning:  Remove fake loading delays + extract hardcoded URLs
+  Afternoon: Add loading states to providers + handle guest mode
+
+Day 5: Cleanup + Security
+  Morning:  Delete dead code + tighten CORS + hash OTP codes
+  Afternoon: Final review and testing
+```
 
 ---
 
 ## Appendix: File Reference Index
 
-### Models
-| File | Issue |
-|---|---|
-| `lib/data/models/product_model.dart` | ID as String with prefix, hardcoded URL |
-| `lib/data/models/order_model.dart` | Status as int, camelCase keys, missing fields |
-| `lib/data/models/order_item_model.dart` | product_id as String, camelCase keys, missing fields |
-| `lib/data/models/payment_card_model.dart` | All JSON keys camelCase |
-| `lib/data/models/cart_item_model.dart` | Extra non-DB fields in toJson |
-| `lib/data/models/user_model.dart` | camelCase JSON keys |
-| `lib/data/models/address_model.dart` | isDefault key mismatch |
-| `lib/data/models/home_content_model.dart` | Missing timestamp fields |
-| `lib/data/models/product_size_model.dart` | Missing id field |
-| `lib/features/auth/data/models/profile_model.dart` | No migration, uses fromMap/toMap |
+### Migrations
+| # | File | Status |
+|---|------|--------|
+| 001 | `001_products_schema.sql` | ✅ In use |
+| 002 | `002_seed_categories.sql` | ✅ In use |
+| 003 | `003_seed_products.sql` | ✅ In use |
+| 004 | `004_seed_product_images.sql` | ✅ In use |
+| 005 | `005_seed_product_sizes.sql` | ✅ In use |
+| 006 | `006_home_content.sql` | ✅ In use |
+| 007 | `007_product_images_storage_policies.sql` | ✅ In use |
+| 008 | `008_sync_cleanup.sql` | ✅ In use |
+| 009 | `009_cart_items_schema.sql` | ✅ In use |
+| 010 | `010_wishlist_items_schema.sql` | ✅ In use |
+| 011 | `011_orders_schema.sql` | ✅ In use |
+| 012 | `012_dynamic_categories.sql` | ✅ In use |
+| 013 | `013_drop_categories_image_url.sql` | ✅ In use |
+| 014 | `014_addresses_schema.sql` | ✅ In use |
+| 015 | `015_payment_cards_schema.sql` | ✅ In use |
+| 016 | `016_create_password_reset_codes.sql` | ⚠️ RLS needs fix |
+| 017 | `017_otp_security_hardening.sql` | ✅ In use |
+| 018 | `018_profiles_schema.sql` | ✅ In use |
+| 019 | `019_avatars_storage.sql` | ✅ In use |
 
-### Providers
-| File | Issue |
-|---|---|
-| `lib/data/providers/auth_provider.dart` | Dynamic casts, missing mounted check |
-| `lib/data/providers/product_provider.dart` | No error handling on load |
-| `lib/data/providers/wishlist_provider.dart` | Silent error swallowing |
-| `lib/data/providers/search_provider.dart` | Not per-user, no error handling |
-| `lib/core/theme/theme_provider.dart` | No error handling in _loadTheme |
+### Edge Functions
+| Function | Status | Notes |
+|----------|--------|-------|
+| `send-reset-code` | ✅ In use | Sends OTP via Resend API |
+| `verify-reset-code` | ✅ In use | Verifies OTP without changing password |
+| `reset-password` | ✅ In use | Updates password via admin API |
 
-### Repositories
-| File | Issue |
-|---|---|
-| `lib/data/repositories/search/supabase_search_repository.dart` | Fake Supabase — client-side only |
-| `lib/data/repositories/product/supabase_product_repository.dart` | Mutable cache state |
-| `lib/data/repositories/orders/supabase_order_repository.dart` | Hardcoded URL, mutable state |
-| `lib/data/repositories/cart/supabase_cart_repository.dart` | Hardcoded URL |
-| `lib/data/repositories/product/product_search_matcher.dart` | Dead code |
+### Models with Issues
+| File | Issue | Severity |
+|------|-------|----------|
+| `product_model.dart` | ID as String with 'p' prefix, hardcoded URL | HIGH |
+| `order_model.dart` | Status as int index, camelCase keys | HIGH |
+| `order_item_model.dart` | productId as String, camelCase keys | HIGH |
+| `payment_card_model.dart` | All JSON keys camelCase | HIGH |
+| `cart_item_model.dart` | Extra non-DB fields in toJson | HIGH |
 
-### Security
-| File | Issue |
-|---|---|
-| `supabase/migrations/016_create_password_reset_codes.sql` | ✅ Fixed — Anon policies removed (Phase 1) |
-| `supabase/functions/send-reset-code/index.ts` | ✅ Fixed — `_devCode` removed (Phase 1) |
-| `supabase/functions/reset-password/index.ts` | ✅ Fixed — `attempt_count` now incremented (Phase 1) |
-| `lib/core/router/app_router.dart` | No auth guards |
+### Providers with Issues
+| File | Issue | Severity |
+|------|-------|----------|
+| `auth_provider.dart` | 3 `as dynamic` casts, missing mounted check in logout | HIGH |
+| `wishlist_provider.dart` | Silent error swallowing on add/remove | MEDIUM |
+| `product_provider.dart` | No catchError on loadAll() | MEDIUM |
+| `search_provider.dart` | Not per-user, no real Supabase search | HIGH |
 
-### Screens
-| File | Issue |
-|---|---|
-| `lib/features/orders/presentation/pages/orders_page.dart` | Fake delay |
-| `lib/features/wishlist/presentation/pages/wishlist_page.dart` | Fake delay, no error handling |
-| `lib/features/product/presentation/pages/product_detail_page.dart` | Fake delay, no try/catch on cart add |
-| `lib/features/product/presentation/pages/product_listing_page.dart` | Fake delay |
-| `lib/features/auth/presentation/pages/signup_page.dart` | Missing mounted check on navigation |
+### Security Issues
+| File | Issue | Severity |
+|------|-------|----------|
+| `016_create_password_reset_codes.sql` | Anon policies grant SELECT/INSERT/UPDATE to all users | CRITICAL |
+| `app_router.dart` | No auth guards on any of 22 routes | HIGH |
+| `send-reset-code/index.ts` | OTP stored as plaintext, O(n) listUsers(), CORS * | MEDIUM |
+| `reset-password/index.ts` | O(n) listUsers(), CORS * | MEDIUM |

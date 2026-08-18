@@ -21,6 +21,7 @@ class AuthState {
   final String? error;
   final bool emailConfirmationPending;
   final bool resetCodeVerified;
+  final bool isGuest;
 
   const AuthState({
     this.user,
@@ -28,6 +29,7 @@ class AuthState {
     this.error,
     this.emailConfirmationPending = false,
     this.resetCodeVerified = false,
+    this.isGuest = false,
   });
 
   bool get isAuthenticated => user != null;
@@ -40,6 +42,7 @@ class AuthState {
     bool clearError = false,
     bool? emailConfirmationPending,
     bool? resetCodeVerified,
+    bool? isGuest,
   }) {
     return AuthState(
       user: clearUser ? null : (user ?? this.user),
@@ -48,6 +51,7 @@ class AuthState {
       emailConfirmationPending:
           emailConfirmationPending ?? this.emailConfirmationPending,
       resetCodeVerified: resetCodeVerified ?? this.resetCodeVerified,
+      isGuest: isGuest ?? this.isGuest,
     );
   }
 }
@@ -64,6 +68,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   String? _pendingFullName;
   String? _pendingPhoneNumber;
   bool _isSignUpInProgress = false;
+  int _profileLoadGeneration = 0;
 
   void _listenToAuthChanges() {
     final client = supabase.Supabase.instance.client;
@@ -76,6 +81,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (event == supabase.AuthChangeEvent.signedIn && session != null) {
         await _loadProfileFromSession();
       } else if (event == supabase.AuthChangeEvent.signedOut) {
+        _profileLoadGeneration++;
         if (mounted) {
           state = const AuthState();
         }
@@ -86,11 +92,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> _loadProfileFromSession() async {
     if (!mounted) return;
 
+    final generation = ++_profileLoadGeneration;
+
     state = state.copyWith(isLoading: true, clearError: true);
 
     try {
       final profile = await _repository.getProfile();
-      if (!mounted) return;
+      if (!mounted || generation != _profileLoadGeneration) return;
 
       if (profile == null) {
         if (_pendingFullName != null && _pendingPhoneNumber != null) {
@@ -100,7 +108,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
               phoneNumber: _pendingPhoneNumber!,
             );
             final newProfile = await _repository.getProfile();
-            if (!mounted) return;
+            if (!mounted || generation != _profileLoadGeneration) return;
             if (newProfile != null) {
               final user = _userFromProfile(newProfile);
               state = state.copyWith(
@@ -114,7 +122,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
             }
           } catch (_) {}
         }
-        state = state.copyWith(isLoading: false, clearUser: true);
+        state = state.copyWith(
+          isLoading: false,
+          clearUser: true,
+          error: 'Could not load profile. Please try again.',
+        );
         return;
       }
 
@@ -123,11 +135,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
         user: user,
         isLoading: false,
         emailConfirmationPending: false,
+        isGuest: false,
       );
       _pendingFullName = null;
       _pendingPhoneNumber = null;
     } catch (_) {
-      if (mounted) {
+      if (mounted && generation == _profileLoadGeneration) {
         state = state.copyWith(isLoading: false, clearUser: true);
       }
     }
@@ -165,7 +178,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         return;
       }
       final user = _userFromProfile(profile);
-      state = state.copyWith(user: user, isLoading: false);
+      state = state.copyWith(user: user, isLoading: false, isGuest: false);
     } catch (_) {
       if (mounted) {
         state = state.copyWith(isLoading: false, clearUser: true);
@@ -217,7 +230,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           if (!mounted) return;
           if (retryProfile != null) {
             final user = _userFromProfile(retryProfile);
-            state = state.copyWith(user: user, isLoading: false);
+            state = state.copyWith(user: user, isLoading: false, isGuest: false);
             return;
           }
         } catch (_) {}
@@ -230,7 +243,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       }
 
       final user = _userFromProfile(profile);
-      state = state.copyWith(user: user, isLoading: false);
+      state = state.copyWith(user: user, isLoading: false, isGuest: false);
     } on SocketException {
       if (!mounted) return;
       state = state.copyWith(
@@ -259,20 +272,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.signIn(email: email, password: password);
-      if (!mounted) return;
-
-      final profile = await _repository.getProfile();
-      if (!mounted) return;
-      if (profile == null) {
-        state = state.copyWith(
-          isLoading: false,
-          clearUser: true,
-          error: 'Could not load profile. Please try again.',
-        );
-        return;
-      }
-      final user = _userFromProfile(profile);
-      state = state.copyWith(user: user, isLoading: false);
     } on SocketException {
       if (!mounted) return;
       state = state.copyWith(
@@ -292,6 +291,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    _profileLoadGeneration++;
     state = state.copyWith(isLoading: true);
     try {
       await _repository.signOut();
@@ -340,6 +340,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   void clearError() {
     state = state.copyWith(clearError: true);
+  }
+
+  void enterGuestMode() {
+    if (!mounted) return;
+    state = const AuthState(isGuest: true);
   }
 
   void clearResetCodeVerified() {

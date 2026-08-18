@@ -66,6 +66,7 @@ class SupabaseProductRepository implements ProductRepository {
         .toList();
   }
 
+  @override
   Future<void> loadAll() async {
     await loadCategories();
 
@@ -134,19 +135,4 @@ class SupabaseProductRepository implements ProductRepository {
     return '';
   }
 
-  @override
-  List<ProductModel> searchProducts(
-    String query, {
-    List<CategoryModel> categories = const [],
-  }) {
-    final trimmed = query.trim().toLowerCase();
-    if (trimmed.isEmpty) return [];
-
-    return _productsCache.where((p) {
-      final categoryName = _categoryName(categories, p.categoryId);
-      final searchable =
-          '${p.name} $categoryName ${p.description} ${p.brand}'.toLowerCase();
-      return searchable.contains(trimmed);
-    }).toList();
-  }
 }

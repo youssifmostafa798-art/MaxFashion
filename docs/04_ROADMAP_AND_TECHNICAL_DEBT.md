@@ -1,11 +1,17 @@
 # 04 — Roadmap & Technical Debt
 
 > **MaxFashion — Remaining Work, Known Issues & Technical Debt**
-> Last Updated: August 16, 2026
+> Last Updated: August 18, 2026
 
 ---
 
 ## Remaining Features
+
+### CRITICAL Priority
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Fix `password_reset_codes` RLS | ❌ Not Started | **SECURITY VULNERABILITY** — Anon policies grant SELECT/INSERT/UPDATE on all reset codes. Edge functions use service_role but client-side anon access allows reading all OTP codes. |
 
 ### High Priority — Important Missing Functionality
 

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:max/core/models/loadable_list_state.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/repositories/orders/order_repository.dart';
@@ -13,15 +14,25 @@ final ordersMigrationServiceProvider = Provider<OrdersMigrationService>((ref) {
   return OrdersMigrationService();
 });
 
-class OrdersNotifier extends StateNotifier<List<OrderModel>> {
+class OrdersNotifier extends StateNotifier<LoadableListState<OrderModel>> {
   final OrderRepository _repository;
   final OrdersMigrationService _migrationService;
+  final String? _userId;
 
-  OrdersNotifier(this._repository, this._migrationService) : super([]) {
+  OrdersNotifier(this._repository, this._migrationService, {String? userId})
+      : _userId = userId,
+        super(const LoadableListState()) {
     _migrateAndLoad();
   }
 
   Future<void> _migrateAndLoad() async {
+    if (!mounted) return;
+    if (_userId == null) {
+      state = const LoadableListState();
+      return;
+    }
+    state = state.copyWith(isLoading: true, clearError: true);
+
     try {
       final isMigrated = await _migrationService.isMigrated;
       if (!mounted) return;
@@ -31,10 +42,14 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
       }
       await _repository.loadOrders();
       if (!mounted) return;
-      state = _repository.getOrders();
+      state = state.copyWith(items: _repository.getOrders(), isLoading: false);
     } catch (_) {
       if (!mounted) return;
-      state = [];
+      state = state.copyWith(
+        items: [],
+        isLoading: false,
+        error: 'Could not load orders. Please try again.',
+      );
     }
   }
 
@@ -42,7 +57,7 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
     try {
       await _repository.addOrder(order);
       if (!mounted) return;
-      state = _repository.getOrders();
+      state = state.copyWith(items: _repository.getOrders(), clearError: true);
     } catch (_) {
       rethrow;
     }
@@ -52,7 +67,7 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
     try {
       await _repository.updateOrderStatus(orderId, status);
       if (!mounted) return;
-      state = _repository.getOrders();
+      state = state.copyWith(items: _repository.getOrders(), clearError: true);
     } catch (_) {
       rethrow;
     }
@@ -63,12 +78,12 @@ class OrdersNotifier extends StateNotifier<List<OrderModel>> {
   }
 }
 
-final ordersProvider =
-    StateNotifierProvider<OrdersNotifier, List<OrderModel>>((ref) {
+final ordersProvider = StateNotifierProvider<OrdersNotifier,
+    LoadableListState<OrderModel>>((ref) {
   final repository = ref.watch(orderRepositoryProvider);
   final migrationService = ref.watch(ordersMigrationServiceProvider);
-  ref.watch(currentUserIdProvider);
-  return OrdersNotifier(repository, migrationService);
+  final userId = ref.watch(currentUserIdProvider);
+  return OrdersNotifier(repository, migrationService, userId: userId);
 });
 
 final ordersCountProvider = Provider<int>((ref) {

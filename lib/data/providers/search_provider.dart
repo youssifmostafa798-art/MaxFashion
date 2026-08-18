@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
-import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 import 'package:max/data/repositories/search/supabase_search_repository.dart';
 
 final searchRepositoryProvider = Provider<SearchRepository>((ref) {
-  final productRepo = ref.watch(productRepositoryProvider);
-  return SupabaseSearchRepository(productRepo);
+  return SupabaseSearchRepository();
 });
 
 enum SearchContextType { global, home, category, wishlist, cart, orders }
@@ -20,6 +18,12 @@ class SearchState {
   final List<String> recentSearches;
   final List<ProductModel> suggestedProducts;
   final bool isLoading;
+  final bool isLoadingMore;
+  final int totalCount;
+  final int currentPage;
+  final String? error;
+
+  static const int pageSize = 20;
 
   const SearchState({
     this.query = '',
@@ -27,7 +31,13 @@ class SearchState {
     this.recentSearches = const [],
     this.suggestedProducts = const [],
     this.isLoading = false,
+    this.isLoadingMore = false,
+    this.totalCount = 0,
+    this.currentPage = 0,
+    this.error,
   });
+
+  bool get hasMore => results.length < totalCount;
 
   SearchState copyWith({
     String? query,
@@ -35,6 +45,10 @@ class SearchState {
     List<String>? recentSearches,
     List<ProductModel>? suggestedProducts,
     bool? isLoading,
+    bool? isLoadingMore,
+    int? totalCount,
+    int? currentPage,
+    String? error,
   }) {
     return SearchState(
       query: query ?? this.query,
@@ -42,6 +56,10 @@ class SearchState {
       recentSearches: recentSearches ?? this.recentSearches,
       suggestedProducts: suggestedProducts ?? this.suggestedProducts,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      totalCount: totalCount ?? this.totalCount,
+      currentPage: currentPage ?? this.currentPage,
+      error: error,
     );
   }
 }
@@ -52,7 +70,6 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
   SearchNotifier(this.ref) : super(const SearchState()) {
     _loadRecentSearches();
-    _loadSuggested();
   }
 
   void _loadRecentSearches() async {
@@ -60,33 +77,70 @@ class SearchNotifier extends StateNotifier<SearchState> {
     state = state.copyWith(recentSearches: saved);
   }
 
-  void _loadSuggested() {
-    final suggested = ref.read(sessionSuggestedProductsProvider);
-    state = state.copyWith(suggestedProducts: suggested);
-  }
-
   void onQueryChanged(String query) {
-    state = state.copyWith(query: query);
+    state = state.copyWith(query: query, error: null);
 
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 250), () {
-      _performSearch(query);
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      _search(query);
     });
   }
 
-  void _performSearch(String query) {
+  Future<void> _search(String query) async {
     if (query.trim().isEmpty) {
-      state = state.copyWith(results: [], isLoading: false);
+      state = state.copyWith(results: [], isLoading: false, totalCount: 0);
       return;
     }
 
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, error: null);
 
-    final repo = ref.read(searchRepositoryProvider);
-    final categories = ref.read(categoriesProvider);
-    final results = repo.searchProducts(query, source: null, categories: categories);
+    try {
+      final repo = ref.read(searchRepositoryProvider);
+      final result = await repo.searchProducts(
+        query,
+        limit: SearchState.pageSize,
+        offset: 0,
+      );
 
-    state = state.copyWith(results: results, isLoading: false);
+      state = state.copyWith(
+        results: result.products,
+        totalCount: result.totalCount,
+        currentPage: 0,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Search failed. Please try again.',
+      );
+    }
+  }
+
+  Future<void> loadMore() async {
+    if (state.isLoadingMore || !state.hasMore) return;
+
+    state = state.copyWith(isLoadingMore: true);
+
+    try {
+      final repo = ref.read(searchRepositoryProvider);
+      final nextPage = state.currentPage + 1;
+      final result = await repo.searchProducts(
+        state.query,
+        limit: SearchState.pageSize,
+        offset: nextPage * SearchState.pageSize,
+      );
+
+      state = state.copyWith(
+        results: [...state.results, ...result.products],
+        currentPage: nextPage,
+        isLoadingMore: false,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoadingMore: false,
+        error: 'Failed to load more results.',
+      );
+    }
   }
 
   void addRecentSearch(String query) {
@@ -114,7 +168,14 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
   void clearSearch() {
     _debounce?.cancel();
-    state = state.copyWith(query: '', results: [], isLoading: false);
+    state = state.copyWith(
+      query: '',
+      results: [],
+      isLoading: false,
+      totalCount: 0,
+      currentPage: 0,
+      error: null,
+    );
   }
 
   void resetSession() {
@@ -123,6 +184,9 @@ class SearchNotifier extends StateNotifier<SearchState> {
       query: '',
       results: [],
       isLoading: false,
+      totalCount: 0,
+      currentPage: 0,
+      error: null,
     );
   }
 

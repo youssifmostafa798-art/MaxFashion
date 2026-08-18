@@ -20,6 +20,8 @@ class SettingsPage extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final themeMode = ref.watch(themeProvider);
     final notificationsEnabled = ref.watch(notificationsEnabledProvider);
+    final authState = ref.watch(authStateProvider);
+    final isGuest = authState.isGuest;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -121,9 +123,9 @@ class SettingsPage extends ConsumerWidget {
                   onTap: () => _showAboutDialog(context),
                 ),
                 SettingsTile(
-                  icon: Icons.logout,
-                  title: 'Logout',
-                  isDestructive: true,
+                  icon: isGuest ? Icons.login : Icons.logout,
+                  title: isGuest ? 'Sign In' : 'Logout',
+                  isDestructive: !isGuest,
                   onTap: () => _handleLogout(context, ref),
                 ),
               ],
@@ -156,6 +158,13 @@ class SettingsPage extends ConsumerWidget {
   }
 
   Future<void> _handleLogout(BuildContext context, WidgetRef ref) async {
+    final authState = ref.read(authStateProvider);
+    if (authState.isGuest) {
+      if (context.mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.auth, (route) => false);
+      }
+      return;
+    }
     await ref.read(authStateProvider.notifier).logout();
     if (context.mounted) {
       Navigator.of(

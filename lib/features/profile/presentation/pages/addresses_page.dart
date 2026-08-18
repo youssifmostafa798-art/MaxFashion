@@ -57,7 +57,8 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final addresses = ref.watch(addressProvider);
+    final addressesState = ref.watch(addressProvider);
+    final addresses = addressesState.items;
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),

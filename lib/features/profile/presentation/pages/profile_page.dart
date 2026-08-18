@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/guest_prompt_dialog.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -26,6 +27,7 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
     final user = authState.user;
+    final isGuest = authState.isGuest;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -48,9 +50,9 @@ class ProfilePage extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(
           children: [
-            _ProfileHeader(user: user),
+            _ProfileHeader(user: user, isGuest: isGuest),
             SizedBox(height: 24.h),
-            const _MenuSection(),
+            _MenuSection(isGuest: isGuest),
             SizedBox(height: 30.h),
           ],
         ),
@@ -60,8 +62,9 @@ class ProfilePage extends ConsumerWidget {
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.user});
+  const _ProfileHeader({required this.user, required this.isGuest});
   final UserModel? user;
+  final bool isGuest;
 
   String _getMemberSinceText() {
     if (user == null) return 'Member since —';
@@ -80,7 +83,7 @@ class _ProfileHeader extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
-      onTap: user == null
+      onTap: isGuest
           ? () {
               Navigator.pushNamed(context, AppRouter.signup);
             }
@@ -168,6 +171,27 @@ class _ProfileHeader extends StatelessWidget {
               size: 12,
               color: colorScheme.onSurfaceVariant,
             ),
+            if (isGuest) ...[
+              SizedBox(height: 16.h),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, AppRouter.login);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.h),
+                  decoration: BoxDecoration(
+                    color: colorScheme.onSurface,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: CustomText(
+                    text: 'SIGN IN',
+                    size: 14,
+                    color: colorScheme.surface,
+                    spacing: 2,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -176,7 +200,8 @@ class _ProfileHeader extends StatelessWidget {
 }
 
 class _MenuSection extends ConsumerWidget {
-  const _MenuSection();
+  const _MenuSection({required this.isGuest});
+  final bool isGuest;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -185,6 +210,13 @@ class _MenuSection extends ConsumerWidget {
     final wishlistCount = ref.watch(wishlistCountProvider);
     final addressCount = ref.watch(addressCountProvider);
     final cardCount = ref.watch(paymentCardCountProvider);
+
+    void onProtectedTap(String feature) {
+      showGuestPromptDialog(
+        context: context,
+        message: 'Please sign in to access $feature.',
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,60 +231,70 @@ class _MenuSection extends ConsumerWidget {
         ProfileMenuItem(
           icon: Icons.edit_outlined,
           title: 'Edit Profile',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const EditProfilePage()),
-            );
-          },
+          onTap: isGuest
+              ? () => onProtectedTap('profile editing')
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const EditProfilePage()),
+                  );
+                },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.shopping_bag_outlined,
           title: 'My Orders',
           trailing: ordersCount > 0 ? '$ordersCount' : null,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const OrdersPage()),
-            );
-          },
+          onTap: isGuest
+              ? () => onProtectedTap('your orders')
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const OrdersPage()),
+                  );
+                },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.favorite_border,
           title: 'Wishlist',
           trailing: wishlistCount > 0 ? '$wishlistCount' : null,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const WishlistPage()),
-            );
-          },
+          onTap: isGuest
+              ? () => onProtectedTap('your wishlist')
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const WishlistPage()),
+                  );
+                },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.location_on_outlined,
           title: 'Addresses',
           trailing: addressCount > 0 ? '$addressCount' : null,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AddressesPage()),
-            );
-          },
+          onTap: isGuest
+              ? () => onProtectedTap('your addresses')
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddressesPage()),
+                  );
+                },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.credit_card_outlined,
           title: 'Payment Methods',
           trailing: cardCount > 0 ? '$cardCount' : null,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const PaymentMethodsPage()),
-            );
-          },
+          onTap: isGuest
+              ? () => onProtectedTap('payment methods')
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PaymentMethodsPage()),
+                  );
+                },
         ),
         SizedBox(height: 10.h),
         ProfileMenuItem(

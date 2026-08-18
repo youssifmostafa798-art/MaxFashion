@@ -1,7 +1,7 @@
 # 03 — Features & Data
 
 > **MaxFashion — Feature-by-Feature Status & Data Architecture**
-> Last Updated: August 16, 2026
+> Last Updated: August 18, 2026
 
 ---
 
@@ -76,12 +76,13 @@ LoginPage → authStateProvider → AuthNotifier.login()
 **Implementation:**
 - 3-page UI flow: ForgotPasswordPage → VerifyResetCodePage → ResetPasswordPage
 - `sendResetCode()` calls `send-reset-code` Edge Function (sends 6-digit OTP via Resend API)
-- `verifyResetCode()` calls `reset-password` Edge Function to verify code
-- `resetPasswordWithCode()` calls `reset-password` Edge Function to update password
+- `verifyResetCode()` calls `verify-reset-code` Edge Function (verifies code without changing password)
+- `resetPasswordWithCode()` calls `reset-password` Edge Function (updates password via admin API)
 - `password_reset_codes` table stores OTP codes with expiry, attempt limiting, and rate limiting
 - Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
 - Dev mode: If no RESEND_API_KEY configured, codes are logged to console
 - `cleanup_expired_codes()` SQL function for automatic cleanup of expired codes
+- ⚠️ **Security:** `password_reset_codes` RLS still grants anon INSERT/SELECT/UPDATE access
 
 **Key Files:**
 - `lib/features/auth/presentation/pages/forgot_password_page.dart`
@@ -89,6 +90,7 @@ LoginPage → authStateProvider → AuthNotifier.login()
 - `lib/features/auth/presentation/pages/reset_password_page.dart`
 - `lib/features/auth/data/repositories/supabase_auth_repository.dart` — `sendResetCode()`, `verifyResetCode()`, `resetPasswordWithCode()`
 - `supabase/functions/send-reset-code/index.ts`
+- `supabase/functions/verify-reset-code/index.ts`
 - `supabase/functions/reset-password/index.ts`
 - `supabase/migrations/016_create_password_reset_codes.sql`
 - `supabase/migrations/017_otp_security_hardening.sql`
@@ -102,7 +104,7 @@ ForgotPasswordPage → authStateProvider → AuthNotifier.sendResetCode()
 
 VerifyResetCodePage → authStateProvider → AuthNotifier.verifyResetCode()
   → SupabaseAuthRepository.verifyResetCode()
-  → Supabase Edge Function 'reset-password'
+  → Supabase Edge Function 'verify-reset-code'
   → Verifies code (unused, not expired, attempts < 5)
 
 ResetPasswordPage → authStateProvider → AuthNotifier.resetPasswordWithCode()
@@ -621,7 +623,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 | `last_request_at` | TIMESTAMPTZ | DEFAULT NOW() |
 | `created_at` | TIMESTAMPTZ | DEFAULT NOW() |
 
-**RLS:** Anonymous INSERT/SELECT/UPDATE for unauthenticated password reset flow.
+**RLS:** ⚠️ Anonymous INSERT/SELECT/UPDATE for unauthenticated password reset flow — **security issue, needs removal**.
 **Indexes:** Partial index on (email, used) WHERE used = FALSE.
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 

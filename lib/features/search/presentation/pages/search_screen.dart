@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/search_provider.dart';
+import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/search/presentation/widgets/search_text_field.dart';
 import 'package:max/features/search/presentation/widgets/search_results_list.dart';
 import 'package:max/features/search/presentation/widgets/search_suggestions.dart';
@@ -125,9 +126,39 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       return const SearchSkeleton();
     }
 
+    if (searchState.error != null && searchState.results.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                size: 48.w,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                searchState.error!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return SearchResultsList(
       products: searchState.results,
       query: searchState.query,
+      hasMore: searchState.hasMore,
+      isLoadingMore: searchState.isLoadingMore,
+      onLoadMore: () => ref.read(searchProvider.notifier).loadMore(),
       onProductSelected: (product) async {
         ref.read(searchProvider.notifier).addRecentSearch(searchState.query);
         await Navigator.push(
@@ -141,9 +172,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
   }
 
   Widget _buildDefaultContent() {
-    final suggestedProducts = ref.watch(
-      searchProvider.select((s) => s.suggestedProducts),
-    );
+    final suggestedProducts = ref.watch(sessionSuggestedProductsProvider);
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),

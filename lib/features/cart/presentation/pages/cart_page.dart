@@ -5,11 +5,13 @@ import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/features/cart/presentation/widgets/cart_item_card.dart';
 import 'package:max/data/providers/cart_provider.dart';
+import 'package:max/data/providers/auth_provider.dart';
 
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/router/app_router.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -24,6 +26,8 @@ class _CartPageState extends ConsumerState<CartPage> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartProvider);
+    final authState = ref.watch(authStateProvider);
+    final isGuest = authState.isGuest;
     final colorScheme = Theme.of(context).colorScheme;
 
     // Show error SnackBar when error changes
@@ -50,6 +54,26 @@ class _CartPageState extends ConsumerState<CartPage> {
         _lastShownError = null;
       }
     });
+
+    if (isGuest) {
+      return Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: colorScheme.surface,
+          elevation: 0,
+          centerTitle: true,
+          title: CustomText(
+            text: 'MY BAG',
+            size: 18,
+            color: colorScheme.onSurface,
+            spacing: 4,
+            weight: FontWeight.bold,
+          ),
+        ),
+        body: _GuestCartView(),
+      );
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -285,6 +309,59 @@ class _EmptyCart extends StatelessWidget {
                 text: 'START SHOPPING',
                 size: 14,
                 color: Theme.of(context).colorScheme.surface,
+                spacing: 2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GuestCartView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_bag_outlined,
+            size: 80.w,
+            color: colorScheme.outline,
+          ),
+          SizedBox(height: 20.h),
+          CustomText(
+            text: 'Sign in to view your bag',
+            size: 18,
+            color: colorScheme.onSurface,
+            weight: FontWeight.w600,
+          ),
+          SizedBox(height: 8.h),
+          CustomText(
+            text: 'Save items and checkout across devices.',
+            size: 14,
+            color: colorScheme.onSurfaceVariant,
+          ),
+          SizedBox(height: 30.h),
+          GestureDetector(
+            onTap: () {
+              HapticUtils.light();
+              Navigator.pushNamed(context, AppRouter.login);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 14.h),
+              decoration: BoxDecoration(
+                color: colorScheme.onSurface,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: CustomText(
+                text: 'SIGN IN',
+                size: 14,
+                color: colorScheme.surface,
                 spacing: 2,
               ),
             ),

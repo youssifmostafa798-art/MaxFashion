@@ -13,11 +13,17 @@ class SearchResultsList extends ConsumerWidget {
     super.key,
     required this.products,
     required this.query,
+    required this.hasMore,
+    required this.isLoadingMore,
+    required this.onLoadMore,
     required this.onProductSelected,
   });
 
   final List<ProductModel> products;
   final String query;
+  final bool hasMore;
+  final bool isLoadingMore;
+  final VoidCallback onLoadMore;
   final ValueChanged<ProductModel> onProductSelected;
 
   @override
@@ -30,8 +36,15 @@ class SearchResultsList extends ConsumerWidget {
 
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      itemCount: products.length,
+      itemCount: products.length + (hasMore ? 1 : 0),
       itemBuilder: (context, index) {
+        if (index == products.length) {
+          return _LoadMoreIndicator(
+            isLoading: isLoadingMore,
+            onLoadMore: onLoadMore,
+          );
+        }
+
         final product = products[index];
         return _SearchResultCard(
           product: product,
@@ -40,6 +53,33 @@ class SearchResultsList extends ConsumerWidget {
           onTap: () => onProductSelected(product),
         );
       },
+    );
+  }
+}
+
+class _LoadMoreIndicator extends StatelessWidget {
+  const _LoadMoreIndicator({required this.isLoading, required this.onLoadMore});
+
+  final bool isLoading;
+  final VoidCallback onLoadMore;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.h),
+      child: Center(
+        child: TextButton(
+          onPressed: onLoadMore,
+          child: const Text('Load more results'),
+        ),
+      ),
     );
   }
 }

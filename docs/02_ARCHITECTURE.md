@@ -203,11 +203,13 @@ EditProfilePage → AuthNotifier.updateProfile()
 - Session persistence via Supabase SDK (automatic)
 
 ### OTP Password Recovery
-- Two Supabase Edge Functions (Deno/TypeScript):
+- Three Supabase Edge Functions (Deno/TypeScript):
   - `send-reset-code` — generates 6-digit OTP, stores in `password_reset_codes`, sends via Resend API
-  - `reset-password` — verifies OTP code, updates password via admin API
+  - `verify-reset-code` — verifies OTP code without changing password (enforces max 5 attempts)
+  - `reset-password` — verifies OTP code again (defense-in-depth), updates password via admin API, marks code as used
 - `password_reset_codes` table with rate limiting (60s cooldown) and attempt limiting (max 5)
 - `cleanup_expired_codes()` SQL function for automatic cleanup
+- ⚠️ **Security:** RLS still grants anon INSERT/SELECT/UPDATE on `password_reset_codes`
 
 ### Database Tables
 
@@ -225,7 +227,7 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `order_items` | Order line items | User-owned (via orders) |
 | `addresses` | User shipping addresses | User-owned |
 | `payment_cards` | Saved payment methods | User-owned |
-| `password_reset_codes` | OTP codes for password reset | Anonymous (for unauthenticated flow) |
+| `password_reset_codes` | OTP codes for password reset | ⚠️ Anon access (security issue — needs fix) |
 
 ### Storage
 
@@ -239,22 +241,24 @@ EditProfilePage → AuthNotifier.updateProfile()
 ```
 supabase/migrations/
 ├── 001_products_schema.sql          — Schema for categories, products, product_images, product_sizes + RLS
-├── 002_seed_categories.sql          — INSERT 23 categories
-├── 003_seed_products.sql            — INSERT 251 products
-├── 004_seed_product_images.sql      — INSERT 251 images
-├── 005_seed_product_sizes.sql       — INSERT 977 sizes
+├── 002_seed_categories.sql          — INSERT 22 categories
+├── 003_seed_products.sql            — INSERT 249 products
+├── 004_seed_product_images.sql      — INSERT 250 images
+├── 005_seed_product_sizes.sql       — INSERT 998 sizes
 ├── 006_home_content.sql             — home_content table + seed
 ├── 007_product_images_storage_policies.sql — Storage RLS for product-images bucket
 ├── 008_sync_cleanup.sql             — Remove stale records (3 products, 1 category)
 ├── 009_cart_items_schema.sql        — cart_items table + RLS
 ├── 010_wishlist_items_schema.sql    — wishlist_items table + RLS
 ├── 011_orders_schema.sql            — orders + order_items tables + RLS
-├── 012_dynamic_categories.sql       — Dynamic category support
+├── 012_dynamic_categories.sql       — Dynamic category support (icon_name, display_order, is_active)
 ├── 013_drop_categories_image_url.sql — Drop image_url from categories
 ├── 014_addresses_schema.sql         — addresses table + RLS
 ├── 015_payment_cards_schema.sql     — payment_cards table + RLS
-├── 016_create_password_reset_codes.sql — password_reset_codes table + cleanup function
-└── 017_otp_security_hardening.sql   — Rate limiting columns for OTP security
+├── 016_create_password_reset_codes.sql — password_reset_codes table + cleanup function + RLS
+├── 017_otp_security_hardening.sql   — Rate limiting columns (attempt_count, last_request_at)
+├── 018_profiles_schema.sql          — profiles table formalization + RLS + updated_at trigger
+└── 019_avatars_storage.sql          — avatars bucket + storage policies
 ```
 
 ### Edge Functions
@@ -263,6 +267,8 @@ supabase/migrations/
 supabase/functions/
 ├── send-reset-code/
 │   └── index.ts                     — Sends 6-digit OTP via Resend API
+├── verify-reset-code/
+│   └── index.ts                     — Verifies OTP code without changing password
 └── reset-password/
     └── index.ts                     — Verifies OTP and resets password via admin API
 ```

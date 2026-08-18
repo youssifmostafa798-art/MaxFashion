@@ -49,13 +49,18 @@ class CartState {
 
 class CartNotifier extends StateNotifier<CartState> {
   final CartRepository _repository;
+  final String? _userId;
 
-  CartNotifier(this._repository) : super(const CartState()) {
+  CartNotifier(this._repository, {String? userId}) : _userId = userId, super(const CartState()) {
     _loadCart();
   }
 
   Future<void> _loadCart() async {
     if (!mounted) return;
+    if (_userId == null) {
+      state = const CartState();
+      return;
+    }
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       final items = await _repository.loadCart();
@@ -222,8 +227,8 @@ class CartNotifier extends StateNotifier<CartState> {
 final cartProvider =
     StateNotifierProvider<CartNotifier, CartState>((ref) {
   final repository = ref.watch(cartRepositoryProvider);
-  ref.watch(currentUserIdProvider);
-  return CartNotifier(repository);
+  final userId = ref.watch(currentUserIdProvider);
+  return CartNotifier(repository, userId: userId);
 });
 
 final cartItemsProvider = Provider<List<CartItemModel>>((ref) {

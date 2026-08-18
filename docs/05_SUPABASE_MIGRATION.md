@@ -1,7 +1,7 @@
 # 05 — Supabase Migration Status
 
 > **MaxFashion — Current Supabase Implementation & Migration Reference**
-> Last Updated: August 16, 2026
+> Last Updated: August 18, 2026
 
 ---
 
@@ -18,7 +18,9 @@
 | 3.7 | Addresses | ✅ Completed | `014_addresses_schema.sql` |
 | 3.8 | Payment Cards | ✅ Completed | `015_payment_cards_schema.sql` |
 | 3.9 | OTP Password Recovery | ✅ Completed | `016_create_password_reset_codes.sql`, `017_otp_security_hardening.sql` |
-| 3.10| OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
+| 3.10 | OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
+| — | Profiles Table | ✅ Completed | `018_profiles_schema.sql` |
+| — | Avatars Storage | ✅ Completed | `019_avatars_storage.sql` |
 
 ---
 
@@ -26,7 +28,7 @@
 
 | Table | Purpose | RLS | Status |
 |-------|---------|-----|--------|
-| `profiles` | User profile (extends auth.users) | User-owned (SELECT/UPDATE own row) | ✅ In use |
+| `profiles` | User profile (extends auth.users) | User-owned (SELECT/INSERT/UPDATE) | ✅ In use |
 | `categories` | Product categories (with icon_name, display_order) | Public read | ✅ In use |
 | `products` | Core catalog items | Public read | ✅ In use |
 | `product_images` | Multiple images per product | Public read | ✅ In use |
@@ -38,7 +40,7 @@
 | `order_items` | Order line items | User-owned (via orders) | ✅ In use |
 | `addresses` | User shipping addresses | User-owned (full CRUD) | ✅ In use |
 | `payment_cards` | Saved payment methods | User-owned (full CRUD) | ✅ In use |
-| `password_reset_codes` | OTP codes for password reset | Anonymous (INSERT/SELECT/UPDATE for unauthenticated flow) | ✅ In use |
+| `password_reset_codes` | OTP codes for password reset | ⚠️ **Anon access (security issue)** | ✅ In use |
 
 ### Table Schemas (Reference)
 
@@ -199,6 +201,8 @@ UNIQUE on (product_id, size).
 
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 
+**⚠️ SECURITY ISSUE:** Migration 016 creates anon INSERT/SELECT/UPDATE policies. These were never removed. Edge Functions use service_role which bypasses RLS, but the anon policies allow any unauthenticated client to read all reset codes.
+
 ---
 
 ## Storage Buckets
@@ -245,9 +249,9 @@ UNIQUE on (product_id, size).
 | `payment_cards` | Users can insert own payment cards | INSERT | `auth.uid() = user_id` |
 | `payment_cards` | Users can update own payment cards | UPDATE | `auth.uid() = user_id` |
 | `payment_cards` | Users can delete own payment cards | DELETE | `auth.uid() = user_id` |
-| `password_reset_codes` | Allow anonymous insert for password reset | INSERT | true (anon role) |
-| `password_reset_codes` | Allow anonymous select for password reset | SELECT | true (anon role) |
-| `password_reset_codes` | Allow anonymous update for password reset | UPDATE | true (anon role) |
+| `password_reset_codes` | ⚠️ Allow anonymous insert for password reset | INSERT | true (anon role) |
+| `password_reset_codes` | ⚠️ Allow anonymous select for password reset | SELECT | true (anon role) |
+| `password_reset_codes` | ⚠️ Allow anonymous update for password reset | UPDATE | true (anon role) |
 
 ---
 
@@ -263,7 +267,7 @@ UNIQUE on (product_id, size).
 | Home Content | `SupabaseHomeContentRepository` | `home_content` | ✅ Complete |
 | Cart | `SupabaseCartRepository` | `cart_items` | ✅ Complete |
 | Wishlist | `SupabaseWishlistRepository` | `wishlist_items` | ✅ Complete |
-| Search | `SupabaseSearchRepository` | In-memory filter of Supabase cache | ✅ Complete |
+| Search | `SupabaseSearchRepository` | In-memory filter of Supabase cache | 🟡 Partial |
 | Orders | `SupabaseOrderRepository` | `orders` + `order_items` | ✅ Complete |
 | Addresses | `SupabaseAddressRepository` | `addresses` | ✅ Complete |
 | Payment Cards | `SupabasePaymentCardRepository` | `payment_cards` | ✅ Complete |
@@ -276,7 +280,8 @@ UNIQUE on (product_id, size).
 | Feature | Storage | Key | Notes |
 |---------|---------|-----|-------|
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
-| Recent Searches | SharedPreferences | `recent_searches` | Intentionally local. |
+| Recent Searches | SharedPreferences | `recent_searches` | ⚠️ Not per-user — shared across accounts. |
+| Orders Migration Flag | SharedPreferences | `orders_migrated_to_supabase_{userId}` | Per-user migration flag. |
 
 ---
 
@@ -285,22 +290,22 @@ UNIQUE on (product_id, size).
 | # | File | Purpose |
 |---|------|---------|
 | 001 | `001_products_schema.sql` | Schema for categories, products, product_images, product_sizes + RLS |
-| 002 | `002_seed_categories.sql` | INSERT 23 categories |
-| 003 | `003_seed_products.sql` | INSERT 251 products |
-| 004 | `004_seed_product_images.sql` | INSERT 251 images |
-| 005 | `005_seed_product_sizes.sql` | INSERT 977 sizes |
+| 002 | `002_seed_categories.sql` | INSERT 22 categories |
+| 003 | `003_seed_products.sql` | INSERT 249 products |
+| 004 | `004_seed_product_images.sql` | INSERT 250 images |
+| 005 | `005_seed_product_sizes.sql` | INSERT 998 sizes |
 | 006 | `006_home_content.sql` | home_content table + seed |
 | 007 | `007_product_images_storage_policies.sql` | Storage RLS for product-images bucket |
 | 008 | `008_sync_cleanup.sql` | Remove stale records (3 products, 1 category) |
 | 009 | `009_cart_items_schema.sql` | cart_items table + RLS |
 | 010 | `010_wishlist_items_schema.sql` | wishlist_items table + RLS |
 | 011 | `011_orders_schema.sql` | orders + order_items tables + RLS |
-| 012 | `012_dynamic_categories.sql` | Dynamic category support |
-| 013 | `013_drop_categories_image_url.sql` | Drop image_url from categories table |
+| 012 | `012_dynamic_categories.sql` | Dynamic category support (icon_name, display_order, is_active) |
+| 013 | `013_drop_categories_image_url.sql` | Drop image_url from categories |
 | 014 | `014_addresses_schema.sql` | addresses table + RLS |
 | 015 | `015_payment_cards_schema.sql` | payment_cards table + RLS |
 | 016 | `016_create_password_reset_codes.sql` | password_reset_codes table + cleanup function + RLS |
-| 017 | `017_otp_security_hardening.sql` | Rate limiting columns (attempt_count, last_request_at) for OTP security |
+| 017 | `017_otp_security_hardening.sql` | Rate limiting columns (attempt_count, last_request_at) |
 | 018 | `018_profiles_schema.sql` | profiles table formalization + RLS + updated_at trigger |
 | 019 | `019_avatars_storage.sql` | avatars bucket + storage policies (public read, owner write) |
 
@@ -311,7 +316,8 @@ UNIQUE on (product_id, size).
 | Function | Purpose | Environment Variables |
 |----------|---------|----------------------|
 | `send-reset-code` | Sends 6-digit OTP via Resend API email | `RESEND_API_KEY` (optional, dev mode without it) |
-| `reset-password` | Verifies OTP code and resets password via admin API | Uses `SUPABASE_SERVICE_ROLE_KEY` |
+| `verify-reset-code` | Verifies OTP code without changing password | Uses service_role |
+| `reset-password` | Verifies OTP and resets password via admin API | Uses `SUPABASE_SERVICE_ROLE_KEY` |
 
 ---
 
@@ -319,15 +325,23 @@ UNIQUE on (product_id, size).
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Product image gallery | High | Feature | Only single thumbnail displayed; productImages list unused in UI |
+| Fix `password_reset_codes` RLS | **CRITICAL** | Security | Remove anon policies — edge functions use service_role |
+| Product image gallery | High | Feature | Only single thumbnail displayed |
 | Order cancellation UI | High | Feature | No cancellation flow from user side |
 | Delivery option | High | Feature | Hardcoded to "Pickup at store" only |
-| Fix Dynamic Casts in Auth | Medium | Code Quality | `ensureProfileExists` and `isEmailConfirmationPending` accessed via `as dynamic` |
-| Exception Cleanup | Medium | Code Quality | 28 silently swallowed exceptions (`catch (_) {}`) |
+| Fix Dynamic Casts in Auth | Medium | Code Quality | `ensureProfileExists` accessed via `as dynamic` |
+| Exception Cleanup | Medium | Code Quality | 28 silently swallowed exceptions |
 | Product reviews/ratings | Medium | Feature | No code found |
 | Push notifications | Medium | Feature | No code found |
 | Real payment gateway | High | Feature | Credit card form exists but no payment processing |
+| Fix OrderModel serialization | High | Code Quality | Status as int, camelCase keys vs snake_case DB |
+| Fix PaymentCardModel serialization | High | Code Quality | camelCase JSON keys vs snake_case DB columns |
+| Fix CartItemModel serialization | Medium | Code Quality | Extra non-DB fields in toJson |
+| Fix ProductModel ID | High | Code Quality | ID as String with 'p' prefix — DB is BIGINT |
+| Implement router auth guards | High | Security | All 22 routes accessible without auth |
+| Scope recent searches by user | High | Data Isolation | SharedPreferences key is global |
+| Implement real search | High | Feature | Client-side only, no Supabase text search |
 
 ---
 
-*See [01_PROJECT_STATUS.md](./01_PROJECT_STATUS.md) for overall status, [02_ARCHITECTURE.md](./02_ARCHITECTURE.md) for architecture, [03_FEATURES_AND_DATA.md](./03_FEATURES_AND_DATA.md) for feature details, and [04_ROADMAP_AND_TECHNICAL_DEBT.md](./04_ROADMAP_AND_TECHNICAL_DEBT.md) for remaining work.*
+*See [01_PROJECT_STATUS.md](./01_PROJECT_STATUS.md) for overall status, [02_ARCHITECTURE.md](./02_ARCHITECTURE.md) for architecture, [03_FEATURES_AND_DATA.md](./03_FEATURES_AND_DATA.md) for feature details, [04_ROADMAP_AND_TECHNICAL_DEBT.md](./04_ROADMAP_AND_TECHNICAL_DEBT.md) for remaining work, and [SUPABASE_REMAINING_WORK.md](./SUPABASE_REMAINING_WORK.md) for detailed audit.*
