@@ -21,16 +21,6 @@ class WishlistPage extends ConsumerStatefulWidget {
 }
 
 class _WishlistPageState extends ConsumerState<WishlistPage> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final wishlistState = ref.watch(wishlistProvider);
@@ -59,7 +49,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
       );
     }
 
-    if (_isLoading || wishlistState.isLoading) {
+    if (wishlistState.isLoading) {
       return Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: AppBar(

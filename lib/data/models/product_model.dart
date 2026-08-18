@@ -37,10 +37,6 @@ class ProductModel {
 
   bool get featured => isFeatured;
 
-  String get collection => '';
-
-  List<String> get keywords => [];
-
   List<String> get sizes => productSizes.map((s) => s.size).toList();
 
   double get effectivePrice => discountPrice ?? price;

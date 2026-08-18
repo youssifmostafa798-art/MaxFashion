@@ -7,7 +7,6 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
-import 'package:max/core/widgets/skeletons/product_listing_skeleton.dart';
 
 class ProductListingPage extends ConsumerStatefulWidget {
   const ProductListingPage({
@@ -22,24 +21,10 @@ class ProductListingPage extends ConsumerStatefulWidget {
 }
 
 class _ProductListingPageState extends ConsumerState<ProductListingPage> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final products = ref.watch(categoryProductsProvider(widget.category));
-
-    if (_isLoading) {
-      return const ProductListingSkeleton();
-    }
 
     return Scaffold(
       backgroundColor: colorScheme.surface,

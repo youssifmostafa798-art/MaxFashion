@@ -46,41 +46,11 @@ flutter:
 
   assets:
     - .env
-    - assets/cover/
     - assets/logo/
-    - assets/product/
     - assets/svgs/
     - assets/texts/
     - assets/pop/
     - assets/categories_icons/
-    - assets/products_supa/
-    - assets/products_supa/men/accessories/sunglasses/
-    - assets/products_supa/men/accessories/watches/
-    - assets/products_supa/men/clothing/jeans/
-    - assets/products_supa/men/clothing/polos/
-    - assets/products_supa/men/clothing/shirts/
-    - assets/products_supa/men/clothing/shorts/
-    - assets/products_supa/men/clothing/tshirts/
-    - assets/products_supa/men/shoes/boots/
-    - assets/products_supa/men/shoes/loafers/
-    - assets/products_supa/men/shoes/running/
-    - assets/products_supa/men/shoes/sneakers/
-    - assets/products_supa/women/accessories/
-    - assets/products_supa/women/accessories/bracelets/
-    - assets/products_supa/women/accessories/earrings/
-    - assets/products_supa/women/accessories/necklaces/
-    - assets/products_supa/women/accessories/rings/
-    - assets/products_supa/women/accessories/sunglasses/
-    - assets/products_supa/women/accessories/watches/
-    - assets/products_supa/women/bags/
-    - assets/products_supa/women/clothing/blouses/
-    - assets/products_supa/women/clothing/crop_tops/
-    - assets/products_supa/women/clothing/dresses/
-    - assets/products_supa/women/clothing/jeans/
-    - assets/products_supa/women/clothing/skirts/
-    - assets/products_supa/women/clothing/wide_leg_pants/
-    - assets/products_supa/women/shoes/boots/
-    - assets/products_supa/women/shoes/heels/
 
   fonts:
     - family: Tenor_Sans

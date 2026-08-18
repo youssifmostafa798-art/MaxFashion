@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/constants/app_constants.dart';
 
 class AppTextStyles {
   const AppTextStyles._();
@@ -13,10 +11,4 @@ class AppTextStyles {
   static double get fontSize15 => 15.sp;
   static double get fontSize18 => 18.sp;
   static double get fontSize32 => 32.sp;
-
-  // Combined: fontSize 14 + Tenor Sans font (most common inline TextStyle pattern)
-  static TextStyle get bodyMediumTenor => TextStyle(
-    fontSize: 14.sp,
-    fontFamily: AppConstants.fontFamily,
-  );
 }

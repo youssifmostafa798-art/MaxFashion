@@ -20,16 +20,6 @@ class OrdersPage extends ConsumerStatefulWidget {
 }
 
 class _OrdersPageState extends ConsumerState<OrdersPage> {
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final ordersState = ref.watch(ordersProvider);
@@ -58,7 +48,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
       );
     }
 
-    if (_isLoading || ordersState.isLoading) {
+    if (ordersState.isLoading) {
       return Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: AppBar(

@@ -13,7 +13,6 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/cart_provider.dart';
-import 'package:max/core/widgets/skeletons/product_detail_skeleton.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/guest_prompt_dialog.dart';
@@ -29,27 +28,16 @@ class ProductDetailPage extends ConsumerStatefulWidget {
 class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   int selectedQty = 1;
   String? selectedSize;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     final sizes = widget.product.sizes;
     selectedSize = sizes.isNotEmpty ? sizes.first : null;
-    Future.delayed(const Duration(milliseconds: 400), () {
-      if (mounted) setState(() => _isLoading = false);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        appBar: const CustomAppbar(showSearchBar: false),
-        body: const ProductDetailSkeleton(),
-      );
-    }
-
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
       body: Padding(
