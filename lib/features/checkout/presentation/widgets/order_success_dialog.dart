@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/features/checkout/presentation/widgets/order_rating_widget.dart';
 
 enum OrderDialogResult { confirmed, cancelled }
 
@@ -76,16 +77,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset("assets/pop/emogi1.svg"),
-                    Gap(20.w),
-                    SvgPicture.asset("assets/pop/emogi2.svg"),
-                    Gap(20.w),
-                    SvgPicture.asset("assets/pop/emogi3.svg"),
-                  ],
-                ),
+                const OrderRatingWidget(),
 
                 const Spacer(),
                 Row(
