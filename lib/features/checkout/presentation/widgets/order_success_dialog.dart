@@ -4,6 +4,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/widgets/custom_button.dart';
 
 enum OrderDialogResult { confirmed, cancelled }
@@ -51,8 +52,15 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                 ),
                 Gap(10.h),
                 CustomText(
-                  text: "Payment ID $orderId",
+                  text: "Payment ID",
+                  size: 14,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                Gap(6.h),
+                CustomText(
+                  text: OrderDisplayHelper.formatOrderId(orderId),
                   size: 18,
+                  weight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(20.h),

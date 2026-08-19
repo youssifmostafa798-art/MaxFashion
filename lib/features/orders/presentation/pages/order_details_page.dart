@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
+import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/order_model.dart';
@@ -32,7 +33,7 @@ class OrderDetailsPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
-                        text: 'Order #${order.orderId}',
+                        text: OrderDisplayHelper.formatOrderId(order.orderId),
                         size: 18,
                         weight: FontWeight.w700,
                         color: colorScheme.onSurface,

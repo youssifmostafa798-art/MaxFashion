@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/date_formatter.dart';
+import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -81,7 +82,7 @@ class _OrderCardState extends State<OrderCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText(
-                          text: 'Order #${order.orderId}',
+                          text: OrderDisplayHelper.formatOrderId(order.orderId),
                           size: 15,
                           weight: FontWeight.w600,
                           color: colorScheme.onSurface,
