@@ -36,6 +36,33 @@ class OrderModel {
     }
   }
 
+  static String statusToString(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.processing:
+        return 'processing';
+      case OrderStatus.shipped:
+        return 'shipped';
+      case OrderStatus.delivered:
+        return 'delivered';
+      case OrderStatus.cancelled:
+        return 'cancelled';
+    }
+  }
+
+  static OrderStatus statusFromString(String? value) {
+    switch (value) {
+      case 'shipped':
+        return OrderStatus.shipped;
+      case 'delivered':
+        return OrderStatus.delivered;
+      case 'cancelled':
+        return OrderStatus.cancelled;
+      case 'processing':
+      default:
+        return OrderStatus.processing;
+    }
+  }
+
   OrderModel copyWith({
     String? orderId,
     DateTime? orderDate,
@@ -57,25 +84,42 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'orderId': orderId,
-        'orderDate': orderDate.toIso8601String(),
+        'order_id': orderId,
+        'order_date': orderDate.toIso8601String(),
         'items': items.map((item) => item.toJson()).toList(),
-        'totalPrice': totalPrice,
-        'paymentMethod': paymentMethod,
-        'deliveryAddress': deliveryAddress,
-        'status': status.index,
+        'total_price': totalPrice,
+        'payment_method': paymentMethod,
+        'delivery_address': deliveryAddress,
+        'status': statusToString(status),
       };
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
-        orderId: json['orderId'] as String,
-        orderDate: DateTime.parse(json['orderDate'] as String),
-        items: (json['items'] as List)
-            .map((item) =>
-                OrderItemModel.fromJson(item as Map<String, dynamic>))
-            .toList(),
-        totalPrice: (json['totalPrice'] as num).toDouble(),
-        paymentMethod: json['paymentMethod'] as String,
-        deliveryAddress: json['deliveryAddress'] as String,
-        status: OrderStatus.values[json['status'] as int],
+        orderId: (json['order_id'] as String?) ??
+            (json['orderId'] as String?) ??
+            '',
+        orderDate: (() {
+          final raw = json['order_date'] ?? json['orderDate'];
+          if (raw == null) return DateTime.now();
+          return DateTime.parse(raw as String);
+        })(),
+        items: (json['items'] as List?)
+                ?.map((item) =>
+                    OrderItemModel.fromJson(item as Map<String, dynamic>))
+                .toList() ??
+            [],
+        totalPrice: ((json['total_price'] ?? json['totalPrice']) as num?)
+                ?.toDouble() ??
+            0.0,
+        paymentMethod: (json['payment_method'] as String?) ??
+            (json['paymentMethod'] as String?) ??
+            '',
+        deliveryAddress: (json['delivery_address'] as String?) ??
+            (json['deliveryAddress'] as String?) ??
+            '',
+        status: statusFromString(
+            (json['status'] as String?) ??
+            ((json['status'] is int)
+                ? OrderStatus.values[json['status'] as int].name
+                : null)),
       );
 }

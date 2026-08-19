@@ -188,7 +188,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
       if (!mounted) return;
       state = state.copyWith(
         isAvatarLoading: false,
-        error: e.toString(),
+        error: 'Failed to upload image. Please try again.',
       );
     } finally {
       _isPickerActive = false;
@@ -224,7 +224,7 @@ class EditProfileNotifier extends StateNotifier<EditProfileState> {
       if (!mounted) return;
       state = state.copyWith(
         isAvatarLoading: false,
-        error: e.toString(),
+        error: 'Failed to remove avatar. Please try again.',
       );
     }
   }

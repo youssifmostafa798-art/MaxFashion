@@ -73,6 +73,7 @@ class _SignupPageState extends ConsumerState<SignupPage>
 
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next.user != null && !next.isLoading) {
+        if (!mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
           AppRouter.main,

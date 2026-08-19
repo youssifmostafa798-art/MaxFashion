@@ -1,22 +1,26 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/data/providers/auth_provider.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
+class _SplashPageState extends ConsumerState<SplashPage>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
+  bool _navigated = false;
+  Timer? _authTimer;
 
   @override
   void initState() {
@@ -46,15 +50,48 @@ class _SplashPageState extends State<SplashPage>
   }
 
   Future<void> _navigateToNext() async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted || _navigated) return;
 
     HapticFeedback.lightImpact();
 
-    final session = Supabase.instance.client.auth.currentSession;
-    final user = Supabase.instance.client.auth.currentUser;
+    final authState = ref.read(authStateProvider);
 
-    if (session != null && user != null) {
+    if (authState.isLoading) {
+      _waitForAuthAndNavigate();
+      return;
+    }
+
+    _performNavigation(authState);
+  }
+
+  void _waitForAuthAndNavigate() {
+    _authTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted || _navigated) {
+        timer.cancel();
+        return;
+      }
+      final authState = ref.read(authStateProvider);
+      if (!authState.isLoading) {
+        timer.cancel();
+        _performNavigation(authState);
+      }
+    });
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted && !_navigated) {
+        _authTimer?.cancel();
+        final authState = ref.read(authStateProvider);
+        _performNavigation(authState);
+      }
+    });
+  }
+
+  void _performNavigation(AuthState authState) {
+    if (!mounted || _navigated) return;
+    _navigated = true;
+
+    if (authState.isAuthenticated || authState.isGuest) {
       Navigator.pushReplacementNamed(context, AppRouter.main);
     } else {
       Navigator.pushReplacementNamed(context, AppRouter.auth);
@@ -63,6 +100,7 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   void dispose() {
+    _authTimer?.cancel();
     _fadeController.dispose();
     _scaleController.dispose();
     super.dispose();

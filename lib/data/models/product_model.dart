@@ -1,9 +1,8 @@
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_size_model.dart';
 
 class ProductModel {
-  static const String _storageBaseUrl =
-      'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
 
   final String id;
   final int categoryId;
@@ -33,7 +32,7 @@ class ProductModel {
     this.productSizes = const [],
   });
 
-  String get image => '$_storageBaseUrl/$thumbnailUrl';
+  String get image => '${AppConstants.supabaseStorageBaseUrl}/$thumbnailUrl';
 
   bool get featured => isFeatured;
 
@@ -42,6 +41,8 @@ class ProductModel {
   double get effectivePrice => discountPrice ?? price;
 
   bool get hasDiscount => discountPrice != null && discountPrice! < price;
+
+  int? get rawId => int.tryParse(id.startsWith('p') ? id.substring(1) : id);
 
   ProductModel copyWith({
     String? id,
@@ -80,13 +81,13 @@ class ProductModel {
       id: 'p${json['id']}',
       categoryId: json['category_id'] as int,
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String? ?? '',
       price: (json['price'] as num).toDouble(),
       discountPrice: json['discount_price'] != null
           ? (json['discount_price'] as num).toDouble()
           : null,
-      brand: json['brand'] as String,
-      thumbnailUrl: json['thumbnail_url'] as String,
+      brand: json['brand'] as String? ?? 'MaxFashion',
+      thumbnailUrl: json['thumbnail_url'] as String? ?? '',
       isFeatured: json['is_featured'] as bool? ?? false,
       isAvailable: json['is_available'] as bool? ?? true,
     );
@@ -94,7 +95,7 @@ class ProductModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': rawId,
       'category_id': categoryId,
       'name': name,
       'description': description,

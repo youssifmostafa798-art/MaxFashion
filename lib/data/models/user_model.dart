@@ -68,12 +68,12 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'fullName': fullName,
+      'full_name': fullName,
       'email': email,
-      'phoneNumber': phoneNumber,
-      'profileImage': profileImage,
-      'memberSince': memberSince.toIso8601String(),
-      'dateOfBirth': dateOfBirth?.toIso8601String(),
+      'phone_number': phoneNumber,
+      'avatar_url': profileImage,
+      'created_at': memberSince.toIso8601String(),
+      'date_of_birth': dateOfBirth?.toIso8601String(),
       'gender': gender,
       'country': country,
       'bio': bio,
@@ -83,14 +83,23 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
-      fullName: json['fullName'] as String,
-      email: json['email'] as String,
-      phoneNumber: (json['phoneNumber'] as String?) ?? '',
-      profileImage: json['profileImage'] as String?,
-      memberSince: DateTime.parse(json['memberSince'] as String),
-      dateOfBirth: json['dateOfBirth'] != null
-          ? DateTime.parse(json['dateOfBirth'] as String)
-          : null,
+      fullName: (json['full_name'] as String?) ??
+          (json['fullName'] as String? ?? ''),
+      email: (json['email'] as String?) ?? '',
+      phoneNumber: (json['phone_number'] as String?) ??
+          (json['phoneNumber'] as String? ?? ''),
+      profileImage: (json['avatar_url'] as String?) ??
+          (json['profileImage'] as String?),
+      memberSince: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : json['memberSince'] != null
+              ? DateTime.parse(json['memberSince'] as String)
+              : DateTime.now(),
+      dateOfBirth: json['date_of_birth'] != null
+          ? DateTime.parse(json['date_of_birth'] as String)
+          : json['dateOfBirth'] != null
+              ? DateTime.parse(json['dateOfBirth'] as String)
+              : null,
       gender: json['gender'] as String?,
       country: json['country'] as String?,
       bio: json['bio'] as String?,

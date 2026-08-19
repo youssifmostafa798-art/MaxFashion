@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:max/splash.dart';
+import 'package:max/core/router/auth_guard.dart';
 import 'package:max/features/auth/presentation/pages/auth_page.dart';
 import 'package:max/features/auth/presentation/pages/login_page.dart';
 import 'package:max/features/auth/presentation/pages/signup_page.dart';
@@ -94,19 +95,23 @@ class AppRouter {
         final cartItems = args['cartItems'] as List<CartItemModel>;
         final total = args['total'] as double;
         return _buildRoute(
-          PlaceOrder(cartItems: cartItems, total: total),
+          AuthGuard(child: PlaceOrder(cartItems: cartItems, total: total)),
           settings,
           direction: _SlideDirection.right,
         );
       case addAddress:
         final AddressModel? editAddress = settings.arguments as AddressModel?;
         return _buildRoute(
-          AddAddress(editAddress: editAddress),
+          AuthGuard(child: AddAddress(editAddress: editAddress)),
           settings,
           direction: _SlideDirection.right,
         );
       case addCard:
-        return _buildRoute(const AddCard(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          AuthGuard(child: const AddCard()),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case orders:
         return _buildRoute(const OrdersPage(), settings, direction: _SlideDirection.right);
       case orderDetails:
@@ -119,11 +124,23 @@ class AppRouter {
       case profile:
         return _buildRoute(const ProfilePage(), settings, direction: _SlideDirection.right);
       case editProfile:
-        return _buildRoute(const EditProfilePage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          AuthGuard(child: const EditProfilePage()),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case addresses:
-        return _buildRoute(const AddressesPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          AuthGuard(child: const AddressesPage()),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case paymentMethods:
-        return _buildRoute(const PaymentMethodsPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          AuthGuard(child: const PaymentMethodsPage()),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case AppRouter.settings:
         return _buildRoute(const SettingsPage(), settings, direction: _SlideDirection.right);
       case categories:

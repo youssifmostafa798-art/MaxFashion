@@ -31,6 +31,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage>
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _passwordUpdated = false;
+  bool _updatePasswordRequested = false;
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -61,6 +62,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage>
     HapticUtils.light();
     if (!_formKey.currentState!.validate()) return;
 
+    _updatePasswordRequested = true;
     ref.read(authStateProvider.notifier).resetPasswordWithCode(
           email: widget.email,
           code: widget.code,
@@ -77,10 +79,11 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage>
           prev?.isLoading == true &&
           next.error == null &&
           _passwordUpdated == false &&
-          prev?.isLoading == true) {
+          _updatePasswordRequested) {
         if (mounted) {
           setState(() {
             _passwordUpdated = true;
+            _updatePasswordRequested = false;
           });
         }
         return;
@@ -88,6 +91,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage>
 
       if (next.error != null && next.error!.isNotEmpty) {
         if (mounted) {
+          setState(() {
+            _updatePasswordRequested = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(next.error!)),
           );

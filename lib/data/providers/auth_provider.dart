@@ -103,7 +103,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (profile == null) {
         if (_pendingFullName != null && _pendingPhoneNumber != null) {
           try {
-            await (_repository as dynamic).ensureProfileExists(
+            await _repository.ensureProfileExists(
               fullName: _pendingFullName!,
               phoneNumber: _pendingPhoneNumber!,
             );
@@ -120,7 +120,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
               _pendingPhoneNumber = null;
               return;
             }
-          } catch (_) {}
+          } catch (_) {
+            // Profile creation failed — continue to fallback error state below
+          }
         }
         state = state.copyWith(
           isLoading: false,
@@ -204,8 +206,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       if (!mounted) return;
 
-      final repo = _repository as dynamic;
-      if (repo.isEmailConfirmationPending == true) {
+      if (_repository.isEmailConfirmationPending) {
         _pendingFullName = fullName;
         _pendingPhoneNumber = phoneNumber;
         state = state.copyWith(
@@ -222,7 +223,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         _pendingFullName = fullName;
         _pendingPhoneNumber = phoneNumber;
         try {
-          await (_repository as dynamic).ensureProfileExists(
+          await _repository.ensureProfileExists(
             fullName: fullName,
             phoneNumber: phoneNumber,
           );
@@ -233,7 +234,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
             state = state.copyWith(user: user, isLoading: false, isGuest: false);
             return;
           }
-        } catch (_) {}
+        } catch (_) {
+          // Profile creation failed — continue to email confirmation state
+        }
         state = state.copyWith(
           isLoading: false,
           emailConfirmationPending: true,
@@ -296,6 +299,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       await _repository.signOut();
     } catch (_) {}
+    if (!mounted) return;
     state = const AuthState();
   }
 
@@ -425,7 +429,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
         newPassword: newPassword,
       );
       if (!mounted) return;
-      state = state.copyWith(isLoading: false);
+
+      // CRITICAL: Sign out the local Supabase session after a successful
+      // password reset. The Edge Function already invalidated all sessions
+      // server-side, but the Flutter client may still hold a valid access
+      // token in memory. Signing out here clears that token so the login
+      // page performs a real signInWithPassword and does not navigate via
+      // a stale cached session.
+      try {
+        await _repository.signOut();
+      } catch (_) {
+        // Ignore sign-out errors — the password is already changed.
+        // The session will expire naturally even if sign-out fails.
+      }
+
+      // Clear all user state so LoginPage cannot use a restored session
+      // to bypass the new password requirement.
+      _profileLoadGeneration++;
+      if (!mounted) return;
+      state = const AuthState();
     } on SocketException {
       if (!mounted) return;
       state = state.copyWith(

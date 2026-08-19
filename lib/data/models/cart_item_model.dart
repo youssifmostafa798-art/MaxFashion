@@ -63,16 +63,34 @@ class CartItemModel {
         'selected_size': selectedSize,
         'quantity': quantity,
         'unit_price': unitPrice,
+        if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
+        if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
       };
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) => CartItemModel(
         id: json['id'] as String?,
         productId: json['product_id'] as int,
-        productName: json['product_name'] as String? ?? '',
-        productImage: json['product_image'] as String? ?? '',
-        selectedColor: json['selected_color'] as String?,
-        selectedSize: json['selected_size'] as String? ?? '',
+        productName: (json['product_name'] as String?) ??
+            (json['productName'] as String? ?? ''),
+        productImage: (json['product_image'] as String?) ??
+            (json['productImage'] as String? ?? ''),
+        selectedColor: (json['selected_color'] as String?) ??
+            (json['selectedColor'] as String?),
+        selectedSize: (json['selected_size'] as String?) ??
+            (json['selectedSize'] as String? ?? ''),
         quantity: json['quantity'] as int? ?? 1,
-        unitPrice: (json['unit_price'] as num?)?.toDouble() ?? 0.0,
+        unitPrice: (json['unit_price'] as num?)?.toDouble() ??
+            (json['unitPrice'] as num?)?.toDouble() ??
+            0.0,
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'] as String)
+            : json['createdAt'] != null
+                ? DateTime.parse(json['createdAt'] as String)
+                : null,
+        updatedAt: json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'] as String)
+            : json['updatedAt'] != null
+                ? DateTime.parse(json['updatedAt'] as String)
+                : null,
       );
 }

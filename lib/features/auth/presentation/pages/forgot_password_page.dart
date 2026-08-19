@@ -23,6 +23,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool _codeSent = false;
+  bool _sendCodeRequested = false;
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -52,6 +53,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     HapticUtils.light();
     if (!_formKey.currentState!.validate()) return;
 
+    _sendCodeRequested = true;
     ref.read(authStateProvider.notifier).sendResetCode(
           email: _emailController.text.trim(),
         );
@@ -65,7 +67,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
       if (!next.isLoading &&
           prev?.isLoading == true &&
           next.error == null &&
-          !_codeSent) {
+          !_codeSent &&
+          _sendCodeRequested) {
         if (mounted) {
           setState(() {
             _codeSent = true;

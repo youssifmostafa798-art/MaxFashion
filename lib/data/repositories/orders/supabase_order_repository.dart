@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/data/models/order_item_model.dart';
 import 'package:max/data/repositories/orders/order_repository.dart';
@@ -8,9 +9,6 @@ class SupabaseOrderRepository implements OrderRepository {
       : _client = client ?? Supabase.instance.client;
 
   final SupabaseClient _client;
-
-  static const String _storageBaseUrl =
-      'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
 
   static const _selectWithItems = '''
     id, user_id, order_number, total_price, status,
@@ -24,7 +22,7 @@ class SupabaseOrderRepository implements OrderRepository {
   String _buildImageUrl(String? url) {
     if (url == null || url.isEmpty) return '';
     if (url.startsWith('http')) return url;
-    return '$_storageBaseUrl/$url';
+    return '${AppConstants.supabaseStorageBaseUrl}/$url';
   }
 
   String _statusToDb(OrderStatus status) {

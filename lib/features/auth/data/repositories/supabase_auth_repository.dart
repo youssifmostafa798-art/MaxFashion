@@ -13,6 +13,7 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
 
   bool _isEmailConfirmationPending = false;
 
+  @override
   bool get isEmailConfirmationPending => _isEmailConfirmationPending;
 
   @override
@@ -71,6 +72,7 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
     }
   }
 
+  @override
   Future<void> ensureProfileExists({
     required String fullName,
     required String phoneNumber,
@@ -290,22 +292,36 @@ class SupabaseAuthRepository implements AuthRepositoryInterface {
     required String code,
     required String newPassword,
   }) async {
-    // Always use the Edge Function for password reset.
-    // This ensures OTP verification is enforced for ALL users,
-    // including authenticated users. No bypass is allowed.
-    final response = await _client.functions.invoke(
-      'reset-password',
-      body: {
-        'email': email.toLowerCase(),
-        'code': code,
-        'new_password': newPassword,
-      },
-    );
+    try {
+      // Always use the Edge Function for password reset.
+      // This ensures OTP verification is enforced for ALL users,
+      // including authenticated users. No bypass is allowed.
+      final response = await _client.functions.invoke(
+        'reset-password',
+        body: {
+          'email': email.toLowerCase(),
+          'code': code,
+          'new_password': newPassword,
+        },
+      );
 
-    if (response.status != 200) {
-      final errorData = response.data;
-      final errorMessage = errorData?['error'] as String? ?? 'Failed to update password.';
-      throw Exception(errorMessage);
+      final responseData = response.data;
+      final isSuccess = response.status == 200 &&
+          responseData is Map &&
+          responseData['success'] == true;
+
+      if (!isSuccess) {
+        final errorMessage = responseData is Map
+            ? responseData['error'] as String?
+            : null;
+        throw Exception(errorMessage ?? 'Failed to update password.');
+      }
+    } on FunctionException catch (e) {
+      final details = e.details;
+      if (details is Map && details['error'] != null) {
+        throw Exception(details['error'] as String);
+      }
+      throw Exception('Failed to update password. Please try again.');
     }
   }
 }

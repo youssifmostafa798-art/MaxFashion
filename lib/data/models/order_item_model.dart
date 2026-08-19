@@ -54,23 +54,34 @@ class OrderItemModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'productId': productId,
-        'productName': productName,
-        'productImage': productImage,
-        'selectedColor': selectedColor,
-        'selectedSize': selectedSize,
+        'product_id': productId,
+        'product_name': productName,
+        'product_image': productImage,
+        'selected_color': selectedColor,
+        'selected_size': selectedSize,
         'quantity': quantity,
-        'unitPrice': unitPrice,
+        'unit_price': unitPrice,
       };
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) =>
       OrderItemModel(
-        productId: json['productId'] as String,
-        productName: json['productName'] as String,
-        productImage: json['productImage'] as String,
-        selectedColor: json['selectedColor'] as String?,
-        selectedSize: (json['selectedSize'] as String?) ?? 'S',
-        quantity: json['quantity'] as int,
-        unitPrice: (json['unitPrice'] as num).toDouble(),
+        productId: (json['product_id'] as String?) ??
+            (json['productId'] as String?) ??
+            '',
+        productName: (json['product_name'] as String?) ??
+            (json['productName'] as String?) ??
+            '',
+        productImage: (json['product_image'] as String?) ??
+            (json['productImage'] as String?) ??
+            '',
+        selectedColor: (json['selected_color'] as String?) ??
+            (json['selectedColor'] as String?),
+        selectedSize: (json['selected_size'] as String?) ??
+            (json['selectedSize'] as String?) ??
+            'S',
+        quantity: (json['quantity'] as int?) ?? 1,
+        unitPrice: ((json['unit_price'] ?? json['unitPrice']) as num?)
+                ?.toDouble() ??
+            0.0,
       );
 }

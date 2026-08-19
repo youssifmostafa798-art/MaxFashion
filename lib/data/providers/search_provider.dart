@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 import 'package:max/data/repositories/search/supabase_search_repository.dart';
 
@@ -66,9 +67,10 @@ class SearchState {
 
 class SearchNotifier extends StateNotifier<SearchState> {
   final Ref ref;
+  final String? userId;
   Timer? _debounce;
 
-  SearchNotifier(this.ref) : super(const SearchState()) {
+  SearchNotifier(this.ref, {this.userId}) : super(const SearchState()) {
     _loadRecentSearches();
   }
 
@@ -190,11 +192,14 @@ class SearchNotifier extends StateNotifier<SearchState> {
     );
   }
 
-  static const _kRecentSearchesKey = 'recent_searches';
+  String get _recentSearchesKey {
+    if (userId != null) return 'recent_searches_$userId';
+    return 'recent_searches_guest';
+  }
 
   Future<List<String>> _loadRecentSearchesFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_kRecentSearchesKey);
+    final jsonString = prefs.getString(_recentSearchesKey);
     if (jsonString == null) return [];
     final List<String> decoded =
         (jsonDecode(jsonString) as List).cast<String>();
@@ -203,7 +208,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
   void _saveRecentSearches(List<String> searches) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_kRecentSearchesKey, jsonEncode(searches));
+    await prefs.setString(_recentSearchesKey, jsonEncode(searches));
   }
 
   @override
@@ -215,5 +220,6 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
 final searchProvider =
     StateNotifierProvider<SearchNotifier, SearchState>((ref) {
-  return SearchNotifier(ref);
+  final userId = ref.watch(currentUserIdProvider);
+  return SearchNotifier(ref, userId: userId);
 });

@@ -48,4 +48,11 @@ abstract class AuthRepositoryInterface {
     required String code,
     required String newPassword,
   });
+
+  bool get isEmailConfirmationPending;
+
+  Future<void> ensureProfileExists({
+    required String fullName,
+    required String phoneNumber,
+  });
 }

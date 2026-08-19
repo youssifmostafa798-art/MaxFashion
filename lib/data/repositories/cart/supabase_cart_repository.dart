@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/repositories/cart/cart_repository.dart';
 
@@ -7,9 +8,6 @@ class SupabaseCartRepository implements CartRepository {
       : _client = client ?? Supabase.instance.client;
 
   final SupabaseClient _client;
-
-  static const String _storageBaseUrl =
-      'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
 
   static const _selectWithProduct = '''
     id, user_id, product_id, size, quantity, created_at, updated_at,
@@ -21,7 +19,7 @@ class SupabaseCartRepository implements CartRepository {
   String _buildImageUrl(String? thumbnailUrl) {
     if (thumbnailUrl == null || thumbnailUrl.isEmpty) return '';
     if (thumbnailUrl.startsWith('http')) return thumbnailUrl;
-    return '$_storageBaseUrl/$thumbnailUrl';
+    return '${AppConstants.supabaseStorageBaseUrl}/$thumbnailUrl';
   }
 
   String? _sizeForDb(String selectedSize) {

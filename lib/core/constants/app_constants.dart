@@ -1,4 +1,7 @@
 class AppConstants {
+  static const String supabaseStorageBaseUrl =
+      'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
+
   static const String fontFamily = 'Tenor_Sans';
 
   static const String logoPath = 'assets/logo/logo-bg.svg';

@@ -9,19 +9,21 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+import { corsHeaders, handleCORS } from "../_shared/cors.ts";
 
 const MAX_ATTEMPTS = 5;
 
+async function hashOTP(code: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(code);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  const corsResponse = handleCORS(req);
+  if (corsResponse) return corsResponse;
 
   try {
     const { email, code } = await req.json();
@@ -40,7 +42,7 @@ serve(async (req) => {
     // Look up the code record for this email
     const { data: codeRecord, error: queryError } = await supabase
       .from("password_reset_codes")
-      .select("id, code, used, expires_at, attempt_count")
+      .select("id, code_hash, used, expires_at, attempt_count")
       .eq("email", email.toLowerCase())
       .eq("used", false)
       .order("created_at", { ascending: false })
@@ -84,8 +86,9 @@ serve(async (req) => {
       );
     }
 
-    // Check if the provided code matches the stored code
-    if (codeRecord.code !== code) {
+    // Check if the provided code matches the stored hash
+    const submittedHash = await hashOTP(code);
+    if (codeRecord.code_hash !== submittedHash) {
       // Increment attempt_count
       const newAttemptCount = codeRecord.attempt_count + 1;
 

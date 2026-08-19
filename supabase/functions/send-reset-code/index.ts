@@ -15,20 +15,58 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { corsHeaders, handleCORS } from "../_shared/cors.ts";
 
-// CORS: Allow-Origin is set to * because this is a Flutter mobile app.
-// Mobile HTTP clients do not enforce CORS restrictions.
-// If a web version is added, restrict to specific origins.
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
+const AUTH_USER_PAGE_SIZE = 1000;
+const MAX_AUTH_USER_SCAN_PAGES = 100;
+
+async function hashOTP(code: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(code);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function findAuthUserByEmail(
+  supabase: ReturnType<typeof createClient>,
+  normalizedEmail: string,
+) {
+  for (let page = 1; page <= MAX_AUTH_USER_SCAN_PAGES; page++) {
+    const { data, error } = await supabase.auth.admin.listUsers({
+      page,
+      perPage: AUTH_USER_PAGE_SIZE,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    const users = data?.users ?? [];
+    const authUser = users.find(
+      (user) => user.email?.toLowerCase() === normalizedEmail
+    );
+
+    if (authUser) {
+      return authUser;
+    }
+
+    if (users.length < AUTH_USER_PAGE_SIZE) {
+      return null;
+    }
+
+    const lastPage = data?.lastPage ?? 0;
+    if (lastPage > 0 && page >= lastPage) {
+      return null;
+    }
+  }
+
+  throw new Error("Auth user lookup exceeded scan limit");
+}
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
-  }
+  const corsResponse = handleCORS(req);
+  if (corsResponse) return corsResponse;
 
   try {
     const { email } = await req.json();
@@ -40,9 +78,11 @@ serve(async (req) => {
       );
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(normalizedEmail)) {
       return new Response(
         JSON.stringify({ error: "Invalid email format" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -54,21 +94,28 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Check if user exists in auth
-    const { data: users, error: listError } = await supabase.auth.admin.listUsers();
-    if (listError) {
+    // Check if user exists in auth using Admin API
+    // NOTE: .from("auth.users") does NOT work — PostgREST only exposes the public schema.
+    // NOTE: supabase-js listUsers() accepts only pagination params; it does not
+    // forward a filter param, so the match must be checked explicitly.
+    let authUser;
+    try {
+      authUser = await findAuthUserByEmail(supabase, normalizedEmail);
+    } catch (error) {
+      console.log(
+        `[send-reset-code] User lookup failed: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
       return new Response(
-        JSON.stringify({ error: "Failed to verify email" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ success: true, message: "If an account exists, a reset code has been sent." }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const userExists = users?.users?.some(
-      (u) => u.email?.toLowerCase() === email.toLowerCase()
-    );
-
-    // For security, always return success even if user doesn't exist
-    if (!userExists) {
+    // If query fails or user not found, still return success (user enumeration protection)
+    if (!authUser) {
+      console.log("[send-reset-code] User not found");
       return new Response(
         JSON.stringify({ success: true, message: "If an account exists, a reset code has been sent." }),
         { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -79,7 +126,7 @@ serve(async (req) => {
     const { data: recentCode } = await supabase
       .from("password_reset_codes")
       .select("last_request_at")
-      .eq("email", email.toLowerCase())
+      .eq("email", normalizedEmail)
       .eq("used", false)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -103,19 +150,22 @@ serve(async (req) => {
     await supabase
       .from("password_reset_codes")
       .update({ used: true })
-      .eq("email", email.toLowerCase())
+      .eq("email", normalizedEmail)
       .eq("used", false);
 
     // Generate 6-digit code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Store code in database (expires in 10 minutes)
+    // Hash the code before storing (never persist plaintext)
+    const codeHash = await hashOTP(code);
+
+    // Store hashed code in database (expires in 10 minutes)
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
     const { error: insertError } = await supabase
       .from("password_reset_codes")
       .insert({
-        email: email.toLowerCase(),
-        code: code,
+        email: normalizedEmail,
+        code_hash: codeHash,
         expires_at: expiresAt,
         used: false,
         attempt_count: 0,
@@ -175,12 +225,15 @@ serve(async (req) => {
 
     if (!emailResponse.ok) {
       const errorData = await emailResponse.text();
-      console.error("Resend error:", errorData);
+      console.error(`[send-reset-code] Resend error (status ${emailResponse.status}):`, errorData);
       return new Response(
         JSON.stringify({ error: "Failed to send email" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    const emailResult = await emailResponse.json();
+    console.log(`[send-reset-code] Resend accepted: id=${emailResult.id}, to=${email}`);
 
     return new Response(
       JSON.stringify({ success: true, message: "Reset code sent successfully." }),
