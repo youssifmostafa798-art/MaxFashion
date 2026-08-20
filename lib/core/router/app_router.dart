@@ -28,6 +28,9 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/cart_item_model.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/data/models/address_model.dart';
+import 'package:max/data/models/collection_model.dart';
+import 'package:max/features/collection/presentation/pages/collection_products_page.dart';
+import 'package:max/features/collection/presentation/pages/all_collections_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -56,6 +59,8 @@ class AppRouter {
   static const String forgotPassword = '/forgot-password';
   static const String verifyResetCode = '/verify-reset-code';
   static const String resetPassword = '/reset-password';
+  static const String collectionProducts = '/collection-products';
+  static const String allCollections = '/all-collections';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -158,6 +163,19 @@ class AppRouter {
         final args = settings.arguments as Map<String, String>;
         return _buildRoute(
           ResetPasswordPage(email: args['email']!, code: args['code']!),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case collectionProducts:
+        final CollectionModel collection = settings.arguments as CollectionModel;
+        return _buildRoute(
+          CollectionProductsPage(collection: collection),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case allCollections:
+        return _buildRoute(
+          const AllCollectionsPage(),
           settings,
           direction: _SlideDirection.right,
         );

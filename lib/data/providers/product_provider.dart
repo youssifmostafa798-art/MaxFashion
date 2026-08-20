@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/product/product_repository.dart';
@@ -126,7 +127,10 @@ final filteredHomeProductsProvider = Provider<List<ProductModel>>((ref) {
   final selectedCategoryId = ref.watch(selectedCategoryProvider);
   final products = ref.watch(shuffledProductsProvider);
 
-  if (selectedCategoryId == null) return products;
+  final filtered = selectedCategoryId == null
+      ? products
+      : products.where((p) => p.categoryId == selectedCategoryId).toList();
 
-  return products.where((p) => p.categoryId == selectedCategoryId).toList();
+  if (filtered.length <= AppConstants.homeProductsLimit) return filtered;
+  return filtered.sublist(0, AppConstants.homeProductsLimit);
 });
