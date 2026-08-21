@@ -81,9 +81,9 @@ class ProductsNotifier extends StateNotifier<ProductsLoadState> {
 
 final productsProvider =
     StateNotifierProvider<ProductsNotifier, ProductsLoadState>((ref) {
-  final repo = ref.watch(productRepositoryProvider);
-  return ProductsNotifier(repo);
-});
+      final repo = ref.watch(productRepositoryProvider);
+      return ProductsNotifier(repo);
+    });
 
 final productsLoaded = Provider<bool>((ref) {
   return ref.watch(productsProvider).isLoaded;
@@ -107,6 +107,16 @@ final categoryProductsProvider = Provider.family<List<ProductModel>, String>((
     final name = categoryNameById(categories, p.categoryId);
     return name.toLowerCase() == category.toLowerCase();
   }).toList();
+});
+
+const int _previewCategoryCount = 7;
+
+final previewCategoriesProvider = Provider<List<CategoryModel>>((ref) {
+  final categories = ref.watch(categoriesProvider);
+  if (categories.length <= _previewCategoryCount) return categories;
+  final copy = List<CategoryModel>.from(categories);
+  copy.shuffle(Random());
+  return copy.sublist(0, _previewCategoryCount);
 });
 
 final selectedCategoryProvider = StateProvider<int?>((ref) => null);

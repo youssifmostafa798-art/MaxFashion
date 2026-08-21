@@ -21,6 +21,7 @@ import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 import 'package:max/features/profile/presentation/pages/payment_methods_page.dart';
 import 'package:max/features/settings/presentation/pages/settings_page.dart';
 import 'package:max/features/menu/presentation/pages/categories_page.dart';
+import 'package:max/features/menu/presentation/pages/all_categories_page.dart';
 import 'package:max/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:max/features/auth/presentation/pages/verify_reset_code_page.dart';
 import 'package:max/features/auth/presentation/pages/reset_password_page.dart';
@@ -61,6 +62,7 @@ class AppRouter {
   static const String resetPassword = '/reset-password';
   static const String collectionProducts = '/collection-products';
   static const String allCollections = '/all-collections';
+  static const String allCategories = '/all-categories';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -69,16 +71,32 @@ class AppRouter {
       case auth:
         return _buildRoute(const AuthPage(), settings);
       case login:
-        return _buildRoute(const LoginPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const LoginPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case signup:
-        return _buildRoute(const SignupPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const SignupPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case main:
         final int tab = (settings.arguments as int?) ?? 0;
         return _buildRoute(MainScreen(initialTab: tab), settings);
       case search:
-        return _buildRoute(const SearchScreen(), settings, direction: _SlideDirection.bottom);
+        return _buildRoute(
+          const SearchScreen(),
+          settings,
+          direction: _SlideDirection.bottom,
+        );
       case wishlist:
-        return _buildRoute(const WishlistPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const WishlistPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case productListing:
         final String category = (settings.arguments as String?) ?? '';
         return _buildRoute(
@@ -94,13 +112,19 @@ class AppRouter {
           direction: _SlideDirection.right,
         );
       case cart:
-        return _buildRoute(const CartPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const CartPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case placeOrder:
         final args = settings.arguments as Map<String, dynamic>;
         final cartItems = args['cartItems'] as List<CartItemModel>;
         final total = args['total'] as double;
         return _buildRoute(
-          AuthGuard(child: PlaceOrder(cartItems: cartItems, total: total)),
+          AuthGuard(
+            child: PlaceOrder(cartItems: cartItems, total: total),
+          ),
           settings,
           direction: _SlideDirection.right,
         );
@@ -118,7 +142,11 @@ class AppRouter {
           direction: _SlideDirection.right,
         );
       case orders:
-        return _buildRoute(const OrdersPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const OrdersPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case orderDetails:
         final OrderModel order = settings.arguments as OrderModel;
         return _buildRoute(
@@ -127,7 +155,11 @@ class AppRouter {
           direction: _SlideDirection.right,
         );
       case profile:
-        return _buildRoute(const ProfilePage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const ProfilePage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case editProfile:
         return _buildRoute(
           AuthGuard(child: const EditProfilePage()),
@@ -147,11 +179,23 @@ class AppRouter {
           direction: _SlideDirection.right,
         );
       case AppRouter.settings:
-        return _buildRoute(const SettingsPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const SettingsPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case categories:
-        return _buildRoute(const CategoriesPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const CategoriesPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case forgotPassword:
-        return _buildRoute(const ForgotPasswordPage(), settings, direction: _SlideDirection.right);
+        return _buildRoute(
+          const ForgotPasswordPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
       case verifyResetCode:
         final String email = settings.arguments as String;
         return _buildRoute(
@@ -167,7 +211,8 @@ class AppRouter {
           direction: _SlideDirection.right,
         );
       case collectionProducts:
-        final CollectionModel collection = settings.arguments as CollectionModel;
+        final CollectionModel collection =
+            settings.arguments as CollectionModel;
         return _buildRoute(
           CollectionProductsPage(collection: collection),
           settings,
@@ -176,6 +221,12 @@ class AppRouter {
       case allCollections:
         return _buildRoute(
           const AllCollectionsPage(),
+          settings,
+          direction: _SlideDirection.right,
+        );
+      case allCategories:
+        return _buildRoute(
+          const AllCategoriesPage(),
           settings,
           direction: _SlideDirection.right,
         );
