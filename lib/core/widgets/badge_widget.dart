@@ -7,16 +7,19 @@ class BadgeWidget extends StatelessWidget {
     super.key,
     required this.child,
     required this.count,
+    this.size = 24,
   });
 
   final Widget child;
   final int count;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
+    final double s = size.w;
     return SizedBox(
-      width: 24.w,
-      height: 24.w,
+      width: s,
+      height: s,
       child: Stack(
         clipBehavior: Clip.none,
         children: [

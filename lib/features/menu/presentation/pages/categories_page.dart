@@ -30,38 +30,36 @@ class CategoriesPage extends StatelessWidget {
           weight: FontWeight.bold,
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 10.h),
-                const MenuSearchBar(),
-                SizedBox(height: 20.h),
-                const MenuSectionTitle('CATEGORIES'),
-                SizedBox(height: 12.h),
-                CategoryGrid(
-                  showPreview: true,
-                  onSeeMoreTap: () {
-                    HapticUtils.light();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AllCategoriesPage(),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 24.h),
-                const MenuSectionTitle('SHOP BY'),
-                SizedBox(height: 12.h),
-                const ShopByList(),
-                SizedBox(height: 30.h),
-              ],
-            ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10.h),
+              const MenuSearchBar(),
+              SizedBox(height: 20.h),
+              const MenuSectionTitle('CATEGORIES'),
+              SizedBox(height: 12.h),
+              CategoryGrid(
+                showPreview: true,
+                onSeeMoreTap: () {
+                  HapticUtils.light();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AllCategoriesPage(),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 24.h),
+              const MenuSectionTitle('SHOP BY'),
+              SizedBox(height: 12.h),
+              const ShopByList(),
+              SizedBox(height: 30.h),
+            ],
           ),
         ),
       ),
