@@ -75,11 +75,6 @@ class _ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final displayName = user?.fullName ?? 'Guest User';
     final displayEmail = user?.email ?? 'guest@example.com';
-    final displayPhone = user?.phoneNumber ?? '';
-    final displayGender = user?.gender ?? '';
-    final displayCountry = user?.country ?? '';
-    final displayDob = user?.dateOfBirth;
-    final displayBio = user?.bio ?? '';
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -122,49 +117,6 @@ class _ProfileHeader extends StatelessWidget {
               size: 13,
               color: colorScheme.onSurfaceVariant,
             ),
-            if (displayPhone.isNotEmpty) ...[
-              SizedBox(height: 4.h),
-              CustomText(
-                text: displayPhone,
-                size: 13,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ],
-            if (displayGender.isNotEmpty) ...[
-              SizedBox(height: 4.h),
-              CustomText(
-                text: displayGender,
-                size: 13,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ],
-            if (displayCountry.isNotEmpty) ...[
-              SizedBox(height: 4.h),
-              CustomText(
-                text: displayCountry,
-                size: 13,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ],
-            if (displayDob != null) ...[
-              SizedBox(height: 4.h),
-              CustomText(
-                text: DateFormatter.formatDateNumeric(displayDob),
-                size: 13,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ],
-            if (displayBio.isNotEmpty) ...[
-              SizedBox(height: 8.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: CustomText(
-                  text: displayBio,
-                  size: 12,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
             SizedBox(height: 4.h),
             CustomText(
               text: _getMemberSinceText(),
