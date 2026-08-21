@@ -1,7 +1,7 @@
 # 04 — Roadmap & Technical Debt
 
 > **MaxFashion — Remaining Work, Known Issues & Technical Debt**
-> Last Updated: August 18, 2026
+> Last Updated: August 21, 2026
 
 ---
 
@@ -12,6 +12,7 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | ~~Fix `password_reset_codes` RLS~~ | ✅ Verified Secure | Migration 016 correctly has NO anon policies. Edge functions use service_role which bypasses RLS. |
+| ~~OTP Code Hashing~~ | ✅ Completed | Migration 021 — OTP codes stored as SHA-256 hashes, not plaintext. |
 
 ### High Priority — Important Missing Functionality
 
@@ -33,7 +34,7 @@
 | "Shop By" Filtering | ⚠️ UI Only | New Arrivals, Trending, Best Sellers, Online Exclusive — static UI, no filtering |
 | Product Reviews/Ratings | ❌ Not Implemented | No code found |
 | Push Notifications | ❌ Not Implemented | No code found |
-| Consolidate Search Logic | ⚠️ Partial | 3 search implementations exist; search itself is functional via Supabase RPC |
+| Consolidate Search Logic | ⚠️ Partial | Search is functional via Supabase RPC; duplicate implementations could be consolidated |
 | Menu Categories Dynamic Loading | ⚠️ Hardcoded | CategoriesPage has hardcoded items (should load from Supabase) |
 
 ### Low Priority — Optional Polish
@@ -44,7 +45,6 @@
 | Product Discount Display | ⚠️ Field Exists | `discountPrice` field exists but always null in seeded data |
 | Social Media Links | ⚠️ Non-Functional | Footer icons trigger haptic only |
 | Deep Linking | ❌ Not Implemented | Some screens use Navigator.push instead of named routes |
-| Remove Bundled Product Images | ❌ Not Started | `assets/products_supa/` may bloat APK (images now served from Supabase Storage) |
 | Remove Dead Getters | ❌ Not Started | `collection` and `keywords` getters in ProductModel return empty values |
 
 ---
@@ -57,7 +57,7 @@
 |-------|-----------------|--------|-------|
 | `ensureProfileExists` via dynamic cast | Authentication | Open | `lib/data/providers/auth_provider.dart` — accessed via `(_repository as dynamic)` — fragile but functional |
 | `isEmailConfirmationPending` via dynamic cast | Authentication | Open | Same file — not on `AuthRepositoryInterface` |
-| Missing mounted check in logout | Authentication | Open | `auth_provider.dart:299` — `state = const AuthState()` without `mounted` check after `signOut()` |
+| Missing mounted check in logout | Authentication | Open | `auth_provider.dart` — `state = const AuthState()` without `mounted` check after `signOut()` |
 | 24 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider, orders_provider, wishlist_provider, payment_card_provider, address_provider, supabase_product_repository, supabase_order_repository, supabase_auth_repository, place_order, edit_profile_provider |
 | Hardcoded Supabase URL | Products, Cart, Orders | Open | `_storageBaseUrl` hardcoded in ProductModel, SupabaseCartRepository, SupabaseOrderRepository instead of using .env config |
 
@@ -70,7 +70,6 @@
 | "Shop By" items static | Menu | Open | No filtering logic behind New Arrivals, Trending, etc. |
 | Menu categories hardcoded | Menu | Open | Items hardcoded in CategoriesPage, not loaded from Supabase |
 | Cover image URL from Supabase | Home | Open | If `cover_url` is null, shows empty container fallback |
-| Duplicate search implementations | Search | Open | SupabaseSearchRepository, SupabaseProductRepository.searchProducts, ProductSearchMatcher all implement search |
 | Dead `collection` getter | Products | Open | Returns empty string, used in ProductSearchMatcher (no effect) |
 | Dead `keywords` getter | Products | Open | Returns empty list, used in ProductSearchMatcher (no effect) |
 
@@ -92,6 +91,7 @@ The following files have been **deleted** from the codebase but may still be ref
 | `lib/data/models/cover_model.dart` | ❌ DELETED | Unused cover model |
 | `lib/data/datasources/local/` | ❌ DELETED | LocalProductDataSource directory — removed from codebase |
 | `lib/data/services/payment_card_storage.dart` | ❌ DELETED | SharedPreferences payment cards — superseded by SupabasePaymentCardRepository |
+| `lib/data/repositories/product/product_search_matcher.dart` | ❌ DELETED | Dead code — never imported anywhere |
 
 ### Code Quality Issues
 
@@ -104,9 +104,7 @@ The following files have been **deleted** from the codebase but may still be ref
 | Mixed navigation patterns (named routes vs Navigator.push) | Various | Low |
 | Dead `collection` getter returns empty string | `lib/data/models/product_model.dart` | Low |
 | Dead `keywords` getter returns empty list | `lib/data/models/product_model.dart` | Low |
-| 3 duplicate search implementations | `supabase_search_repository.dart`, `supabase_product_repository.dart`, `product_search_matcher.dart` | Low |
 | `discountPrice` always null in seed data | Supabase seed data | Low |
-| Bundled product images may bloat APK | `assets/products_supa/` | Low |
 
 ### Architecture Inconsistencies
 
@@ -114,7 +112,6 @@ The following files have been **deleted** from the codebase but may still be ref
 |-------|-------|
 | Some navigation uses Navigator.push | While routing uses named routes — mixed approach |
 | Cart items join product data on every load | Could be optimized with caching |
-| Search uses Supabase RPC (full-text search) | Recent searches still stored locally (not per-user) |
 
 ### Unused Dependencies
 
@@ -141,12 +138,9 @@ The following files have been **deleted** from the codebase but may still be ref
 
 **Tasks:**
 - Remove dead `collection` and `keywords` getters from ProductModel
-- Remove dead `ProductSearchMatcher` class
-- Consolidate 3 search implementations into one
 - Extract hardcoded Supabase URLs to configuration
 - Add named routes for all screens
 - Load menu categories from Supabase
-- Remove or verify bundled `assets/products_supa/` images
 - Remove any remaining dead code
 
 ### 3. Real Payment Gateway
@@ -184,9 +178,11 @@ The following files have been **deleted** from the codebase but may still be ref
 | Orders | Supabase | Supabase | ✅ Done |
 | Addresses | Supabase | Supabase | ✅ Done |
 | Payment Cards | Supabase | Supabase | ✅ Done |
+| Collections | Supabase | Supabase | ✅ Done |
 | OTP Password Recovery | Supabase (Edge Functions) | Supabase (Edge Functions) | ✅ Done |
+| OTP Code Hashing | SHA-256 hashes | SHA-256 hashes | ✅ Done |
 | Theme | SharedPreferences | SharedPreferences | ✅ Correct (local is fine) |
-| Recent Searches | SharedPreferences | SharedPreferences | ⚠️ Not per-user — shared across accounts |
+| Recent Searches | SharedPreferences (per-user) | SharedPreferences (per-user) | ✅ Done (per-user scoped) |
 
 ---
 

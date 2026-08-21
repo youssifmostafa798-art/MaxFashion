@@ -1,7 +1,7 @@
 # 05 — Supabase Migration Status
 
 > **MaxFashion — Current Supabase Implementation & Migration Reference**
-> Last Updated: August 18, 2026
+> Last Updated: August 21, 2026
 
 ---
 
@@ -21,6 +21,9 @@
 | 3.10 | OTP Security Hardening | ✅ Completed | `017_otp_security_hardening.sql` |
 | — | Profiles Table | ✅ Completed | `018_profiles_schema.sql` |
 | — | Avatars Storage | ✅ Completed | `019_avatars_storage.sql` |
+| — | Full-Text Search | ✅ Completed | `020_full_text_search.sql` |
+| — | OTP Code Hashing | ✅ Completed | `021_otp_code_hashing.sql` |
+| — | Collections Feature | ✅ Completed | `022_collections_schema.sql`, `023_fix_watches_image_url.sql` |
 
 ---
 
@@ -40,7 +43,9 @@
 | `order_items` | Order line items | User-owned (via orders) | ✅ In use |
 | `addresses` | User shipping addresses | User-owned (full CRUD) | ✅ In use |
 | `payment_cards` | Saved payment methods | User-owned (full CRUD) | ✅ In use |
-| `password_reset_codes` | OTP codes for password reset | ✅ Service-role only (no anon policies) | ✅ In use |
+| `password_reset_codes` | OTP codes for password reset (SHA-256 hashed) | ✅ Service-role only (no anon policies) | ✅ In use |
+| `collections` | Curated product collections | Public read (active only) | ✅ In use |
+| `collection_categories` | Collection-to-category junction | Public read | ✅ In use |
 
 ### Table Schemas (Reference)
 
@@ -192,7 +197,7 @@ UNIQUE on (product_id, size).
 |--------|------|------------|
 | `id` | UUID | PK |
 | `email` | TEXT | NOT NULL |
-| `code` | TEXT | NOT NULL |
+| `code_hash` | TEXT | NOT NULL |
 | `expires_at` | TIMESTAMPTZ | NOT NULL |
 | `used` | BOOL | DEFAULT false |
 | `attempt_count` | INT | DEFAULT 0 |
@@ -201,7 +206,34 @@ UNIQUE on (product_id, size).
 
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
 
+**Note:** OTP codes are stored as SHA-256 hashes (migration 021), not plaintext. The `code` column was replaced by `code_hash`.
+
 **⚠️ SECURITY NOTE:** Migration 016 creates RLS with NO client-side policies. The anon and authenticated roles have NO policies on this table. Edge Functions use service_role which bypasses RLS. This is correctly secured.
+
+#### collections
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGINT | PK |
+| `name` | TEXT | NOT NULL |
+| `image_url` | TEXT | Nullable |
+| `display_order` | INTEGER | DEFAULT 0 |
+| `is_active` | BOOLEAN | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+**RLS:** Public read access for active collections only (`is_active = true`).
+**Note:** `updated_at` auto-updates via trigger.
+
+#### collection_categories
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGINT | PK |
+| `collection_id` | BIGINT | FK → collections(id) ON DELETE CASCADE |
+| `category_id` | BIGINT | FK → categories(id) ON DELETE CASCADE |
+
+**RLS:** Public read access.
+**Indexes:** Indexes on collection_id and category_id.
+**Constraint:** UNIQUE on (collection_id, category_id).
 
 ---
 
@@ -211,6 +243,7 @@ UNIQUE on (product_id, size).
 |--------|---------|---------------|
 | `avatars` | Profile avatar images | Public read, owner write (authenticated users can upload/delete own avatar) |
 | `product-images` | Product image storage | Public read, service-role write only (no client writes) |
+| `collection-images` | Collection cover images | Public read, service-role write only (no client writes) |
 
 ---
 
@@ -250,6 +283,8 @@ UNIQUE on (product_id, size).
 | `payment_cards` | Users can update own payment cards | UPDATE | `auth.uid() = user_id` |
 | `payment_cards` | Users can delete own payment cards | DELETE | `auth.uid() = user_id` |
 | `password_reset_codes` | No client-side policies (service-role only) | N/A | N/A |
+| `collections` | Anyone can view active collections | SELECT | `is_active = true` |
+| `collection_categories` | Anyone can view collection categories | SELECT | true |
 
 ---
 
@@ -269,6 +304,7 @@ UNIQUE on (product_id, size).
 | Orders | `SupabaseOrderRepository` | `orders` + `order_items` | ✅ Complete |
 | Addresses | `SupabaseAddressRepository` | `addresses` | ✅ Complete |
 | Payment Cards | `SupabasePaymentCardRepository` | `payment_cards` | ✅ Complete |
+| Collections | `SupabaseCollectionRepository` | `collections` + `collection_categories` | ✅ Complete |
 | OTP Password Recovery | `SupabaseAuthRepository` | Edge Functions + `password_reset_codes` | ✅ Complete |
 
 ---
@@ -278,9 +314,9 @@ UNIQUE on (product_id, size).
 | Feature | Storage | Key | Notes |
 |---------|---------|-----|-------|
 | Theme | SharedPreferences | `theme_mode` | Intentionally local. |
-| Recent Searches | SharedPreferences | `recent_searches` | ⚠️ Not per-user — shared across accounts. |
+| Recent Searches | SharedPreferences | `recent_searches_{userId}` | Per-user scoped via userId key. |
 | Orders Migration Flag | SharedPreferences | `orders_migrated_to_supabase_{userId}` | Per-user migration flag. |
-| Search | Supabase RPC | `search_products` | Full-text search via RPC. Recent searches stored locally (not per-user). |
+| Search | Supabase RPC | `search_products` | Full-text search via RPC. Recent searches stored locally (per-user). |
 
 ---
 
@@ -290,8 +326,8 @@ UNIQUE on (product_id, size).
 |---|------|---------|
 | 001 | `001_products_schema.sql` | Schema for categories, products, product_images, product_sizes + RLS |
 | 002 | `002_seed_categories.sql` | INSERT 22 categories |
-| 003 | `003_seed_products.sql` | INSERT 249 products |
-| 004 | `004_seed_product_images.sql` | INSERT 250 images |
+| 003 | `003_seed_products.sql` | INSERT 247 products |
+| 004 | `004_seed_product_images.sql` | INSERT 248 images |
 | 005 | `005_seed_product_sizes.sql` | INSERT 998 sizes |
 | 006 | `006_home_content.sql` | home_content table + seed |
 | 007 | `007_product_images_storage_policies.sql` | Storage RLS for product-images bucket |
@@ -308,6 +344,9 @@ UNIQUE on (product_id, size).
 | 018 | `018_profiles_schema.sql` | profiles table formalization + RLS + updated_at trigger |
 | 019 | `019_avatars_storage.sql` | avatars bucket + storage policies (public read, owner write) |
 | 020 | `020_full_text_search.sql` | pg_trgm extension, search_vector column, search_products RPC function |
+| 021 | `021_otp_code_hashing.sql` | SHA-256 hashed OTP codes (code_hash column, pgcrypto extension) |
+| 022 | `022_collections_schema.sql` | collections + collection_categories tables, collection-images bucket, seed data |
+| 023 | `023_fix_watches_image_url.sql` | Fix Watches collection image URL extension |
 
 ---
 
@@ -315,9 +354,9 @@ UNIQUE on (product_id, size).
 
 | Function | Purpose | Environment Variables |
 |----------|---------|----------------------|
-| `send-reset-code` | Sends 6-digit OTP via Resend API email | `RESEND_API_KEY` (optional, dev mode without it) |
-| `verify-reset-code` | Verifies OTP code without changing password | Uses service_role |
-| `reset-password` | Verifies OTP and resets password via admin API | Uses `SUPABASE_SERVICE_ROLE_KEY` |
+| `send-reset-code` | Sends 6-digit OTP via Resend API email (SHA-256 hashed before storage) | `RESEND_API_KEY` (optional, dev mode without it) |
+| `verify-reset-code` | Verifies OTP code hash without changing password | Uses service_role |
+| `reset-password` | Verifies OTP code hash, resets password via admin API, invalidates all sessions | Uses `SUPABASE_SERVICE_ROLE_KEY` |
 
 ---
 
@@ -327,8 +366,6 @@ UNIQUE on (product_id, size).
 |------|----------|------|-------|
 | Fix Auth Interface | **HIGH** | Code Quality | `ensureProfileExists` accessed via `as dynamic` |
 | Add mounted check in logout | **HIGH** | Code Quality | Missing in auth_provider.dart logout method |
-| Implement router auth guards | **HIGH** | Security | All 24 routes accessible without auth |
-| Scope recent searches by user | **HIGH** | Data Isolation | SharedPreferences key is global |
 | Fix OrderModel serialization | HIGH | Code Quality | Status as int, camelCase keys vs snake_case DB |
 | Fix PaymentCardModel serialization | HIGH | Code Quality | camelCase JSON keys vs snake_case DB columns |
 | Fix CartItemModel serialization | MEDIUM | Code Quality | Extra non-DB fields in toJson |

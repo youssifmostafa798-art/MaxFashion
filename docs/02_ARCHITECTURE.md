@@ -1,7 +1,7 @@
 # 02 — Architecture
 
 > **MaxFashion — System Architecture & Technical Design**
-> Last Updated: August 16, 2026
+> Last Updated: August 21, 2026
 
 ---
 
@@ -29,10 +29,11 @@ UI (Pages/Widgets)
 
 1. **Repository Pattern** — Abstract interfaces for all data access. Supabase implementations are wired via Riverpod providers.
 2. **Riverpod** — All state management uses `StateNotifierProvider`, `StateProvider`, or `Provider`.
-3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (24 named routes).
+3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (27 named routes).
 4. **ScreenUtil** — Design size 375x812, all sizing via `.w`, `.h`, `.r`, `.sp`.
 5. **Theme-aware** — `Theme.of(context).colorScheme` used throughout, no hardcoded colors.
 6. **Auth-Aware Providers** — All user-scoped providers watch `currentUserIdProvider` to auto-invalidate on login/logout, preventing cross-account data leakage.
+7. **Route-Level Auth Guards** — `AuthGuard` widget protects sensitive routes (checkout, profile editing, addresses, payment methods).
 
 ---
 
@@ -44,16 +45,17 @@ lib/
 ├── splash.dart                        # Animated splash with session check
 ├── core/
 │   ├── constants/                     # App constants, asset paths
-│   ├── router/                        # AppRouter (24 named routes)
+│   ├── router/                        # AppRouter (27 named routes), AuthGuard
 │   ├── theme/                         # AppColors, AppTheme, ThemeProvider, ThemeStorage
 │   ├── utils/                         # Validators, formatters, haptics, ID generator
-│   └── widgets/                       # 18+ reusable widgets + skeletons
+│   └── widgets/                       # 18+ reusable widgets + skeletons + dialogs
 ├── data/
-│   ├── models/                        # 11 data models
-│   ├── providers/                     # 9+ Riverpod providers
+│   ├── models/                        # 12 data models
+│   ├── providers/                     # 10+ Riverpod providers
 │   ├── repositories/                  # Abstract + Supabase implementations
 │   │   ├── address/                   # AddressRepository, SupabaseAddressRepository
 │   │   ├── cart/                      # CartRepository, SupabaseCartRepository
+│   │   ├── collection/                # CollectionRepository, SupabaseCollectionRepository
 │   │   ├── orders/                    # OrderRepository, SupabaseOrderRepository
 │   │   ├── payment_card/              # PaymentCardRepository, SupabasePaymentCardRepository
 │   │   ├── product/                   # ProductRepository, SupabaseProductRepository
@@ -74,9 +76,10 @@ lib/
     │       └── widgets/               # CustomAuthButton, CustomAuthTextField
     ├── cart/                          # Cart UI
     ├── checkout/                      # Checkout, PlaceOrder, AddAddress, AddCard
+    ├── collection/                    # AllCollectionsPage, CollectionProductsPage
     ├── home/                          # Home page
     ├── main/                          # MainScreen (bottom nav)
-    ├── menu/                          # CategoriesPage
+    ├── menu/                          # CategoriesPage, AllCategoriesPage
     ├── orders/                        # OrdersPage, OrderDetailsPage
     ├── product/                       # ProductListing, ProductDetail
     ├── profile/                       # Profile, EditProfile, Addresses, PaymentMethods
@@ -102,17 +105,17 @@ LoginPage → authStateProvider → AuthNotifier.login()
 ForgotPasswordPage → authStateProvider → AuthNotifier.sendResetCode()
   → SupabaseAuthRepository.sendResetCode()
   → Supabase Edge Function 'send-reset-code'
-  → password_reset_codes table + Resend API email
+  → password_reset_codes table (SHA-256 hashed codes) + Resend API email
 
 VerifyResetCodePage → authStateProvider → AuthNotifier.verifyResetCode()
   → SupabaseAuthRepository.verifyResetCode()
-  → Supabase Edge Function 'reset-password'
-  → Verifies code (unused, not expired, attempts < 5)
+  → Supabase Edge Function 'verify-reset-code'
+  → Verifies code_hash (unused, not expired, attempts < 5)
 
 ResetPasswordPage → authStateProvider → AuthNotifier.resetPasswordWithCode()
   → SupabaseAuthRepository.resetPasswordWithCode()
   → Supabase Edge Function 'reset-password'
-  → Updates password via admin API, marks code as used
+  → Updates password via admin API, invalidates all sessions, marks code as used
 ```
 
 ### Products
@@ -204,10 +207,11 @@ EditProfilePage → AuthNotifier.updateProfile()
 
 ### OTP Password Recovery
 - Three Supabase Edge Functions (Deno/TypeScript):
-  - `send-reset-code` — generates 6-digit OTP, stores in `password_reset_codes`, sends via Resend API
-  - `verify-reset-code` — verifies OTP code without changing password (enforces max 5 attempts)
-  - `reset-password` — verifies OTP code again (defense-in-depth), updates password via admin API, marks code as used
+  - `send-reset-code` — generates 6-digit OTP, hashes with SHA-256, stores in `password_reset_codes`, sends via Resend API
+  - `verify-reset-code` — verifies OTP code hash without changing password (enforces max 5 attempts)
+  - `reset-password` — verifies OTP code hash again (defense-in-depth), updates password via admin API, invalidates all sessions, marks code as used
 - `password_reset_codes` table with rate limiting (60s cooldown) and attempt limiting (max 5)
+- OTP codes stored as SHA-256 hashes (migration 021) — plaintext never persisted
 - `cleanup_expired_codes()` SQL function for automatic cleanup
 - ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
 
@@ -227,7 +231,9 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `order_items` | Order line items | User-owned (via orders) |
 | `addresses` | User shipping addresses | User-owned |
 | `payment_cards` | Saved payment methods | User-owned |
-| `password_reset_codes` | OTP codes for password reset | ✅ Service-role only (no anon policies) |
+| `password_reset_codes` | OTP codes for password reset (SHA-256 hashed) | ✅ Service-role only (no anon policies) |
+| `collections` | Curated product collections | Public read (active only) |
+| `collection_categories` | Collection-to-category junction | Public read |
 
 ### Storage
 
@@ -235,6 +241,7 @@ EditProfilePage → AuthNotifier.updateProfile()
 |--------|---------|--------|
 | `avatars` | Profile avatars | Public read, owner write |
 | `product-images` | Product images | Public read, service-role write |
+| `collection-images` | Collection cover images | Public read, service-role write |
 
 ### SQL Migrations
 
@@ -242,8 +249,8 @@ EditProfilePage → AuthNotifier.updateProfile()
 supabase/migrations/
 ├── 001_products_schema.sql          — Schema for categories, products, product_images, product_sizes + RLS
 ├── 002_seed_categories.sql          — INSERT 22 categories
-├── 003_seed_products.sql            — INSERT 249 products
-├── 004_seed_product_images.sql      — INSERT 250 images
+├── 003_seed_products.sql            — INSERT 247 products
+├── 004_seed_product_images.sql      — INSERT 248 images
 ├── 005_seed_product_sizes.sql       — INSERT 998 sizes
 ├── 006_home_content.sql             — home_content table + seed
 ├── 007_product_images_storage_policies.sql — Storage RLS for product-images bucket
@@ -259,7 +266,10 @@ supabase/migrations/
 ├── 017_otp_security_hardening.sql   — Rate limiting columns (attempt_count, last_request_at)
 ├── 018_profiles_schema.sql          — profiles table formalization + RLS + updated_at trigger
 ├── 019_avatars_storage.sql          — avatars bucket + storage policies
-└── 020_full_text_search.sql         — pg_trgm extension, search_vector column, search_products RPC function
+├── 020_full_text_search.sql         — pg_trgm extension, search_vector column, search_products RPC function
+├── 021_otp_code_hashing.sql         — SHA-256 hashed OTP codes (code_hash column, pgcrypto)
+├── 022_collections_schema.sql       — collections + collection_categories tables, collection-images bucket, seed data
+└── 023_fix_watches_image_url.sql    — Fix Watches collection image URL extension
 ```
 
 ### Edge Functions
@@ -305,6 +315,7 @@ supabase/functions/
 | `paymentCardCountProvider` | Provider | `data/providers/payment_card_provider.dart` |
 | `searchProvider` | StateNotifierProvider | `data/providers/search_provider.dart` |
 | `homeContentProvider` | FutureProvider | `data/providers/home_content_provider.dart` |
+| `collectionsProvider` | FutureProvider | `data/providers/collection_provider.dart` |
 | `themeProvider` | StateNotifierProvider | `core/theme/theme_provider.dart` |
 | `authRepositoryProvider` | Provider | `features/auth/presentation/providers/auth_providers.dart` |
 
@@ -326,6 +337,7 @@ All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`,
 | `UserModel` | `data/models/user_model.dart` | id, fullName, email, phoneNumber, profileImage, memberSince, dateOfBirth, gender, country, bio |
 | `ProductModel` | `data/models/product_model.dart` | id, categoryId, name, description, price, discountPrice, brand, thumbnailUrl, isFeatured, isAvailable, productImages, productSizes |
 | `CategoryModel` | `data/models/category_model.dart` | id, name, slug, iconName, displayOrder, isActive |
+| `CollectionModel` | `data/models/collection_model.dart` | id, name, imageUrl, displayOrder, isActive, categoryIds |
 | `CartItemModel` | `data/models/cart_item_model.dart` | id, productId, productName, productImage, selectedColor, selectedSize, quantity, unitPrice, createdAt, updatedAt |
 | `OrderModel` | `data/models/order_model.dart` | orderId, orderDate, items, totalPrice, paymentMethod, deliveryAddress, status |
 | `OrderItemModel` | `data/models/order_item_model.dart` | productId, productName, productImage, selectedColor, selectedSize, quantity, unitPrice |
@@ -348,8 +360,8 @@ All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`,
 | Cart | `CartPage` | Cart count |
 | You | `ProfilePage` | Wishlist count |
 
-### Named Routes (24)
-`/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`, `/forgot-password`, `/verify-reset-code`, `/reset-password`
+### Named Routes (27)
+`/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`, `/forgot-password`, `/verify-reset-code`, `/reset-password`, `/collection-products`, `/all-collections`, `/all-categories`
 
 ---
 

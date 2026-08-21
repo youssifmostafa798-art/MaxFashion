@@ -127,7 +127,7 @@ This section reflects a snapshot of progress and should be updated as phases clo
 - ✓ `SupabaseProductRepository` created and wired into `productRepositoryProvider`.
 - ✓ SQL migrations for `categories`, `products`, `product_images`, `product_sizes`.
 - ✓ Import scripts for data seeding.
-- ✓ Supabase data population verified (categories=22, products=248, product_images=248, product_sizes=977).
+- ✓ Supabase data population verified (categories=22, products=244, product_images=244, product_sizes=977).
 - ✓ `categoriesProvider` migrated from local JSON to Supabase.
 - ✓ Hardcoded `ProductModel.category` mapping removed; dynamic category resolution implemented.
 - ✓ Product asset integrity verified; Product images now served from Supabase Storage.
@@ -137,19 +137,23 @@ This section reflects a snapshot of progress and should be updated as phases clo
 - ✓ Addresses migrated to Supabase (`addresses` table with RLS).
 - ✓ Payment cards migrated to Supabase (`payment_cards` table with RLS).
 - ✓ OTP-based password recovery implemented (Edge Functions + `password_reset_codes` table).
+- ✓ OTP codes hashed with SHA-256 (migration 021).
+- ✓ Collections feature implemented (migrations 022-023, `collections` + `collection_categories` tables).
 - ✓ Data isolation audit completed and cross-account data leakage fixed.
 - ✓ Auth-aware provider invalidation implemented for all user-scoped providers.
 - ✓ Lifecycle `mounted` checks added to all async methods in all notifiers.
+- ✓ Route-level auth guards implemented (`AuthGuard` widget).
+- ✓ Recent searches scoped per-user (keyed by userId).
 
 ### 2.2 Current Focus
 
-**Now** — Core feature set is substantially complete (~92%). Remaining work focuses on code quality (dynamic casts, exception cleanup), missing high-priority features (real payment gateway, order cancellation, product image gallery), and testing.
+**Now** — Core feature set is substantially complete (~94%). Remaining work focuses on code quality (dynamic casts, exception cleanup, model serialization), missing high-priority features (real payment gateway, order cancellation, product image gallery), and testing.
 
 ### 2.3 Visual Progress Summary
 
 | Area | Progress |
 |---|---|
-| Overall Roadmap Completion (Phases 1–16) | ~92% |
+| Overall Roadmap Completion (Phases 1–16) | ~94% |
 | UI Layer (Phases 1–4) | 95% |
 | Backend Integration (Phases 5–7) | 95% |
 | Core Shopping Features (Phases 8–13) | 95% |

@@ -1,7 +1,7 @@
 # 03 — Features & Data
 
 > **MaxFashion — Feature-by-Feature Status & Data Architecture**
-> Last Updated: August 18, 2026
+> Last Updated: August 21, 2026
 
 ---
 
@@ -20,7 +20,7 @@
 | Product Details | ✅ Complete | Supabase | Supabase |
 | Cart | ✅ Complete | Supabase cart_items | Supabase |
 | Checkout | ✅ Complete | Supabase (cart, orders, order_items) | Supabase |
-| Search | ✅ Complete | Supabase RPC (full-text search) | SharedPreferences (recent, not per-user) |
+| Search | ✅ Complete | Supabase RPC (full-text search) | SharedPreferences (recent, per-user) |
 | Menu / Categories | ✅ Complete | Supabase | Supabase |
 | Settings | ✅ Complete | None | SharedPreferences |
 | Dark/Light Theme | ✅ Complete | None | SharedPreferences |
@@ -28,7 +28,9 @@
 | Orders | ✅ Complete | Supabase orders + order_items | Supabase |
 | Addresses | ✅ Complete | Supabase addresses | Supabase |
 | Payment Cards | ✅ Complete | Supabase payment_cards | Supabase |
-| OTP Password Recovery | ✅ Complete | Supabase Edge Functions + password_reset_codes | Supabase |
+| Collections | ✅ Complete | Supabase collections + collection_categories | Supabase |
+| OTP Password Recovery | ✅ Complete | Supabase Edge Functions + password_reset_codes (SHA-256 hashed) | Supabase |
+| Route Auth Guards | ✅ Complete | AuthGuard widget | In-memory |
 | Promo Code | ⚠️ UI Only | None | None |
 | Product Reviews | ❌ Not Implemented | — | — |
 | Push Notifications | ❌ Not Implemented | — | — |
@@ -70,7 +72,7 @@ LoginPage → authStateProvider → AuthNotifier.login()
 ### OTP Password Recovery
 
 **Status:** ✅ Completed
-**Backend:** Supabase Edge Functions + `password_reset_codes` table
+**Backend:** Supabase Edge Functions + `password_reset_codes` table (SHA-256 hashed)
 **Persistence:** Supabase
 
 **Implementation:**
@@ -78,8 +80,10 @@ LoginPage → authStateProvider → AuthNotifier.login()
 - `sendResetCode()` calls `send-reset-code` Edge Function (sends 6-digit OTP via Resend API)
 - `verifyResetCode()` calls `verify-reset-code` Edge Function (verifies code without changing password)
 - `resetPasswordWithCode()` calls `reset-password` Edge Function (updates password via admin API)
+- OTP codes are SHA-256 hashed before storage (migration 021)
 - `password_reset_codes` table stores OTP codes with expiry, attempt limiting, and rate limiting
 - Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
+- Session invalidation after password reset (global signOut)
 - Dev mode: If no RESEND_API_KEY configured, codes are logged to console
 - `cleanup_expired_codes()` SQL function for automatic cleanup of expired codes
 - ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
@@ -349,23 +353,23 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 
 **Status:** ✅ Completed
 **Backend:** Supabase RPC (full-text search with trigram matching)
-**Persistence:** SharedPreferences (recent searches, not per-user)
+**Persistence:** SharedPreferences (recent searches, per-user via userId key)
 
 **Implementation:**
-- Debounced search (250ms)
-- Recent searches (persisted, max 10)
-- Suggested products (first 3 products)
+- Debounced search (300ms)
+- Recent searches (persisted per-user, max 10)
+- Suggested products (top 10 shuffled products)
 - Context-aware search (global, home, category, wishlist, cart, orders)
 - Search results with highlighted query text
 - Search skeleton loading state
+- Server-side pagination (load more)
 - `SupabaseSearchRepository` uses `search_products` RPC with full-text search via migration 020
-- Note: 3 search implementations exist (SupabaseSearchRepository, SupabaseProductRepository.searchProducts, ProductSearchMatcher) — should be consolidated
+- Recent searches keyed by userId (`recent_searches_{userId}`), preventing cross-account history leakage
 
 **Key Files:**
 - `lib/data/providers/search_provider.dart`
 - `lib/data/repositories/search/supabase_search_repository.dart`
-- `lib/data/repositories/product/supabase_product_repository.dart`
-- `lib/data/repositories/product/product_search_matcher.dart`
+- `lib/data/repositories/search/search_repository.dart` (interface)
 - `lib/features/search/presentation/pages/search_screen.dart`
 
 ---
@@ -417,6 +421,42 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - `lib/data/providers/payment_card_provider.dart`
 - `lib/features/profile/presentation/pages/payment_methods_page.dart`
 - `lib/features/checkout/presentation/pages/add_card.dart`
+
+---
+
+### Collections
+
+**Status:** ✅ Completed
+**Backend:** Supabase collections + collection_categories tables
+**Persistence:** Supabase
+
+**Implementation:**
+- `SupabaseCollectionRepository` — fetches active collections with category mappings
+- `collections` table with RLS (public read for active collections)
+- `collection_categories` junction table linking collections to categories
+- Home page carousel showing top 5 active collections
+- All Collections page showing all active collections in a grid
+- Collection Products page filtering products by a collection's categories
+- `collection-images` storage bucket (public read, service-role write)
+- Collection images served from Supabase Storage via `Image.network()`
+- 10 collections seeded (6 active, 4 inactive)
+
+**Key Files:**
+- `lib/data/repositories/collection/collection_repository.dart` (interface)
+- `lib/data/repositories/collection/supabase_collection_repository.dart`
+- `lib/data/providers/collection_provider.dart`
+- `lib/data/models/collection_model.dart`
+- `lib/features/collection/presentation/pages/all_collections_page.dart`
+- `lib/features/collection/presentation/pages/collection_products_page.dart`
+- `lib/features/collection/presentation/widgets/home_collections_section.dart`
+
+**Data Flow:**
+```
+Home → collectionsProvider → SupabaseCollectionRepository.getActiveCollections()
+  → Supabase collections table (active only) + collection_categories
+  → HomeCollectionsSection carousel (top 5)
+  → CollectionProductsPage (filter by collection's categories)
+```
 
 ---
 
@@ -616,7 +656,7 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 |--------|------|------------|
 | `id` | UUID | PK |
 | `email` | TEXT | NOT NULL |
-| `code` | TEXT | NOT NULL |
+| `code_hash` | TEXT | NOT NULL |
 | `expires_at` | TIMESTAMPTZ | NOT NULL |
 | `used` | BOOL | DEFAULT false |
 | `attempt_count` | INT | DEFAULT 0 |
@@ -626,6 +666,32 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 **RLS:** ✅ Service-role only (no anon policies). Edge functions use service_role which bypasses RLS.
 **Indexes:** Partial index on (email, used) WHERE used = FALSE.
 **Function:** `cleanup_expired_codes()` — deletes codes older than 1 hour past expiry.
+**Note:** OTP codes are stored as SHA-256 hashes (migration 021), not plaintext.
+
+#### collections
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGINT | PK |
+| `name` | TEXT | NOT NULL |
+| `image_url` | TEXT | Nullable |
+| `display_order` | INTEGER | DEFAULT 0 |
+| `is_active` | BOOLEAN | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | DEFAULT now() |
+| `updated_at` | TIMESTAMPTZ | DEFAULT now() |
+
+**RLS:** Public read access for active collections only (`is_active = true`).
+**Note:** `updated_at` auto-updates via trigger.
+
+#### collection_categories
+| Column | Type | Constraint |
+|--------|------|------------|
+| `id` | BIGINT | PK |
+| `collection_id` | BIGINT | FK → collections(id) ON DELETE CASCADE |
+| `category_id` | BIGINT | FK → categories(id) ON DELETE CASCADE |
+
+**RLS:** Public read access.
+**Indexes:** Indexes on collection_id and category_id.
+**Constraint:** UNIQUE on (collection_id, category_id).
 
 ### Storage Policies
 
@@ -637,14 +703,19 @@ PlaceOrder → ordersProvider → OrdersNotifier.addOrder()
 - SELECT: Public (anon + authenticated)
 - INSERT/UPDATE/DELETE: Authenticated users (own avatar only)
 
+#### collection-images bucket
+- SELECT: Public (anon + authenticated)
+- INSERT/UPDATE/DELETE: Service role only (no client writes)
+
 ### Seed Data
 
 | Table | Records | Source |
 |-------|---------|--------|
 | categories | 22 (initial) → 22 (after cleanup) | `002_seed_categories.sql` |
-| products | 249 (initial) → 248 (after cleanup) | `003_seed_products.sql` |
-| product_images | 250 (initial) → 248 (after cleanup) | `004_seed_product_images.sql` |
-| product_sizes | 998 (initial) | `005_seed_product_sizes.sql` |
+| products | 247 (initial) → 244 (after cleanup) | `003_seed_products.sql` |
+| product_images | 248 (initial) → 244 (after cleanup) | `004_seed_product_images.sql` |
+| product_sizes | 998 (initial) → 977 (after cleanup) | `005_seed_product_sizes.sql` |
+| collections | 10 (6 active) | `022_collections_schema.sql` |
 
 ---
 

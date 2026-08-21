@@ -228,7 +228,7 @@ This provider derives the current user's ID from auth state. When the user logs 
 |---------|-----|-------------|--------|-------|
 | SharedPreferences | `orders` | No | KNOWN DEBT | Legacy local orders (pre-migration) |
 | SharedPreferences | `orders_migrated_to_supabase_*` | Yes (after fix) | FIXED | Per-user migration flag |
-| SharedPreferences | `recent_searches` | No | LOW RISK | Non-sensitive, cosmetic only |
+| SharedPreferences | `recent_searches_*` | Yes (per-user) | FIXED | Per-user keyed by userId |
 | SharedPreferences | `theme_mode` | No | OK | App-wide preference, not user data |
 
 **Note:** `saved_addresses` and `saved_payment_cards` SharedPreferences keys are no longer used — both features have been migrated to Supabase with user-scoped RLS policies.
@@ -497,7 +497,6 @@ void remove(String id) {
 
 | Issue | Severity | Description | Recommended Fix |
 |-------|----------|-------------|-----------------|
-| Search history not user-scoped | LOW | `SharedPreferences` key `recent_searches` is global. | Low priority - non-sensitive cosmetic data. |
 | No `deleteOrder` in repository | LOW | Orders cannot be deleted by the user. May be intentional (admin-only). | Consider adding if user-initiated cancellation is needed. |
 
 ---

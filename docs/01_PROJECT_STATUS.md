@@ -1,23 +1,23 @@
 # 01 — Project Status
 
 > **MaxFashion — Current Application State**
-> Audit Date: August 18, 2026
-> Previous Audit: August 16, 2026
+> Audit Date: August 21, 2026
+> Previous Audit: August 18, 2026
 > Project Version: 1.0.0+1
 
 ---
 
 ## Current Application State
 
-MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The core architecture, backend integration (Supabase), authentication, product browsing, cart, checkout, orders, profile management, search, wishlist, addresses, payment cards, and OTP-based password recovery are all implemented and wired end-to-end.
+MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The core architecture, backend integration (Supabase), authentication, product browsing, cart, checkout, orders, profile management, search, wishlist, addresses, payment cards, collections, and OTP-based password recovery are all implemented and wired end-to-end.
 
 | Area | Status |
 |------|--------|
-| **Overall** | **~92% complete** |
+| **Overall** | **~94% complete** |
 | UI | ~95% — All core screens built with skeleton loading |
-| Business Logic | ~95% — Auth, products, cart, wishlist, orders, addresses, payment cards fully on Supabase |
-| Architecture | ~95% — Repository pattern established, auth-aware providers |
-| Backend (Supabase) | ~92% — Auth, products, cart, wishlist, orders, home content, addresses, payment cards migrated |
+| Business Logic | ~95% — Auth, products, cart, wishlist, orders, addresses, payment cards, collections fully on Supabase |
+| Architecture | ~96% — Repository pattern established, auth-aware providers, route-level auth guards |
+| Backend (Supabase) | ~95% — Auth, products, cart, wishlist, orders, home content, addresses, payment cards, collections migrated |
 | State Management | ~95% — Riverpod used consistently with auth-aware invalidation |
 | Testing | 0% — No tests beyond minimal smoke test |
 
@@ -39,8 +39,11 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | 3.10 | OTP Security Hardening | ✅ Completed |
 | — | Profiles Table Migration | ✅ Completed (`018_profiles_schema.sql`) |
 | — | Avatars Storage Migration | ✅ Completed (`019_avatars_storage.sql`) |
+| — | OTP Code Hashing | ✅ Completed (`021_otp_code_hashing.sql`) |
+| — | Collections Feature | ✅ Completed (`022_collections_schema.sql`, `023_fix_watches_image_url.sql`) |
 | — | Data Isolation Audit & Fix | ✅ Completed |
 | — | Avatar Race Condition Fix | ✅ Completed |
+| — | Route-Level Auth Guards | ✅ Completed (`auth_guard.dart`) |
 
 ---
 
@@ -56,11 +59,12 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Home Content | ✅ | ✅ home_content table | ❌ | ✅ Completed |
 | Cart | ✅ | ✅ cart_items table | ❌ | ✅ Completed |
 | Wishlist | ✅ | ✅ wishlist_items table | ❌ | ✅ Completed |
-| Search | ✅ | ✅ Supabase RPC (full-text search) | ✅ Recent searches (not per-user) | 🟡 Partial |
+| Search | ✅ | ✅ Supabase RPC (full-text search) | ✅ Recent searches (per-user via userId key) | ✅ Completed |
 | Orders | ✅ | ✅ orders + order_items tables | ❌ | ✅ Completed |
 | Addresses | ✅ | ✅ addresses table | ❌ | ✅ Completed |
 | Payment Cards | ✅ | ✅ payment_cards table | ❌ | ✅ Completed |
-| OTP Password Recovery | ✅ | ✅ password_reset_codes + 3 Edge Functions | ❌ | ✅ Completed |
+| Collections | ✅ | ✅ collections + collection_categories tables | ❌ | ✅ Completed |
+| OTP Password Recovery | ✅ | ✅ password_reset_codes + 3 Edge Functions (OTP hashed) | ❌ | ✅ Completed |
 | Theme | ✅ | ❌ | ✅ SharedPreferences | ✅ Working (local is correct) |
 | Settings | ✅ | ❌ | N/A | ✅ Working |
 
@@ -81,8 +85,10 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - `verifyResetCode()` — calls `verify-reset-code` Edge Function (verifies code without changing password)
 - `resetPasswordWithCode()` — calls `reset-password` Edge Function (updates password via admin API)
 - `password_reset_codes` table stores OTP codes with expiry, attempt limiting, and rate limiting
+- OTP codes are hashed (SHA-256) before storage (migration 021)
 - 3-page UI flow: ForgotPasswordPage → VerifyResetCodePage → ResetPasswordPage
 - Security: 60-second rate limit between code requests, max 5 verification attempts per code, 10-minute code expiry
+- Session invalidation after password reset (global signOut)
 - ✅ **RLS correctly secured** — Migration 016 has NO anon policies. Edge functions use service_role which bypasses RLS.
 
 ### Products
@@ -134,6 +140,15 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - Auth-aware provider (watches `currentUserIdProvider`)
 - ⚠️ PaymentCardModel JSON keys are camelCase — DB columns are snake_case
 
+### Collections
+- `SupabaseCollectionRepository` — fetches active collections with category mappings
+- `collections` table with RLS (public read for active collections)
+- `collection_categories` junction table with category mappings
+- Home page carousel showing top 5 active collections
+- All Collections page, Collection Products page (filter by collection's categories)
+- `collection-images` storage bucket (public read, service-role write)
+- Auth-aware provider (watches `currentUserIdProvider`)
+
 ---
 
 ## What Is Still Using Local/SharedPreferences
@@ -141,7 +156,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Feature | Storage Method | Key | Intentional? |
 |---------|---------------|-----|-------------|
 | Theme | SharedPreferences | `theme_mode` (string) | ✅ Yes — app-wide preference, not user data |
-| Recent Searches | SharedPreferences | `recent_searches` (JSON array) | ⚠️ No — should be per-user |
+| Recent Searches | SharedPreferences | `recent_searches_{userId}` (JSON array) | ✅ Yes — per-user scoped, non-sensitive cosmetic data |
 | Orders Migration Flag | SharedPreferences | `orders_migrated_to_supabase_{userId}` (bool) | ✅ Yes — per-user migration flag |
 
 ---
@@ -152,9 +167,9 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 |-------|---------|-----|--------|
 | `profiles` | varies | ✅ User-owned | ✅ In use (migration 018) |
 | `categories` | 22 | ✅ Public read | ✅ In use |
-| `products` | 248 | ✅ Public read | ✅ In use |
-| `product_images` | 248 | ✅ Public read | ✅ In use |
-| `product_sizes` | ~970 | ✅ Public read | ✅ In use |
+| `products` | 244 | ✅ Public read | ✅ In use |
+| `product_images` | 244 | ✅ Public read | ✅ In use |
+| `product_sizes` | ~977 | ✅ Public read | ✅ In use |
 | `cart_items` | varies | ✅ User-owned | ✅ In use |
 | `wishlist_items` | varies | ✅ User-owned | ✅ In use |
 | `home_content` | 1 | ✅ Public read (active) | ✅ In use |
@@ -163,6 +178,8 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | `addresses` | varies | ✅ User-owned | ✅ In use |
 | `payment_cards` | varies | ✅ User-owned | ✅ In use |
 | `password_reset_codes` | varies | ✅ Service-role only (no anon policies) | ✅ In use |
+| `collections` | 10 (6 active) | ✅ Public read (active only) | ✅ In use |
+| `collection_categories` | varies | ✅ Public read | ✅ In use |
 
 ### Storage Buckets
 
@@ -170,14 +187,15 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 |--------|-----------|---------|
 | `avatars` | Public read, owner write (migration 019) | Profile avatar images |
 | `product-images` | Public read, service-role write | Product image storage |
+| `collection-images` | Public read, service-role write | Collection cover images |
 
 ### Edge Functions
 
 | Function | Purpose | Status |
 |----------|---------|--------|
-| `send-reset-code` | Sends 6-digit OTP via Resend API email | ✅ In use |
+| `send-reset-code` | Sends 6-digit OTP via Resend API email (SHA-256 hashed) | ✅ In use |
 | `verify-reset-code` | Verifies OTP code without changing password | ✅ In use |
-| `reset-password` | Updates password via admin API | ✅ In use |
+| `reset-password` | Updates password via admin API, invalidates all sessions | ✅ In use |
 
 ---
 
@@ -202,6 +220,13 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 17. **SQL migration 015** created `payment_cards` table with RLS.
 18. **SQL migration 016** created `password_reset_codes` table with RLS and `cleanup_expired_codes()` function.
 19. **SQL migration 017** added OTP security hardening columns (attempt_count, last_request_at).
+20. **SQL migration 020** added full-text search with pg_trgm, search_vector column, and `search_products` RPC function.
+21. **SQL migration 021** added OTP code hashing (SHA-256) — plaintext codes replaced with `code_hash` column.
+22. **SQL migration 022** created `collections` and `collection_categories` tables, `collection-images` storage bucket, and seeded 10 collections.
+23. **SQL migration 023** fixed Watches collection image URL extension.
+24. **Route-level auth guards implemented** — `AuthGuard` widget protects sensitive routes (placeOrder, addAddress, addCard, editProfile, addresses, paymentMethods).
+25. **Recent searches scoped per-user** — SharedPreferences key now includes userId, preventing cross-account search history leakage.
+26. **Collections feature implemented** — Full collection browsing with home carousel, all collections page, and collection-filtered product listing.
 
 ---
 
@@ -213,16 +238,13 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | `isEmailConfirmationPending` accessed via dynamic cast | Medium | Open |
 | Missing mounted check in logout | Medium | Open |
 | 24 silently swallowed exceptions (`catch (_) {}`) | Medium | Open |
-| No router auth guards — all 24 routes accessible without auth | High | Open |
 | OrderModel serialization: status as int, camelCase keys | High | Open |
 | PaymentCardModel serialization: camelCase keys vs snake_case DB | High | Open |
 | CartItemModel serialization: extra non-DB fields in toJson | High | Open |
 | ProductModel ID as String with 'p' prefix | High | Open |
-| Recent searches not per-user | High | Open |
 | Hardcoded Supabase URL in 3 files | Low | Open |
 | Promo code UI exists but non-functional | Low | Open |
 | "Shop By" menu items are static UI only | Low | Open |
-| Dead `collection` and `keywords` getters in ProductModel | Low | Open |
 | 3 duplicate search implementations | Low | Open |
 
 ---
@@ -231,14 +253,13 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 
 1. **Fix Auth Interface** — Add methods to interface, remove `as dynamic` casts
 2. **Fix Model Serialization** — OrderModel, PaymentCardModel, CartItemModel, ProductModel
-3. **Implement Router Auth Guards** — Protect user-scoped routes
-4. **Scope Recent Searches** — Key by user ID, clear on logout
-5. **Fix Error Handling** — Wishlist, product providers
-6. **Remove Fake Loading Delays** — Use real AsyncValue states
-7. **Real Payment Gateway** — Credit card form exists but no payment processing
-8. **Order Cancellation UI** — No cancellation flow from user side
-9. **Product Image Gallery** — Only single thumbnail displayed
-10. **Testing** — Add unit and widget tests
+3. **Fix Error Handling** — Wishlist, product providers
+4. **Remove Fake Loading Delays** — Use real AsyncValue states
+5. **Real Payment Gateway** — Credit card form exists but no payment processing
+6. **Order Cancellation UI** — No cancellation flow from user side
+7. **Product Image Gallery** — Only single thumbnail displayed
+8. **Remove Dead Code** — `collection` and `keywords` getters in ProductModel, consolidate search implementations
+9. **Testing** — Add unit and widget tests
 
 ---
 
