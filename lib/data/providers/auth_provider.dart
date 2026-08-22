@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:max/data/models/user_model.dart';
 import 'package:max/features/auth/data/models/profile_model.dart';
@@ -78,8 +79,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       if (_isSignUpInProgress) return;
 
-      if (event == supabase.AuthChangeEvent.signedIn && session != null) {
+      if (event == supabase.AuthChangeEvent.initialSession && session != null) {
         await _loadProfileFromSession();
+      } else if (event == supabase.AuthChangeEvent.signedIn && session != null) {
+        await _loadProfileFromSession();
+      } else if (event == supabase.AuthChangeEvent.tokenRefreshed && session != null) {
+        if (state.user == null && mounted) {
+          await _loadProfileFromSession();
+        }
       } else if (event == supabase.AuthChangeEvent.signedOut) {
         _profileLoadGeneration++;
         if (mounted) {
@@ -164,9 +171,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
     );
   }
 
+  static const _rememberMeKey = 'auth_remember_me';
+
+  Future<void> _saveRememberMe(bool value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_rememberMeKey, value);
+    } catch (_) {}
+  }
+
+  Future<bool> _loadRememberMe() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool(_rememberMeKey) ?? true;
+    } catch (_) {
+      return true;
+    }
+  }
+
   Future<void> _restoreSession() async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
+      final rememberMe = await _loadRememberMe();
+      if (!rememberMe) {
+        await _repository.signOut();
+        if (!mounted) return;
+        state = state.copyWith(isLoading: false, clearUser: true);
+        return;
+      }
+
       final userId = await _repository.getCurrentUserId();
       if (!mounted) return;
       if (userId == null) {
@@ -182,8 +215,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = _userFromProfile(profile);
       state = state.copyWith(user: user, isLoading: false, isGuest: false);
     } catch (_) {
-      if (mounted) {
+      if (!mounted) return;
+      final userId = await _repository.getCurrentUserId();
+      if (userId == null) {
         state = state.copyWith(isLoading: false, clearUser: true);
+      } else {
+        state = state.copyWith(isLoading: false);
       }
     }
   }
@@ -275,6 +312,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.signIn(email: email, password: password);
+      await _saveRememberMe(rememberMe);
     } on SocketException {
       if (!mounted) return;
       state = state.copyWith(

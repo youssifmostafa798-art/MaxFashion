@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/form_validators.dart';
@@ -39,6 +40,19 @@ class _LoginPageState extends ConsumerState<LoginPage>
       curve: Curves.easeOut,
     );
     _controller.forward();
+    _loadRememberMe();
+  }
+
+  Future<void> _loadRememberMe() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getBool('auth_remember_me');
+      if (mounted && saved != null) {
+        setState(() {
+          _rememberMe = saved;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
