@@ -116,10 +116,15 @@ class OrderModel {
         deliveryAddress: (json['delivery_address'] as String?) ??
             (json['deliveryAddress'] as String?) ??
             '',
-        status: statusFromString(
-            (json['status'] as String?) ??
-            ((json['status'] is int)
-                ? OrderStatus.values[json['status'] as int].name
-                : null)),
+        status: (() {
+          final raw = json['status'];
+          if (raw is int) {
+            if (raw >= 0 && raw < OrderStatus.values.length) {
+              return OrderStatus.values[raw];
+            }
+            return OrderStatus.processing;
+          }
+          return statusFromString(raw as String?);
+        })(),
       );
 }
