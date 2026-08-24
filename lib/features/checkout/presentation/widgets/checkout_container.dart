@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 
 class CheckoutContainer extends StatelessWidget {
@@ -17,6 +18,7 @@ class CheckoutContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
@@ -30,7 +32,7 @@ class CheckoutContainer extends StatelessWidget {
           CustomText(text: text, color: colorScheme.onSurfaceVariant),
           const Spacer(),
           if (isFree)
-            CustomText(text: "FREE", color: colorScheme.onSurfaceVariant),
+            CustomText(text: l10n.free.toUpperCase(), color: colorScheme.onSurfaceVariant),
           Icon(iconData, color: colorScheme.onSurface),
         ],
       ),

@@ -86,7 +86,7 @@ class _CollectionCardState extends State<CollectionCard>
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: AlignmentDirectional.centerStart,
                     child: CustomText(
                       text: widget.collection.name.toUpperCase(),
                       size: 12,

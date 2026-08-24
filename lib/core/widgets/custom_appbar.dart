@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
 import 'custom_text.dart';
 
@@ -43,7 +44,9 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
-                        Icons.arrow_back,
+                        Directionality.of(context) == TextDirection.rtl
+                            ? Icons.arrow_forward
+                            : Icons.arrow_back,
                         color: colorScheme.onSurface,
                         size: 24.w,
                       ),
@@ -79,6 +82,7 @@ class _SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: () {
@@ -97,12 +101,12 @@ class _SearchBar extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 14.w),
+              padding: EdgeInsetsDirectional.only(start: 14.w),
               child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
             ),
             SizedBox(width: 10.w),
             CustomText(
-              text: 'Search....',
+              text: l10n.searchHint,
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),

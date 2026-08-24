@@ -11,6 +11,7 @@ import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/pages/product_listing_page.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class RecentSearchesSection extends ConsumerWidget {
   const RecentSearchesSection({super.key, required this.onTap});
@@ -19,6 +20,7 @@ class RecentSearchesSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final recentSearches = ref.watch(searchProvider.select((s) => s.recentSearches));
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -33,7 +35,7 @@ class RecentSearchesSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                text: 'RECENT SEARCHES',
+                text: l10n.recentSearches.toUpperCase(),
                 size: 12,
                 color: colorScheme.onSurfaceVariant,
                 spacing: 3,
@@ -41,7 +43,7 @@ class RecentSearchesSection extends ConsumerWidget {
               GestureDetector(
                 onTap: () => ref.read(searchProvider.notifier).clearRecentSearches(),
                 child: CustomText(
-                  text: 'Clear all',
+                  text: l10n.clearAll,
                   size: 12,
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -103,6 +105,7 @@ class SuggestedProductsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (products.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
@@ -111,7 +114,7 @@ class SuggestedProductsSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: CustomText(
-            text: 'SUGGESTED FOR YOU',
+            text: l10n.suggestedForYou.toUpperCase(),
             size: 12,
             color: colorScheme.onSurfaceVariant,
             spacing: 3,
@@ -194,6 +197,7 @@ class PopularCategoriesSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final categories = ref.watch(categoriesProvider);
 
@@ -203,7 +207,7 @@ class PopularCategoriesSection extends ConsumerWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: CustomText(
-            text: 'POPULAR CATEGORIES',
+            text: l10n.popularCategories.toUpperCase(),
             size: 12,
             color: colorScheme.onSurfaceVariant,
             spacing: 3,

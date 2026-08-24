@@ -82,7 +82,9 @@ class CheckoutAddressSection extends StatelessWidget {
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios_outlined,
+              Directionality.of(context) == TextDirection.rtl
+                  ? Icons.arrow_back_ios_outlined
+                  : Icons.arrow_forward_ios_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ],

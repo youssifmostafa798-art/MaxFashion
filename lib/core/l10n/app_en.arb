@@ -1,0 +1,1263 @@
+{
+  "@@locale": "en",
+  "appName": "MaxFashion",
+  "@appName": {
+    "description": "The application name"
+  },
+  "languageName": "English",
+  "@languageName": {
+    "description": "The name of the current language in its own script"
+  },
+  "englishLanguageName": "English",
+  "@englishLanguageName": {
+    "description": "The name of the English language in its own script"
+  },
+  "arabicLanguageName": "العربية",
+  "@arabicLanguageName": {
+    "description": "The name of the Arabic language in its own script"
+  },
+  "signInRequired": "Sign in required",
+  "@signInRequired": {
+    "description": "Title for the sign-in required dialog"
+  },
+  "signInRequiredMessage": "Please sign in to access this feature.",
+  "@signInRequiredMessage": {
+    "description": "Default message for the sign-in required dialog"
+  },
+  "signIn": "SIGN IN",
+  "@signIn": {
+    "description": "Label for the sign-in button"
+  },
+  "createAccount": "CREATE ACCOUNT",
+  "@createAccount": {
+    "description": "Label for the create account button"
+  },
+  "cancel": "CANCEL",
+  "@cancel": {
+    "description": "Label for cancel buttons"
+  },
+  "gotIt": "GOT IT",
+  "@gotIt": {
+    "description": "Label for the dismiss/acknowledge button"
+  },
+  "confirm": "CONFIRM",
+  "@confirm": {
+    "description": "Label for confirm buttons"
+  },
+  "emailRequired": "Please enter your email",
+  "@emailRequired": {
+    "description": "Validation message when email field is empty"
+  },
+  "emailInvalid": "Invalid email address",
+  "@emailInvalid": {
+    "description": "Validation message when email format is invalid"
+  },
+  "passwordRequired": "Please enter your password",
+  "@passwordRequired": {
+    "description": "Validation message when password field is empty"
+  },
+  "passwordTooShort": "Password must be at least 6 characters",
+  "@passwordTooShort": {
+    "description": "Validation message when password is too short"
+  },
+  "fieldRequired": "Please fill the field",
+  "@fieldRequired": {
+    "description": "Generic validation message when a required field is empty"
+  },
+  "searchHint": "Search....",
+  "@searchHint": {
+    "description": "Placeholder text in the search bar"
+  },
+  "genericError": "Something went wrong. Please try again.",
+  "@genericError": {
+    "description": "Default error message for unexpected failures"
+  },
+  "loadFailed": "Couldn't load content. Please try again.",
+  "@loadFailed": {
+    "description": "Generic error when content fails to load"
+  },
+  "operationFailed": "Couldn't complete the action. Please try again.",
+  "@operationFailed": {
+    "description": "Generic error when an action fails to complete"
+  },
+  "memberSince": "Member since {date}",
+  "@memberSince": {
+    "description": "Text showing when a user became a member",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "Jan 2024"
+      }
+    }
+  },
+  "cardBrand": "Card",
+  "@cardBrand": {
+    "description": "Generic fallback label for unknown card brands"
+  },
+  "welcomeBack": "Welcome\nBack",
+  "@welcomeBack": {
+    "description": "Title text on the login page"
+  },
+  "signInToContinue": "Sign in to continue",
+  "@signInToContinue": {
+    "description": "Subtitle text on the login page"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Hint text for email input field"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Hint text for password input field"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Link text to navigate to forgot password page"
+  },
+  "rememberMe": "Remember Me",
+  "@rememberMe": {
+    "description": "Label for the remember me checkbox"
+  },
+  "or": "OR",
+  "@or": {
+    "description": "Separator text between login options"
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Label for the sign-up button"
+  },
+  "createAccountTitle": "Create\nAccount",
+  "@createAccountTitle": {
+    "description": "Title text on the signup page"
+  },
+  "signUpToGetStarted": "Sign up to get started",
+  "@signUpToGetStarted": {
+    "description": "Subtitle text on the signup page"
+  },
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Hint text for full name input field"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Hint text for phone number input field"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Hint text for confirm password input field"
+  },
+  "pleaseEnterName": "Please enter your name",
+  "@pleaseEnterName": {
+    "description": "Validation message when name field is empty"
+  },
+  "pleaseEnterPhone": "Please enter your phone number",
+  "@pleaseEnterPhone": {
+    "description": "Validation message when phone field is empty"
+  },
+  "phoneMustBe11Digits": "Phone number must be 11 digits",
+  "@phoneMustBe11Digits": {
+    "description": "Validation message when phone number is not 11 digits"
+  },
+  "enterValidEgyptianPhone": "Enter a valid Egyptian phone number",
+  "@enterValidEgyptianPhone": {
+    "description": "Validation message when phone format is invalid"
+  },
+  "pleaseConfirmPassword": "Please confirm your password",
+  "@pleaseConfirmPassword": {
+    "description": "Validation message when confirm password field is empty"
+  },
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Validation message when passwords do not match"
+  },
+  "emailConfirmationSent": "Confirmation email sent! Please check your inbox and verify your email, then login.",
+  "@emailConfirmationSent": {
+    "description": "Info message shown after signup with email confirmation"
+  },
+  "forgotPasswordTitle": "Forgot\nPassword",
+  "@forgotPasswordTitle": {
+    "description": "Title text on the forgot password page"
+  },
+  "enterEmailForCode": "Enter your email to receive a verification code",
+  "@enterEmailForCode": {
+    "description": "Subtitle text on the forgot password page"
+  },
+  "verificationCodeSent": "Verification code sent! Check your inbox.",
+  "@verificationCodeSent": {
+    "description": "Info message shown when verification code is sent"
+  },
+  "enterCode": "Enter Code",
+  "@enterCode": {
+    "description": "Button text to enter verification code"
+  },
+  "sendVerificationCode": "Send Verification Code",
+  "@sendVerificationCode": {
+    "description": "Button text to send verification code"
+  },
+  "verifyCodeTitle": "Verify\nCode",
+  "@verifyCodeTitle": {
+    "description": "Title text on the verify code page"
+  },
+  "enterCodeSentTo": "Enter the 6-digit code sent to {email}",
+  "@enterCodeSentTo": {
+    "description": "Subtitle text on the verify code page",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "user@example.com"
+      }
+    }
+  },
+  "pleaseEnterFullCode": "Please enter the full 6-digit code",
+  "@pleaseEnterFullCode": {
+    "description": "Validation message when OTP code is incomplete"
+  },
+  "verifyCode": "Verify Code",
+  "@verifyCode": {
+    "description": "Button text to verify the code"
+  },
+  "resendCode": "Resend Code",
+  "@resendCode": {
+    "description": "Link text to resend verification code"
+  },
+  "resendCodeIn": "Resend code in {seconds}s",
+  "@resendCodeIn": {
+    "description": "Countdown text before resend is available",
+    "placeholders": {
+      "seconds": {
+        "type": "String",
+        "example": "60"
+      }
+    }
+  },
+  "newPasswordTitle": "New\nPassword",
+  "@newPasswordTitle": {
+    "description": "Title text on the reset password page"
+  },
+  "createNewPasswordSubtitle": "Create a new password for your account",
+  "@createNewPasswordSubtitle": {
+    "description": "Subtitle text on the reset password page"
+  },
+  "passwordUpdatedSuccess": "Password updated successfully! You can now login with your new password.",
+  "@passwordUpdatedSuccess": {
+    "description": "Success message after password is updated"
+  },
+  "goToLogin": "Go to Login",
+  "@goToLogin": {
+    "description": "Button text to navigate to login after password reset"
+  },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "Hint text for new password input field"
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Button text to update the password"
+  },
+  "accountAlreadyExists": "An account with this email already exists.",
+  "@accountAlreadyExists": {
+    "description": "Error when trying to sign up with an existing email"
+  },
+  "incorrectEmailOrPassword": "Incorrect email or password.",
+  "@incorrectEmailOrPassword": {
+    "description": "Error when login credentials are wrong"
+  },
+  "invalidOrExpiredCode": "Invalid or expired code. Please try again.",
+  "@invalidOrExpiredCode": {
+    "description": "Error when verification code is invalid or expired"
+  },
+  "noInternetConnection": "No internet connection. Please check your network.",
+  "@noInternetConnection": {
+    "description": "Error when network is unavailable"
+  },
+  "connectionTimedOut": "Connection timed out. Please try again.",
+  "@connectionTimedOut": {
+    "description": "Error when connection times out"
+  },
+  "pleaseWaitBeforeResend": "Please wait before requesting another code.",
+  "@pleaseWaitBeforeResend": {
+    "description": "Error when code resend is rate-limited"
+  },
+  "couldNotLoadProfile": "Could not load profile. Please try again.",
+  "@couldNotLoadProfile": {
+    "description": "Error when user profile fails to load"
+  },
+  "alreadyHaveAccount": "Already have account",
+  "@alreadyHaveAccount": {
+    "description": "Button text for users who already have an account"
+  },
+  "continueAsGuest": "Continue as Guest",
+  "@continueAsGuest": {
+    "description": "Link text to continue as a guest user"
+  },
+  "exploreCollections": "Explore Collections",
+  "@exploreCollections": {
+    "description": "Section title on the home page"
+  },
+  "allCategory": "All",
+  "@allCategory": {
+    "description": "Label for the 'All' category filter"
+  },
+  "noProductsFound": "No products found",
+  "@noProductsFound": {
+    "description": "Empty state message when no products are available"
+  },
+  "about": "About",
+  "@about": {
+    "description": "Label for the about section link"
+  },
+  "contact": "Contact",
+  "@contact": {
+    "description": "Label for the contact section link"
+  },
+  "blog": "Blog",
+  "@blog": {
+    "description": "Label for the blog section link"
+  },
+  "menu": "Menu",
+  "@menu": {
+    "description": "Label for the menu section or bottom nav item"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Label for the categories section"
+  },
+  "shopBy": "Shop By",
+  "@shopBy": {
+    "description": "Title for the shop-by section in the menu"
+  },
+  "allCategories": "All Categories",
+  "@allCategories": {
+    "description": "Title for the all-categories page"
+  },
+  "noCategoriesFound": "No Categories Found",
+  "@noCategoriesFound": {
+    "description": "Empty state message when no categories are available"
+  },
+  "categoriesCount": "{count} categories",
+  "@categoriesCount": {
+    "description": "Text showing the number of categories",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "5"
+      }
+    }
+  },
+  "newArrivals": "New Arrivals",
+  "@newArrivals": {
+    "description": "Label for the new arrivals shop-by item"
+  },
+  "trendingNow": "Trending Now",
+  "@trendingNow": {
+    "description": "Label for the trending-now shop-by item"
+  },
+  "bestSellers": "Best Sellers",
+  "@bestSellers": {
+    "description": "Label for the best-sellers shop-by item"
+  },
+  "onlineExclusive": "Online Exclusive",
+  "@onlineExclusive": {
+    "description": "Label for the online-exclusive shop-by item"
+  },
+  "seeMore": "See More",
+  "@seeMore": {
+    "description": "Link text to see more items"
+  },
+  "searchCategoriesHint": "Search categories...",
+  "@searchCategoriesHint": {
+    "description": "Placeholder text in the menu search bar"
+  },
+  "size": "SIZE",
+  "@size": {
+    "description": "Label for the size selector section"
+  },
+  "sizeLabel": "Size: {size}",
+  "@sizeLabel": {
+    "description": "Label showing the selected size in cart/wishlist items",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "M"
+      }
+    }
+  },
+  "estimatedTotal": "Est. Total",
+  "@estimatedTotal": {
+    "description": "Label for the estimated total price"
+  },
+  "addToCart": "Add to cart",
+  "@addToCart": {
+    "description": "Button text to add item to cart"
+  },
+  "signInToAddToBag": "Sign in to add items to your bag.",
+  "@signInToAddToBag": {
+    "description": "Dialog message prompting guest to sign in to add items"
+  },
+  "itemsCount": "{count} items",
+  "@itemsCount": {
+    "description": "Text showing the number of items",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "12"
+      }
+    }
+  },
+  "noItemsInCategory": "No items in {category} yet",
+  "@noItemsInCategory": {
+    "description": "Empty state message when no items exist in a category",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "example": "Shoes"
+      }
+    }
+  },
+  "priceValue": "${price}",
+  "@priceValue": {
+    "description": "Formatted price value with dollar sign",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "29.99"
+      }
+    }
+  },
+  "searchOnHomeHint": "Search products on home...",
+  "@searchOnHomeHint": {
+    "description": "Placeholder text for search on home context"
+  },
+  "searchInCategoryHint": "Search in this category...",
+  "@searchInCategoryHint": {
+    "description": "Placeholder text for search in category context"
+  },
+  "searchInBagHint": "Search in your bag...",
+  "@searchInBagHint": {
+    "description": "Placeholder text for search in bag context"
+  },
+  "searchInWishlistHint": "Search in wishlist...",
+  "@searchInWishlistHint": {
+    "description": "Placeholder text for search in wishlist context"
+  },
+  "searchInOrdersHint": "Search in orders...",
+  "@searchInOrdersHint": {
+    "description": "Placeholder text for search in orders context"
+  },
+  "recentSearches": "Recent Searches",
+  "@recentSearches": {
+    "description": "Section header for recent search history"
+  },
+  "clearAll": "Clear all",
+  "@clearAll": {
+    "description": "Button text to clear all recent searches"
+  },
+  "suggestedForYou": "Suggested for You",
+  "@suggestedForYou": {
+    "description": "Section header for suggested search terms"
+  },
+  "popularCategories": "Popular Categories",
+  "@popularCategories": {
+    "description": "Section header for popular categories"
+  },
+  "loadMoreResults": "Load more results",
+  "@loadMoreResults": {
+    "description": "Button text to load more search results"
+  },
+  "noResultsFound": "No Results Found",
+  "@noResultsFound": {
+    "description": "Empty state title when no search results match"
+  },
+  "tryAnotherKeyword": "Try another keyword",
+  "@tryAnotherKeyword": {
+    "description": "Empty state subtitle suggesting to try a different search"
+  },
+  "myBag": "MY BAG",
+  "@myBag": {
+    "description": "AppBar title for the cart page"
+  },
+  "loadingBag": "Loading your bag...",
+  "@loadingBag": {
+    "description": "Loading state text on the cart page"
+  },
+  "subtotal": "Subtotal",
+  "@subtotal": {
+    "description": "Label for the cart subtotal"
+  },
+  "delivery": "Delivery",
+  "@delivery": {
+    "description": "Label for delivery cost in cart summary"
+  },
+  "free": "Free",
+  "@free": {
+    "description": "Text indicating free delivery"
+  },
+  "checkout": "Checkout",
+  "@checkout": {
+    "description": "Button text to proceed to checkout"
+  },
+  "yourBagIsEmpty": "Your bag is empty",
+  "@yourBagIsEmpty": {
+    "description": "Empty state title for the cart page"
+  },
+  "addItemsToGetStarted": "Add items to get started",
+  "@addItemsToGetStarted": {
+    "description": "Empty state subtitle for the cart page"
+  },
+  "startShopping": "START SHOPPING",
+  "@startShopping": {
+    "description": "CTA button text on empty cart page"
+  },
+  "signInToViewBag": "Sign in to view your bag",
+  "@signInToViewBag": {
+    "description": "Title on guest cart page prompting sign-in"
+  },
+  "saveItemsAcrossDevices": "Save items and checkout across devices.",
+  "@saveItemsAcrossDevices": {
+    "description": "Subtitle on guest cart/wishlist pages"
+  },
+  "wishlist": "Wishlist",
+  "@wishlist": {
+    "description": "Label for the wishlist page or section"
+  },
+  "productAddedToCart": "{productName} added to cart",
+  "@productAddedToCart": {
+    "description": "SnackBar message when a product is added to cart from wishlist",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "Blue Jacket"
+      }
+    }
+  },
+  "wishlistEmpty": "Your wishlist is empty",
+  "@wishlistEmpty": {
+    "description": "Empty state title for the wishlist page"
+  },
+  "saveFavoritesHere": "Save your favorite products here.",
+  "@saveFavoritesHere": {
+    "description": "Empty state subtitle for the wishlist page"
+  },
+  "continueShopping": "CONTINUE SHOPPING",
+  "@continueShopping": {
+    "description": "CTA button text on empty wishlist page"
+  },
+  "signInToViewWishlist": "Sign in to view your wishlist",
+  "@signInToViewWishlist": {
+    "description": "Title on guest wishlist page prompting sign-in"
+  },
+  "moveToCart": "MOVE TO CART",
+  "@moveToCart": {
+    "description": "Button text to move a wishlist item to cart"
+  },
+  "allCollections": "ALL COLLECTIONS",
+  "@allCollections": {
+    "description": "AppBar title for the all-collections page"
+  },
+  "collectionFailed": "Failed to load collections",
+  "@collectionFailed": {
+    "description": "Error message when collections fail to load"
+  },
+  "noCollectionsFound": "No Collections Found",
+  "@noCollectionsFound": {
+    "description": "Empty state message when no collections are available"
+  },
+  "collectionsCount": "{count} collections",
+  "@collectionsCount": {
+    "description": "Text showing the number of collections",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "8"
+      }
+    }
+  },
+  "noItemsInCollection": "No items in {collectionName} yet",
+  "@noItemsInCollection": {
+    "description": "Empty state message when no items exist in a collection",
+    "placeholders": {
+      "collectionName": {
+        "type": "String",
+        "example": "Summer Sale"
+      }
+    }
+  },
+  "homeNav": "Home",
+  "@homeNav": {
+    "description": "Label for the home bottom navigation item"
+  },
+  "cartNav": "Cart",
+  "@cartNav": {
+    "description": "Label for the cart bottom navigation item"
+  },
+  "profileNav": "You",
+  "@profileNav": {
+    "description": "Label for the profile bottom navigation item"
+  },
+  "checkoutPageTitle": "Checkout",
+  "@checkoutPageTitle": {
+    "description": "AppBar title for the checkout page"
+  },
+  "shippingAddress": "SHIPPING ADDRESS",
+  "@shippingAddress": {
+    "description": "Section header for shipping address on checkout"
+  },
+  "addShippingAddress": "Add shipping address",
+  "@addShippingAddress": {
+    "description": "Button text to add a shipping address"
+  },
+  "shippingMethod": "SHIPPING METHOD",
+  "@shippingMethod": {
+    "description": "Section header for shipping method on checkout"
+  },
+  "pickupAtStore": "Pickup at store",
+  "@pickupAtStore": {
+    "description": "Label for pickup at store shipping method"
+  },
+  "savedPaymentMethods": "SAVED PAYMENT METHODS",
+  "@savedPaymentMethods": {
+    "description": "Section header for saved payment methods on checkout"
+  },
+  "addNewCard": "Add New Card",
+  "@addNewCard": {
+    "description": "Button text to add a new payment card"
+  },
+  "paymentMethodLabel": "PAYMENT METHOD",
+  "@paymentMethodLabel": {
+    "description": "Section header for payment method on checkout"
+  },
+  "selectPaymentMethod": "Select payment method",
+  "@selectPaymentMethod": {
+    "description": "Button text to select a payment method"
+  },
+  "totalLabel": "Total",
+  "@totalLabel": {
+    "description": "Label for the order total on checkout"
+  },
+  "placeOrder": "PLACE ORDER",
+  "@placeOrder": {
+    "description": "Button text to place the order"
+  },
+  "addPromoCode": "ADD Promo Code",
+  "@addPromoCode": {
+    "description": "Button text to add a promo code"
+  },
+  "addCardButton": "Add Card",
+  "@addCardButton": {
+    "description": "Button text to add a payment card"
+  },
+  "editAddressTitle": "Edit Address",
+  "@editAddressTitle": {
+    "description": "Page title when editing an address"
+  },
+  "addAddressTitle": "Add Address",
+  "@addAddressTitle": {
+    "description": "Page title when adding a new address"
+  },
+  "addressLabelSection": "ADDRESS LABEL",
+  "@addressLabelSection": {
+    "description": "Section header for address label selection"
+  },
+  "homeLabel": "Home",
+  "@homeLabel": {
+    "description": "Address label for home"
+  },
+  "workLabel": "Work",
+  "@workLabel": {
+    "description": "Address label for work"
+  },
+  "otherLabel": "Other",
+  "@otherLabel": {
+    "description": "Address label for other"
+  },
+  "streetAddressHint": "Street Address",
+  "@streetAddressHint": {
+    "description": "Hint text for street address input"
+  },
+  "apartmentHint": "Apartment, Suite, etc. (optional)",
+  "@apartmentHint": {
+    "description": "Hint text for apartment input"
+  },
+  "cityHint": "City",
+  "@cityHint": {
+    "description": "Hint text for city input"
+  },
+  "stateHint": "State",
+  "@stateHint": {
+    "description": "Hint text for state input"
+  },
+  "zipCodeHint": "ZIP Code",
+  "@zipCodeHint": {
+    "description": "Hint text for ZIP code input"
+  },
+  "countryHint": "Country",
+  "@countryHint": {
+    "description": "Hint text for country input"
+  },
+  "updateButton": "Update",
+  "@updateButton": {
+    "description": "Button text to update an address"
+  },
+  "addNowButton": "Add now",
+  "@addNowButton": {
+    "description": "Button text to add an address"
+  },
+  "paymentSuccess": "PAYMENT SUCCESS",
+  "@paymentSuccess": {
+    "description": "Title shown after successful payment"
+  },
+  "paymentSuccessMessage": "Your payment was successful",
+  "@paymentSuccessMessage": {
+    "description": "Message shown after successful payment"
+  },
+  "paymentIdLabel": "Payment ID",
+  "@paymentIdLabel": {
+    "description": "Label for the payment ID"
+  },
+  "ratePurchase": "Rate your purchase",
+  "@ratePurchase": {
+    "description": "Label for rating section on success dialog"
+  },
+  "submit": "SUBMIT",
+  "@submit": {
+    "description": "Button text to submit rating"
+  },
+  "addedToCartTitle": "ADDED TO CART",
+  "@addedToCartTitle": {
+    "description": "Title shown when item is added to cart"
+  },
+  "itemAddedMessage": "Item added to your cart successfully",
+  "@itemAddedMessage": {
+    "description": "Message shown when item is added to cart"
+  },
+  "reviewCartOrShop": "You can review your cart or continue shopping.",
+  "@reviewCartOrShop": {
+    "description": "Message shown after adding item to cart"
+  },
+  "readyToCheckout": "Ready to checkout?",
+  "@readyToCheckout": {
+    "description": "Label shown in add-to-cart dialog"
+  },
+  "viewCart": "View Cart",
+  "@viewCart": {
+    "description": "Button text to view the cart"
+  },
+  "shopMore": "Shop More",
+  "@shopMore": {
+    "description": "Button text to continue shopping"
+  },
+  "missingInformation": "MISSING INFORMATION",
+  "@missingInformation": {
+    "description": "Title for missing information dialog"
+  },
+  "addShippingAddressError": "Please add a shipping address",
+  "@addShippingAddressError": {
+    "description": "Error message when shipping address is missing"
+  },
+  "selectPaymentMethodError": "Please select a payment method",
+  "@selectPaymentMethodError": {
+    "description": "Error message when payment method is not selected"
+  },
+  "failedPlaceOrder": "Failed to place order. Please try again.",
+  "@failedPlaceOrder": {
+    "description": "Error message when order placement fails"
+  },
+  "cardEnding": "{brand} ending ••••{last4}",
+  "@cardEnding": {
+    "description": "Text showing card brand and last 4 digits",
+    "placeholders": {
+      "brand": { "type": "String", "example": "Mastercard" },
+      "last4": { "type": "String", "example": "12" }
+    }
+  },
+  "sizeQtyLabel": "Size: {size}  Qty: {quantity}",
+  "@sizeQtyLabel": {
+    "description": "Label showing size and quantity of a cart item",
+    "placeholders": {
+      "size": { "type": "String", "example": "M" },
+      "quantity": { "type": "String", "example": "2" }
+    }
+  },
+  "qtyLabel": "Qty: {quantity}",
+  "@qtyLabel": {
+    "description": "Label showing quantity of a cart item",
+    "placeholders": {
+      "quantity": { "type": "String", "example": "2" }
+    }
+  },
+  "defaultBadge": "DEFAULT",
+  "@defaultBadge": {
+    "description": "Badge label for default payment method or address"
+  },
+  "signInToSaveFavorite": "Sign in to save your favorite products.",
+  "@signInToSaveFavorite": {
+    "description": "Dialog message prompting guest to sign in to save favorites"
+  },
+  "rateExperience": "Rate your experience",
+  "@rateExperience": {
+    "description": "Rating message for 0 stars"
+  },
+  "weCanDoBetter": "We can do better",
+  "@weCanDoBetter": {
+    "description": "Rating message for 1 star"
+  },
+  "thanksForFeedback": "Thanks for your feedback",
+  "@thanksForFeedback": {
+    "description": "Rating message for 2 stars"
+  },
+  "good": "Good",
+  "@good": {
+    "description": "Rating message for 3 stars"
+  },
+  "great": "Great",
+  "@great": {
+    "description": "Rating message for 4 stars"
+  },
+  "excellent": "Excellent!",
+  "@excellent": {
+    "description": "Rating message for 5 stars"
+  },
+  "expiresLabel": "Expires {date}",
+  "@expiresLabel": {
+    "description": "Label showing card expiry date",
+    "placeholders": {
+      "date": { "type": "String", "example": "12/28" }
+    }
+  },
+  "cardAlreadySaved": "This card is already saved.",
+  "@cardAlreadySaved": {
+    "description": "SnackBar message when a duplicate card is detected"
+  },
+  "myOrders": "MY ORDERS",
+  "@myOrders": {
+    "description": "AppBar title for the orders page"
+  },
+  "signInToViewOrders": "Sign in to view your orders",
+  "@signInToViewOrders": {
+    "description": "Title on guest orders page prompting sign-in"
+  },
+  "trackPurchases": "Track your purchases and order history.",
+  "@trackPurchases": {
+    "description": "Subtitle on guest orders page"
+  },
+  "productsLabel": "PRODUCTS",
+  "@productsLabel": {
+    "description": "Section header for products in order details"
+  },
+  "colorLabel": "Color: {color}",
+  "@colorLabel": {
+    "description": "Label showing the selected color",
+    "placeholders": {
+      "color": { "type": "String", "example": "Blue" }
+    }
+  },
+  "totalItems": "Total ({count} items)",
+  "@totalItems": {
+    "description": "Label showing total price and item count",
+    "placeholders": {
+      "count": { "type": "String", "example": "3" }
+    }
+  },
+  "deliveryAddressLabel": "DELIVERY ADDRESS",
+  "@deliveryAddressLabel": {
+    "description": "Section header for delivery address in order details"
+  },
+  "noOrdersYet": "You haven't placed any orders yet",
+  "@noOrdersYet": {
+    "description": "Empty state title for the orders page"
+  },
+  "purchasesWillAppear": "Your completed purchases will appear here.",
+  "@purchasesWillAppear": {
+    "description": "Empty state subtitle for the orders page"
+  },
+  "orderPlaced": "Order Placed",
+  "@orderPlaced": {
+    "description": "Timeline step title for order placed"
+  },
+  "statusProcessing": "Processing",
+  "@statusProcessing": {
+    "description": "Order status label for processing"
+  },
+  "statusShipped": "Shipped",
+  "@statusShipped": {
+    "description": "Order status label for shipped"
+  },
+  "statusDelivered": "Delivered",
+  "@statusDelivered": {
+    "description": "Order status label for delivered"
+  },
+  "statusCancelled": "Cancelled",
+  "@statusCancelled": {
+    "description": "Order status label for cancelled"
+  },
+  "orderTimeline": "ORDER TIMELINE",
+  "@orderTimeline": {
+    "description": "Section header for order timeline"
+  },
+  "viewDetails": "VIEW DETAILS",
+  "@viewDetails": {
+    "description": "Button text to view order details"
+  },
+  "youTitle": "YOU",
+  "@youTitle": {
+    "description": "AppBar title for the profile page"
+  },
+  "guestUser": "Guest User",
+  "@guestUser": {
+    "description": "Display name for guest users"
+  },
+  "accountSection": "ACCOUNT",
+  "@accountSection": {
+    "description": "Section header for account menu"
+  },
+  "editProfileMenu": "Edit Profile",
+  "@editProfileMenu": {
+    "description": "Menu item to edit profile"
+  },
+  "myOrdersMenu": "My Orders",
+  "@myOrdersMenu": {
+    "description": "Menu item for my orders"
+  },
+  "wishlistMenu": "Wishlist",
+  "@wishlistMenu": {
+    "description": "Menu item for wishlist"
+  },
+  "addressesMenu": "Addresses",
+  "@addressesMenu": {
+    "description": "Menu item for addresses"
+  },
+  "paymentMethodsMenu": "Payment Methods",
+  "@paymentMethodsMenu": {
+    "description": "Menu item for payment methods"
+  },
+  "settingsMenu": "Settings",
+  "@settingsMenu": {
+    "description": "Menu item for settings"
+  },
+  "featureProfileEditing": "profile editing",
+  "@featureProfileEditing": {
+    "description": "Feature name used in sign-in prompt for profile editing"
+  },
+  "featureYourOrders": "your orders",
+  "@featureYourOrders": {
+    "description": "Feature name used in sign-in prompt for orders"
+  },
+  "featureYourWishlist": "your wishlist",
+  "@featureYourWishlist": {
+    "description": "Feature name used in sign-in prompt for wishlist"
+  },
+  "featureYourAddresses": "your addresses",
+  "@featureYourAddresses": {
+    "description": "Feature name used in sign-in prompt for addresses"
+  },
+  "featurePaymentMethods": "payment methods",
+  "@featurePaymentMethods": {
+    "description": "Feature name used in sign-in prompt for payment methods"
+  },
+  "pleaseSignInToAccessFeature": "Please sign in to access {feature}.",
+  "@pleaseSignInToAccessFeature": {
+    "description": "Message prompting guest to sign in for a feature",
+    "placeholders": {
+      "feature": { "type": "String", "example": "your orders" }
+    }
+  },
+  "editProfileTitle": "EDIT PROFILE",
+  "@editProfileTitle": {
+    "description": "AppBar title for the edit profile page"
+  },
+  "removePhoto": "Remove Photo",
+  "@removePhoto": {
+    "description": "Button text to remove profile photo"
+  },
+  "personalInformation": "PERSONAL INFORMATION",
+  "@personalInformation": {
+    "description": "Section header for personal information in edit profile"
+  },
+  "firstNameHint": "Enter your first name",
+  "@firstNameHint": {
+    "description": "Hint text for first name input"
+  },
+  "firstNameLabel": "FIRST NAME",
+  "@firstNameLabel": {
+    "description": "Label for first name input"
+  },
+  "firstNameRequired": "First name is required",
+  "@firstNameRequired": {
+    "description": "Validation message when first name is empty"
+  },
+  "firstNameMaxLength": "First name must be 50 characters or less",
+  "@firstNameMaxLength": {
+    "description": "Validation message when first name exceeds 50 chars"
+  },
+  "lastNameHint": "Enter your last name",
+  "@lastNameHint": {
+    "description": "Hint text for last name input"
+  },
+  "lastNameLabel": "LAST NAME",
+  "@lastNameLabel": {
+    "description": "Label for last name input"
+  },
+  "lastNameMaxLength": "Last name must be 50 characters or less",
+  "@lastNameMaxLength": {
+    "description": "Validation message when last name exceeds 50 chars"
+  },
+  "emailAddressHint": "Your email address",
+  "@emailAddressHint": {
+    "description": "Hint text for email address input"
+  },
+  "emailLabel": "EMAIL",
+  "@emailLabel": {
+    "description": "Label for email input"
+  },
+  "phoneHint": "Enter your phone number",
+  "@phoneHint": {
+    "description": "Hint text for phone number input"
+  },
+  "phoneLabel": "PHONE NUMBER",
+  "@phoneLabel": {
+    "description": "Label for phone number input"
+  },
+  "invalidPhone": "Please enter a valid phone number",
+  "@invalidPhone": {
+    "description": "Validation message when phone number is invalid"
+  },
+  "dobHint": "Select your date of birth",
+  "@dobHint": {
+    "description": "Hint text for date of birth input"
+  },
+  "dobLabel": "DATE OF BIRTH (OPTIONAL)",
+  "@dobLabel": {
+    "description": "Label for date of birth input"
+  },
+  "additionalInfo": "ADDITIONAL INFO",
+  "@additionalInfo": {
+    "description": "Section header for additional info in edit profile"
+  },
+  "genderHint": "Select your gender",
+  "@genderHint": {
+    "description": "Hint text for gender dropdown"
+  },
+  "genderLabel": "GENDER (OPTIONAL)",
+  "@genderLabel": {
+    "description": "Label for gender dropdown"
+  },
+  "genderMale": "Male",
+  "@genderMale": {
+    "description": "Gender option for male"
+  },
+  "genderFemale": "Female",
+  "@genderFemale": {
+    "description": "Gender option for female"
+  },
+  "genderOther": "Other",
+  "@genderOther": {
+    "description": "Gender option for other"
+  },
+  "genderPreferNotToSay": "Prefer not to say",
+  "@genderPreferNotToSay": {
+    "description": "Gender option for prefer not to say"
+  },
+  "countryHintProfile": "Enter your country",
+  "@countryHintProfile": {
+    "description": "Hint text for country input in edit profile"
+  },
+  "countryLabel": "COUNTRY (OPTIONAL)",
+  "@countryLabel": {
+    "description": "Label for country input"
+  },
+  "countryMaxLength": "Country must be 50 characters or less",
+  "@countryMaxLength": {
+    "description": "Validation message when country exceeds 50 chars"
+  },
+  "bioHint": "Tell us about yourself",
+  "@bioHint": {
+    "description": "Hint text for bio input"
+  },
+  "bioLabel": "BIO (OPTIONAL)",
+  "@bioLabel": {
+    "description": "Label for bio input"
+  },
+  "bioMaxLength": "Bio must be 200 characters or less",
+  "@bioMaxLength": {
+    "description": "Validation message when bio exceeds 200 chars"
+  },
+  "discardChanges": "Discard Changes?",
+  "@discardChanges": {
+    "description": "Title for discard changes confirmation dialog"
+  },
+  "unsavedChangesMessage": "You have unsaved changes. Are you sure you want to leave?",
+  "@unsavedChangesMessage": {
+    "description": "Message for discard changes confirmation dialog"
+  },
+  "discardButton": "Discard",
+  "@discardButton": {
+    "description": "Button text to discard changes"
+  },
+  "saveChanges": "SAVE CHANGES",
+  "@saveChanges": {
+    "description": "Button text to save profile changes"
+  },
+  "profileUpdated": "Profile Updated",
+  "@profileUpdated": {
+    "description": "Title for profile updated success dialog"
+  },
+  "profileUpdatedMessage": "Your profile information has been saved successfully.",
+  "@profileUpdatedMessage": {
+    "description": "Message for profile updated success dialog"
+  },
+  "deleteCardConfirm": "Delete Card?",
+  "@deleteCardConfirm": {
+    "description": "Title for delete card confirmation dialog"
+  },
+  "cannotUndo": "This action cannot be undone.",
+  "@cannotUndo": {
+    "description": "Warning message for destructive actions"
+  },
+  "deleteButton": "DELETE",
+  "@deleteButton": {
+    "description": "Button text for delete confirmation"
+  },
+  "noSavedCards": "No saved payment methods.",
+  "@noSavedCards": {
+    "description": "Empty state title for payment methods page"
+  },
+  "addFirstPaymentMethod": "Add your first payment method.",
+  "@addFirstPaymentMethod": {
+    "description": "Empty state subtitle for payment methods page"
+  },
+  "deleteAddressConfirm": "Delete Address?",
+  "@deleteAddressConfirm": {
+    "description": "Title for delete address confirmation dialog"
+  },
+  "noSavedAddresses": "No saved addresses.",
+  "@noSavedAddresses": {
+    "description": "Empty state title for addresses page"
+  },
+  "addFirstAddress": "Add your first delivery address.",
+  "@addFirstAddress": {
+    "description": "Empty state subtitle for addresses page"
+  },
+  "editButton": "Edit",
+  "@editButton": {
+    "description": "Button text to edit an item"
+  },
+  "deleteLabel": "Delete",
+  "@deleteLabel": {
+    "description": "Button label for delete action"
+  },
+  "setDefaultLabel": "Set Default",
+  "@setDefaultLabel": {
+    "description": "Button text to set item as default"
+  },
+  "settingsTitle": "SETTINGS",
+  "@settingsTitle": {
+    "description": "AppBar title for the settings page"
+  },
+  "generalSection": "GENERAL",
+  "@generalSection": {
+    "description": "Section header for general settings"
+  },
+  "languageLabel": "Language",
+  "@languageLabel": {
+    "description": "Settings tile title for language"
+  },
+  "appearanceSection": "APPEARANCE",
+  "@appearanceSection": {
+    "description": "Section header for appearance settings"
+  },
+  "themeLabel": "Theme",
+  "@themeLabel": {
+    "description": "Settings tile title for theme"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Theme option for light mode"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Theme option for dark mode"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "Theme option for system mode"
+  },
+  "notificationsSection": "NOTIFICATIONS",
+  "@notificationsSection": {
+    "description": "Section header for notification settings"
+  },
+  "pushNotifications": "Push Notifications",
+  "@pushNotifications": {
+    "description": "Settings tile title for push notifications"
+  },
+  "pushNotificationsSubtitle": "Receive order updates and promotions",
+  "@pushNotificationsSubtitle": {
+    "description": "Settings tile subtitle for push notifications"
+  },
+  "privacySection": "PRIVACY",
+  "@privacySection": {
+    "description": "Section header for privacy settings"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Settings tile title for privacy policy"
+  },
+  "termsConditions": "Terms & Conditions",
+  "@termsConditions": {
+    "description": "Settings tile title for terms and conditions"
+  },
+  "supportSection": "SUPPORT",
+  "@supportSection": {
+    "description": "Section header for support settings"
+  },
+  "contactSupport": "Contact Support",
+  "@contactSupport": {
+    "description": "Settings tile title for contact support"
+  },
+  "contactSupportSubtitle": "Get help with your account",
+  "@contactSupportSubtitle": {
+    "description": "Settings tile subtitle for contact support"
+  },
+  "aboutSection": "ABOUT",
+  "@aboutSection": {
+    "description": "Section header for about settings"
+  },
+  "aboutApp": "About App",
+  "@aboutApp": {
+    "description": "Settings tile title for about app"
+  },
+  "versionLabel": "Version 1.0.0",
+  "@versionLabel": {
+    "description": "Settings tile subtitle showing app version"
+  },
+  "signInSection": "Sign In",
+  "@signInSection": {
+    "description": "Settings tile title for sign in (guest state)"
+  },
+  "logoutSection": "Logout",
+  "@logoutSection": {
+    "description": "Settings tile title for logout (logged-in state)"
+  },
+  "comingSoon": "{title} coming soon",
+  "@comingSoon": {
+    "description": "SnackBar message for placeholder features",
+    "placeholders": {
+      "title": { "type": "String", "example": "Privacy Policy" }
+    }
+  },
+  "aboutDescription": "Your premium fashion destination.",
+  "@aboutDescription": {
+    "description": "Description shown in the about dialog"
+  },
+  "copyrightText": "Copyright © OpenUI All Rights Reserved.",
+  "@copyrightText": {
+    "description": "Copyright notice shown in app footer"
+  },
+  "everyday": "Everyday",
+  "@everyday": {
+    "description": "Label for business hours that apply every day"
+  },
+  "memberSinceFallback": "Member since —",
+  "@memberSinceFallback": {
+    "description": "Fallback text when member since date is unavailable"
+  }
+}

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class HomeEmptyProducts extends StatelessWidget {
   const HomeEmptyProducts({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
@@ -22,7 +24,7 @@ class HomeEmptyProducts extends StatelessWidget {
             ),
             Gap(16.h),
             CustomText(
-              text: 'No products found',
+              text: l10n.noProductsFound,
               size: 16,
               color: colorScheme.onSurfaceVariant,
             ),

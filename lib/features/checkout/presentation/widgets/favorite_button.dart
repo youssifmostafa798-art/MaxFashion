@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
@@ -28,9 +29,10 @@ class FavoriteButton extends ConsumerWidget {
       onTap: () {
         HapticUtils.selection();
         if (isGuest) {
+          final l10n = AppLocalizations.of(context)!;
           showGuestPromptDialog(
             context: context,
-            message: 'Sign in to save your favorite products.',
+            message: l10n.signInToSaveFavorite,
           );
           return;
         }

@@ -7,6 +7,7 @@ import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/features/search/presentation/widgets/highlighted_text.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class SearchResultsList extends ConsumerWidget {
   const SearchResultsList({
@@ -72,12 +73,13 @@ class _LoadMoreIndicator extends StatelessWidget {
       );
     }
 
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Center(
         child: TextButton(
           onPressed: onLoadMore,
-          child: const Text('Load more results'),
+          child: Text(l10n.loadMoreResults),
         ),
       ),
     );
@@ -99,6 +101,7 @@ class _SearchResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: onTap,
@@ -152,7 +155,7 @@ class _SearchResultCard extends StatelessWidget {
                   ),
                   Gap(4.h),
                   CustomText(
-                    text: '\$${product.price.toStringAsFixed(2)}',
+                    text: l10n.priceValue(product.price.toStringAsFixed(2)),
                     size: 15,
                     weight: FontWeight.w600,
                     color: const Color(0xffDD8560),
@@ -174,6 +177,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -197,7 +201,7 @@ class _EmptyState extends StatelessWidget {
             ),
             Gap(24.h),
             CustomText(
-              text: 'No Results Found',
+              text: l10n.noResultsFound,
               size: 18,
               color: colorScheme.onSurface,
               weight: FontWeight.w600,
@@ -205,7 +209,7 @@ class _EmptyState extends StatelessWidget {
             ),
             Gap(8.h),
             CustomText(
-              text: 'Try another keyword',
+              text: l10n.tryAnotherKeyword,
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),

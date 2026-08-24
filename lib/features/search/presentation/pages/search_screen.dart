@@ -9,6 +9,8 @@ import 'package:max/features/search/presentation/widgets/search_results_list.dar
 import 'package:max/features/search/presentation/widgets/search_suggestions.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/core/widgets/skeletons/search_skeleton.dart';
+import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/errors/app_error_messages.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key, this.initialSource, this.searchContext});
@@ -65,7 +67,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Icon(
-                    Icons.arrow_back,
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Icons.arrow_forward
+                        : Icons.arrow_back,
                     size: 24.w,
                     color: colorScheme.onSurface,
                   ),
@@ -101,27 +105,29 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
   }
 
   String _getHintText() {
+    final l10n = AppLocalizations.of(context)!;
     final ctx = widget.searchContext;
     switch (ctx) {
       case SearchContextType.home:
-        return 'Search products on home...';
+        return l10n.searchOnHomeHint;
       case SearchContextType.category:
-        return 'Search in this category...';
+        return l10n.searchInCategoryHint;
       case SearchContextType.cart:
-        return 'Search in your bag...';
+        return l10n.searchInBagHint;
       case SearchContextType.wishlist:
-        return 'Search in wishlist...';
+        return l10n.searchInWishlistHint;
       case SearchContextType.orders:
-        return 'Search in orders...';
+        return l10n.searchInOrdersHint;
       case SearchContextType.global:
-        return 'Search....';
+        return l10n.searchHint;
       case null:
-        return 'Search....';
+        return l10n.searchHint;
     }
   }
 
   Widget _buildSearchResults() {
     final searchState = ref.watch(searchProvider);
+    final l10n = AppLocalizations.of(context)!;
     if (searchState.isLoading) {
       return const SearchSkeleton();
     }
@@ -140,7 +146,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
               ),
               SizedBox(height: 16.h),
               Text(
-                searchState.error!,
+                AppErrorMessages.resolve(l10n, searchState.error),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

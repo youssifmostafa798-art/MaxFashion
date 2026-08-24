@@ -9,9 +9,12 @@ import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
 import 'package:max/core/widgets/badge_widget.dart';
 import 'package:max/core/theme/app_colors.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 const int _tabCount = 4;
-const double _circleSize = 50.0;
+const double _indicatorWidth = 64.0;
+const double _indicatorHeight = 70.0;
+const double _indicatorRadius = 22.0;
 const double _barHeight = 58.0;
 const double _circleProtrusion = 14.0;
 const double _barTopRadius = 20.0;
@@ -63,6 +66,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartCount = ref.watch(
       cartItemsProvider.select((items) => items.length),
     );
@@ -72,23 +76,23 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       _NavItemData(
         icon: Icons.home_outlined,
         activeIcon: Icons.home,
-        label: 'Home',
+        label: l10n.homeNav,
       ),
       _NavItemData(
         icon: Icons.menu_outlined,
         activeIcon: Icons.menu,
-        label: 'Menu',
+        label: l10n.menu,
       ),
       _NavItemData(
         icon: Icons.shopping_bag_outlined,
         activeIcon: Icons.shopping_bag,
-        label: 'Cart',
+        label: l10n.cartNav,
         badgeCount: cartCount,
       ),
       _NavItemData(
         icon: Icons.person_outline,
         activeIcon: Icons.person,
-        label: 'You',
+        label: l10n.profileNav,
         badgeCount: wishlistCount,
       ),
     ];
@@ -146,13 +150,22 @@ class _CustomBottomNavBar extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final totalItemWidth = screenWidth - _horizontalPadding.w * 2;
     final itemWidth = totalItemWidth / items.length;
-    final indicatorCenterX = itemWidth * currentIndex + itemWidth / 2;
+    // Distance from the directionality START edge to the center of the
+    // active item's slot. The items Row mirrors under RTL, and
+    // AnimatedPositionedDirectional mirrors with it, keeping the moving
+    // indicator locked to the tapped destination in both LTR and RTL.
+    final indicatorStartOffset =
+        itemWidth * currentIndex + itemWidth / 2 - _indicatorWidth.w / 2;
 
-    final barColor = (isDark ? AppColors.black : AppColors.white)
-        .withValues(alpha: 0.82);
+    final barColor = (isDark ? AppColors.black : AppColors.white).withValues(
+      alpha: 0.82,
+    );
     final circleColor = isDark ? AppColors.white : AppColors.black;
     final activeIconColor = isDark ? AppColors.black : AppColors.white;
-    final activeLabelColor = isDark ? AppColors.white : AppColors.black;
+    // Active items render on top of the full-height indicator pill
+    // (circleColor), so their label must use the same contrasting
+    // foreground as the active icon.
+    final activeLabelColor = isDark ? AppColors.black : AppColors.white;
     final inactiveColor = AppColors.grey500;
 
     return SafeArea(
@@ -186,6 +199,27 @@ class _CustomBottomNavBar extends StatelessWidget {
                   ),
                 ),
               ),
+              AnimatedPositionedDirectional(
+                duration: _animDuration,
+                curve: Curves.easeInOut,
+                start: indicatorStartOffset,
+                top: 0,
+                width: _indicatorWidth.w,
+                height: _indicatorHeight.h,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: circleColor,
+                    borderRadius: BorderRadius.circular(_indicatorRadius.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withValues(alpha: 0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               Positioned(
                 top: _circleProtrusion.h,
                 left: 0,
@@ -207,34 +241,40 @@ class _CustomBottomNavBar extends StatelessWidget {
                             SizedBox(
                               width: 24.w,
                               height: 24.w,
-                              child: !isActive && item.badgeCount > 0
+                              child: item.badgeCount > 0
                                   ? BadgeWidget(
                                       count: item.badgeCount,
                                       child: Icon(
-                                        item.icon,
+                                        isActive ? item.activeIcon : item.icon,
                                         size: 24.w,
-                                        color: inactiveColor,
+                                        color: isActive
+                                            ? activeIconColor
+                                            : inactiveColor,
                                       ),
                                     )
-                                  : isActive
-                                  ? null
                                   : Icon(
-                                      item.icon,
+                                      isActive ? item.activeIcon : item.icon,
                                       size: 24.w,
-                                      color: inactiveColor,
+                                      color: isActive
+                                          ? activeIconColor
+                                          : inactiveColor,
                                     ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              item.label,
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: isActive
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                                color: isActive
-                                    ? activeLabelColor
-                                    : inactiveColor,
+                            Flexible(
+                              child: Text(
+                                item.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: isActive
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                  color: isActive
+                                      ? activeLabelColor
+                                      : inactiveColor,
+                                ),
                               ),
                             ),
                           ],
@@ -242,43 +282,6 @@ class _CustomBottomNavBar extends StatelessWidget {
                       ),
                     );
                   }),
-                ),
-              ),
-              AnimatedPositioned(
-                duration: _animDuration,
-                curve: Curves.easeInOut,
-                left: indicatorCenterX - _circleSize.w / 2,
-                top: 0,
-                width: _circleSize.w,
-                height: _circleSize.w,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: circleColor,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.15),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: items[currentIndex].badgeCount > 0
-                        ? BadgeWidget(
-                            count: items[currentIndex].badgeCount,
-                            child: Icon(
-                              items[currentIndex].activeIcon,
-                              size: 24.w,
-                              color: activeIconColor,
-                            ),
-                          )
-                        : Icon(
-                            items[currentIndex].activeIcon,
-                            size: 24.w,
-                            color: activeIconColor,
-                          ),
-                  ),
                 ),
               ),
             ],

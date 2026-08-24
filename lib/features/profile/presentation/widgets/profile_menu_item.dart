@@ -105,7 +105,9 @@ class _ProfileMenuItemState extends State<ProfileMenuItem>
                 ),
               SizedBox(width: 4.w),
               Icon(
-                Icons.chevron_right,
+                Directionality.of(context) == TextDirection.rtl
+                    ? Icons.chevron_left
+                    : Icons.chevron_right,
                 color: colorScheme.onSurfaceVariant,
                 size: 20.w,
               ),

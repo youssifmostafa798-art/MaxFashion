@@ -12,6 +12,7 @@ import 'package:max/features/product/presentation/pages/product_detail_page.dart
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/features/wishlist/presentation/widgets/wishlist_item_card.dart';
 import 'package:max/core/widgets/skeletons/wishlist_skeleton.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class WishlistPage extends ConsumerStatefulWidget {
   const WishlistPage({super.key});
@@ -23,6 +24,7 @@ class WishlistPage extends ConsumerStatefulWidget {
 class _WishlistPageState extends ConsumerState<WishlistPage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final wishlistState = ref.watch(wishlistProvider);
     final wishlistItems = wishlistState.items;
     final authState = ref.watch(authStateProvider);
@@ -38,7 +40,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
           elevation: 0,
           centerTitle: true,
           title: CustomText(
-            text: 'WISHLIST',
+            text: l10n.wishlist.toUpperCase(),
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -58,7 +60,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
           elevation: 0,
           centerTitle: true,
           title: CustomText(
-            text: 'WISHLIST',
+            text: l10n.wishlist.toUpperCase(),
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -77,7 +79,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'WISHLIST',
+          text: l10n.wishlist.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -92,6 +94,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
 class _WishlistContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final wishlistState = ref.watch(wishlistProvider);
     final wishlistItems = wishlistState.items;
 
@@ -128,7 +131,7 @@ class _WishlistContent extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: CustomText(
-                  text: '${product.name} added to cart',
+                  text: l10n.productAddedToCart(product.name),
                   size: 14,
                   color: colorScheme.surface,
                 ),
@@ -160,6 +163,7 @@ class _EmptyWishlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -169,14 +173,14 @@ class _EmptyWishlist extends StatelessWidget {
           Icon(Icons.favorite_border, size: 80.w, color: colorScheme.outline),
           SizedBox(height: 20.h),
           CustomText(
-            text: 'Your wishlist is empty',
+            text: l10n.wishlistEmpty,
             size: 18,
             weight: FontWeight.w600,
             color: colorScheme.onSurface,
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Save your favorite products here.',
+            text: l10n.saveFavoritesHere,
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -199,7 +203,7 @@ class _EmptyWishlist extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: CustomText(
-                text: 'CONTINUE SHOPPING',
+                text: l10n.continueShopping.toUpperCase(),
                 size: 14,
                 color: colorScheme.surface,
                 spacing: 2,
@@ -215,6 +219,7 @@ class _EmptyWishlist extends StatelessWidget {
 class _GuestWishlistView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -224,14 +229,14 @@ class _GuestWishlistView extends StatelessWidget {
           Icon(Icons.favorite_border, size: 80.w, color: colorScheme.outline),
           SizedBox(height: 20.h),
           CustomText(
-            text: 'Sign in to view your wishlist',
+            text: l10n.signInToViewWishlist,
             size: 18,
             color: colorScheme.onSurface,
             weight: FontWeight.w600,
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Save your favorite products across devices.',
+            text: l10n.saveItemsAcrossDevices,
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -248,7 +253,7 @@ class _GuestWishlistView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: CustomText(
-                text: 'SIGN IN',
+                text: l10n.signIn.toUpperCase(),
                 size: 14,
                 color: colorScheme.surface,
                 spacing: 2,

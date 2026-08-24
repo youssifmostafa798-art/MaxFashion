@@ -7,12 +7,14 @@ import 'package:max/features/menu/presentation/widgets/menu_search_bar.dart';
 import 'package:max/features/menu/presentation/widgets/menu_section_title.dart';
 import 'package:max/features/menu/presentation/widgets/shop_by_list.dart';
 import 'package:max/features/menu/presentation/pages/all_categories_page.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -23,7 +25,7 @@ class CategoriesPage extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'MENU',
+          text: l10n.menu.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -40,7 +42,7 @@ class CategoriesPage extends StatelessWidget {
               SizedBox(height: 10.h),
               const MenuSearchBar(),
               SizedBox(height: 20.h),
-              const MenuSectionTitle('CATEGORIES'),
+              MenuSectionTitle(l10n.categories.toUpperCase()),
               SizedBox(height: 12.h),
               CategoryGrid(
                 showPreview: true,
@@ -55,7 +57,7 @@ class CategoriesPage extends StatelessWidget {
                 },
               ),
               SizedBox(height: 24.h),
-              const MenuSectionTitle('SHOP BY'),
+              MenuSectionTitle(l10n.shopBy.toUpperCase()),
               SizedBox(height: 12.h),
               const ShopByList(),
               SizedBox(height: 30.h),

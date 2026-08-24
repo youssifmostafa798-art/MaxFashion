@@ -7,6 +7,7 @@ import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
 import 'package:max/features/product/presentation/widgets/product_grid_card.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class ProductListingPage extends ConsumerStatefulWidget {
   const ProductListingPage({
@@ -40,7 +41,12 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage> {
           weight: FontWeight.bold,
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward
+                : Icons.arrow_back,
+            color: colorScheme.onSurface,
+          ),
           onPressed: () {
             HapticUtils.light();
             Navigator.pop(context);
@@ -60,13 +66,14 @@ class _ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: CustomText(
-            text: '${products.length} ${products.length == 1 ? 'item' : 'items'}',
+            text: l10n.itemsCount(products.length.toString()),
             size: 13,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -109,6 +116,7 @@ class _EmptyCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -132,7 +140,7 @@ class _EmptyCategory extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             CustomText(
-              text: 'No Products Found',
+              text: l10n.noProductsFound,
               size: 18,
               color: colorScheme.onSurface,
               weight: FontWeight.w600,
@@ -140,7 +148,7 @@ class _EmptyCategory extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             CustomText(
-              text: 'No items in $category yet',
+              text: l10n.noItemsInCategory(category),
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),

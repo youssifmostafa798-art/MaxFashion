@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/card_utils.dart';
 import 'package:max/core/widgets/action_chip_widget.dart';
@@ -22,6 +23,7 @@ class PaymentCardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -70,7 +72,7 @@ class PaymentCardTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: CustomText(
-                    text: 'DEFAULT',
+                    text: l10n.defaultBadge,
                     size: 10,
                     color: colorScheme.surface,
                     spacing: 2,
@@ -117,7 +119,7 @@ class PaymentCardTile extends StatelessWidget {
             children: [
               ActionChipWidget(
                 icon: Icons.delete_outline,
-                label: 'Delete',
+                label: l10n.deleteLabel,
                 onTap: onDelete,
                 colorScheme: colorScheme,
                 isDestructive: true,
@@ -127,7 +129,7 @@ class PaymentCardTile extends StatelessWidget {
                 GestureDetector(
                   onTap: onSetDefault,
                   child: CustomText(
-                    text: 'Set Default',
+                    text: l10n.setDefaultLabel,
                     size: 12,
                     color: colorScheme.onSurface,
                   ),

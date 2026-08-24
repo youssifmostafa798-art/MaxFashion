@@ -4,6 +4,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/core/theme/app_colors.dart';
 
@@ -25,6 +26,8 @@ class _AddCardState extends State<AddCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -35,7 +38,7 @@ class _AddCardState extends State<AddCard> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Header(title: "Payment method".toUpperCase()),
+                Header(title: l10n.paymentMethodLabel.toUpperCase()),
                 Gap(13.h),
 
                 CreditCardWidget(
@@ -62,7 +65,7 @@ class _AddCardState extends State<AddCard> {
 
                 CustomButton(
                   isSvg: true,
-                  title: "Add Card".toUpperCase(),
+                  title: l10n.addCardButton.toUpperCase(),
                   onTap: () {
                     if (key.currentState!.validate()) {
                       final data = {

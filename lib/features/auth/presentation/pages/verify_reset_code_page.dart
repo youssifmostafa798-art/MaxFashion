@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/utils/haptic_utils.dart';
@@ -73,12 +74,15 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
     HapticUtils.light();
     final code = _enteredCode;
     if (code.length != 6) {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter the full 6-digit code')),
+        SnackBar(content: Text(l10n.pleaseEnterFullCode)),
       );
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
     ref.read(authStateProvider.notifier).verifyResetCode(
           email: widget.email,
           code: code,
@@ -87,6 +91,8 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
 
   void _onResend() {
     HapticUtils.light();
+    final l10n = AppLocalizations.of(context)!;
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
     ref.read(authStateProvider.notifier).sendResetCode(
           email: widget.email,
         );
@@ -96,6 +102,9 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
+    final l10n = AppLocalizations.of(context)!;
+
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
 
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (!next.isLoading &&
@@ -139,14 +148,16 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Icon(
-                  Icons.arrow_back_ios_new,
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.arrow_forward_ios
+                      : Icons.arrow_back_ios_new,
                   size: 20.w,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               SizedBox(height: 40.h),
               Text(
-                'Verify\nCode',
+                l10n.verifyCodeTitle,
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize32,
                   fontWeight: FontWeight.w700,
@@ -156,7 +167,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'Enter the 6-digit code sent to ${widget.email}',
+                l10n.enterCodeSentTo(widget.email),
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize14,
                   fontWeight: FontWeight.w400,
@@ -233,7 +244,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
               ),
               SizedBox(height: 36.h),
               CustomAuthButton(
-                text: 'Verify Code',
+                text: l10n.verifyCode,
                 isLoading: authState.isLoading,
                 onTap: _onVerify,
               ),
@@ -243,7 +254,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                     ? GestureDetector(
                         onTap: _onResend,
                         child: Text(
-                          'Resend Code',
+                          l10n.resendCode,
                           style: TextStyle(
                             fontSize: AppTextStyles.fontSize14,
                             fontWeight: FontWeight.w500,
@@ -252,7 +263,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                         ),
                       )
                     : Text(
-                        'Resend code in ${_resendSeconds}s',
+                        l10n.resendCodeIn(_resendSeconds.toString()),
                         style: TextStyle(
                           fontSize: AppTextStyles.fontSize14,
                           fontWeight: FontWeight.w400,

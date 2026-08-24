@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/theme/app_text_styles.dart';
@@ -54,6 +55,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
     if (!_formKey.currentState!.validate()) return;
 
     _sendCodeRequested = true;
+    final l10n = AppLocalizations.of(context)!;
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
     ref.read(authStateProvider.notifier).sendResetCode(
           email: _emailController.text.trim(),
         );
@@ -62,6 +65,9 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
+    final l10n = AppLocalizations.of(context)!;
+
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
 
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (!next.isLoading &&
@@ -104,14 +110,16 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Icon(
-                      Icons.arrow_back_ios_new,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.arrow_forward_ios
+                          : Icons.arrow_back_ios_new,
                       size: 20.w,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: 40.h),
                   Text(
-                    'Forgot\nPassword',
+                    l10n.forgotPasswordTitle,
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize32,
                       fontWeight: FontWeight.w700,
@@ -121,7 +129,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Enter your email to receive a verification code',
+                    l10n.enterEmailForCode,
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize14,
                       fontWeight: FontWeight.w400,
@@ -145,7 +153,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                           SizedBox(width: 12.w),
                           Expanded(
                             child: Text(
-                              'Verification code sent! Check your inbox.',
+                              l10n.verificationCodeSent,
                               style: TextStyle(
                                 fontSize: AppTextStyles.fontSize13,
                                 color: AppColors.successGreen800,
@@ -157,7 +165,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                     ),
                     SizedBox(height: 24.h),
                     CustomAuthButton(
-                      text: 'Enter Code',
+                      text: l10n.enterCode,
                       onTap: () {
                         Navigator.pushNamed(
                           context,
@@ -169,13 +177,17 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage>
                   ] else ...[
                     CustomAuthTextField(
                       controller: _emailController,
-                      hint: 'Email',
+                      hint: l10n.email,
                       keyboardType: TextInputType.emailAddress,
-                      validator: FormValidators.validateEmail,
+                      validator: (value) => FormValidators.validateEmail(
+                        value,
+                        emptyError: l10n.emailRequired,
+                        invalidError: l10n.emailInvalid,
+                      ),
                     ),
                     SizedBox(height: 36.h),
                     CustomAuthButton(
-                      text: 'Send Verification Code',
+                      text: l10n.sendVerificationCode,
                       isLoading: authState.isLoading,
                       onTap: _onSendCode,
                     ),

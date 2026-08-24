@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/l10n/language_provider.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/theme/theme_provider.dart';
@@ -20,9 +22,15 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final themeMode = ref.watch(themeProvider);
+    final locale = ref.watch(localeProvider);
     final notificationsEnabled = ref.watch(notificationsEnabledProvider);
     final authState = ref.watch(authStateProvider);
     final isGuest = authState.isGuest;
+
+    final l10n = AppLocalizations.of(context)!;
+    final languageDisplayName = locale.languageCode == 'ar'
+        ? l10n.arabicLanguageName
+        : l10n.englishLanguageName;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -31,11 +39,16 @@ class SettingsPage extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward
+                : Icons.arrow_back,
+            color: colorScheme.onSurface,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: CustomText(
-          text: 'SETTINGS',
+          text: l10n.settingsTitle,
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -48,35 +61,29 @@ class SettingsPage extends ConsumerWidget {
         child: Column(
           children: [
             SettingsSection(
-              title: 'GENERAL',
+              title: l10n.generalSection,
               children: [
                 SettingsTile(
                   icon: Icons.language_outlined,
-                  title: 'Language',
-                  subtitle: 'English (US)',
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Language selection coming soon'),
-                      ),
-                    );
-                  },
+                  title: l10n.languageLabel,
+                  subtitle: languageDisplayName,
+                  onTap: () => _showLanguagePicker(context, ref),
                 ),
               ],
             ),
             SizedBox(height: 24.h),
             SettingsSection(
-              title: 'APPEARANCE',
+              title: l10n.appearanceSection,
               children: [_ThemeSelector(themeMode: themeMode, ref: ref)],
             ),
             SizedBox(height: 24.h),
             SettingsSection(
-              title: 'NOTIFICATIONS',
+              title: l10n.notificationsSection,
               children: [
                 SettingsTileSwitch(
                   icon: Icons.notifications_outlined,
-                  title: 'Push Notifications',
-                  subtitle: 'Receive order updates and promotions',
+                  title: l10n.pushNotifications,
+                  subtitle: l10n.pushNotificationsSubtitle,
                   value: notificationsEnabled,
                   onChanged: (value) {
                     ref.read(notificationsEnabledProvider.notifier).state =
@@ -87,45 +94,45 @@ class SettingsPage extends ConsumerWidget {
             ),
             SizedBox(height: 24.h),
             SettingsSection(
-              title: 'PRIVACY',
+              title: l10n.privacySection,
               children: [
                 SettingsTile(
                   icon: Icons.privacy_tip_outlined,
-                  title: 'Privacy Policy',
-                  onTap: () => _showPlaceholder(context, 'Privacy Policy'),
+                  title: l10n.privacyPolicy,
+                  onTap: () => _showPlaceholder(context, l10n.privacyPolicy),
                 ),
                 SettingsTile(
                   icon: Icons.description_outlined,
-                  title: 'Terms & Conditions',
-                  onTap: () => _showPlaceholder(context, 'Terms & Conditions'),
+                  title: l10n.termsConditions,
+                  onTap: () => _showPlaceholder(context, l10n.termsConditions),
                 ),
               ],
             ),
             SizedBox(height: 24.h),
             SettingsSection(
-              title: 'SUPPORT',
+              title: l10n.supportSection,
               children: [
                 SettingsTile(
                   icon: Icons.support_agent_outlined,
-                  title: 'Contact Support',
-                  subtitle: 'Get help with your account',
-                  onTap: () => _showPlaceholder(context, 'Contact Support'),
+                  title: l10n.contactSupport,
+                  subtitle: l10n.contactSupportSubtitle,
+                  onTap: () => _showPlaceholder(context, l10n.contactSupport),
                 ),
               ],
             ),
             SizedBox(height: 24.h),
             SettingsSection(
-              title: 'ABOUT',
+              title: l10n.aboutSection,
               children: [
                 SettingsTile(
                   icon: Icons.info_outline,
-                  title: 'About App',
-                  subtitle: 'Version 1.0.0',
+                  title: l10n.aboutApp,
+                  subtitle: l10n.versionLabel,
                   onTap: () => _showAboutDialog(context),
                 ),
                 SettingsTile(
                   icon: isGuest ? Icons.login : Icons.logout,
-                  title: isGuest ? 'Sign In' : 'Logout',
+                  title: isGuest ? l10n.signInSection : l10n.logoutSection,
                   isDestructive: !isGuest,
                   onTap: () => _handleLogout(context, ref),
                 ),
@@ -139,12 +146,82 @@ class SettingsPage extends ConsumerWidget {
   }
 
   void _showPlaceholder(BuildContext context, String title) {
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('$title coming soon')));
+    ).showSnackBar(SnackBar(content: Text(l10n.comingSoon(title))));
+  }
+
+  void _showLanguagePicker(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.read(localeProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    final languages = [
+      (locale: const Locale('en'), name: l10n.englishLanguageName),
+      (locale: const Locale('ar'), name: l10n.arabicLanguageName),
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 8.h),
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: colorScheme.outline,
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              CustomText(
+                text: l10n.languageLabel,
+                size: 16,
+                weight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+              SizedBox(height: 8.h),
+              ...languages.map((lang) {
+                final isSelected = currentLocale.languageCode ==
+                    lang.locale.languageCode;
+                return ListTile(
+                  title: CustomText(
+                    text: lang.name,
+                    size: 14,
+                    color: isSelected
+                        ? AppColors.accent
+                        : colorScheme.onSurface,
+                  ),
+                  trailing: isSelected
+                      ? Icon(Icons.check, color: AppColors.accent, size: 20.w)
+                      : null,
+                  onTap: () {
+                    ref
+                        .read(localeProvider.notifier)
+                        .setLocale(lang.locale);
+                    Navigator.pop(context);
+                  },
+                );
+              }),
+              SizedBox(height: 8.h),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _showAboutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showAboutDialog(
       context: context,
       applicationName: 'MaxFashion',
@@ -154,7 +231,7 @@ class SettingsPage extends ConsumerWidget {
         size: 40.w,
         color: AppColors.accent,
       ),
-      children: [const Text('Your premium fashion destination.')],
+      children: [Text(l10n.aboutDescription)],
     );
   }
 
@@ -184,6 +261,7 @@ class _ThemeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
@@ -203,26 +281,26 @@ class _ThemeSelector extends StatelessWidget {
                 size: 22.w,
               ),
               SizedBox(width: 14.w),
-              CustomText(text: 'Theme', size: 14, color: colorScheme.onSurface),
+              CustomText(text: l10n.themeLabel, size: 14, color: colorScheme.onSurface),
             ],
           ),
           SizedBox(height: 12.h),
           SegmentedButton<ThemeMode>(
-            segments: const [
+            segments: [
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.light,
-                label: Text('Light', style: TextStyle(fontSize: 12)),
-                icon: Icon(Icons.light_mode),
+                label: Text(l10n.themeLight, style: const TextStyle(fontSize: 12)),
+                icon: const Icon(Icons.light_mode),
               ),
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.dark,
-                label: Text('Dark', style: TextStyle(fontSize: 12)),
-                icon: Icon(Icons.dark_mode),
+                label: Text(l10n.themeDark, style: const TextStyle(fontSize: 12)),
+                icon: const Icon(Icons.dark_mode),
               ),
               ButtonSegment<ThemeMode>(
                 value: ThemeMode.system,
-                label: Text('System', style: TextStyle(fontSize: 12)),
-                icon: Icon(Icons.settings_brightness),
+                label: Text(l10n.themeSystem, style: const TextStyle(fontSize: 12)),
+                icon: const Icon(Icons.settings_brightness),
               ),
             ],
             selected: {themeMode},

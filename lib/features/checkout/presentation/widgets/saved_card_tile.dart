@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/card_utils.dart';
 import 'package:max/data/models/payment_card_model.dart';
@@ -20,6 +21,7 @@ class SavedCardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -53,7 +55,7 @@ class SavedCardTile extends StatelessWidget {
                   ),
                   Gap(2.h),
                   CustomText(
-                    text: 'Expires ${card.expiry}',
+                    text: l10n.expiresLabel(card.expiry),
                     size: 12,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -71,7 +73,7 @@ class SavedCardTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: CustomText(
-                  text: 'DEFAULT',
+                  text: l10n.defaultBadge,
                   size: 9,
                   color: Theme.of(context).colorScheme.surface,
                   spacing: 1,
@@ -79,7 +81,7 @@ class SavedCardTile extends StatelessWidget {
               ),
             if (isSelected)
               Padding(
-                padding: EdgeInsets.only(left: 8.w),
+                padding: EdgeInsetsDirectional.only(start: 8.w),
                 child: Icon(
                   Icons.check_circle,
                   color: Theme.of(context).colorScheme.onSurface,

@@ -35,7 +35,7 @@ class LoadableListState<T> {
       return LoadableListState(items: items);
     } catch (_) {
       return LoadableListState(
-        error: errorMessage ?? 'Something went wrong. Please try again.',
+        error: errorMessage,
       );
     }
   }

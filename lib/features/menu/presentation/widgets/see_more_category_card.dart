@@ -3,6 +3,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class SeeMoreCategoryCard extends StatefulWidget {
   const SeeMoreCategoryCard({super.key, required this.onTap});
@@ -40,6 +41,7 @@ class _SeeMoreCategoryCardState extends State<SeeMoreCategoryCard>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -70,7 +72,7 @@ class _SeeMoreCategoryCardState extends State<SeeMoreCategoryCard>
             ),
             Gap(6.h),
             CustomText(
-              text: 'See More',
+              text: l10n.seeMore,
               size: 11,
               weight: FontWeight.bold,
               spacing: 2,

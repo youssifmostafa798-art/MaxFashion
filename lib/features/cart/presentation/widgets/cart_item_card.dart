@@ -3,6 +3,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class CartItemCard extends StatelessWidget {
   const CartItemCard({
@@ -34,6 +35,7 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Dismissible(
@@ -44,8 +46,8 @@ class CartItemCard extends StatelessWidget {
         onRemove();
       },
       background: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 24.w),
+        alignment: AlignmentDirectional.centerEnd,
+        padding: EdgeInsetsDirectional.only(end: 24.w),
         margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
           color: Colors.red.shade300,
@@ -113,7 +115,7 @@ class CartItemCard extends StatelessWidget {
                   ),
                   Gap(6.h),
                   CustomText(
-                    text: '\$${price.toStringAsFixed(2)}',
+                    text: l10n.priceValue(price.toStringAsFixed(2)),
                     size: 15,
                     weight: FontWeight.w600,
                     color: colorScheme.onSurface,
@@ -134,7 +136,7 @@ class CartItemCard extends StatelessWidget {
                           ),
                           SizedBox(width: 4.w),
                           CustomText(
-                            text: selectedColor!,
+                            text: l10n.colorLabel(selectedColor!),
                             size: 12,
                             color: colorScheme.onSurfaceVariant,
                           ),
@@ -146,7 +148,7 @@ class CartItemCard extends StatelessWidget {
                           ),
                         if (selectedSize.isNotEmpty)
                           CustomText(
-                            text: 'Size: $selectedSize',
+                            text: l10n.sizeLabel(selectedSize),
                             size: 12,
                             color: colorScheme.onSurfaceVariant,
                           ),

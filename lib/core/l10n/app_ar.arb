@@ -1,0 +1,1263 @@
+{
+  "@@locale": "ar",
+  "appName": "ماكس فاشن",
+  "@appName": {
+    "description": "The application name"
+  },
+  "languageName": "العربية",
+  "@languageName": {
+    "description": "The name of the current language in its own script"
+  },
+  "englishLanguageName": "English",
+  "@englishLanguageName": {
+    "description": "The name of the English language in its own script"
+  },
+  "arabicLanguageName": "العربية",
+  "@arabicLanguageName": {
+    "description": "The name of the Arabic language in its own script"
+  },
+  "signInRequired": "تسجيل الدخول مطلوب",
+  "@signInRequired": {
+    "description": "Title for the sign-in required dialog"
+  },
+  "signInRequiredMessage": "يرجى تسجيل الدخول للوصول إلى هذه الميزة.",
+  "@signInRequiredMessage": {
+    "description": "Default message for the sign-in required dialog"
+  },
+  "signIn": "تسجيل الدخول",
+  "@signIn": {
+    "description": "Label for the sign-in button"
+  },
+  "createAccount": "إنشاء حساب",
+  "@createAccount": {
+    "description": "Label for the create account button"
+  },
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Label for cancel buttons"
+  },
+  "gotIt": "حسناً",
+  "@gotIt": {
+    "description": "Label for the dismiss/acknowledge button"
+  },
+  "confirm": "تأكيد",
+  "@confirm": {
+    "description": "Label for confirm buttons"
+  },
+  "emailRequired": "يرجى إدخال بريدك الإلكتروني",
+  "@emailRequired": {
+    "description": "Validation message when email field is empty"
+  },
+  "emailInvalid": "عنوان بريد إلكتروني غير صالح",
+  "@emailInvalid": {
+    "description": "Validation message when email format is invalid"
+  },
+  "passwordRequired": "يرجى إدخال كلمة المرور",
+  "@passwordRequired": {
+    "description": "Validation message when password field is empty"
+  },
+  "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+  "@passwordTooShort": {
+    "description": "Validation message when password is too short"
+  },
+  "fieldRequired": "يرجى ملء هذا الحقل",
+  "@fieldRequired": {
+    "description": "Generic validation message when a required field is empty"
+  },
+  "searchHint": "بحث....",
+  "@searchHint": {
+    "description": "Placeholder text in the search bar"
+  },
+  "genericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "@genericError": {
+    "description": "Default error message for unexpected failures"
+  },
+  "loadFailed": "تعذّر تحميل المحتوى. يرجى المحاولة مرة أخرى.",
+  "@loadFailed": {
+    "description": "Generic error when content fails to load"
+  },
+  "operationFailed": "تعذّر إتمام العملية. يرجى المحاولة مرة أخرى.",
+  "@operationFailed": {
+    "description": "Generic error when an action fails to complete"
+  },
+  "memberSince": "عضو منذ {date}",
+  "@memberSince": {
+    "description": "Text showing when a user became a member",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "يناير ٢٠٢٤"
+      }
+    }
+  },
+  "cardBrand": "بطاقة",
+  "@cardBrand": {
+    "description": "Generic fallback label for unknown card brands"
+  },
+  "welcomeBack": "مرحباً بعودتك",
+  "@welcomeBack": {
+    "description": "Title text on the login page"
+  },
+  "signInToContinue": "سجل الدخول للمتابعة",
+  "@signInToContinue": {
+    "description": "Subtitle text on the login page"
+  },
+  "email": "البريد الإلكتروني",
+  "@email": {
+    "description": "Hint text for email input field"
+  },
+  "password": "كلمة المرور",
+  "@password": {
+    "description": "Hint text for password input field"
+  },
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "@forgotPassword": {
+    "description": "Link text to navigate to forgot password page"
+  },
+  "rememberMe": "تذكرني",
+  "@rememberMe": {
+    "description": "Label for the remember me checkbox"
+  },
+  "or": "أو",
+  "@or": {
+    "description": "Separator text between login options"
+  },
+  "signUp": "إنشاء حساب",
+  "@signUp": {
+    "description": "Label for the sign-up button"
+  },
+  "createAccountTitle": "إنشاء\nحساب",
+  "@createAccountTitle": {
+    "description": "Title text on the signup page"
+  },
+  "signUpToGetStarted": "أنشئ حسابك للبدء",
+  "@signUpToGetStarted": {
+    "description": "Subtitle text on the signup page"
+  },
+  "fullName": "الاسم الكامل",
+  "@fullName": {
+    "description": "Hint text for full name input field"
+  },
+  "phoneNumber": "رقم الهاتف",
+  "@phoneNumber": {
+    "description": "Hint text for phone number input field"
+  },
+  "confirmPassword": "تأكيد كلمة المرور",
+  "@confirmPassword": {
+    "description": "Hint text for confirm password input field"
+  },
+  "pleaseEnterName": "يرجى إدخال اسمك",
+  "@pleaseEnterName": {
+    "description": "Validation message when name field is empty"
+  },
+  "pleaseEnterPhone": "يرجى إدخال رقم هاتفك",
+  "@pleaseEnterPhone": {
+    "description": "Validation message when phone field is empty"
+  },
+  "phoneMustBe11Digits": "يجب أن يكون رقم الهاتف 11 رقم",
+  "@phoneMustBe11Digits": {
+    "description": "Validation message when phone number is not 11 digits"
+  },
+  "enterValidEgyptianPhone": "أدخل رقم هاتف مصري صالح",
+  "@enterValidEgyptianPhone": {
+    "description": "Validation message when phone format is invalid"
+  },
+  "pleaseConfirmPassword": "يرجى تأكيد كلمة المرور",
+  "@pleaseConfirmPassword": {
+    "description": "Validation message when confirm password field is empty"
+  },
+  "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+  "@passwordsDoNotMatch": {
+    "description": "Validation message when passwords do not match"
+  },
+  "emailConfirmationSent": "تم إرسال بريد التأكيد! يرجى التحقق من صندوق الوارد وتأكيد بريدك الإلكتروني، ثم تسجيل الدخول.",
+  "@emailConfirmationSent": {
+    "description": "Info message shown after signup with email confirmation"
+  },
+  "forgotPasswordTitle": "نسيت\nكلمة المرور",
+  "@forgotPasswordTitle": {
+    "description": "Title text on the forgot password page"
+  },
+  "enterEmailForCode": "أدخل بريدك الإلكتروني لتستلم رمز التحقق",
+  "@enterEmailForCode": {
+    "description": "Subtitle text on the forgot password page"
+  },
+  "verificationCodeSent": "تم إرسال رمز التحقق! تحقق من صندوق الوارد.",
+  "@verificationCodeSent": {
+    "description": "Info message shown when verification code is sent"
+  },
+  "enterCode": "إدخال الرمز",
+  "@enterCode": {
+    "description": "Button text to enter verification code"
+  },
+  "sendVerificationCode": "إرسال رمز التحقق",
+  "@sendVerificationCode": {
+    "description": "Button text to send verification code"
+  },
+  "verifyCodeTitle": "التحقق\nمن الرمز",
+  "@verifyCodeTitle": {
+    "description": "Title text on the verify code page"
+  },
+  "enterCodeSentTo": "أدخل الرمز المكون من 6 أرقام المرسل إلى {email}",
+  "@enterCodeSentTo": {
+    "description": "Subtitle text on the verify code page",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "user@example.com"
+      }
+    }
+  },
+  "pleaseEnterFullCode": "يرجى إدخال الرمز المكون من 6 أرقام بالكامل",
+  "@pleaseEnterFullCode": {
+    "description": "Validation message when OTP code is incomplete"
+  },
+  "verifyCode": "تحقق من الرمز",
+  "@verifyCode": {
+    "description": "Button text to verify the code"
+  },
+  "resendCode": "إعادة إرسال الرمز",
+  "@resendCode": {
+    "description": "Link text to resend verification code"
+  },
+  "resendCodeIn": "إعادة الإرسال خلال {seconds} ثانية",
+  "@resendCodeIn": {
+    "description": "Countdown text before resend is available",
+    "placeholders": {
+      "seconds": {
+        "type": "String",
+        "example": "60"
+      }
+    }
+  },
+  "newPasswordTitle": "كلمة المرور\nالجديدة",
+  "@newPasswordTitle": {
+    "description": "Title text on the reset password page"
+  },
+  "createNewPasswordSubtitle": "أنشئ كلمة مرور جديدة لحسابك",
+  "@createNewPasswordSubtitle": {
+    "description": "Subtitle text on the reset password page"
+  },
+  "passwordUpdatedSuccess": "تم تحديث كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+  "@passwordUpdatedSuccess": {
+    "description": "Success message after password is updated"
+  },
+  "goToLogin": "الذهاب لتسجيل الدخول",
+  "@goToLogin": {
+    "description": "Button text to navigate to login after password reset"
+  },
+  "newPassword": "كلمة المرور الجديدة",
+  "@newPassword": {
+    "description": "Hint text for new password input field"
+  },
+  "updatePassword": "تحديث كلمة المرور",
+  "@updatePassword": {
+    "description": "Button text to update the password"
+  },
+  "accountAlreadyExists": "يوجد حساب بالفعل بهذا البريد الإلكتروني.",
+  "@accountAlreadyExists": {
+    "description": "Error when trying to sign up with an existing email"
+  },
+  "incorrectEmailOrPassword": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  "@incorrectEmailOrPassword": {
+    "description": "Error when login credentials are wrong"
+  },
+  "invalidOrExpiredCode": "رمز غير صالح أو منتهي الصلاحية. يرجى المحاولة مرة أخرى.",
+  "@invalidOrExpiredCode": {
+    "description": "Error when verification code is invalid or expired"
+  },
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت. يرجى التحقق من شبكتك.",
+  "@noInternetConnection": {
+    "description": "Error when network is unavailable"
+  },
+  "connectionTimedOut": "انتهت مهلة الاتصال. يرجى المحاولة مرة أخرى.",
+  "@connectionTimedOut": {
+    "description": "Error when connection times out"
+  },
+  "pleaseWaitBeforeResend": "يرجى الانتظار قبل طلب رمز آخر.",
+  "@pleaseWaitBeforeResend": {
+    "description": "Error when code resend is rate-limited"
+  },
+  "couldNotLoadProfile": "تعذر تحميل الملف الشخصي. يرجى المحاولة مرة أخرى.",
+  "@couldNotLoadProfile": {
+    "description": "Error when user profile fails to load"
+  },
+  "alreadyHaveAccount": "لديك حساب بالفعل",
+  "@alreadyHaveAccount": {
+    "description": "Button text for users who already have an account"
+  },
+  "continueAsGuest": "المتابعة كضيف",
+  "@continueAsGuest": {
+    "description": "Link text to continue as a guest user"
+  },
+  "exploreCollections": "استكشف المجموعات",
+  "@exploreCollections": {
+    "description": "Section title on the home page"
+  },
+  "allCategory": "الكل",
+  "@allCategory": {
+    "description": "Label for the 'All' category filter"
+  },
+  "noProductsFound": "لم يتم العثور على منتجات",
+  "@noProductsFound": {
+    "description": "Empty state message when no products are available"
+  },
+  "about": "حول",
+  "@about": {
+    "description": "Label for the about section link"
+  },
+  "contact": "اتصل بنا",
+  "@contact": {
+    "description": "Label for the contact section link"
+  },
+  "blog": "المدونة",
+  "@blog": {
+    "description": "Label for the blog section link"
+  },
+  "menu": "القائمة",
+  "@menu": {
+    "description": "Label for the menu section or bottom nav item"
+  },
+  "categories": "الأقسام",
+  "@categories": {
+    "description": "Label for the categories section"
+  },
+  "shopBy": "تسوق حسب",
+  "@shopBy": {
+    "description": "Title for the shop-by section in the menu"
+  },
+  "allCategories": "جميع الأقسام",
+  "@allCategories": {
+    "description": "Title for the all-categories page"
+  },
+  "noCategoriesFound": "لم يتم العثور على أقسام",
+  "@noCategoriesFound": {
+    "description": "Empty state message when no categories are available"
+  },
+  "categoriesCount": "{count} أقسام",
+  "@categoriesCount": {
+    "description": "Text showing the number of categories",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "5"
+      }
+    }
+  },
+  "newArrivals": "وصل حديثاً",
+  "@newArrivals": {
+    "description": "Label for the new arrivals shop-by item"
+  },
+  "trendingNow": "الرائج الآن",
+  "@trendingNow": {
+    "description": "Label for the trending-now shop-by item"
+  },
+  "bestSellers": "الأكثر مبيعاً",
+  "@bestSellers": {
+    "description": "Label for the best-sellers shop-by item"
+  },
+  "onlineExclusive": "حصري عبر الإنترنت",
+  "@onlineExclusive": {
+    "description": "Label for the online-exclusive shop-by item"
+  },
+  "seeMore": "عرض المزيد",
+  "@seeMore": {
+    "description": "Link text to see more items"
+  },
+  "searchCategoriesHint": "بحث في الأقسام...",
+  "@searchCategoriesHint": {
+    "description": "Placeholder text in the menu search bar"
+  },
+  "size": "المقاس",
+  "@size": {
+    "description": "Label for the size selector section"
+  },
+  "sizeLabel": "المقاس: {size}",
+  "@sizeLabel": {
+    "description": "Label showing the selected size in cart/wishlist items",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "M"
+      }
+    }
+  },
+  "estimatedTotal": "الإجمالي التقديري",
+  "@estimatedTotal": {
+    "description": "Label for the estimated total price"
+  },
+  "addToCart": "أضف إلى السلة",
+  "@addToCart": {
+    "description": "Button text to add item to cart"
+  },
+  "signInToAddToBag": "سجّل الدخول لإضافة منتجات إلى حقيبتك.",
+  "@signInToAddToBag": {
+    "description": "Dialog message prompting guest to sign in to add items"
+  },
+  "itemsCount": "{count} منتجات",
+  "@itemsCount": {
+    "description": "Text showing the number of items",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "12"
+      }
+    }
+  },
+  "noItemsInCategory": "لا توجد منتجات في {category} بعد",
+  "@noItemsInCategory": {
+    "description": "Empty state message when no items exist in a category",
+    "placeholders": {
+      "category": {
+        "type": "String",
+        "example": "أحذية"
+      }
+    }
+  },
+  "priceValue": "${price}",
+  "@priceValue": {
+    "description": "Formatted price value with dollar sign",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "29.99"
+      }
+    }
+  },
+  "searchOnHomeHint": "ابحث عن منتجات...",
+  "@searchOnHomeHint": {
+    "description": "Placeholder text for search on home context"
+  },
+  "searchInCategoryHint": "بحث في هذا القسم...",
+  "@searchInCategoryHint": {
+    "description": "Placeholder text for search in category context"
+  },
+  "searchInBagHint": "بحث في حقيبتك...",
+  "@searchInBagHint": {
+    "description": "Placeholder text for search in bag context"
+  },
+  "searchInWishlistHint": "بحث في قائمة الأمنيات...",
+  "@searchInWishlistHint": {
+    "description": "Placeholder text for search in wishlist context"
+  },
+  "searchInOrdersHint": "بحث في الطلبات...",
+  "@searchInOrdersHint": {
+    "description": "Placeholder text for search in orders context"
+  },
+  "recentSearches": "عمليات البحث الأخيرة",
+  "@recentSearches": {
+    "description": "Section header for recent search history"
+  },
+  "clearAll": "مسح الكل",
+  "@clearAll": {
+    "description": "Button text to clear all recent searches"
+  },
+  "suggestedForYou": "مقترحات لك",
+  "@suggestedForYou": {
+    "description": "Section header for suggested search terms"
+  },
+  "popularCategories": "الأقسام الشائعة",
+  "@popularCategories": {
+    "description": "Section header for popular categories"
+  },
+  "loadMoreResults": "تحميل المزيد من النتائج",
+  "@loadMoreResults": {
+    "description": "Button text to load more search results"
+  },
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "@noResultsFound": {
+    "description": "Empty state title when no search results match"
+  },
+  "tryAnotherKeyword": "جرّب كلمة بحث أخرى",
+  "@tryAnotherKeyword": {
+    "description": "Empty state subtitle suggesting to try a different search"
+  },
+  "myBag": "حقيبتي",
+  "@myBag": {
+    "description": "AppBar title for the cart page"
+  },
+  "loadingBag": "جاري تحميل حقيبتك...",
+  "@loadingBag": {
+    "description": "Loading state text on the cart page"
+  },
+  "subtotal": "المجموع الفرعي",
+  "@subtotal": {
+    "description": "Label for the cart subtotal"
+  },
+  "delivery": "التوصيل",
+  "@delivery": {
+    "description": "Label for delivery cost in cart summary"
+  },
+  "free": "مجاني",
+  "@free": {
+    "description": "Text indicating free delivery"
+  },
+  "checkout": "إتمام الشراء",
+  "@checkout": {
+    "description": "Button text to proceed to checkout"
+  },
+  "yourBagIsEmpty": "حقيبتك فارغة",
+  "@yourBagIsEmpty": {
+    "description": "Empty state title for the cart page"
+  },
+  "addItemsToGetStarted": "أضف منتجات للبدء",
+  "@addItemsToGetStarted": {
+    "description": "Empty state subtitle for the cart page"
+  },
+  "startShopping": "ابدأ التسوق",
+  "@startShopping": {
+    "description": "CTA button text on empty cart page"
+  },
+  "signInToViewBag": "سجّل الدخول لعرض حقيبتك",
+  "@signInToViewBag": {
+    "description": "Title on guest cart page prompting sign-in"
+  },
+  "saveItemsAcrossDevices": "احفظ المنتجات وأتمم الشراء عبر الأجهزة.",
+  "@saveItemsAcrossDevices": {
+    "description": "Subtitle on guest cart/wishlist pages"
+  },
+  "wishlist": "قائمة الأمنيات",
+  "@wishlist": {
+    "description": "Label for the wishlist page or section"
+  },
+  "productAddedToCart": "تمت إضافة {productName} إلى السلة",
+  "@productAddedToCart": {
+    "description": "SnackBar message when a product is added to cart from wishlist",
+    "placeholders": {
+      "productName": {
+        "type": "String",
+        "example": "جاكيت أزرق"
+      }
+    }
+  },
+  "wishlistEmpty": "قائمة أمنياتك فارغة",
+  "@wishlistEmpty": {
+    "description": "Empty state title for the wishlist page"
+  },
+  "saveFavoritesHere": "احفظ منتجاتك المفضلة هنا.",
+  "@saveFavoritesHere": {
+    "description": "Empty state subtitle for the wishlist page"
+  },
+  "continueShopping": "متابعة التسوق",
+  "@continueShopping": {
+    "description": "CTA button text on empty wishlist page"
+  },
+  "signInToViewWishlist": "سجّل الدخول لعرض قائمة أمنياتك",
+  "@signInToViewWishlist": {
+    "description": "Title on guest wishlist page prompting sign-in"
+  },
+  "moveToCart": "نقل إلى السلة",
+  "@moveToCart": {
+    "description": "Button text to move a wishlist item to cart"
+  },
+  "allCollections": "جميع المجموعات",
+  "@allCollections": {
+    "description": "AppBar title for the all-collections page"
+  },
+  "collectionFailed": "فشل تحميل المجموعات",
+  "@collectionFailed": {
+    "description": "Error message when collections fail to load"
+  },
+  "noCollectionsFound": "لم يتم العثور على مجموعات",
+  "@noCollectionsFound": {
+    "description": "Empty state message when no collections are available"
+  },
+  "collectionsCount": "{count} مجموعات",
+  "@collectionsCount": {
+    "description": "Text showing the number of collections",
+    "placeholders": {
+      "count": {
+        "type": "String",
+        "example": "8"
+      }
+    }
+  },
+  "noItemsInCollection": "لا توجد منتجات في {collectionName} بعد",
+  "@noItemsInCollection": {
+    "description": "Empty state message when no items exist in a collection",
+    "placeholders": {
+      "collectionName": {
+        "type": "String",
+        "example": "تخفيضات الصيف"
+      }
+    }
+  },
+  "homeNav": "الرئيسية",
+  "@homeNav": {
+    "description": "Label for the home bottom navigation item"
+  },
+  "cartNav": "السلة",
+  "@cartNav": {
+    "description": "Label for the cart bottom navigation item"
+  },
+  "profileNav": "أنت",
+  "@profileNav": {
+    "description": "Label for the profile bottom navigation item"
+  },
+  "checkoutPageTitle": "إتمام الشراء",
+  "@checkoutPageTitle": {
+    "description": "AppBar title for the checkout page"
+  },
+  "shippingAddress": "عنوان الشحن",
+  "@shippingAddress": {
+    "description": "Section header for shipping address on checkout"
+  },
+  "addShippingAddress": "إضافة عنوان الشحن",
+  "@addShippingAddress": {
+    "description": "Button text to add a shipping address"
+  },
+  "shippingMethod": "طريقة الشحن",
+  "@shippingMethod": {
+    "description": "Section header for shipping method on checkout"
+  },
+  "pickupAtStore": "الاستلام من المتجر",
+  "@pickupAtStore": {
+    "description": "Label for pickup at store shipping method"
+  },
+  "savedPaymentMethods": "طرق الدفع المحفوظة",
+  "@savedPaymentMethods": {
+    "description": "Section header for saved payment methods on checkout"
+  },
+  "addNewCard": "إضافة بطاقة جديدة",
+  "@addNewCard": {
+    "description": "Button text to add a new payment card"
+  },
+  "paymentMethodLabel": "طريقة الدفع",
+  "@paymentMethodLabel": {
+    "description": "Section header for payment method on checkout"
+  },
+  "selectPaymentMethod": "اختر طريقة الدفع",
+  "@selectPaymentMethod": {
+    "description": "Button text to select a payment method"
+  },
+  "totalLabel": "الإجمالي",
+  "@totalLabel": {
+    "description": "Label for the order total on checkout"
+  },
+  "placeOrder": "تأكيد الطلب",
+  "@placeOrder": {
+    "description": "Button text to place the order"
+  },
+  "addPromoCode": "إضافة كود خصم",
+  "@addPromoCode": {
+    "description": "Button text to add a promo code"
+  },
+  "addCardButton": "إضافة بطاقة",
+  "@addCardButton": {
+    "description": "Button text to add a payment card"
+  },
+  "editAddressTitle": "تعديل العنوان",
+  "@editAddressTitle": {
+    "description": "Page title when editing an address"
+  },
+  "addAddressTitle": "إضافة عنوان",
+  "@addAddressTitle": {
+    "description": "Page title when adding a new address"
+  },
+  "addressLabelSection": "تسمية العنوان",
+  "@addressLabelSection": {
+    "description": "Section header for address label selection"
+  },
+  "homeLabel": "المنزل",
+  "@homeLabel": {
+    "description": "Address label for home"
+  },
+  "workLabel": "العمل",
+  "@workLabel": {
+    "description": "Address label for work"
+  },
+  "otherLabel": "أخرى",
+  "@otherLabel": {
+    "description": "Address label for other"
+  },
+  "streetAddressHint": "العنوان",
+  "@streetAddressHint": {
+    "description": "Hint text for street address input"
+  },
+  "apartmentHint": "شقة، جناح، إلخ (اختياري)",
+  "@apartmentHint": {
+    "description": "Hint text for apartment input"
+  },
+  "cityHint": "المدينة",
+  "@cityHint": {
+    "description": "Hint text for city input"
+  },
+  "stateHint": "المنطقة",
+  "@stateHint": {
+    "description": "Hint text for state input"
+  },
+  "zipCodeHint": "الرمز البريدي",
+  "@zipCodeHint": {
+    "description": "Hint text for ZIP code input"
+  },
+  "countryHint": "الدولة",
+  "@countryHint": {
+    "description": "Hint text for country input"
+  },
+  "updateButton": "تحديث",
+  "@updateButton": {
+    "description": "Button text to update an address"
+  },
+  "addNowButton": "إضافة الآن",
+  "@addNowButton": {
+    "description": "Button text to add an address"
+  },
+  "paymentSuccess": "تم الدفع بنجاح",
+  "@paymentSuccess": {
+    "description": "Title shown after successful payment"
+  },
+  "paymentSuccessMessage": "تم الدفع بنجاح",
+  "@paymentSuccessMessage": {
+    "description": "Message shown after successful payment"
+  },
+  "paymentIdLabel": "رقم الدفع",
+  "@paymentIdLabel": {
+    "description": "Label for the payment ID"
+  },
+  "ratePurchase": "قيّم مشترياتك",
+  "@ratePurchase": {
+    "description": "Label for rating section on success dialog"
+  },
+  "submit": "إرسال",
+  "@submit": {
+    "description": "Button text to submit rating"
+  },
+  "addedToCartTitle": "تمت الإضافة إلى السلة",
+  "@addedToCartTitle": {
+    "description": "Title shown when item is added to cart"
+  },
+  "itemAddedMessage": "تمت إضافة المنتج إلى سلتك بنجاح",
+  "@itemAddedMessage": {
+    "description": "Message shown when item is added to cart"
+  },
+  "reviewCartOrShop": "يمكنك مراجعة سلتك أو متابعة التسوق.",
+  "@reviewCartOrShop": {
+    "description": "Message shown after adding item to cart"
+  },
+  "readyToCheckout": "جاهز للشراء؟",
+  "@readyToCheckout": {
+    "description": "Label shown in add-to-cart dialog"
+  },
+  "viewCart": "عرض السلة",
+  "@viewCart": {
+    "description": "Button text to view the cart"
+  },
+  "shopMore": "تسوق المزيد",
+  "@shopMore": {
+    "description": "Button text to continue shopping"
+  },
+  "missingInformation": "معلومات ناقصة",
+  "@missingInformation": {
+    "description": "Title for missing information dialog"
+  },
+  "addShippingAddressError": "يرجى إضافة عنوان الشحن",
+  "@addShippingAddressError": {
+    "description": "Error message when shipping address is missing"
+  },
+  "selectPaymentMethodError": "يرجى اختيار طريقة الدفع",
+  "@selectPaymentMethodError": {
+    "description": "Error message when payment method is not selected"
+  },
+  "failedPlaceOrder": "فشل تأكيد الطلب. يرجى المحاولة مرة أخرى.",
+  "@failedPlaceOrder": {
+    "description": "Error message when order placement fails"
+  },
+  "cardEnding": "{brand} تنتهي بـ ••••{last4}",
+  "@cardEnding": {
+    "description": "Text showing card brand and last 4 digits",
+    "placeholders": {
+      "brand": { "type": "String", "example": "ماستركارد" },
+      "last4": { "type": "String", "example": "12" }
+    }
+  },
+  "sizeQtyLabel": "المقاس: {size}  الكمية: {quantity}",
+  "@sizeQtyLabel": {
+    "description": "Label showing size and quantity of a cart item",
+    "placeholders": {
+      "size": { "type": "String", "example": "M" },
+      "quantity": { "type": "String", "example": "2" }
+    }
+  },
+  "qtyLabel": "الكمية: {quantity}",
+  "@qtyLabel": {
+    "description": "Label showing quantity of a cart item",
+    "placeholders": {
+      "quantity": { "type": "String", "example": "2" }
+    }
+  },
+  "defaultBadge": "الافتراضي",
+  "@defaultBadge": {
+    "description": "Badge label for default payment method or address"
+  },
+  "signInToSaveFavorite": "سجّل الدخول لحفظ منتجاتك المفضلة.",
+  "@signInToSaveFavorite": {
+    "description": "Dialog message prompting guest to sign in to save favorites"
+  },
+  "rateExperience": "قيّم تجربتك",
+  "@rateExperience": {
+    "description": "Rating message for 0 stars"
+  },
+  "weCanDoBetter": "يمكننا أن نكون أفضل",
+  "@weCanDoBetter": {
+    "description": "Rating message for 1 star"
+  },
+  "thanksForFeedback": "شكراً على ملاحظاتك",
+  "@thanksForFeedback": {
+    "description": "Rating message for 2 stars"
+  },
+  "good": "جيد",
+  "@good": {
+    "description": "Rating message for 3 stars"
+  },
+  "great": "ممتاز",
+  "@great": {
+    "description": "Rating message for 4 stars"
+  },
+  "excellent": "رائع!",
+  "@excellent": {
+    "description": "Rating message for 5 stars"
+  },
+  "expiresLabel": "تنتهي صلاحيته {date}",
+  "@expiresLabel": {
+    "description": "Label showing card expiry date",
+    "placeholders": {
+      "date": { "type": "String", "example": "12/28" }
+    }
+  },
+  "cardAlreadySaved": "هذه البطاقة محفوظة بالفعل.",
+  "@cardAlreadySaved": {
+    "description": "SnackBar message when a duplicate card is detected"
+  },
+  "myOrders": "طلباتي",
+  "@myOrders": {
+    "description": "AppBar title for the orders page"
+  },
+  "signInToViewOrders": "سجّل الدخول لعرض طلباتك",
+  "@signInToViewOrders": {
+    "description": "Title on guest orders page prompting sign-in"
+  },
+  "trackPurchases": "تتبع مشترياتك وسجل طلباتك.",
+  "@trackPurchases": {
+    "description": "Subtitle on guest orders page"
+  },
+  "productsLabel": "المنتجات",
+  "@productsLabel": {
+    "description": "Section header for products in order details"
+  },
+  "colorLabel": "اللون: {color}",
+  "@colorLabel": {
+    "description": "Label showing the selected color",
+    "placeholders": {
+      "color": { "type": "String", "example": "أزرق" }
+    }
+  },
+  "totalItems": "الإجمالي ({count} منتجات)",
+  "@totalItems": {
+    "description": "Label showing total price and item count",
+    "placeholders": {
+      "count": { "type": "String", "example": "3" }
+    }
+  },
+  "deliveryAddressLabel": "عنوان التوصيل",
+  "@deliveryAddressLabel": {
+    "description": "Section header for delivery address in order details"
+  },
+  "noOrdersYet": "لم تقم بأي طلبات بعد",
+  "@noOrdersYet": {
+    "description": "Empty state title for the orders page"
+  },
+  "purchasesWillAppear": "ستظهر مشترياتك المكتملة هنا.",
+  "@purchasesWillAppear": {
+    "description": "Empty state subtitle for the orders page"
+  },
+  "orderPlaced": "تم الطلب",
+  "@orderPlaced": {
+    "description": "Timeline step title for order placed"
+  },
+  "statusProcessing": "قيد المعالجة",
+  "@statusProcessing": {
+    "description": "Order status label for processing"
+  },
+  "statusShipped": "تم الشحن",
+  "@statusShipped": {
+    "description": "Order status label for shipped"
+  },
+  "statusDelivered": "تم التوصيل",
+  "@statusDelivered": {
+    "description": "Order status label for delivered"
+  },
+  "statusCancelled": "ملغي",
+  "@statusCancelled": {
+    "description": "Order status label for cancelled"
+  },
+  "orderTimeline": "الجدول الزمني للطلب",
+  "@orderTimeline": {
+    "description": "Section header for order timeline"
+  },
+  "viewDetails": "عرض التفاصيل",
+  "@viewDetails": {
+    "description": "Button text to view order details"
+  },
+  "youTitle": "أنت",
+  "@youTitle": {
+    "description": "AppBar title for the profile page"
+  },
+  "guestUser": "ضيف",
+  "@guestUser": {
+    "description": "Display name for guest users"
+  },
+  "accountSection": "الحساب",
+  "@accountSection": {
+    "description": "Section header for account menu"
+  },
+  "editProfileMenu": "تعديل الملف الشخصي",
+  "@editProfileMenu": {
+    "description": "Menu item to edit profile"
+  },
+  "myOrdersMenu": "طلباتي",
+  "@myOrdersMenu": {
+    "description": "Menu item for my orders"
+  },
+  "wishlistMenu": "قائمة الأمنيات",
+  "@wishlistMenu": {
+    "description": "Menu item for wishlist"
+  },
+  "addressesMenu": "العناوين",
+  "@addressesMenu": {
+    "description": "Menu item for addresses"
+  },
+  "paymentMethodsMenu": "طرق الدفع",
+  "@paymentMethodsMenu": {
+    "description": "Menu item for payment methods"
+  },
+  "settingsMenu": "الإعدادات",
+  "@settingsMenu": {
+    "description": "Menu item for settings"
+  },
+  "featureProfileEditing": "تعديل الملف الشخصي",
+  "@featureProfileEditing": {
+    "description": "Feature name used in sign-in prompt for profile editing"
+  },
+  "featureYourOrders": "طلباتك",
+  "@featureYourOrders": {
+    "description": "Feature name used in sign-in prompt for orders"
+  },
+  "featureYourWishlist": "قائمة أمنياتك",
+  "@featureYourWishlist": {
+    "description": "Feature name used in sign-in prompt for wishlist"
+  },
+  "featureYourAddresses": "عناوينك",
+  "@featureYourAddresses": {
+    "description": "Feature name used in sign-in prompt for addresses"
+  },
+  "featurePaymentMethods": "طرق الدفع",
+  "@featurePaymentMethods": {
+    "description": "Feature name used in sign-in prompt for payment methods"
+  },
+  "pleaseSignInToAccessFeature": "يرجى تسجيل الدخول للوصول إلى {feature}.",
+  "@pleaseSignInToAccessFeature": {
+    "description": "Message prompting guest to sign in for a feature",
+    "placeholders": {
+      "feature": { "type": "String", "example": "طلباتك" }
+    }
+  },
+  "editProfileTitle": "تعديل الملف الشخصي",
+  "@editProfileTitle": {
+    "description": "AppBar title for the edit profile page"
+  },
+  "removePhoto": "إزالة الصورة",
+  "@removePhoto": {
+    "description": "Button text to remove profile photo"
+  },
+  "personalInformation": "المعلومات الشخصية",
+  "@personalInformation": {
+    "description": "Section header for personal information in edit profile"
+  },
+  "firstNameHint": "أدخل اسمك الأول",
+  "@firstNameHint": {
+    "description": "Hint text for first name input"
+  },
+  "firstNameLabel": "الاسم الأول",
+  "@firstNameLabel": {
+    "description": "Label for first name input"
+  },
+  "firstNameRequired": "الاسم الأول مطلوب",
+  "@firstNameRequired": {
+    "description": "Validation message when first name is empty"
+  },
+  "firstNameMaxLength": "يجب أن يكون الاسم الأول 50 حرفاً أو أقل",
+  "@firstNameMaxLength": {
+    "description": "Validation message when first name exceeds 50 chars"
+  },
+  "lastNameHint": "أدخل اسم العائلة",
+  "@lastNameHint": {
+    "description": "Hint text for last name input"
+  },
+  "lastNameLabel": "اسم العائلة",
+  "@lastNameLabel": {
+    "description": "Label for last name input"
+  },
+  "lastNameMaxLength": "يجب أن يكون اسم العائلة 50 حرفاً أو أقل",
+  "@lastNameMaxLength": {
+    "description": "Validation message when last name exceeds 50 chars"
+  },
+  "emailAddressHint": "بريدك الإلكتروني",
+  "@emailAddressHint": {
+    "description": "Hint text for email address input"
+  },
+  "emailLabel": "البريد الإلكتروني",
+  "@emailLabel": {
+    "description": "Label for email input"
+  },
+  "phoneHint": "أدخل رقم هاتفك",
+  "@phoneHint": {
+    "description": "Hint text for phone number input"
+  },
+  "phoneLabel": "رقم الهاتف",
+  "@phoneLabel": {
+    "description": "Label for phone number input"
+  },
+  "invalidPhone": "يرجى إدخال رقم هاتف صالح",
+  "@invalidPhone": {
+    "description": "Validation message when phone number is invalid"
+  },
+  "dobHint": "اختر تاريخ ميلادك",
+  "@dobHint": {
+    "description": "Hint text for date of birth input"
+  },
+  "dobLabel": "تاريخ الميلاد (اختياري)",
+  "@dobLabel": {
+    "description": "Label for date of birth input"
+  },
+  "additionalInfo": "معلومات إضافية",
+  "@additionalInfo": {
+    "description": "Section header for additional info in edit profile"
+  },
+  "genderHint": "اختر جنسك",
+  "@genderHint": {
+    "description": "Hint text for gender dropdown"
+  },
+  "genderLabel": "الجنس (اختياري)",
+  "@genderLabel": {
+    "description": "Label for gender dropdown"
+  },
+  "genderMale": "ذكر",
+  "@genderMale": {
+    "description": "Gender option for male"
+  },
+  "genderFemale": "أنثى",
+  "@genderFemale": {
+    "description": "Gender option for female"
+  },
+  "genderOther": "أخرى",
+  "@genderOther": {
+    "description": "Gender option for other"
+  },
+  "genderPreferNotToSay": "أفضّل عدم التوضيح",
+  "@genderPreferNotToSay": {
+    "description": "Gender option for prefer not to say"
+  },
+  "countryHintProfile": "أدخل بلدك",
+  "@countryHintProfile": {
+    "description": "Hint text for country input in edit profile"
+  },
+  "countryLabel": "الدولة (اختياري)",
+  "@countryLabel": {
+    "description": "Label for country input"
+  },
+  "countryMaxLength": "يجب أن تكون الدولة 50 حرفاً أو أقل",
+  "@countryMaxLength": {
+    "description": "Validation message when country exceeds 50 chars"
+  },
+  "bioHint": "أخبرنا عن نفسك",
+  "@bioHint": {
+    "description": "Hint text for bio input"
+  },
+  "bioLabel": "السيرة الذاتية (اختياري)",
+  "@bioLabel": {
+    "description": "Label for bio input"
+  },
+  "bioMaxLength": "يجب أن تكون السيرة الذاتية 200 حرفاً أو أقل",
+  "@bioMaxLength": {
+    "description": "Validation message when bio exceeds 200 chars"
+  },
+  "discardChanges": "تجاهل التغييرات؟",
+  "@discardChanges": {
+    "description": "Title for discard changes confirmation dialog"
+  },
+  "unsavedChangesMessage": "لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة؟",
+  "@unsavedChangesMessage": {
+    "description": "Message for discard changes confirmation dialog"
+  },
+  "discardButton": "تجاهل",
+  "@discardButton": {
+    "description": "Button text to discard changes"
+  },
+  "saveChanges": "حفظ التغييرات",
+  "@saveChanges": {
+    "description": "Button text to save profile changes"
+  },
+  "profileUpdated": "تم تحديث الملف الشخصي",
+  "@profileUpdated": {
+    "description": "Title for profile updated success dialog"
+  },
+  "profileUpdatedMessage": "تم حفظ معلومات ملفك الشخصي بنجاح.",
+  "@profileUpdatedMessage": {
+    "description": "Message for profile updated success dialog"
+  },
+  "deleteCardConfirm": "حذف البطاقة؟",
+  "@deleteCardConfirm": {
+    "description": "Title for delete card confirmation dialog"
+  },
+  "cannotUndo": "لا يمكن التراجع عن هذا الإجراء.",
+  "@cannotUndo": {
+    "description": "Warning message for destructive actions"
+  },
+  "deleteButton": "حذف",
+  "@deleteButton": {
+    "description": "Button text for delete confirmation"
+  },
+  "noSavedCards": "لا توجد طرق دفع محفوظة.",
+  "@noSavedCards": {
+    "description": "Empty state title for payment methods page"
+  },
+  "addFirstPaymentMethod": "أضف طريقة الدفع الأولى.",
+  "@addFirstPaymentMethod": {
+    "description": "Empty state subtitle for payment methods page"
+  },
+  "deleteAddressConfirm": "حذف العنوان؟",
+  "@deleteAddressConfirm": {
+    "description": "Title for delete address confirmation dialog"
+  },
+  "noSavedAddresses": "لا توجد عناوين محفوظة.",
+  "@noSavedAddresses": {
+    "description": "Empty state title for addresses page"
+  },
+  "addFirstAddress": "أضف عنوان التوصيل الأول.",
+  "@addFirstAddress": {
+    "description": "Empty state subtitle for addresses page"
+  },
+  "editButton": "تعديل",
+  "@editButton": {
+    "description": "Button text to edit an item"
+  },
+  "deleteLabel": "حذف",
+  "@deleteLabel": {
+    "description": "Button label for delete action"
+  },
+  "setDefaultLabel": "تعيين كافتراضي",
+  "@setDefaultLabel": {
+    "description": "Button text to set item as default"
+  },
+  "settingsTitle": "الإعدادات",
+  "@settingsTitle": {
+    "description": "AppBar title for the settings page"
+  },
+  "generalSection": "عام",
+  "@generalSection": {
+    "description": "Section header for general settings"
+  },
+  "languageLabel": "اللغة",
+  "@languageLabel": {
+    "description": "Settings tile title for language"
+  },
+  "appearanceSection": "المظهر",
+  "@appearanceSection": {
+    "description": "Section header for appearance settings"
+  },
+  "themeLabel": "المظهر",
+  "@themeLabel": {
+    "description": "Settings tile title for theme"
+  },
+  "themeLight": "فاتح",
+  "@themeLight": {
+    "description": "Theme option for light mode"
+  },
+  "themeDark": "داكن",
+  "@themeDark": {
+    "description": "Theme option for dark mode"
+  },
+  "themeSystem": "النظام",
+  "@themeSystem": {
+    "description": "Theme option for system mode"
+  },
+  "notificationsSection": "الإشعارات",
+  "@notificationsSection": {
+    "description": "Section header for notification settings"
+  },
+  "pushNotifications": "الإشعارات الفورية",
+  "@pushNotifications": {
+    "description": "Settings tile title for push notifications"
+  },
+  "pushNotificationsSubtitle": "استلام تحديثات الطلبات والعروض",
+  "@pushNotificationsSubtitle": {
+    "description": "Settings tile subtitle for push notifications"
+  },
+  "privacySection": "الخصوصية",
+  "@privacySection": {
+    "description": "Section header for privacy settings"
+  },
+  "privacyPolicy": "سياسة الخصوصية",
+  "@privacyPolicy": {
+    "description": "Settings tile title for privacy policy"
+  },
+  "termsConditions": "الشروط والأحكام",
+  "@termsConditions": {
+    "description": "Settings tile title for terms and conditions"
+  },
+  "supportSection": "الدعم",
+  "@supportSection": {
+    "description": "Section header for support settings"
+  },
+  "contactSupport": "اتصل بالدعم",
+  "@contactSupport": {
+    "description": "Settings tile title for contact support"
+  },
+  "contactSupportSubtitle": "الحصول على مساعدة بحسابك",
+  "@contactSupportSubtitle": {
+    "description": "Settings tile subtitle for contact support"
+  },
+  "aboutSection": "حول",
+  "@aboutSection": {
+    "description": "Section header for about settings"
+  },
+  "aboutApp": "عن التطبيق",
+  "@aboutApp": {
+    "description": "Settings tile title for about app"
+  },
+  "versionLabel": "الإصدار 1.0.0",
+  "@versionLabel": {
+    "description": "Settings tile subtitle showing app version"
+  },
+  "signInSection": "تسجيل الدخول",
+  "@signInSection": {
+    "description": "Settings tile title for sign in (guest state)"
+  },
+  "logoutSection": "تسجيل الخروج",
+  "@logoutSection": {
+    "description": "Settings tile title for logout (logged-in state)"
+  },
+  "comingSoon": "{title} قريباً",
+  "@comingSoon": {
+    "description": "SnackBar message for placeholder features",
+    "placeholders": {
+      "title": { "type": "String", "example": "سياسة الخصوصية" }
+    }
+  },
+  "aboutDescription": "وجهتك المتميزة للأزياء.",
+  "@aboutDescription": {
+    "description": "Description shown in the about dialog"
+  },
+  "copyrightText": "حقوق الطبع والنشر © OpenUI. جميع الحقوق محفوظة.",
+  "@copyrightText": {
+    "description": "Copyright notice shown in app footer"
+  },
+  "everyday": "يومياً",
+  "@everyday": {
+    "description": "Label for business hours that apply every day"
+  },
+  "memberSinceFallback": "عضو منذ —",
+  "@memberSinceFallback": {
+    "description": "Fallback text when member since date is unavailable"
+  }
+}

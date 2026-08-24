@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
@@ -41,12 +42,13 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
   }
 
   void _deleteAddress(AddressModel address) {
+    final l10n = AppLocalizations.of(context)!;
     AppConfirmationDialog.show(
       context: context,
-      title: 'Delete Address?',
-      message: 'This action cannot be undone.',
+      title: l10n.deleteAddressConfirm,
+      message: l10n.cannotUndo,
       icon: Icons.delete_outline,
-      confirmLabel: 'DELETE',
+      confirmLabel: l10n.deleteButton,
       isDestructive: true,
     ).then((confirmed) {
       if (confirmed) {
@@ -63,6 +65,7 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
   Widget build(BuildContext context) {
     final addressesState = ref.watch(addressProvider);
     final addresses = addressesState.items;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
@@ -70,7 +73,7 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
           ? EmptyAddresses(onAdd: _addAddress)
           : Column(
               children: [
-                const Header(title: 'Addresses'),
+                Header(title: l10n.addressesMenu),
                 Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(
@@ -94,7 +97,7 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
                   padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 30.h),
                   child: CustomButton(
                     isSvg: false,
-                    title: 'Add Address',
+                    title: l10n.addAddressTitle,
                     onTap: _addAddress,
                   ),
                 ),

@@ -12,6 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.3
@@ -41,6 +44,7 @@ flutter_launcher_icons:
 
 
 flutter:
+  generate: true
 
   uses-material-design: true
 
@@ -57,5 +61,10 @@ flutter:
     - family: Tenor_Sans
       fonts:
         - asset: assets/fonts/Tenor_Sans/TenorSans-Regular.ttf
-        
+    - family: Noto_Sans_Arabic
+      fonts:
+        - asset: assets/fonts/Noto_Sans_Arabic/NotoSansArabic-Regular.ttf
+        - asset: assets/fonts/Noto_Sans_Arabic/NotoSansArabic-Bold.ttf
+          weight: 700
+
 

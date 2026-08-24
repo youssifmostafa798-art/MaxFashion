@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/action_chip_widget.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/address_model.dart';
@@ -19,9 +20,25 @@ class AddressCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSetDefault;
 
+  /// Maps legacy English labels stored before localization to their
+  /// localized equivalents; custom/user-entered labels display as-is.
+  String _displayLabel(AppLocalizations l10n, String label) {
+    switch (label.toLowerCase()) {
+      case 'home':
+        return l10n.homeLabel.toUpperCase();
+      case 'work':
+        return l10n.workLabel.toUpperCase();
+      case 'other':
+        return l10n.otherLabel.toUpperCase();
+      default:
+        return label.toUpperCase();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -50,7 +67,7 @@ class AddressCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: CustomText(
-                  text: address.label.toUpperCase(),
+                  text: _displayLabel(l10n, address.label),
                   size: 10,
                   color: address.isDefault
                       ? colorScheme.surface
@@ -70,7 +87,7 @@ class AddressCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: CustomText(
-                    text: 'DEFAULT',
+                    text: l10n.defaultBadge,
                     size: 10,
                     color: colorScheme.surface,
                     spacing: 2,
@@ -109,14 +126,14 @@ class AddressCard extends StatelessWidget {
             children: [
               ActionChipWidget(
                 icon: Icons.edit_outlined,
-                label: 'Edit',
+                label: l10n.editButton,
                 onTap: onEdit,
                 colorScheme: colorScheme,
               ),
               Gap(8.w),
               ActionChipWidget(
                 icon: Icons.delete_outline,
-                label: 'Delete',
+                label: l10n.deleteLabel,
                 onTap: onDelete,
                 colorScheme: colorScheme,
                 isDestructive: true,
@@ -126,7 +143,7 @@ class AddressCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onSetDefault,
                   child: CustomText(
-                    text: 'Set Default',
+                    text: l10n.setDefaultLabel,
                     size: 12,
                     color: colorScheme.onSurface,
                   ),

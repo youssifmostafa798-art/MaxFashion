@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/cart_item_model.dart';
 
@@ -13,6 +14,7 @@ class CheckoutCartItemsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 120.h,
       child: ListView.builder(
@@ -59,8 +61,8 @@ class CheckoutCartItemsList extends StatelessWidget {
                       SizedBox(height: 2.h),
                       CustomText(
                         text: item.selectedSize.isNotEmpty
-                            ? 'Size: ${item.selectedSize}  Qty: ${item.quantity}'
-                            : 'Qty: ${item.quantity}',
+                            ? l10n.sizeQtyLabel(item.selectedSize, item.quantity.toString())
+                            : l10n.qtyLabel(item.quantity.toString()),
                         size: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -68,7 +70,7 @@ class CheckoutCartItemsList extends StatelessWidget {
                   ),
                 ),
                 CustomText(
-                  text: '\$${item.totalPrice.toStringAsFixed(2)}',
+                  text: l10n.priceValue(item.totalPrice.toStringAsFixed(2)),
                   size: 13,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),

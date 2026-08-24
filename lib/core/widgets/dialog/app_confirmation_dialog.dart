@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 
@@ -11,8 +12,8 @@ class AppConfirmationDialog extends StatelessWidget {
     required this.title,
     required this.message,
     this.icon,
-    this.confirmLabel = 'CONFIRM',
-    this.cancelLabel = 'CANCEL',
+    this.confirmLabel,
+    this.cancelLabel,
     this.isDestructive = false,
     this.onConfirm,
     this.onCancel,
@@ -21,8 +22,8 @@ class AppConfirmationDialog extends StatelessWidget {
   final String title;
   final String message;
   final IconData? icon;
-  final String confirmLabel;
-  final String cancelLabel;
+  final String? confirmLabel;
+  final String? cancelLabel;
   final bool isDestructive;
   final VoidCallback? onConfirm;
   final VoidCallback? onCancel;
@@ -32,8 +33,8 @@ class AppConfirmationDialog extends StatelessWidget {
     required String title,
     required String message,
     IconData? icon,
-    String confirmLabel = 'CONFIRM',
-    String cancelLabel = 'CANCEL',
+    String? confirmLabel,
+    String? cancelLabel,
     bool isDestructive = false,
     bool barrierDismissible = true,
   }) {
@@ -73,6 +74,9 @@ class AppConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final displayConfirm = confirmLabel ?? l10n.confirm;
+    final displayCancel = cancelLabel ?? l10n.cancel;
 
     return Dialog(
       child: Container(
@@ -136,7 +140,7 @@ class AppConfirmationDialog extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          cancelLabel.toUpperCase(),
+                          displayCancel.toUpperCase(),
                           style: TextStyle(
                             fontSize: AppTextStyles.fontSize14,
                             color: colorScheme.onSurface,
@@ -164,7 +168,7 @@ class AppConfirmationDialog extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          confirmLabel.toUpperCase(),
+                          displayConfirm.toUpperCase(),
                           style: TextStyle(
                             fontSize: AppTextStyles.fontSize14,
                             color: isDestructive ? Colors.white : colorScheme.surface,

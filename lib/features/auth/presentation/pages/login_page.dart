@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/form_validators.dart';
 import 'package:max/core/utils/haptic_utils.dart';
@@ -67,6 +68,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
     HapticUtils.light();
     if (!_formKey.currentState!.validate()) return;
 
+    final l10n = AppLocalizations.of(context)!;
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
     ref.read(authStateProvider.notifier).login(
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -77,6 +80,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
+    final l10n = AppLocalizations.of(context)!;
+
+    ref.read(authStateProvider.notifier).setLocalizations(l10n);
 
     ref.listen<AuthState>(authStateProvider, (prev, next) {
       if (next.user != null && !next.isLoading) {
@@ -116,14 +122,16 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Icon(
-                      Icons.arrow_back_ios_new,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.arrow_forward_ios
+                          : Icons.arrow_back_ios_new,
                       size: 20.w,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: 40.h),
                   Text(
-                    'Welcome\nBack',
+                    l10n.welcomeBack,
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize32,
                       fontWeight: FontWeight.w700,
@@ -133,7 +141,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Sign in to continue',
+                    l10n.signInToContinue,
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize14,
                       fontWeight: FontWeight.w400,
@@ -143,26 +151,34 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   SizedBox(height: 48.h),
                   CustomAuthTextField(
                     controller: _emailController,
-                    hint: 'Email',
+                    hint: l10n.email,
                     keyboardType: TextInputType.emailAddress,
-                    validator: FormValidators.validateEmail,
+                    validator: (value) => FormValidators.validateEmail(
+                      value,
+                      emptyError: l10n.emailRequired,
+                      invalidError: l10n.emailInvalid,
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   CustomAuthTextField(
                     controller: _passwordController,
-                    hint: 'Password',
+                    hint: l10n.password,
                     isPassword: true,
-                    validator: FormValidators.validatePassword,
+                    validator: (value) => FormValidators.validatePassword(
+                      value,
+                      emptyError: l10n.passwordRequired,
+                      tooShortError: l10n.passwordTooShort,
+                    ),
                   ),
                   SizedBox(height: 12.h),
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: AlignmentDirectional.centerEnd,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, AppRouter.forgotPassword);
                       },
                       child: Text(
-                        'Forgot Password?',
+                        l10n.forgotPassword,
                         style: TextStyle(
                           fontSize: AppTextStyles.fontSize13,
                           fontWeight: FontWeight.w500,
@@ -186,7 +202,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                         visualDensity: VisualDensity.compact,
                       ),
                       Text(
-                        'Remember Me',
+                        l10n.rememberMe,
                         style: TextStyle(
                           fontSize: AppTextStyles.fontSize13,
                           fontWeight: FontWeight.w500,
@@ -197,7 +213,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   ),
                   SizedBox(height: 12.h),
                   CustomAuthButton(
-                    text: 'Login',
+                    text: l10n.signIn,
                     isLoading: authState.isLoading,
                     onTap: _onLogin,
                   ),
@@ -208,7 +224,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Text(
-                          'OR',
+                          l10n.or,
                           style: TextStyle(
                             fontSize: AppTextStyles.fontSize12,
                             fontWeight: FontWeight.w500,
@@ -222,7 +238,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                   ),
                   SizedBox(height: 24.h),
                   CustomAuthButton(
-                    text: 'Sign Up',
+                    text: l10n.signUp,
                     isOutlined: true,
                     onTap: () {
                       Navigator.pushReplacementNamed(context, AppRouter.signup);

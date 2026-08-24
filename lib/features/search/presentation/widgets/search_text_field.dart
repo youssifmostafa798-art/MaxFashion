@@ -67,7 +67,7 @@ class _SearchTextFieldState extends ConsumerState<SearchTextField> {
       child: Row(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 14.w),
+            padding: EdgeInsetsDirectional.only(start: 14.w),
             child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
           ),
           SizedBox(width: 10.w),

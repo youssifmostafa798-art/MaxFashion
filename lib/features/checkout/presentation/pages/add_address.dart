@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -29,10 +30,8 @@ class _AddAddressState extends State<AddAddress> {
   final countryController = TextEditingController();
   final zipController = TextEditingController();
 
-  String _selectedLabel = 'Home';
+  String? _selectedLabel;
   final _formkey = GlobalKey<FormState>();
-
-  static const _labels = ['Home', 'Work', 'Other'];
 
   @override
   void dispose() {
@@ -63,7 +62,8 @@ class _AddAddressState extends State<AddAddress> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.isEditing ? 'Edit Address' : 'Add Address';
+    final l10n = AppLocalizations.of(context)!;
+    final title = widget.isEditing ? l10n.editAddressTitle : l10n.addAddressTitle;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -81,63 +81,32 @@ class _AddAddressState extends State<AddAddress> {
                   children: [
                     Gap(20.h),
                     CustomText(
-                      text: 'ADDRESS LABEL',
+                      text: l10n.addressLabelSection,
                       size: 12,
                       color: colorScheme.onSurfaceVariant,
                       spacing: 2,
                     ),
                     Gap(10.h),
                     Row(
-                      children: _labels.map((label) {
-                        final isSelected = _selectedLabel == label;
-                        return Padding(
-                          padding: EdgeInsets.only(right: 10.w),
-                          child: GestureDetector(
-                            onTap: () => setState(() => _selectedLabel = label),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? colorScheme.onSurface
-                                    : colorScheme.surfaceContainerHighest,
-                                borderRadius: BorderRadius.circular(20.r),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? colorScheme.onSurface
-                                      : colorScheme.outline,
-                                ),
-                              ),
-                              child: Text(
-                                label,
-                                style: TextStyle(
-                                  fontSize: AppTextStyles.fontSize13,
-                                  color: isSelected
-                                      ? colorScheme.surface
-                                      : colorScheme.onSurface,
-                                  fontFamily: AppConstants.fontFamily,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                      children: [
+                        _buildLabelChip(l10n.homeLabel, l10n, colorScheme),
+                        _buildLabelChip(l10n.workLabel, l10n, colorScheme),
+                        _buildLabelChip(l10n.otherLabel, l10n, colorScheme),
+                      ],
                     ),
                     Gap(30.h),
                     CustomTextField(
-                      hint: "Street Address",
+                      hint: l10n.streetAddressHint,
                       controller: streetController,
                     ),
                     Gap(30.h),
                     CustomTextField(
-                      hint: "Apartment, Suite, etc. (optional)",
+                      hint: l10n.apartmentHint,
                       controller: apartmentController,
                     ),
                     Gap(30.h),
                     CustomTextField(
-                      hint: "City",
+                      hint: l10n.cityHint,
                       controller: cityController,
                     ),
                     Gap(30.h),
@@ -145,14 +114,14 @@ class _AddAddressState extends State<AddAddress> {
                       children: [
                         Expanded(
                           child: CustomTextField(
-                            hint: "State",
+                            hint: l10n.stateHint,
                             controller: stateController,
                           ),
                         ),
                         Gap(30.w),
                         Expanded(
                           child: CustomTextField(
-                            hint: "ZIP Code",
+                            hint: l10n.zipCodeHint,
                             controller: zipController,
                           ),
                         ),
@@ -160,7 +129,7 @@ class _AddAddressState extends State<AddAddress> {
                     ),
                     Gap(30.h),
                     CustomTextField(
-                      hint: "Country",
+                      hint: l10n.countryHint,
                       controller: countryController,
                     ),
                   ],
@@ -169,7 +138,7 @@ class _AddAddressState extends State<AddAddress> {
               Gap(60.h),
               CustomButton(
                 isSvg: false,
-                title: (widget.isEditing ? "Update" : "Add now").toUpperCase(),
+                title: (widget.isEditing ? l10n.updateButton : l10n.addNowButton).toUpperCase(),
                 onTap: () {
                   if (!_formkey.currentState!.validate()) return;
 
@@ -183,7 +152,7 @@ class _AddAddressState extends State<AddAddress> {
                     state: stateController.text.trim(),
                     country: countryController.text.trim(),
                     zip: zipController.text.trim(),
-                    label: _selectedLabel,
+                    label: _selectedLabel ?? l10n.homeLabel,
                     isDefault: widget.editAddress?.isDefault ?? false,
                   );
 
@@ -192,6 +161,44 @@ class _AddAddressState extends State<AddAddress> {
               ),
               Gap(70.h),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabelChip(String label, AppLocalizations l10n, ColorScheme colorScheme) {
+    final effectiveLabel = _selectedLabel ?? l10n.homeLabel;
+    final isSelected = effectiveLabel == label;
+    return Padding(
+      padding: EdgeInsetsDirectional.only(end: 10.w),
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedLabel = label),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 8.h,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colorScheme.onSurface
+                : colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: isSelected
+                  ? colorScheme.onSurface
+                  : colorScheme.outline,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: AppTextStyles.fontSize13,
+              color: isSelected
+                  ? colorScheme.surface
+                  : colorScheme.onSurface,
+              fontFamily: AppConstants.fontFamily,
+            ),
           ),
         ),
       ),

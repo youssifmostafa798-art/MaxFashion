@@ -115,7 +115,9 @@ class _SettingsTileState extends State<SettingsTile>
               ?widget.trailing,
               if (widget.trailing == null && widget.onTap != null)
                 Icon(
-                  Icons.chevron_right,
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
                   color: colorScheme.onSurfaceVariant,
                   size: 20.w,
                 ),

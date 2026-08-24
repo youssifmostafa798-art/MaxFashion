@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class SeeMoreCollectionCard extends StatefulWidget {
   const SeeMoreCollectionCard({super.key, required this.onTap});
@@ -41,6 +42,7 @@ class _SeeMoreCollectionCardState extends State<SeeMoreCollectionCard>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -86,7 +88,7 @@ class _SeeMoreCollectionCardState extends State<SeeMoreCollectionCard>
               ),
               Gap(10.h),
               CustomText(
-                text: 'See More',
+                text: l10n.seeMore,
                 size: 12,
                 weight: FontWeight.bold,
                 spacing: 2,

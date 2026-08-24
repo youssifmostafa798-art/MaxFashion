@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 
 class PromoSection extends StatelessWidget {
@@ -10,6 +11,7 @@ class PromoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -24,7 +26,7 @@ class PromoSection extends StatelessWidget {
               colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
             ),
             Gap(20.w),
-            CustomText(text: "ADD Promo Code", color: colorScheme.onSurface),
+            CustomText(text: l10n.addPromoCode, color: colorScheme.onSurface),
           ],
         ),
         Gap(20.h),
@@ -38,9 +40,9 @@ class PromoSection extends StatelessWidget {
               colorFilter: ColorFilter.mode(colorScheme.onSurface, BlendMode.srcIn),
             ),
             Gap(20.w),
-            CustomText(text: "Delivery", color: colorScheme.onSurface),
+            CustomText(text: l10n.delivery, color: colorScheme.onSurface),
             const Spacer(),
-            CustomText(text: "FREE", color: colorScheme.onSurface),
+            CustomText(text: l10n.free.toUpperCase(), color: colorScheme.onSurface),
             Gap(5.w),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
@@ -10,6 +11,7 @@ class EmptyOrdersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Padding(
@@ -24,14 +26,14 @@ class EmptyOrdersWidget extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             CustomText(
-              text: "You haven't placed any orders yet",
+              text: l10n.noOrdersYet,
               size: 18,
               weight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
             SizedBox(height: 10.h),
             CustomText(
-              text: 'Your completed purchases will appear here.',
+              text: l10n.purchasesWillAppear,
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),
@@ -53,7 +55,7 @@ class EmptyOrdersWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: CustomText(
-                  text: 'CONTINUE SHOPPING',
+                  text: l10n.continueShopping,
                   size: 14,
                   color: colorScheme.surface,
                   spacing: 2,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/widgets/custom_button.dart';
@@ -14,6 +15,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
   required BuildContext context,
   required String orderId,
 }) {
+  final l10n = AppLocalizations.of(context)!;
   return showDialog<OrderDialogResult>(
     barrierDismissible: false,
     context: context,
@@ -28,7 +30,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
             child: Column(
               children: [
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context, OrderDialogResult.cancelled);
@@ -38,7 +40,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                 ),
                 Gap(20.h),
                 CustomText(
-                  text: "PAYMENT SUCCESS",
+                  text: l10n.paymentSuccess,
                   spacing: 2,
                   color: Theme.of(context).colorScheme.onSurface,
                   size: 19,
@@ -47,13 +49,13 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                 SvgPicture.asset("assets/pop/done.svg"),
                 Gap(40.h),
                 CustomText(
-                  text: "Your payment was success",
+                  text: l10n.paymentSuccessMessage,
                   size: 18,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(10.h),
                 CustomText(
-                  text: "Payment ID",
+                  text: l10n.paymentIdLabel,
                   size: 14,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -73,7 +75,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                 ),
                 Gap(20.h),
                 CustomText(
-                  text: "Rate your purchase",
+                  text: l10n.ratePurchase,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(20.h),
@@ -85,7 +87,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                     Expanded(
                       child: CustomButton(
                         isSvg: false,
-                        title: "SUBMIT",
+                        title: l10n.submit,
                         onTap: () {
                           Navigator.pop(context, OrderDialogResult.confirmed);
                         },
@@ -95,7 +97,7 @@ Future<OrderDialogResult?> showOrderSuccessDialog({
                     Expanded(
                       child: CustomButton(
                         isSvg: false,
-                        title: "CANCEL",
+                        title: l10n.cancel,
                         onTap: () {
                           Navigator.pop(context, OrderDialogResult.cancelled);
                         },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/product_model.dart';
 
@@ -37,6 +38,7 @@ class _CardWidgetState extends State<CardWidget> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +84,7 @@ class _CardWidgetState extends State<CardWidget> {
               ],
               Gap(15.h),
               CustomText(
-                text: "\$ ${widget.products.price}",
+                text: l10n.priceValue(widget.products.price.toString()),
                 size: 16,
                 weight: FontWeight.bold,
                 color: const Color(0xffDD8560),

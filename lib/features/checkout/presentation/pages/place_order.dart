@@ -27,6 +27,7 @@ import 'package:max/features/profile/presentation/pages/addresses_page.dart';
 
 import 'package:max/core/utils/card_utils.dart';
 import 'package:max/core/utils/id_generator.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/core/theme/app_colors.dart';
 
@@ -110,20 +111,21 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
   }
 
   bool _validateOrder() {
+    final l10n = AppLocalizations.of(context)!;
     final defaultAddr = ref.read(defaultAddressProvider);
     if (defaultAddr == null) {
       AppMessageDialog.show(
         context: context,
-        title: 'MISSING INFORMATION',
-        message: 'Please add a shipping address',
+        title: l10n.missingInformation,
+        message: l10n.addShippingAddressError,
       );
       return false;
     }
     if (savedCard == null) {
       AppMessageDialog.show(
         context: context,
-        title: 'MISSING INFORMATION',
-        message: 'Please select a payment method',
+        title: l10n.missingInformation,
+        message: l10n.selectPaymentMethodError,
       );
       return false;
     }
@@ -174,9 +176,10 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
       );
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to place order. Please try again.'),
+            content: Text(l10n.failedPlaceOrder),
             backgroundColor: Theme.of(context).colorScheme.error,
             behavior: SnackBarBehavior.floating,
           ),
@@ -191,7 +194,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     final suffix = numStr.length >= 2
         ? numStr.substring(numStr.length - 2)
         : numStr;
-    return 'Master Card ending \u2022\u2022\u2022\u2022$suffix';
+    final l10n = AppLocalizations.of(context)!;
+    return l10n.cardEnding('Mastercard', suffix);
   }
 
   @override
@@ -212,6 +216,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
       });
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
       body: Padding(
@@ -220,12 +226,12 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Header(title: "Checkout"),
+              Header(title: l10n.checkoutPageTitle),
 
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : CustomText(
-                    text: "SHIPPING ADDRESS",
+                    text: l10n.shippingAddress,
                     spacing: 2,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 15,
@@ -246,8 +252,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                     onTap: () {
                       _openAddresses();
                     },
-                    child: const CheckoutContainer(
-                      text: "Add shipping address",
+                    child: CheckoutContainer(
+                      text: l10n.addShippingAddress,
                       iconData: Icons.add,
                       isFree: false,
                     ),
@@ -258,14 +264,14 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
                 : CustomText(
-                    text: "SHIPPING METHOD",
+                    text: l10n.shippingMethod,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             Gap(10.h),
             savedCard != null && hasAddress
                 ? const SizedBox.shrink()
-                : const CheckoutContainer(
-                    text: "Pickup at store",
+                : CheckoutContainer(
+                    text: l10n.pickupAtStore,
                     iconData: Icons.arrow_drop_down,
                     isFree: true,
                   ),
@@ -273,7 +279,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
 
             if (savedCards.isNotEmpty) ...[
               CustomText(
-                text: "SAVED PAYMENT METHODS",
+                text: l10n.savedPaymentMethods,
                 spacing: 2,
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 size: 15,
@@ -289,8 +295,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
               }),
               GestureDetector(
                 onTap: _openCard,
-                child: const CheckoutContainer(
-                  text: "Add New Card",
+                child: CheckoutContainer(
+                  text: l10n.addNewCard,
                   iconData: Icons.add,
                   isFree: false,
                 ),
@@ -302,7 +308,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                 ? const SizedBox.shrink()
                 : savedCards.isEmpty
                     ? CustomText(
-                        text: "PAYMENT METHOD",
+                        text: l10n.paymentMethodLabel,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       )
                     : const SizedBox.shrink(),
@@ -316,8 +322,8 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
                       )
                     : GestureDetector(
                         onTap: _openCard,
-                        child: const CheckoutContainer(
-                          text: "Select payment method",
+                        child: CheckoutContainer(
+                          text: l10n.selectPaymentMethod,
                           iconData: Icons.arrow_drop_down,
                           isFree: false,
                         ),
@@ -333,12 +339,12 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: "Total",
+                  text: l10n.totalLabel,
                   color: Theme.of(context).colorScheme.onSurface,
                   spacing: 3,
                 ),
                 CustomText(
-                  text: "\$ ${widget.total.toStringAsFixed(2)}",
+                  text: l10n.priceValue(widget.total.toStringAsFixed(2)),
                   color: AppColors.errorRed200,
                 ),
               ],
@@ -346,7 +352,7 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
             Gap(20.h),
             CustomButton(
               isSvg: true,
-              title: "PLACE ORDER",
+              title: l10n.placeOrder,
               onTap: () {
                 _placeOrderAndConfirm();
               },

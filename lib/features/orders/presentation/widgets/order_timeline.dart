@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -12,13 +13,14 @@ class OrderTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final steps = _buildSteps();
+    final l10n = AppLocalizations.of(context)!;
+    final steps = _buildSteps(l10n);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text: 'ORDER TIMELINE',
+          text: l10n.orderTimeline,
           size: 12,
           spacing: 2,
           color: colorScheme.onSurfaceVariant,
@@ -84,7 +86,10 @@ class OrderTimeline extends StatelessWidget {
                       if (step['date'] != null) ...[
                         SizedBox(height: 2.h),
                         CustomText(
-                          text: DateFormatter.formatDateTime(step['date'] as DateTime),
+                          text: DateFormatter.formatDateTime(
+                            step['date'] as DateTime,
+                            locale: l10n.localeName,
+                          ),
                           size: 12,
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -100,29 +105,29 @@ class OrderTimeline extends StatelessWidget {
     );
   }
 
-  List<Map<String, dynamic>> _buildSteps() {
+  List<Map<String, dynamic>> _buildSteps(AppLocalizations l10n) {
     final now = order.orderDate;
     return [
       {
-        'title': 'Order Placed',
+        'title': l10n.orderPlaced,
         'date': now,
         'completed': true,
         'current': false,
       },
       {
-        'title': 'Processing',
+        'title': l10n.statusProcessing,
         'date': order.status.index >= OrderStatus.processing.index ? now.add(const Duration(hours: 2)) : null,
         'completed': order.status.index > OrderStatus.processing.index,
         'current': order.status == OrderStatus.processing,
       },
       {
-        'title': 'Shipped',
+        'title': l10n.statusShipped,
         'date': order.status.index >= OrderStatus.shipped.index ? now.add(const Duration(days: 1)) : null,
         'completed': order.status.index > OrderStatus.shipped.index,
         'current': order.status == OrderStatus.shipped,
       },
       {
-        'title': 'Delivered',
+        'title': l10n.statusDelivered,
         'date': order.status == OrderStatus.delivered ? now.add(const Duration(days: 3)) : null,
         'completed': order.status == OrderStatus.delivered,
         'current': order.status == OrderStatus.delivered,

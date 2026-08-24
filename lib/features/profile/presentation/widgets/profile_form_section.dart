@@ -106,7 +106,7 @@ class ProfileFormField extends StatelessWidget {
             counterText: '',
             suffixIcon: suffixIcon != null
                 ? Padding(
-                    padding: EdgeInsets.only(right: 4.w),
+                    padding: EdgeInsetsDirectional.only(end: 4.w),
                     child: Icon(
                       suffixIcon,
                       color: colorScheme.onSurfaceVariant,

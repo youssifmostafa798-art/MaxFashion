@@ -3,6 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/l10n/language_provider.dart';
 import 'package:max/core/theme/app_theme.dart';
 import 'package:max/core/theme/theme_provider.dart';
 import 'package:max/core/router/app_router.dart';
@@ -34,6 +36,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+    final locale = ref.watch(localeProvider);
 
     return ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -42,6 +45,9 @@ class MyApp extends ConsumerWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
+          locale: locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeMode,

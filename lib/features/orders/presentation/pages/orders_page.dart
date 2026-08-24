@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/router/app_router.dart';
@@ -27,6 +28,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
     final authState = ref.watch(authStateProvider);
     final isGuest = authState.isGuest;
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     if (isGuest) {
       return Scaffold(
@@ -37,7 +39,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
           elevation: 0,
           centerTitle: true,
           title: CustomText(
-            text: 'MY ORDERS',
+            text: l10n.myOrders,
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -57,7 +59,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
           elevation: 0,
           centerTitle: true,
           title: CustomText(
-            text: 'MY ORDERS',
+            text: l10n.myOrders,
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -76,7 +78,7 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'MY ORDERS',
+          text: l10n.myOrders,
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -125,6 +127,7 @@ class _GuestOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Column(
@@ -137,14 +140,14 @@ class _GuestOrdersView extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           CustomText(
-            text: 'Sign in to view your orders',
+            text: l10n.signInToViewOrders,
             size: 18,
             color: colorScheme.onSurface,
             weight: FontWeight.w600,
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Track your purchases and order history.',
+            text: l10n.trackPurchases,
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -161,7 +164,7 @@ class _GuestOrdersView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: CustomText(
-                text: 'SIGN IN',
+                text: l10n.signIn,
                 size: 14,
                 color: colorScheme.surface,
                 spacing: 2,

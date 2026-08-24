@@ -8,12 +8,14 @@ import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 import 'package:max/data/models/collection_model.dart';
 import 'package:max/data/providers/collection_provider.dart';
 import 'package:max/features/collection/presentation/widgets/collection_card.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class AllCollectionsPage extends ConsumerWidget {
   const AllCollectionsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final collectionsAsync = ref.watch(collectionsProvider);
 
@@ -24,14 +26,19 @@ class AllCollectionsPage extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'ALL COLLECTIONS',
+          text: l10n.allCollections.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
           weight: FontWeight.bold,
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward
+                : Icons.arrow_back,
+            color: colorScheme.onSurface,
+          ),
           onPressed: () {
             HapticUtils.light();
             Navigator.pop(context);
@@ -64,6 +71,7 @@ class AllCollectionsPage extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Column(
@@ -76,7 +84,7 @@ class AllCollectionsPage extends ConsumerWidget {
           ),
           SizedBox(height: 16.h),
           CustomText(
-            text: 'Failed to load collections',
+            text: l10n.collectionFailed,
             size: 16,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -86,6 +94,7 @@ class AllCollectionsPage extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
@@ -108,7 +117,7 @@ class AllCollectionsPage extends ConsumerWidget {
             ),
             SizedBox(height: 24.h),
             CustomText(
-              text: 'No Collections Found',
+              text: l10n.noCollectionsFound,
               size: 18,
               color: colorScheme.onSurface,
               weight: FontWeight.w600,
@@ -127,14 +136,14 @@ class _CollectionsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: CustomText(
-            text:
-                '${collections.length} ${collections.length == 1 ? 'collection' : 'collections'}',
+            text: l10n.collectionsCount(collections.length.toString()),
             size: 13,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

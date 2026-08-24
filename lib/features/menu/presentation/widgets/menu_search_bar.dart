@@ -4,12 +4,14 @@ import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/providers/search_provider.dart';
 import 'package:max/features/search/presentation/pages/search_screen.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class MenuSearchBar extends StatelessWidget {
   const MenuSearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -32,7 +34,7 @@ class MenuSearchBar extends StatelessWidget {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 14.w),
+              padding: EdgeInsetsDirectional.only(start: 14.w),
               child: Icon(
                 Icons.search,
                 color: colorScheme.onSurfaceVariant,
@@ -40,10 +42,13 @@ class MenuSearchBar extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10.w),
-            CustomText(
-              text: 'Search categories...',
-              size: 14,
-              color: colorScheme.onSurfaceVariant,
+            Expanded(
+              child: CustomText(
+                text: l10n.searchCategoriesHint,
+                size: 14,
+                maxLines: 1,
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

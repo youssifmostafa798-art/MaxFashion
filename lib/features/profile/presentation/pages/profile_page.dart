@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -29,6 +30,7 @@ class ProfilePage extends ConsumerWidget {
     final user = authState.user;
     final isGuest = authState.isGuest;
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -38,7 +40,7 @@ class ProfilePage extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'YOU',
+          text: l10n.youTitle,
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -66,14 +68,17 @@ class _ProfileHeader extends StatelessWidget {
   final UserModel? user;
   final bool isGuest;
 
-  String _getMemberSinceText() {
-    if (user == null) return 'Member since —';
-    return 'Member since ${DateFormatter.formatMonthYear(user!.memberSince)}';
+  String _getMemberSinceText(AppLocalizations l10n) {
+    if (user == null) return l10n.memberSinceFallback;
+    return l10n.memberSince(
+      DateFormatter.formatMonthYear(user!.memberSince, locale: l10n.localeName),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final displayName = user?.fullName ?? 'Guest User';
+    final l10n = AppLocalizations.of(context)!;
+    final displayName = user?.fullName ?? l10n.guestUser;
     final displayEmail = user?.email ?? 'guest@example.com';
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -119,7 +124,7 @@ class _ProfileHeader extends StatelessWidget {
             ),
             SizedBox(height: 4.h),
             CustomText(
-              text: _getMemberSinceText(),
+              text: _getMemberSinceText(l10n),
               size: 12,
               color: colorScheme.onSurfaceVariant,
             ),
@@ -136,7 +141,7 @@ class _ProfileHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: CustomText(
-                    text: 'SIGN IN',
+                    text: l10n.signIn,
                     size: 14,
                     color: colorScheme.surface,
                     spacing: 2,
@@ -158,6 +163,7 @@ class _MenuSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final ordersCount = ref.watch(ordersCountProvider);
     final wishlistCount = ref.watch(wishlistCountProvider);
     final addressCount = ref.watch(addressCountProvider);
@@ -166,7 +172,7 @@ class _MenuSection extends ConsumerWidget {
     void onProtectedTap(String feature) {
       showGuestPromptDialog(
         context: context,
-        message: 'Please sign in to access $feature.',
+        message: l10n.pleaseSignInToAccessFeature(feature),
       );
     }
 
@@ -174,7 +180,7 @@ class _MenuSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text: 'ACCOUNT',
+          text: l10n.accountSection,
           size: 12,
           color: colorScheme.onSurfaceVariant,
           spacing: 3,
@@ -182,9 +188,9 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 12.h),
         ProfileMenuItem(
           icon: Icons.edit_outlined,
-          title: 'Edit Profile',
+          title: l10n.editProfileMenu,
           onTap: isGuest
-              ? () => onProtectedTap('profile editing')
+              ? () => onProtectedTap(l10n.featureProfileEditing)
               : () {
                   Navigator.push(
                     context,
@@ -195,10 +201,10 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.shopping_bag_outlined,
-          title: 'My Orders',
+          title: l10n.myOrdersMenu,
           trailing: ordersCount > 0 ? '$ordersCount' : null,
           onTap: isGuest
-              ? () => onProtectedTap('your orders')
+              ? () => onProtectedTap(l10n.featureYourOrders)
               : () {
                   Navigator.push(
                     context,
@@ -209,10 +215,10 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.favorite_border,
-          title: 'Wishlist',
+          title: l10n.wishlistMenu,
           trailing: wishlistCount > 0 ? '$wishlistCount' : null,
           onTap: isGuest
-              ? () => onProtectedTap('your wishlist')
+              ? () => onProtectedTap(l10n.featureYourWishlist)
               : () {
                   Navigator.push(
                     context,
@@ -223,10 +229,10 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.location_on_outlined,
-          title: 'Addresses',
+          title: l10n.addressesMenu,
           trailing: addressCount > 0 ? '$addressCount' : null,
           onTap: isGuest
-              ? () => onProtectedTap('your addresses')
+              ? () => onProtectedTap(l10n.featureYourAddresses)
               : () {
                   Navigator.push(
                     context,
@@ -237,10 +243,10 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.credit_card_outlined,
-          title: 'Payment Methods',
+          title: l10n.paymentMethodsMenu,
           trailing: cardCount > 0 ? '$cardCount' : null,
           onTap: isGuest
-              ? () => onProtectedTap('payment methods')
+              ? () => onProtectedTap(l10n.featurePaymentMethods)
               : () {
                   Navigator.push(
                     context,
@@ -251,7 +257,7 @@ class _MenuSection extends ConsumerWidget {
         SizedBox(height: 10.h),
         ProfileMenuItem(
           icon: Icons.settings_outlined,
-          title: 'Settings',
+          title: l10n.settingsMenu,
           onTap: () {
             Navigator.push(
               context,

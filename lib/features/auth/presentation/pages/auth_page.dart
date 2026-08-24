@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_text_styles.dart';
@@ -47,6 +48,8 @@ class _AuthPageState extends ConsumerState<AuthPage>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
@@ -68,7 +71,7 @@ class _AuthPageState extends ConsumerState<AuthPage>
                   ),
                   const Spacer(flex: 3),
                   CustomAuthButton(
-                    text: 'Create Account',
+                    text: l10n.createAccount,
                     isOutlined: true,
                     onTap: () {
                       Navigator.pushNamed(context, AppRouter.signup);
@@ -76,7 +79,7 @@ class _AuthPageState extends ConsumerState<AuthPage>
                   ),
                   SizedBox(height: 16.h),
                   CustomAuthButton(
-                    text: 'Already have account',
+                    text: l10n.alreadyHaveAccount,
                     onTap: () {
                       Navigator.pushNamed(context, AppRouter.login);
                     },
@@ -89,7 +92,7 @@ class _AuthPageState extends ConsumerState<AuthPage>
                       Navigator.pushReplacementNamed(context, AppRouter.main);
                     },
                     child: Text(
-                      'Continue as Guest',
+                      l10n.continueAsGuest,
                       style: TextStyle(
                         fontSize: AppTextStyles.fontSize13,
                         fontWeight: FontWeight.w400,

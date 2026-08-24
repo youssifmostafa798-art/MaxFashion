@@ -6,12 +6,14 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/menu/presentation/widgets/category_item.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class AllCategoriesPage extends ConsumerWidget {
   const AllCategoriesPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final categories = ref.watch(categoriesProvider);
 
@@ -22,14 +24,19 @@ class AllCategoriesPage extends ConsumerWidget {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'ALL CATEGORIES',
+          text: l10n.allCategories.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
           weight: FontWeight.bold,
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward
+                : Icons.arrow_back,
+            color: colorScheme.onSurface,
+          ),
           onPressed: () {
             HapticUtils.light();
             Navigator.pop(context);
@@ -43,6 +50,7 @@ class AllCategoriesPage extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
@@ -65,7 +73,7 @@ class AllCategoriesPage extends ConsumerWidget {
             ),
             SizedBox(height: 24.h),
             CustomText(
-              text: 'No Categories Found',
+              text: l10n.noCategoriesFound,
               size: 18,
               color: colorScheme.onSurface,
               weight: FontWeight.w600,
@@ -84,6 +92,7 @@ class _AllCategoriesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,7 +100,7 @@ class _AllCategoriesGrid extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: CustomText(
             text:
-                '${categories.length} ${categories.length == 1 ? 'category' : 'categories'}',
+                l10n.categoriesCount(categories.length.toString()),
             size: 13,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),

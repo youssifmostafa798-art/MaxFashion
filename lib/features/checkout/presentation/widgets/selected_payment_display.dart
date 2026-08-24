@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/card_utils.dart';
 
@@ -17,6 +18,7 @@ class SelectedPaymentDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         const Divider(),
@@ -39,15 +41,16 @@ class SelectedPaymentDisplay extends StatelessWidget {
                     selectedCardBrand,
                   );
                   return CustomText(
-                    text:
-                        "$brandName ending \u2022\u2022\u2022\u2022$suffix",
+                    text: l10n.cardEnding(brandName, suffix),
                     color: Theme.of(context).colorScheme.onSurface,
                   );
                 },
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios_outlined,
+              Directionality.of(context) == TextDirection.rtl
+                  ? Icons.arrow_back_ios_outlined
+                  : Icons.arrow_forward_ios_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ],

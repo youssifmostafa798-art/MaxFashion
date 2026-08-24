@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/core/theme/app_text_styles.dart';
 
@@ -36,21 +37,22 @@ class OrderStatusChip extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel() {
+  String _getStatusLabel(AppLocalizations l10n) {
     switch (status) {
       case OrderStatus.processing:
-        return 'Processing';
+        return l10n.statusProcessing;
       case OrderStatus.shipped:
-        return 'Shipped';
+        return l10n.statusShipped;
       case OrderStatus.delivered:
-        return 'Delivered';
+        return l10n.statusDelivered;
       case OrderStatus.cancelled:
-        return 'Cancelled';
+        return l10n.statusCancelled;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
@@ -58,7 +60,7 @@ class OrderStatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Text(
-        _getStatusLabel(),
+        _getStatusLabel(l10n),
         style: TextStyle(
           fontSize: AppTextStyles.fontSize12,
           fontWeight: FontWeight.w600,

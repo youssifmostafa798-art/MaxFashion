@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hint;
@@ -10,11 +11,12 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return TextFormField(
       controller: controller,
       validator: (v) {
-        if (v == null || v.trim().isEmpty) return 'Please fill the field';
+        if (v == null || v.trim().isEmpty) return l10n.fieldRequired;
         return null;
       },
       cursorColor: colorScheme.onSurface,

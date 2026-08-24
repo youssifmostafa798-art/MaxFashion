@@ -12,6 +12,8 @@ import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/errors/app_error_messages.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -25,6 +27,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cartState = ref.watch(cartProvider);
     final authState = ref.watch(authStateProvider);
     final isGuest = authState.isGuest;
@@ -37,7 +40,7 @@ class _CartPageState extends ConsumerState<CartPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: CustomText(
-              text: next.error!,
+              text: AppErrorMessages.resolve(l10n, next.error),
               size: 14,
               color: colorScheme.surface,
             ),
@@ -64,7 +67,7 @@ class _CartPageState extends ConsumerState<CartPage> {
           elevation: 0,
           centerTitle: true,
           title: CustomText(
-            text: 'MY BAG',
+            text: l10n.myBag.toUpperCase(),
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -83,7 +86,7 @@ class _CartPageState extends ConsumerState<CartPage> {
         elevation: 0,
         centerTitle: true,
         title: CustomText(
-          text: 'MY BAG',
+          text: l10n.myBag.toUpperCase(),
           size: 18,
           color: colorScheme.onSurface,
           spacing: 4,
@@ -102,6 +105,7 @@ class _CartPageState extends ConsumerState<CartPage> {
 class _CartLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +120,7 @@ class _CartLoading extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
           CustomText(
-            text: 'Loading your bag...',
+            text: l10n.loadingBag,
             size: 14,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -182,6 +186,7 @@ class _CartBottomSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isCartEmpty = ref.watch(cartProvider.select((s) => s.items.isEmpty));
     final subtotal = ref.watch(cartSubtotalProvider);
     final colorScheme = Theme.of(context).colorScheme;
@@ -198,9 +203,9 @@ class _CartBottomSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                  text: 'Subtotal', size: 14, color: colorScheme.onSurfaceVariant),
+                  text: l10n.subtotal, size: 14, color: colorScheme.onSurfaceVariant),
               CustomText(
-                text: '\$${subtotal.toStringAsFixed(2)}',
+                text: l10n.priceValue(subtotal.toStringAsFixed(2)),
                 size: 14,
                 color: colorScheme.onSurface,
               ),
@@ -211,8 +216,8 @@ class _CartBottomSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                  text: 'Delivery', size: 14, color: colorScheme.onSurfaceVariant),
-              const CustomText(text: 'Free', size: 14, color: AppColors.accent),
+                  text: l10n.delivery, size: 14, color: colorScheme.onSurfaceVariant),
+              CustomText(text: l10n.free, size: 14, color: AppColors.accent),
             ],
           ),
           SizedBox(height: 12.h),
@@ -222,13 +227,13 @@ class _CartBottomSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomText(
-                text: 'Est. Total',
+                text: l10n.estimatedTotal,
                 size: 16,
                 weight: FontWeight.w700,
                 color: colorScheme.onSurface,
               ),
               CustomText(
-                text: '\$${subtotal.toStringAsFixed(2)}',
+                text: l10n.priceValue(subtotal.toStringAsFixed(2)),
                 size: 16,
                 weight: FontWeight.w700,
                 color: colorScheme.onSurface,
@@ -238,7 +243,7 @@ class _CartBottomSection extends ConsumerWidget {
           SizedBox(height: 16.h),
           CustomButton(
             isSvg: true,
-            title: "Checkout",
+            title: l10n.checkout,
             onTap: isCartEmpty
                 ? null
                 : () {
@@ -265,6 +270,7 @@ class _CartBottomSection extends ConsumerWidget {
 class _EmptyCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -278,13 +284,13 @@ class _EmptyCart extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           CustomText(
-            text: 'Your bag is empty',
+            text: l10n.yourBagIsEmpty,
             size: 18,
             color: colorScheme.onSurfaceVariant,
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Add items to get started',
+            text: l10n.addItemsToGetStarted,
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -306,7 +312,7 @@ class _EmptyCart extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: CustomText(
-                text: 'START SHOPPING',
+                text: l10n.startShopping.toUpperCase(),
                 size: 14,
                 color: Theme.of(context).colorScheme.surface,
                 spacing: 2,
@@ -322,6 +328,7 @@ class _EmptyCart extends StatelessWidget {
 class _GuestCartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -335,14 +342,14 @@ class _GuestCartView extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           CustomText(
-            text: 'Sign in to view your bag',
+            text: l10n.signInToViewBag,
             size: 18,
             color: colorScheme.onSurface,
             weight: FontWeight.w600,
           ),
           SizedBox(height: 8.h),
           CustomText(
-            text: 'Save items and checkout across devices.',
+            text: l10n.saveItemsAcrossDevices,
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),
@@ -359,7 +366,7 @@ class _GuestCartView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: CustomText(
-                text: 'SIGN IN',
+                text: l10n.signIn.toUpperCase(),
                 size: 14,
                 color: colorScheme.surface,
                 spacing: 2,

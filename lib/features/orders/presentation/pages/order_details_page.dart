@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
@@ -16,6 +17,7 @@ class OrderDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
@@ -40,7 +42,10 @@ class OrderDetailsPage extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       CustomText(
-                        text: DateFormatter.formatDateTime(order.orderDate),
+                        text: DateFormatter.formatDateTime(
+                          order.orderDate,
+                          locale: l10n.localeName,
+                        ),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -53,7 +58,7 @@ class OrderDetailsPage extends StatelessWidget {
             SizedBox(height: 24.h),
 
             CustomText(
-              text: 'PRODUCTS',
+              text: l10n.productsLabel,
               size: 12,
               spacing: 2,
               color: colorScheme.onSurfaceVariant,
@@ -107,21 +112,21 @@ class OrderDetailsPage extends StatelessWidget {
                               if (item.selectedColor != null)
                                 CustomText(
                                   text: [
-                                    'Size: ${item.selectedSize}',
-                                    'Color: ${item.selectedColor}',
+                                    l10n.sizeLabel(item.selectedSize),
+                                    l10n.colorLabel(item.selectedColor!),
                                   ].join(' • '),
                                   size: 12,
                                   color: colorScheme.onSurfaceVariant,
                                 )
                               else
                                 CustomText(
-                                  text: 'Size: ${item.selectedSize}',
+                                  text: l10n.sizeLabel(item.selectedSize),
                                   size: 12,
                                   color: colorScheme.onSurfaceVariant,
                                 ),
                               SizedBox(height: 4.h),
                               CustomText(
-                                text: 'Qty: ${item.quantity}',
+                                text: l10n.qtyLabel(item.quantity.toString()),
                                 size: 12,
                                 color: colorScheme.onSurfaceVariant,
                               ),
@@ -129,7 +134,7 @@ class OrderDetailsPage extends StatelessWidget {
                           ),
                         ),
                         CustomText(
-                          text: '\$${item.totalPrice.toStringAsFixed(2)}',
+                          text: l10n.priceValue(item.totalPrice.toStringAsFixed(2)),
                           size: 14,
                           weight: FontWeight.w600,
                           color: colorScheme.onSurface,
@@ -146,12 +151,12 @@ class OrderDetailsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                  text: 'Total (${order.itemCount} items)',
+                  text: l10n.totalItems(order.itemCount.toString()),
                   size: 14,
                   color: colorScheme.onSurfaceVariant,
                 ),
                 CustomText(
-                  text: '\$${order.totalPrice.toStringAsFixed(2)}',
+                  text: l10n.priceValue(order.totalPrice.toStringAsFixed(2)),
                   size: 16,
                   weight: FontWeight.w700,
                   color: colorScheme.onSurface,
@@ -161,12 +166,12 @@ class OrderDetailsPage extends StatelessWidget {
             SizedBox(height: 24.h),
 
             _InfoRow(
-              label: 'DELIVERY ADDRESS',
+              label: l10n.deliveryAddressLabel,
               value: order.deliveryAddress,
             ),
             SizedBox(height: 16.h),
             _InfoRow(
-              label: 'PAYMENT METHOD',
+              label: l10n.paymentMethodLabel,
               value: order.paymentMethod,
             ),
             SizedBox(height: 24.h),

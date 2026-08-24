@@ -7,6 +7,7 @@ import 'package:max/data/models/user_model.dart';
 import 'package:max/features/auth/data/models/profile_model.dart';
 import 'package:max/features/auth/domain/auth_repository_interface.dart';
 import 'package:max/features/auth/presentation/providers/auth_providers.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 final authStateProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(ref.read(authRepositoryProvider));
@@ -70,6 +71,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   String? _pendingPhoneNumber;
   bool _isSignUpInProgress = false;
   int _profileLoadGeneration = 0;
+  AppLocalizations? _l10n;
+
+  void setLocalizations(AppLocalizations l10n) {
+    _l10n = l10n;
+  }
 
   void _listenToAuthChanges() {
     final client = supabase.Supabase.instance.client;
@@ -134,7 +140,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           isLoading: false,
           clearUser: true,
-          error: 'Could not load profile. Please try again.',
+          error: _l10n?.couldNotLoadProfile ?? 'Could not load profile. Please try again.',
         );
         return;
       }
@@ -249,7 +255,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           isLoading: false,
           emailConfirmationPending: true,
-          error: 'Account created! Please check your email to confirm your account.',
+          error: _l10n?.emailConfirmationSent ?? 'Account created! Please check your email to confirm your account.',
         );
         return;
       }
@@ -277,7 +283,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           isLoading: false,
           emailConfirmationPending: true,
-          error: 'Account created! Please check your email to confirm your account.',
+          error: _l10n?.emailConfirmationSent ?? 'Account created! Please check your email to confirm your account.',
         );
         return;
       }
@@ -288,13 +294,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'No internet connection. Please check your network.',
+        error: _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Connection timed out. Please try again.',
+        error: _l10n?.connectionTimedOut ?? 'Connection timed out. Please try again.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -317,13 +323,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'No internet connection. Please check your network.',
+        error: _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Connection timed out. Please try again.',
+        error: _l10n?.connectionTimedOut ?? 'Connection timed out. Please try again.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -367,9 +373,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
       return true;
     } catch (e) {
       if (!mounted) return false;
+      final cleaned = e.toString().replaceFirst('Exception: ', '');
       state = state.copyWith(
         isLoading: false,
-        error: e.toString().replaceFirst('Exception: ', ''),
+        error: cleaned.contains('Exception') || cleaned.contains('Error')
+            ? (_l10n?.genericError ?? 'Something went wrong. Please try again.')
+            : cleaned,
       );
       return false;
     }
@@ -403,13 +412,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'No internet connection. Please check your network.',
+        error: _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Connection timed out. Please try again.',
+        error: _l10n?.connectionTimedOut ?? 'Connection timed out. Please try again.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -433,20 +442,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
       } else {
         state = state.copyWith(
           isLoading: false,
-          error: 'Invalid or expired code. Please try again.',
+          error: _l10n?.invalidOrExpiredCode ?? 'Invalid or expired code. Please try again.',
         );
       }
     } on SocketException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'No internet connection. Please check your network.',
+        error: _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Connection timed out. Please try again.',
+        error: _l10n?.connectionTimedOut ?? 'Connection timed out. Please try again.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -490,13 +499,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'No internet connection. Please check your network.',
+        error: _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.',
       );
     } on TimeoutException {
       if (!mounted) return;
       state = state.copyWith(
         isLoading: false,
-        error: 'Connection timed out. Please try again.',
+        error: _l10n?.connectionTimedOut ?? 'Connection timed out. Please try again.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -511,30 +520,35 @@ class AuthNotifier extends StateNotifier<AuthState> {
         message.contains('user already') ||
         message.contains('email already') ||
         message.contains('exists')) {
-      return 'An account with this email already exists.';
+      return _l10n?.accountAlreadyExists ?? 'An account with this email already exists.';
     }
     if (message.contains('invalid') && message.contains('email')) {
-      return 'Please enter a valid email address.';
+      return _l10n?.emailInvalid ?? 'Invalid email address';
     }
     if (message.contains('password') &&
         (message.contains('weak') ||
             message.contains('too short') ||
             message.contains('at least'))) {
-      return 'Password must be at least 6 characters.';
+      return _l10n?.passwordTooShort ?? 'Password must be at least 6 characters.';
     }
     if (message.contains('not found') || message.contains('invalid login')) {
-      return 'Incorrect email or password.';
+      return _l10n?.incorrectEmailOrPassword ?? 'Incorrect email or password.';
     }
     if (message.contains('network') ||
         message.contains('socket') ||
         message.contains('connection')) {
-      return 'No internet connection. Please check your network.';
+      return _l10n?.noInternetConnection ?? 'No internet connection. Please check your network.';
+    }
+    if (message.contains('429') || message.contains('rate') || message.contains('wait')) {
+      return _l10n?.pleaseWaitBeforeResend ?? 'Please wait before requesting another code.';
     }
 
     final cleaned = e.toString().replaceFirst('Exception: ', '');
-    return cleaned.isNotEmpty
+    return cleaned.isNotEmpty &&
+            !cleaned.contains('Exception') &&
+            !cleaned.contains('Error')
         ? cleaned
-        : 'Something went wrong. Please try again.';
+        : (_l10n?.genericError ?? 'Something went wrong. Please try again.');
   }
 
   @override

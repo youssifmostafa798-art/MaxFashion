@@ -67,7 +67,7 @@ class CollectionsCarouselSkeleton extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w),
                           child: Align(
-                            alignment: Alignment.centerLeft,
+                            alignment: AlignmentDirectional.centerStart,
                             child: SkeletonBox(
                               width: 100.w,
                               height: 12.h,

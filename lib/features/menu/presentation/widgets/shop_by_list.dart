@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class ShopByItem {
   final String label;
@@ -12,19 +13,20 @@ class ShopByItem {
 class ShopByList extends StatelessWidget {
   const ShopByList({super.key});
 
-  static const _items = [
-    ShopByItem('New Arrivals', Icons.new_releases_outlined),
-    ShopByItem('Trending Now', Icons.trending_up),
-    ShopByItem('Best Sellers', Icons.thumb_up_outlined),
-    ShopByItem('Online Exclusive', Icons.language),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
+    final items = [
+      ShopByItem(l10n.newArrivals, Icons.new_releases_outlined),
+      ShopByItem(l10n.trendingNow, Icons.trending_up),
+      ShopByItem(l10n.bestSellers, Icons.thumb_up_outlined),
+      ShopByItem(l10n.onlineExclusive, Icons.language),
+    ];
+
     return Column(
-      children: _items.asMap().entries.map((entry) {
+      children: items.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
         return TweenAnimationBuilder<double>(
@@ -59,7 +61,9 @@ class ShopByList extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.chevron_right,
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.chevron_left
+                      : Icons.chevron_right,
                   color: colorScheme.onSurfaceVariant,
                   size: 20.w,
                 ),

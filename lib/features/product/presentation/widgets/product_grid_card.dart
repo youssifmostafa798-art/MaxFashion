@@ -5,6 +5,7 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/features/checkout/presentation/widgets/favorite_button.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class ProductGridCard extends StatefulWidget {
   const ProductGridCard({
@@ -47,6 +48,7 @@ class _ProductGridCardState extends State<ProductGridCard>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -111,7 +113,7 @@ class _ProductGridCardState extends State<ProductGridCard>
             ),
             Gap(8.h),
             CustomText(
-              text: "\$ ${widget.product.price.toString()}",
+              text: l10n.priceValue(widget.product.price.toString()),
               color: const Color(0xffDD8560),
               size: 16,
             ),

@@ -21,6 +21,12 @@ class CustomText extends StatelessWidget {
   final double spacing;
   final int? maxLines;
   final TextOverflow? overflow;
+  String _fontFamily(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    if (locale.languageCode == 'ar') return 'Noto_Sans_Arabic';
+    return 'Tenor_Sans';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -32,7 +38,7 @@ class CustomText extends StatelessWidget {
         fontSize: size.sp,
         color: color ?? Theme.of(context).colorScheme.onSurface,
         fontWeight: weight,
-        fontFamily: 'Tenor_Sans',
+        fontFamily: _fontFamily(context),
         height: height,
       ),
     );

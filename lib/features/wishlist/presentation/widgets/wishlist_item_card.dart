@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class WishlistItemCard extends StatelessWidget {
   const WishlistItemCard({
@@ -21,6 +22,7 @@ class WishlistItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Dismissible(
@@ -31,8 +33,8 @@ class WishlistItemCard extends StatelessWidget {
         onRemove();
       },
       background: Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 24.w),
+        alignment: AlignmentDirectional.centerEnd,
+        padding: EdgeInsetsDirectional.only(end: 24.w),
         margin: EdgeInsets.only(bottom: 16.h),
         decoration: BoxDecoration(
           color: Colors.red.shade300,
@@ -114,7 +116,7 @@ class WishlistItemCard extends StatelessWidget {
                     ),
                     Gap(8.h),
                     CustomText(
-                      text: '\$${product.price.toStringAsFixed(2)}',
+                      text: l10n.priceValue(product.price.toStringAsFixed(2)),
                       size: 15,
                       weight: FontWeight.w600,
                       color: colorScheme.onSurface,
@@ -135,7 +137,7 @@ class WishlistItemCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: CustomText(
-                          text: 'MOVE TO CART',
+                          text: l10n.moveToCart.toUpperCase(),
                           size: 11,
                           color: colorScheme.surface,
                           spacing: 1,

@@ -16,6 +16,7 @@ import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/dialog/guest_prompt_dialog.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   const ProductDetailPage({super.key, required this.product});
@@ -38,6 +39,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
       body: Padding(
@@ -74,9 +76,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               ),
               if (widget.product.sizes.isNotEmpty) ...[
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerStart,
                   child: CustomText(
-                    text: "SIZE",
+                    text: l10n.size,
                     size: 13,
                     weight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -90,7 +92,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     children: widget.product.sizes.map((size) {
                       final isSelected = selectedSize == size;
                       return Padding(
-                        padding: EdgeInsets.only(right: 10.w),
+                        padding: EdgeInsetsDirectional.only(end: 10.w),
                         child: GestureDetector(
                           onTap: () {
                             HapticUtils.selection();
@@ -138,12 +140,12 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                    text: "Est. Total",
+                    text: l10n.estimatedTotal,
                     color: Theme.of(context).colorScheme.onSurface,
                     spacing: 3,
                   ),
                   CustomText(
-                    text: "\$ ${widget.product.price * selectedQty}",
+                    text: l10n.priceValue((widget.product.price * selectedQty).toString()),
                     color: AppColors.errorRed200,
                   ),
                 ],
@@ -151,13 +153,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               Gap(15.h),
               CustomButton(
                 isSvg: true,
-                title: "Add to cart",
+                title: l10n.addToCart,
                 onTap: () {
                   final isGuest = ref.read(authStateProvider).isGuest;
                   if (isGuest) {
                     showGuestPromptDialog(
                       context: context,
-                      message: 'Sign in to add items to your bag.',
+                      message: l10n.signInToAddToBag,
                     );
                     return;
                   }

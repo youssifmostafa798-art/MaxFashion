@@ -17,6 +17,7 @@ import 'package:max/features/home/presentation/widgets/home_product_grid.dart';
 import 'package:max/features/home/presentation/widgets/home_empty_products.dart';
 import 'package:max/features/home/presentation/widgets/home_about_section.dart';
 import 'package:max/features/collection/presentation/widgets/home_collections_section.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -28,6 +29,7 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final products = ref.watch(filteredHomeProductsProvider);
     final categories = ref.watch(categoriesProvider);
@@ -77,7 +79,7 @@ class _HomeState extends ConsumerState<Home> {
                           : const ProductGridSkeleton(),
                       Gap(5.h),
                       CustomText(
-                        text: "Explore Collections".toUpperCase(),
+                        text: l10n.exploreCollections.toUpperCase(),
                         size: 20,
                       ),
                       Gap(10.h),
@@ -123,7 +125,7 @@ class _HomeState extends ConsumerState<Home> {
                     child: Center(
                       child: CustomText(
                         height: 2.5,
-                        text: "Copyright© OpenUI All Rights Reserved.",
+                        text: l10n.copyrightText,
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),

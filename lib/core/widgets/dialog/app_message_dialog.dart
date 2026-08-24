@@ -3,6 +3,7 @@ import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/theme/app_text_styles.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/dialog/app_dialog_type.dart';
 
@@ -39,7 +40,7 @@ class AppMessageDialog extends StatelessWidget {
     required this.message,
     this.type = AppDialogType.error,
     this.icon,
-    this.primaryActionLabel = 'GOT IT',
+    this.primaryActionLabel,
     this.onPrimaryAction,
   });
 
@@ -47,7 +48,7 @@ class AppMessageDialog extends StatelessWidget {
   final String message;
   final AppDialogType type;
   final IconData? icon;
-  final String primaryActionLabel;
+  final String? primaryActionLabel;
   final VoidCallback? onPrimaryAction;
 
   static Future<void> show({
@@ -56,7 +57,7 @@ class AppMessageDialog extends StatelessWidget {
     required String message,
     AppDialogType type = AppDialogType.error,
     IconData? icon,
-    String primaryActionLabel = 'GOT IT',
+    String? primaryActionLabel,
     VoidCallback? onPrimaryAction,
     bool barrierDismissible = true,
   }) {
@@ -94,8 +95,10 @@ class AppMessageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final displayIcon = icon ?? _defaultIconForType(type, colorScheme);
     final iconColor = _defaultIconColorForType(type, colorScheme);
+    final displayLabel = primaryActionLabel ?? l10n.gotIt;
 
     return Dialog(
       child: Container(
@@ -156,7 +159,7 @@ class AppMessageDialog extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    primaryActionLabel.toUpperCase(),
+                    displayLabel.toUpperCase(),
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize14,
                       color: colorScheme.surface,

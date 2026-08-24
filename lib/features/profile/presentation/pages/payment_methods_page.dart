@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -54,8 +55,9 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
       final provider = ref.read(paymentCardProvider.notifier);
       if (provider.isDuplicate(newCard)) {
         if (mounted) {
+          final l10n = AppLocalizations.of(context)!;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('This card is already saved.')),
+            SnackBar(content: Text(l10n.cardAlreadySaved)),
           );
         }
         return;
@@ -65,12 +67,13 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
   }
 
   void _deleteCard(PaymentCardModel card) {
+    final l10n = AppLocalizations.of(context)!;
     AppConfirmationDialog.show(
       context: context,
-      title: 'Delete Card?',
-      message: 'This action cannot be undone.',
+      title: l10n.deleteCardConfirm,
+      message: l10n.cannotUndo,
       icon: Icons.credit_card_off_outlined,
-      confirmLabel: 'DELETE',
+      confirmLabel: l10n.deleteButton,
       isDestructive: true,
     ).then((confirmed) {
       if (confirmed) {
@@ -87,6 +90,7 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
   Widget build(BuildContext context) {
     final cardsState = ref.watch(paymentCardProvider);
     final cards = cardsState.items;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
@@ -94,7 +98,7 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
           ? _EmptyPaymentMethods(onAdd: _addCard)
           : Column(
               children: [
-                const Header(title: 'Payment Methods'),
+                Header(title: l10n.paymentMethodsMenu),
                 Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(
@@ -117,7 +121,7 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
                   padding: EdgeInsets.fromLTRB(15.w, 0, 15.w, 30.h),
                   child: CustomButton(
                     isSvg: false,
-                    title: 'Add New Card',
+                    title: l10n.addNewCard,
                     onTap: _addCard,
                   ),
                 ),
@@ -135,6 +139,7 @@ class _EmptyPaymentMethods extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Padding(
@@ -148,21 +153,21 @@ class _EmptyPaymentMethods extends StatelessWidget {
             ),
             Gap(24.h),
             CustomText(
-              text: 'No saved payment methods.',
+              text: l10n.noSavedCards,
               size: 18,
               weight: FontWeight.w700,
               color: colorScheme.onSurface,
             ),
             Gap(10.h),
             CustomText(
-              text: 'Add your first payment method.',
+              text: l10n.addFirstPaymentMethod,
               size: 14,
               color: colorScheme.onSurfaceVariant,
             ),
             Gap(40.h),
             CustomButton(
               isSvg: false,
-              title: 'Add Card',
+              title: l10n.addCardButton,
               onTap: onAdd,
             ),
           ],

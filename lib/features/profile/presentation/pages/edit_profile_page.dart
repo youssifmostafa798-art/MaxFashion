@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/errors/app_error_messages.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/widgets/custom_text.dart';
@@ -32,8 +34,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   bool _isInitialized = false;
   String? _lastSyncedUserId;
-
-  static const _genders = ['Male', 'Female', 'Other', 'Prefer not to say'];
 
   @override
   void initState() {
@@ -79,7 +79,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
   void _updateDobController(DateTime? date) {
     if (date != null) {
-      _dobController.text = DateFormatter.formatDateNumeric(date);
+      _dobController.text = DateFormatter.formatDateNumeric(
+        date,
+        locale: Localizations.localeOf(context).languageCode,
+      );
     } else {
       _dobController.clear();
     }
@@ -106,13 +109,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Future<bool> _onWillPop() async {
     final state = ref.read(editProfileProvider);
     if (!state.hasChanges) return true;
+    final l10n = AppLocalizations.of(context)!;
 
     final result = await AppConfirmationDialog.show(
       context: context,
-      title: 'Discard Changes?',
-      message: 'You have unsaved changes. Are you sure you want to leave?',
+      title: l10n.discardChanges,
+      message: l10n.unsavedChangesMessage,
       icon: Icons.warning_amber_rounded,
-      confirmLabel: 'Discard',
+      confirmLabel: l10n.discardButton,
       isDestructive: true,
     );
 
@@ -128,15 +132,19 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     ref.listen<EditProfileState>(editProfileProvider, (previous, next) {
       if (next.error != null && previous?.error != next.error) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.error!),
+            content: Text(AppErrorMessages.resolve(l10n, next.error)),
             backgroundColor: AppColors.errorRed400,
           ),
         );
         ref.read(editProfileProvider.notifier).clearError();
       }
     });
+
+    final l10n = AppLocalizations.of(context)!;
+    final genders = [l10n.genderMale, l10n.genderFemale, l10n.genderOther, l10n.genderPreferNotToSay];
 
     return PopScope(
       canPop: !state.hasChanges,
@@ -154,7 +162,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+            icon: Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? Icons.arrow_forward
+                  : Icons.arrow_back,
+              color: colorScheme.onSurface,
+            ),
             onPressed: () async {
               final shouldPop = await _onWillPop();
               if (shouldPop && context.mounted) {
@@ -163,7 +176,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             },
           ),
           title: CustomText(
-            text: 'EDIT PROFILE',
+            text: l10n.editProfileTitle,
             size: 18,
             color: colorScheme.onSurface,
             spacing: 4,
@@ -204,7 +217,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     onTap: () =>
                         ref.read(editProfileProvider.notifier).removeAvatar(),
                     child: CustomText(
-                      text: 'Remove Photo',
+                      text: l10n.removePhoto,
                       size: 13,
                       color: AppColors.errorRed400,
                     ),
@@ -212,18 +225,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 ],
                 Gap(30.h),
                 ProfileFormSection(
-                  title: 'PERSONAL INFORMATION',
+                  title: l10n.personalInformation,
                   children: [
                     ProfileFormField(
                       controller: _firstNameController,
-                      hint: 'Enter your first name',
-                      label: 'FIRST NAME',
+                      hint: l10n.firstNameHint,
+                      label: l10n.firstNameLabel,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'First name is required';
+                          return l10n.firstNameRequired;
                         }
                         if (value.trim().length > 50) {
-                          return 'First name must be 50 characters or less';
+                          return l10n.firstNameMaxLength;
                         }
                         return null;
                       },
@@ -233,11 +246,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     ProfileFormField(
                       controller: _lastNameController,
-                      hint: 'Enter your last name',
-                      label: 'LAST NAME',
+                      hint: l10n.lastNameHint,
+                      label: l10n.lastNameLabel,
                       validator: (value) {
                         if (value != null && value.trim().length > 50) {
-                          return 'Last name must be 50 characters or less';
+                          return l10n.lastNameMaxLength;
                         }
                         return null;
                       },
@@ -247,14 +260,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     ProfileFormField(
                       controller: _emailController,
-                      hint: 'Your email address',
-                      label: 'EMAIL',
+                      hint: l10n.emailAddressHint,
+                      label: l10n.emailLabel,
                       readOnly: true,
                     ),
                     ProfileFormField(
                       controller: _phoneController,
-                      hint: 'Enter your phone number',
-                      label: 'PHONE NUMBER',
+                      hint: l10n.phoneHint,
+                      label: l10n.phoneLabel,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
@@ -269,7 +282,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                             '',
                           );
                           if (!RegExp(r'^\+?[0-9]{7,15}$').hasMatch(cleaned)) {
-                            return 'Please enter a valid phone number';
+                            return l10n.invalidPhone;
                           }
                         }
                         return null;
@@ -284,8 +297,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       child: AbsorbPointer(
                         child: ProfileFormField(
                           controller: _dobController,
-                          hint: 'Select your date of birth',
-                          label: 'DATE OF BIRTH (OPTIONAL)',
+                          hint: l10n.dobHint,
+                          label: l10n.dobLabel,
                           suffixIcon: Icons.calendar_today_outlined,
                         ),
                       ),
@@ -294,24 +307,24 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 ),
                 Gap(30.h),
                 ProfileFormSection(
-                  title: 'ADDITIONAL INFO',
+                  title: l10n.additionalInfo,
                   children: [
                     ProfileFormDropdown(
                       value: state.gender,
-                      items: _genders,
-                      hint: 'Select your gender',
-                      label: 'GENDER (OPTIONAL)',
+                      items: genders,
+                      hint: l10n.genderHint,
+                      label: l10n.genderLabel,
                       onChanged: (value) => ref
                           .read(editProfileProvider.notifier)
                           .updateGender(value),
                     ),
                     ProfileFormField(
                       controller: _countryController,
-                      hint: 'Enter your country',
-                      label: 'COUNTRY (OPTIONAL)',
+                      hint: l10n.countryHintProfile,
+                      label: l10n.countryLabel,
                       validator: (value) {
                         if (value != null && value.trim().length > 50) {
-                          return 'Country must be 50 characters or less';
+                          return l10n.countryMaxLength;
                         }
                         return null;
                       },
@@ -321,12 +334,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                     ProfileFormField(
                       controller: _bioController,
-                      hint: 'Tell us about yourself',
-                      label: 'BIO (OPTIONAL)',
+                      hint: l10n.bioHint,
+                      label: l10n.bioLabel,
                       maxLines: 3,
                       validator: (value) {
                         if (value != null && value.trim().length > 200) {
-                          return 'Bio must be 200 characters or less';
+                          return l10n.bioMaxLength;
                         }
                         return null;
                       },
@@ -350,6 +363,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Widget _buildSaveButton(ColorScheme colorScheme, EditProfileState state) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: state.isLoading ? null : () => _save(),
       child: Container(
@@ -372,7 +386,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   ),
                 )
               : CustomText(
-                  text: 'SAVE CHANGES',
+                  text: l10n.saveChanges,
                   size: 15,
                   color: colorScheme.surface,
                 ),
@@ -382,6 +396,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Widget _buildCancelButton(ColorScheme colorScheme) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       child: Container(
@@ -394,7 +409,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         ),
         child: Center(
           child: CustomText(
-            text: 'CANCEL',
+            text: l10n.cancel,
             size: 15,
             color: colorScheme.onSurface,
           ),
@@ -410,10 +425,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final success = await notifier.save();
 
     if (success && mounted) {
+      final l10n = AppLocalizations.of(context)!;
       showSuccessDialog(
         context: context,
-        title: 'Profile Updated',
-        message: 'Your profile information has been saved successfully.',
+        title: l10n.profileUpdated,
+        message: l10n.profileUpdatedMessage,
         icon: Icons.check_circle_rounded,
         onDismissed: () {
           if (mounted) {

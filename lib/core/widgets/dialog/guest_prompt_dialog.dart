@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/utils/haptic_utils.dart';
@@ -11,10 +12,11 @@ void showGuestPromptDialog({
   String? message,
 }) {
   final colorScheme = Theme.of(context).colorScheme;
+  final l10n = AppLocalizations.of(context)!;
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    barrierLabel: 'Sign in required',
+    barrierLabel: l10n.signInRequired,
     transitionDuration: const Duration(milliseconds: 250),
     transitionBuilder: (context, animation, secondaryAnimation, child) {
       final curvedAnimation = CurvedAnimation(
@@ -48,7 +50,7 @@ void showGuestPromptDialog({
               ),
               Gap(16.h),
               Text(
-                'Sign in required',
+                l10n.signInRequired,
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize18,
                   fontWeight: FontWeight.w700,
@@ -58,7 +60,7 @@ void showGuestPromptDialog({
               ),
               Gap(8.h),
               Text(
-                message ?? 'Please sign in to access this feature.',
+                message ?? l10n.signInRequiredMessage,
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize13,
                   color: colorScheme.onSurfaceVariant,
@@ -82,7 +84,7 @@ void showGuestPromptDialog({
                   ),
                   child: Center(
                     child: Text(
-                      'SIGN IN',
+                      l10n.signIn,
                       style: TextStyle(
                         fontSize: AppTextStyles.fontSize14,
                         color: colorScheme.surface,
@@ -109,7 +111,7 @@ void showGuestPromptDialog({
                   ),
                   child: Center(
                     child: Text(
-                      'CREATE ACCOUNT',
+                      l10n.createAccount,
                       style: TextStyle(
                         fontSize: AppTextStyles.fontSize14,
                         color: colorScheme.onSurface,
@@ -128,7 +130,7 @@ void showGuestPromptDialog({
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.h),
                   child: Text(
-                    'Cancel',
+                    l10n.cancel,
                     style: TextStyle(
                       fontSize: AppTextStyles.fontSize13,
                       color: colorScheme.onSurfaceVariant,

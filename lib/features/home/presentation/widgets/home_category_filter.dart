@@ -6,6 +6,7 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/providers/product_provider.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 
 class HomeCategoryFilter extends StatelessWidget {
   const HomeCategoryFilter({super.key, required this.categories});
@@ -14,6 +15,7 @@ class HomeCategoryFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: 40.h,
       child: ListView.separated(
@@ -23,7 +25,7 @@ class HomeCategoryFilter extends StatelessWidget {
         separatorBuilder: (_, _) => Gap(8.w),
         itemBuilder: (context, index) {
           if (index == 0) {
-            return const HomeCategoryChip(label: 'All', categoryId: null);
+            return HomeCategoryChip(label: l10n.allCategory, categoryId: null);
           }
           final category = categories[index - 1];
           return HomeCategoryChip(label: category.name, categoryId: category.id);

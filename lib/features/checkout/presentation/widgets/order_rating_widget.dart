@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/custom_text.dart';
 
@@ -14,14 +15,17 @@ class OrderRatingWidget extends StatefulWidget {
 class _OrderRatingWidgetState extends State<OrderRatingWidget> {
   int _selectedRating = 0;
 
-  static const _ratingMessages = {
-    0: 'Rate your experience',
-    1: 'We can do better',
-    2: 'Thanks for your feedback',
-    3: 'Good',
-    4: 'Great',
-    5: 'Excellent!',
-  };
+  String _getRatingMessage(AppLocalizations l10n) {
+    switch (_selectedRating) {
+      case 0: return l10n.rateExperience;
+      case 1: return l10n.weCanDoBetter;
+      case 2: return l10n.thanksForFeedback;
+      case 3: return l10n.good;
+      case 4: return l10n.great;
+      case 5: return l10n.excellent;
+      default: return l10n.rateExperience;
+    }
+  }
 
   void _onStarTap(int rating) {
     HapticUtils.selection();
@@ -33,6 +37,7 @@ class _OrderRatingWidgetState extends State<OrderRatingWidget> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -75,7 +80,7 @@ class _OrderRatingWidgetState extends State<OrderRatingWidget> {
           ),
           child: CustomText(
             key: ValueKey(_selectedRating),
-            text: _ratingMessages[_selectedRating]!,
+            text: _getRatingMessage(l10n),
             size: 14,
             color: colorScheme.onSurfaceVariant,
           ),

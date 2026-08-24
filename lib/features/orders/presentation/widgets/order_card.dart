@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/utils/order_display_helper.dart';
 import 'package:max/core/utils/haptic_utils.dart';
@@ -45,6 +46,7 @@ class _OrderCardState extends State<OrderCard>
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final order = widget.order;
+    final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTapDown: widget.onTap != null ? (_) => _controller.forward() : null,
@@ -89,7 +91,10 @@ class _OrderCardState extends State<OrderCard>
                         ),
                         SizedBox(height: 4.h),
                         CustomText(
-                          text: DateFormatter.formatDate(order.orderDate),
+                          text: DateFormatter.formatDate(
+                            order.orderDate,
+                            locale: l10n.localeName,
+                          ),
                           size: 13,
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -109,13 +114,13 @@ class _OrderCardState extends State<OrderCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
-                        text: '${order.itemCount} item${order.itemCount > 1 ? 's' : ''}',
+                        text: l10n.itemsCount(order.itemCount.toString()),
                         size: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       SizedBox(height: 2.h),
                       CustomText(
-                        text: '\$${order.totalPrice.toStringAsFixed(2)}',
+                        text: l10n.priceValue(order.totalPrice.toStringAsFixed(2)),
                         size: 16,
                         weight: FontWeight.w700,
                         color: colorScheme.onSurface,
@@ -134,7 +139,7 @@ class _OrderCardState extends State<OrderCard>
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: CustomText(
-                        text: 'VIEW DETAILS',
+                        text: l10n.viewDetails,
                         size: 12,
                         color: colorScheme.surface,
                         spacing: 1,
