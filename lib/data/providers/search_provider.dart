@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:max/core/l10n/language_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -74,8 +75,9 @@ class SearchNotifier extends StateNotifier<SearchState> {
     _loadRecentSearches();
   }
 
-  void _loadRecentSearches() async {
+  Future<void> _loadRecentSearches() async {
     final saved = await _loadRecentSearchesFromPrefs();
+    if (!mounted) return;
     state = state.copyWith(recentSearches: saved);
   }
 
@@ -100,6 +102,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
       final repo = ref.read(searchRepositoryProvider);
       final result = await repo.searchProducts(
         query,
+        locale: ref.read(localeProvider).languageCode,
         limit: SearchState.pageSize,
         offset: 0,
       );
@@ -128,6 +131,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
       final nextPage = state.currentPage + 1;
       final result = await repo.searchProducts(
         state.query,
+        locale: ref.read(localeProvider).languageCode,
         limit: SearchState.pageSize,
         offset: nextPage * SearchState.pageSize,
       );
@@ -221,5 +225,6 @@ class SearchNotifier extends StateNotifier<SearchState> {
 final searchProvider =
     StateNotifierProvider<SearchNotifier, SearchState>((ref) {
   final userId = ref.watch(currentUserIdProvider);
+  ref.watch(localeProvider);
   return SearchNotifier(ref, userId: userId);
 });

@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 
@@ -12,7 +13,7 @@ class SupabaseSearchRepository implements SearchRepository {
     return ProductModel(
       id: 'p${row['id']}',
       categoryId: row['category_id'] as int,
-      name: row['name'] as String,
+      name: row['name'] as String? ?? '',
       description: row['description'] as String? ?? '',
       price: (row['price'] as num).toDouble(),
       discountPrice: row['discount_price'] != null
@@ -30,6 +31,7 @@ class SupabaseSearchRepository implements SearchRepository {
   @override
   Future<SearchResult> searchProducts(
     String query, {
+    String locale = AppConstants.fallbackLanguageCode,
     int limit = 20,
     int offset = 0,
   }) async {
@@ -40,6 +42,7 @@ class SupabaseSearchRepository implements SearchRepository {
 
     final response = await _client.rpc('search_products', params: {
       'p_query': trimmed,
+      'p_locale': locale,
       'p_limit': limit,
       'p_offset': offset,
     });

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:max/core/constants/app_constants.dart';
+import 'package:max/core/l10n/language_provider.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/repositories/product/product_repository.dart';
@@ -94,7 +95,12 @@ final categoriesProvider = Provider<List<CategoryModel>>((ref) {
 });
 
 final allProductsProvider = Provider<List<ProductModel>>((ref) {
-  return ref.watch(productsProvider).products;
+  final languageCode = ref.watch(localeProvider).languageCode;
+  return ref
+      .watch(productsProvider)
+      .products
+      .map((product) => product.localizedFor(languageCode))
+      .toList();
 });
 
 final categoryProductsProvider = Provider.family<List<ProductModel>, String>((

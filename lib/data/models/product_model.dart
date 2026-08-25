@@ -1,6 +1,7 @@
 import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_size_model.dart';
+import 'package:max/data/models/product_translation_model.dart';
 
 class ProductModel {
 
@@ -16,6 +17,7 @@ class ProductModel {
   final bool isAvailable;
   final List<ProductImageModel> productImages;
   final List<ProductSizeModel> productSizes;
+  final List<ProductTranslationModel> translations;
 
   const ProductModel({
     required this.id,
@@ -30,6 +32,7 @@ class ProductModel {
     this.isAvailable = true,
     this.productImages = const [],
     this.productSizes = const [],
+    this.translations = const [],
   });
 
   String get image => '${AppConstants.supabaseStorageBaseUrl}/$thumbnailUrl';
@@ -44,6 +47,15 @@ class ProductModel {
 
   int? get rawId => int.tryParse(id.startsWith('p') ? id.substring(1) : id);
 
+  ProductModel localizedFor(String languageCode) {
+    final translation = ProductTranslationModel.resolve(translations, languageCode);
+    if (translation == null) return this;
+    return copyWith(
+      name: translation.name,
+      description: translation.description,
+    );
+  }
+
   ProductModel copyWith({
     String? id,
     int? categoryId,
@@ -57,6 +69,7 @@ class ProductModel {
     bool? isAvailable,
     List<ProductImageModel>? productImages,
     List<ProductSizeModel>? productSizes,
+    List<ProductTranslationModel>? translations,
     bool clearDiscountPrice = false,
   }) {
     return ProductModel(
@@ -73,6 +86,7 @@ class ProductModel {
       isAvailable: isAvailable ?? this.isAvailable,
       productImages: productImages ?? this.productImages,
       productSizes: productSizes ?? this.productSizes,
+      translations: translations ?? this.translations,
     );
   }
 
@@ -80,7 +94,7 @@ class ProductModel {
     return ProductModel(
       id: 'p${json['id']}',
       categoryId: json['category_id'] as int,
-      name: json['name'] as String,
+      name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       price: (json['price'] as num).toDouble(),
       discountPrice: json['discount_price'] != null
@@ -90,6 +104,8 @@ class ProductModel {
       thumbnailUrl: json['thumbnail_url'] as String? ?? '',
       isFeatured: json['is_featured'] as bool? ?? false,
       isAvailable: json['is_available'] as bool? ?? true,
+      translations:
+          ProductTranslationModel.listFromJson(json['product_translations']),
     );
   }
 

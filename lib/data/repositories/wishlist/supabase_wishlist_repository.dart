@@ -2,6 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/product_size_model.dart';
+import 'package:max/data/models/product_translation_model.dart';
 import 'package:max/data/repositories/wishlist/wishlist_repository.dart';
 
 class SupabaseWishlistRepository implements WishlistRepository {
@@ -16,7 +17,8 @@ class SupabaseWishlistRepository implements WishlistRepository {
       id, category_id, name, description, price, discount_price,
       brand, thumbnail_url, is_featured, is_available,
       product_images(id, product_id, image_url, sort_order),
-      product_sizes(product_id, size, stock)
+      product_sizes(product_id, size, stock),
+      product_translations(product_id, locale, name, description)
     )
   ''';
 
@@ -38,7 +40,7 @@ class SupabaseWishlistRepository implements WishlistRepository {
     return ProductModel(
       id: 'p${product['id']}',
       categoryId: product['category_id'] as int,
-      name: product['name'] as String,
+      name: product['name'] as String? ?? '',
       description: product['description'] as String? ?? '',
       price: (product['price'] as num).toDouble(),
       discountPrice: product['discount_price'] != null
@@ -50,6 +52,8 @@ class SupabaseWishlistRepository implements WishlistRepository {
       isAvailable: product['is_available'] as bool? ?? true,
       productImages: images,
       productSizes: sizes,
+      translations:
+          ProductTranslationModel.listFromJson(product['product_translations']),
     );
   }
 

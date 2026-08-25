@@ -167,9 +167,9 @@ class SuggestedProductsSection extends StatelessWidget {
                             ),
                           ),
                         ),
-                          Positioned(
+                          PositionedDirectional(
                             top: 4.w,
-                            right: 4.w,
+                            end: 4.w,
                             child: FavoriteButton(product: product, size: 18),
                           ),
                         ],

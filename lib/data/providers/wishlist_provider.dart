@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:max/core/l10n/language_provider.dart';
 import 'package:max/core/models/loadable_list_state.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -102,6 +103,15 @@ final wishlistProvider = StateNotifierProvider<WishlistNotifier,
   final repository = ref.watch(wishlistRepositoryProvider);
   final userId = ref.watch(currentUserIdProvider);
   return WishlistNotifier(repository, userId: userId);
+});
+
+final localizedWishlistItemsProvider = Provider<List<ProductModel>>((ref) {
+  final languageCode = ref.watch(localeProvider).languageCode;
+  return ref
+      .watch(wishlistProvider)
+      .items
+      .map((product) => product.localizedFor(languageCode))
+      .toList();
 });
 
 final wishlistCountProvider = Provider<int>((ref) {

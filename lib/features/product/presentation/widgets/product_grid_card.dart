@@ -96,9 +96,9 @@ class _ProductGridCardState extends State<ProductGridCard>
                     ),
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   top: 8.w,
-                  right: 8.w,
+                  end: 8.w,
                   child: FavoriteButton(product: widget.product),
                 ),
               ],

@@ -95,8 +95,7 @@ class _WishlistContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final wishlistState = ref.watch(wishlistProvider);
-    final wishlistItems = wishlistState.items;
+    final wishlistItems = ref.watch(localizedWishlistItemsProvider);
 
     return ListView.builder(
       physics: const BouncingScrollPhysics(),

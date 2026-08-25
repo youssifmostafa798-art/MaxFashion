@@ -8,7 +8,10 @@
     "import:products": "node import_products.js",
     "import:product-images": "node import_product_images.js",
     "import:product-sizes": "node import_product_sizes.js",
-    "import:all": "node import_all.js"
+    "import:all": "node import_all.js",
+    "export:english": "node export_english_translations.js",
+    "populate:arabic": "node populate_arabic_translations.js",
+    "validate:arabic": "node validate_arabic_translations.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

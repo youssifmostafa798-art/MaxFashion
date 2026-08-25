@@ -1,4 +1,8 @@
 class AppConstants {
+  static const String englishLanguageCode = 'en';
+  static const String arabicLanguageCode = 'ar';
+  static const String fallbackLanguageCode = englishLanguageCode;
+
   static const String supabaseStorageBaseUrl =
       'https://tonctmdcntftugdskqmb.supabase.co/storage/v1/object/public/product-images';
 

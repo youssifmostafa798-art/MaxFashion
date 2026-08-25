@@ -3,6 +3,7 @@ import 'package:max/data/models/category_model.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/product_size_model.dart';
+import 'package:max/data/models/product_translation_model.dart';
 import 'package:max/data/repositories/product/product_repository.dart';
 
 class SupabaseProductRepository implements ProductRepository {
@@ -22,7 +23,8 @@ class SupabaseProductRepository implements ProductRepository {
       'id, category_id, name, description, price, discount_price, '
       'brand, thumbnail_url, is_featured, is_available, '
       'product_images(id, product_id, image_url, sort_order), '
-      'product_sizes(product_id, size, stock)';
+      'product_sizes(product_id, size, stock), '
+      'product_translations(product_id, locale, name, description)';
 
   ProductModel _mapRowToModel(Map<String, dynamic> row) {
     final images = (row['product_images'] as List?)
@@ -39,7 +41,7 @@ class SupabaseProductRepository implements ProductRepository {
     return ProductModel(
       id: 'p${row['id']}',
       categoryId: categoryId,
-      name: row['name'] as String,
+      name: row['name'] as String? ?? '',
       description: row['description'] as String? ?? '',
       price: (row['price'] as num).toDouble(),
       discountPrice: row['discount_price'] != null
@@ -51,6 +53,8 @@ class SupabaseProductRepository implements ProductRepository {
       isAvailable: row['is_available'] as bool? ?? true,
       productImages: images,
       productSizes: sizes,
+      translations:
+          ProductTranslationModel.listFromJson(row['product_translations']),
     );
   }
 

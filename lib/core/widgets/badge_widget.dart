@@ -25,9 +25,9 @@ class BadgeWidget extends StatelessWidget {
         children: [
           Center(child: child),
           if (count > 0)
-            Positioned(
+            PositionedDirectional(
               top: -3.w,
-              right: -5.w,
+              end: -5.w,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 switchInCurve: Curves.easeOutBack,

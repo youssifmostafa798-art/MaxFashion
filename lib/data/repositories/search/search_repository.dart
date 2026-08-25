@@ -1,3 +1,4 @@
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/product_model.dart';
 
 class SearchResult {
@@ -10,6 +11,7 @@ class SearchResult {
 abstract class SearchRepository {
   Future<SearchResult> searchProducts(
     String query, {
+    String locale = AppConstants.fallbackLanguageCode,
     int limit = 20,
     int offset = 0,
   });
