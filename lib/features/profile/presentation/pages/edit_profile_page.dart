@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/errors/app_error_messages.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/theme/app_colors.dart';
@@ -144,7 +145,24 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     });
 
     final l10n = AppLocalizations.of(context)!;
-    final genders = [l10n.genderMale, l10n.genderFemale, l10n.genderOther, l10n.genderPreferNotToSay];
+    final genderItems = [
+      DropdownMenuItem(
+        value: AppConstants.genderMale,
+        child: Text(l10n.genderMale),
+      ),
+      DropdownMenuItem(
+        value: AppConstants.genderFemale,
+        child: Text(l10n.genderFemale),
+      ),
+      DropdownMenuItem(
+        value: AppConstants.genderOther,
+        child: Text(l10n.genderOther),
+      ),
+      DropdownMenuItem(
+        value: AppConstants.genderPreferNotToSay,
+        child: Text(l10n.genderPreferNotToSay),
+      ),
+    ];
 
     return PopScope(
       canPop: !state.hasChanges,
@@ -311,7 +329,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   children: [
                     ProfileFormDropdown(
                       value: state.gender,
-                      items: genders,
+                      items: genderItems,
                       hint: l10n.genderHint,
                       label: l10n.genderLabel,
                       onChanged: (value) => ref

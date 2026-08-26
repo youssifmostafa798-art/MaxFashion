@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/utils/order_display_helper.dart';
+import 'package:max/core/utils/card_utils.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/order_model.dart';
@@ -172,7 +173,7 @@ class OrderDetailsPage extends StatelessWidget {
             SizedBox(height: 16.h),
             _InfoRow(
               label: l10n.paymentMethodLabel,
-              value: order.paymentMethod,
+              value: _formatPaymentMethod(order.paymentMethod, l10n),
             ),
             SizedBox(height: 24.h),
 
@@ -183,6 +184,14 @@ class OrderDetailsPage extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatPaymentMethod(String? paymentMethod, AppLocalizations l10n) {
+  if (paymentMethod == null || paymentMethod.isEmpty) return '';
+  final parsed = OrderModel.parsePaymentMethod(paymentMethod);
+  if (parsed == null) return paymentMethod;
+  final brandName = CardUtils.getCardBrandName(parsed.brand);
+  return l10n.cardEnding(brandName, parsed.last4);
 }
 
 class _InfoRow extends StatelessWidget {

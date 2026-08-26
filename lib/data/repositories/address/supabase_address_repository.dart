@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/address_model.dart';
 import 'package:max/data/repositories/address/address_repository.dart';
 
@@ -25,7 +26,7 @@ class SupabaseAddressRepository implements AddressRepository {
       state: row['state'] as String,
       country: row['country'] as String,
       zip: (row['zip'] as String?) ?? '',
-      label: (row['label'] as String?) ?? 'Home',
+      label: (row['label'] as String?) ?? AppConstants.addressLabelHome,
       isDefault: row['is_default'] as bool? ?? false,
     );
   }

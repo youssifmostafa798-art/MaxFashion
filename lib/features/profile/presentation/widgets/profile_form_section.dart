@@ -156,7 +156,7 @@ class ProfileFormDropdown extends StatelessWidget {
   });
 
   final String? value;
-  final List<String> items;
+  final List<DropdownMenuItem<String>> items;
   final ValueChanged<String?> onChanged;
   final String hint;
   final String? label;
@@ -164,6 +164,14 @@ class ProfileFormDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    // DropdownButtonFormField asserts that exactly one item matches its
+    // value. profiles.gender is a free-text column, so legacy rows can hold
+    // values outside AppConstants.genderValues (e.g. localized text saved by
+    // older builds). Fall back to the hint instead of crashing; saving again
+    // re-persists a canonical value.
+    final hasSingleMatch =
+        items.where((item) => item.value == value).length == 1;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +186,7 @@ class ProfileFormDropdown extends StatelessWidget {
           SizedBox(height: 6.h),
         ],
         DropdownButtonFormField<String>(
-          initialValue: value,
+          initialValue: hasSingleMatch ? value : null,
           isExpanded: true,
           icon: Icon(
             Icons.keyboard_arrow_down,
@@ -210,12 +218,7 @@ class ProfileFormDropdown extends StatelessWidget {
               ),
             ),
           ),
-          items: items
-              .map((item) => DropdownMenuItem(
-                    value: item,
-                    child: Text(item),
-                  ))
-              .toList(),
+          items: items,
           onChanged: onChanged,
         ),
       ],

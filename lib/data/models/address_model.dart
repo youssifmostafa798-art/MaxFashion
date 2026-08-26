@@ -1,3 +1,4 @@
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/utils/id_generator.dart';
 
 class AddressModel {
@@ -82,7 +83,7 @@ class AddressModel {
       state: json['state'] as String,
       country: json['country'] as String,
       zip: (json['zip'] as String?) ?? '',
-      label: (json['label'] as String?) ?? 'Home',
+      label: (json['label'] as String?) ?? AppConstants.addressLabelHome,
       isDefault: json['isDefault'] as bool? ?? false,
     );
   }

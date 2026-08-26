@@ -56,7 +56,34 @@ class _AddAddressState extends State<AddAddress> {
       stateController.text = a.state;
       countryController.text = a.country;
       zipController.text = a.zip;
-      _selectedLabel = a.label;
+      _selectedLabel = _normalizeLabel(a.label);
+    }
+  }
+
+  String _normalizeLabel(String label) {
+    final lower = label.toLowerCase();
+    if (lower == 'home' || lower == '\u0627\u0644\u0645\u0646\u0632\u0644') {
+      return AppConstants.addressLabelHome;
+    }
+    if (lower == 'work' || lower == '\u0627\u0644\u0639\u0645\u0644') {
+      return AppConstants.addressLabelWork;
+    }
+    if (lower == 'other' || lower == '\u0623\u062e\u0631\u0649') {
+      return AppConstants.addressLabelOther;
+    }
+    return AppConstants.addressLabelHome;
+  }
+
+  String _displayLabel(AppLocalizations l10n, String canonicalLabel) {
+    switch (canonicalLabel) {
+      case AppConstants.addressLabelHome:
+        return l10n.homeLabel;
+      case AppConstants.addressLabelWork:
+        return l10n.workLabel;
+      case AppConstants.addressLabelOther:
+        return l10n.otherLabel;
+      default:
+        return l10n.homeLabel;
     }
   }
 
@@ -89,9 +116,21 @@ class _AddAddressState extends State<AddAddress> {
                     Gap(10.h),
                     Row(
                       children: [
-                        _buildLabelChip(l10n.homeLabel, l10n, colorScheme),
-                        _buildLabelChip(l10n.workLabel, l10n, colorScheme),
-                        _buildLabelChip(l10n.otherLabel, l10n, colorScheme),
+                        _buildLabelChip(
+                          AppConstants.addressLabelHome,
+                          _displayLabel(l10n, AppConstants.addressLabelHome),
+                          colorScheme,
+                        ),
+                        _buildLabelChip(
+                          AppConstants.addressLabelWork,
+                          _displayLabel(l10n, AppConstants.addressLabelWork),
+                          colorScheme,
+                        ),
+                        _buildLabelChip(
+                          AppConstants.addressLabelOther,
+                          _displayLabel(l10n, AppConstants.addressLabelOther),
+                          colorScheme,
+                        ),
                       ],
                     ),
                     Gap(30.h),
@@ -152,7 +191,7 @@ class _AddAddressState extends State<AddAddress> {
                     state: stateController.text.trim(),
                     country: countryController.text.trim(),
                     zip: zipController.text.trim(),
-                    label: _selectedLabel ?? l10n.homeLabel,
+                    label: _selectedLabel ?? AppConstants.addressLabelHome,
                     isDefault: widget.editAddress?.isDefault ?? false,
                   );
 
@@ -167,13 +206,12 @@ class _AddAddressState extends State<AddAddress> {
     );
   }
 
-  Widget _buildLabelChip(String label, AppLocalizations l10n, ColorScheme colorScheme) {
-    final effectiveLabel = _selectedLabel ?? l10n.homeLabel;
-    final isSelected = effectiveLabel == label;
+  Widget _buildLabelChip(String canonicalValue, String displayText, ColorScheme colorScheme) {
+    final isSelected = (_selectedLabel ?? AppConstants.addressLabelHome) == canonicalValue;
     return Padding(
       padding: EdgeInsetsDirectional.only(end: 10.w),
       child: GestureDetector(
-        onTap: () => setState(() => _selectedLabel = label),
+        onTap: () => setState(() => _selectedLabel = canonicalValue),
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 16.w,
@@ -191,7 +229,7 @@ class _AddAddressState extends State<AddAddress> {
             ),
           ),
           child: Text(
-            label,
+            displayText,
             style: TextStyle(
               fontSize: AppTextStyles.fontSize13,
               color: isSelected

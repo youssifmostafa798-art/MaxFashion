@@ -194,8 +194,9 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     final suffix = numStr.length >= 2
         ? numStr.substring(numStr.length - 2)
         : numStr;
-    final l10n = AppLocalizations.of(context)!;
-    return l10n.cardEnding('Mastercard', suffix);
+    final brand = _selectedSavedCard?.cardBrand ?? savedCard!['number'].toString();
+    final canonicalBrand = brand.toLowerCase().replaceAll(RegExp(r'[^a-z]'), '');
+    return '$canonicalBrand:$suffix';
   }
 
   @override

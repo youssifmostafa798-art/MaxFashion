@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/widgets/action_chip_widget.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/address_model.dart';
@@ -20,19 +21,24 @@ class AddressCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSetDefault;
 
-  /// Maps legacy English labels stored before localization to their
-  /// localized equivalents; custom/user-entered labels display as-is.
+  /// Maps address labels to their localized display form.
+  /// Handles canonical domain values, legacy English values, and
+  /// legacy localized values stored before the domain/presentation fix.
   String _displayLabel(AppLocalizations l10n, String label) {
-    switch (label.toLowerCase()) {
-      case 'home':
-        return l10n.homeLabel.toUpperCase();
-      case 'work':
-        return l10n.workLabel.toUpperCase();
-      case 'other':
-        return l10n.otherLabel.toUpperCase();
-      default:
-        return label.toUpperCase();
+    final lower = label.toLowerCase();
+    if (lower == AppConstants.addressLabelHome.toLowerCase() ||
+        lower == '\u0627\u0644\u0645\u0646\u0632\u0644') {
+      return l10n.homeLabel.toUpperCase();
     }
+    if (lower == AppConstants.addressLabelWork.toLowerCase() ||
+        lower == '\u0627\u0644\u0639\u0645\u0644') {
+      return l10n.workLabel.toUpperCase();
+    }
+    if (lower == AppConstants.addressLabelOther.toLowerCase() ||
+        lower == '\u0623\u062e\u0631\u0649') {
+      return l10n.otherLabel.toUpperCase();
+    }
+    return label.toUpperCase();
   }
 
   @override

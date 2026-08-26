@@ -34,4 +34,34 @@ class AppConstants {
   static const double collectionCarouselHeight = 245;
 
   static const int homeProductsLimit = 12;
+
+  /// Canonical, locale-independent gender values persisted to
+  /// Supabase `profiles.gender`. Localized labels live in l10n
+  /// (genderMale/genderFemale/genderOther/genderPreferNotToSay) and must
+  /// never be stored or used as dropdown item values.
+  static const String genderMale = 'Male';
+  static const String genderFemale = 'Female';
+  static const String genderOther = 'Other';
+  static const String genderPreferNotToSay = 'Prefer not to say';
+
+  static const List<String> genderValues = [
+    genderMale,
+    genderFemale,
+    genderOther,
+    genderPreferNotToSay,
+  ];
+
+  /// Canonical, locale-independent address label values persisted to
+  /// Supabase `addresses.label`. Localized labels live in l10n
+  /// (homeLabel/workLabel/otherLabel) and must never be stored or used
+  /// as selection values.
+  static const String addressLabelHome = 'Home';
+  static const String addressLabelWork = 'Work';
+  static const String addressLabelOther = 'Other';
+
+  static const List<String> addressLabelValues = [
+    addressLabelHome,
+    addressLabelWork,
+    addressLabelOther,
+  ];
 }

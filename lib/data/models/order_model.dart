@@ -23,19 +23,6 @@ class OrderModel {
 
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
 
-  String get statusLabel {
-    switch (status) {
-      case OrderStatus.processing:
-        return 'Processing';
-      case OrderStatus.shipped:
-        return 'Shipped';
-      case OrderStatus.delivered:
-        return 'Delivered';
-      case OrderStatus.cancelled:
-        return 'Cancelled';
-    }
-  }
-
   static String statusToString(OrderStatus status) {
     switch (status) {
       case OrderStatus.processing:
@@ -61,6 +48,30 @@ class OrderModel {
       default:
         return OrderStatus.processing;
     }
+  }
+
+  /// Parses the payment method string and returns (brand, last4).
+  /// Handles canonical "brand:42" format and legacy localized formats.
+  static ({String brand, String last4})? parsePaymentMethod(
+    String? paymentMethod,
+  ) {
+    if (paymentMethod == null || paymentMethod.isEmpty) return null;
+
+    final colonIdx = paymentMethod.indexOf(':');
+    if (colonIdx > 0 && colonIdx < paymentMethod.length - 1) {
+      final brand = paymentMethod.substring(0, colonIdx).trim();
+      final last4 = paymentMethod.substring(colonIdx + 1).trim();
+      if (brand.isNotEmpty && last4.isNotEmpty) {
+        return (brand: brand, last4: last4);
+      }
+    }
+
+    final digits = RegExp(r'\d{2}$').firstMatch(paymentMethod);
+    if (digits != null) {
+      return (brand: 'card', last4: digits.group(0)!);
+    }
+
+    return null;
   }
 
   OrderModel copyWith({
