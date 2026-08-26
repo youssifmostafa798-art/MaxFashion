@@ -1,9 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:max/core/constants/app_constants.dart';
 import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/models/product_size_model.dart';
-import 'package:max/data/models/product_translation_model.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 
 class SupabaseSearchRepository implements SearchRepository {
@@ -16,8 +14,7 @@ class SupabaseSearchRepository implements SearchRepository {
       'id, category_id, name, description, price, discount_price, '
       'brand, thumbnail_url, is_featured, is_available, '
       'product_images(id, product_id, image_url, sort_order), '
-      'product_sizes(product_id, size, stock), '
-      'product_translations(product_id, locale, name, description)';
+      'product_sizes(product_id, size, stock)';
 
   ProductModel _mapRowToModel(Map<String, dynamic> row) {
     final images = (row['product_images'] as List?)
@@ -44,15 +41,12 @@ class SupabaseSearchRepository implements SearchRepository {
       isAvailable: row['is_available'] as bool? ?? true,
       productImages: images,
       productSizes: sizes,
-      translations:
-          ProductTranslationModel.listFromJson(row['product_translations']),
     );
   }
 
   @override
   Future<SearchResult> searchProducts(
     String query, {
-    String locale = AppConstants.fallbackLanguageCode,
     int limit = 20,
     int offset = 0,
   }) async {
@@ -63,7 +57,6 @@ class SupabaseSearchRepository implements SearchRepository {
 
     final response = await _client.rpc('search_products', params: {
       'p_query': trimmed,
-      'p_locale': locale,
       'p_limit': limit,
       'p_offset': offset,
     });
