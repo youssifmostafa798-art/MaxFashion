@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
-import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 import 'package:max/data/models/collection_model.dart';
@@ -31,18 +30,6 @@ class AllCollectionsPage extends ConsumerWidget {
           color: colorScheme.onSurface,
           spacing: 4,
           weight: FontWeight.bold,
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Directionality.of(context) == TextDirection.rtl
-                ? Icons.arrow_forward
-                : Icons.arrow_back,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () {
-            HapticUtils.light();
-            Navigator.pop(context);
-          },
         ),
       ),
       body: collectionsAsync.when(

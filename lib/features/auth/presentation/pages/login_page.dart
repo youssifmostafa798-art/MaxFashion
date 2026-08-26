@@ -119,14 +119,17 @@ class _LoginPageState extends ConsumerState<LoginPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 60.h),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Directionality.of(context) == TextDirection.rtl
-                          ? Icons.arrow_forward_ios
-                          : Icons.arrow_back_ios_new,
-                      size: 20.w,
-                      color: Theme.of(context).colorScheme.onSurface,
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(
+                        Directionality.of(context) == TextDirection.rtl
+                            ? Icons.arrow_forward
+                            : Icons.arrow_back,
+                        size: 24.w,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                   ),
                   SizedBox(height: 40.h),

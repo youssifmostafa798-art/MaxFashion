@@ -28,7 +28,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: _height,
       backgroundColor: colorScheme.surfaceContainerHigh,
       automaticallyImplyLeading: false,
-      leading: const SizedBox.shrink(),
+      leading: null,
       leadingWidth: 0,
       titleSpacing: 0,
       title: Column(
@@ -44,9 +44,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
                     child: Padding(
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
-                        Directionality.of(context) == TextDirection.rtl
-                            ? Icons.arrow_forward
-                            : Icons.arrow_back,
+                        Icons.arrow_back,
                         color: colorScheme.onSurface,
                         size: 24.w,
                       ),
@@ -102,7 +100,11 @@ class _SearchBar extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsetsDirectional.only(start: 14.w),
-              child: Icon(Icons.search, color: colorScheme.onSurfaceVariant, size: 20.w),
+              child: Icon(
+                Icons.search,
+                color: colorScheme.onSurfaceVariant,
+                size: 20.w,
+              ),
             ),
             SizedBox(width: 10.w),
             CustomText(

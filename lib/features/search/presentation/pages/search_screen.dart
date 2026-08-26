@@ -67,9 +67,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Icon(
-                    Directionality.of(context) == TextDirection.rtl
-                        ? Icons.arrow_forward
-                        : Icons.arrow_back,
+                    Icons.arrow_back,
                     size: 24.w,
                     color: colorScheme.onSurface,
                   ),
@@ -97,9 +95,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: hasQuery
-            ? _buildSearchResults()
-            : _buildDefaultContent(),
+        child: hasQuery ? _buildSearchResults() : _buildDefaultContent(),
       ),
     );
   }
@@ -169,7 +165,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
         ref.read(searchProvider.notifier).addRecentSearch(searchState.query);
         await Navigator.push(
           context,
-          MaterialPageRoute(builder: (c) => ProductDetailPage(product: product)),
+          MaterialPageRoute(
+            builder: (c) => ProductDetailPage(product: product),
+          ),
         );
         if (!context.mounted) return;
         ref.read(searchProvider.notifier).resetSession();
@@ -193,9 +191,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
             },
           ),
           SizedBox(height: 24.h),
-          SuggestedProductsSection(
-            products: suggestedProducts,
-          ),
+          SuggestedProductsSection(products: suggestedProducts),
           SizedBox(height: 24.h),
           const PopularCategoriesSection(),
           SizedBox(height: 30.h),

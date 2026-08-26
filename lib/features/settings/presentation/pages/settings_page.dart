@@ -38,15 +38,6 @@ class SettingsPage extends ConsumerWidget {
         backgroundColor: colorScheme.surface,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Directionality.of(context) == TextDirection.rtl
-                ? Icons.arrow_forward
-                : Icons.arrow_back,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
         title: CustomText(
           text: l10n.settingsTitle,
           size: 18,

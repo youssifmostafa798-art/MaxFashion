@@ -179,20 +179,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           backgroundColor: colorScheme.surface,
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Directionality.of(context) == TextDirection.rtl
-                  ? Icons.arrow_forward
-                  : Icons.arrow_back,
-              color: colorScheme.onSurface,
-            ),
-            onPressed: () async {
-              final shouldPop = await _onWillPop();
-              if (shouldPop && context.mounted) {
-                Navigator.of(context).pop();
-              }
-            },
-          ),
           title: CustomText(
             text: l10n.editProfileTitle,
             size: 18,
