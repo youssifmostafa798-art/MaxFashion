@@ -31,6 +31,7 @@ void showAddedToCartDialog(BuildContext context) {
     },
     pageBuilder: (context, animation, secondaryAnimation) {
       return Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
         child: Container(
           color: Theme.of(context).colorScheme.surface,
           height: 520.h,
@@ -61,13 +62,13 @@ void showAddedToCartDialog(BuildContext context) {
                 Gap(40.h),
                 CustomText(
                   text: l10n.itemAddedMessage,
-                  size: 18,
+                  size: 16,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(20.h),
                 CustomText(
                   text: l10n.reviewCartOrShop,
-                  size: 18,
+                  size: 14,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 Gap(40.h),
@@ -77,43 +78,13 @@ void showAddedToCartDialog(BuildContext context) {
                   height: 15.h,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
-                Gap(40.h),
+                Gap(30.h),
                 CustomText(
                   text: l10n.readyToCheckout,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 const Spacer(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        isSvg: false,
-                        title: l10n.viewCart,
-                        onTap: () {
-                          HapticUtils.light();
-                          Navigator.pop(context);
-                          Navigator.pushReplacementNamed(
-                            context,
-                            AppRouter.main,
-                            arguments: 2,
-                          );
-                        },
-                      ),
-                    ),
-                    Gap(20.w),
-                    Expanded(
-                      child: CustomButton(
-                        isSvg: false,
-                        title: l10n.shopMore,
-                        onTap: () {
-                          HapticUtils.light();
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                _AddedToCartActions(l10n: l10n),
               ],
             ),
           ),
@@ -121,4 +92,60 @@ void showAddedToCartDialog(BuildContext context) {
       );
     },
   );
+}
+
+class _AddedToCartActions extends StatelessWidget {
+  const _AddedToCartActions({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  static const double _minSideBySideWidth = 280;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final viewCartButton = CustomButton(
+          isSvg: false,
+          title: l10n.viewCart,
+          onTap: () {
+            HapticUtils.light();
+            Navigator.pop(context);
+            Navigator.pushReplacementNamed(
+              context,
+              AppRouter.main,
+              arguments: 2,
+            );
+          },
+        );
+        final shopMoreButton = CustomButton(
+          isSvg: false,
+          title: l10n.shopMore,
+          onTap: () {
+            HapticUtils.light();
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        );
+
+        if (constraints.maxWidth >= _minSideBySideWidth) {
+          return Row(
+            children: [
+              Expanded(child: viewCartButton),
+              Gap(20.w),
+              Expanded(child: shopMoreButton),
+            ],
+          );
+        }
+
+        return Column(
+          children: [
+            viewCartButton,
+            Gap(12.h),
+            shopMoreButton,
+          ],
+        );
+      },
+    );
+  }
 }

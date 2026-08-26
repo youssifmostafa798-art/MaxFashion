@@ -77,6 +77,7 @@ class _CustomButtonState extends State<CustomButton>
           ),
           child: Center(
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.isSvg)
@@ -89,10 +90,14 @@ class _CustomButtonState extends State<CustomButton>
                     ),
                   ),
                 Gap(10.w),
-                CustomText(
-                  text: widget.title.toUpperCase(),
-                  size: 15,
-                  color: colorScheme.surface,
+                Flexible(
+                  child: CustomText(
+                    text: widget.title.toUpperCase(),
+                    size: 15,
+                    color: colorScheme.surface,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

@@ -74,7 +74,10 @@ class AppMessageDialog extends StatelessWidget {
         return ScaleTransition(
           scale: Tween<double>(begin: 0.9, end: 1.0).animate(curvedAnimation),
           child: FadeTransition(
-            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+            opacity: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(curvedAnimation),
             child: child,
           ),
         );
@@ -109,11 +112,7 @@ class AppMessageDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Gap(10.h),
-            Icon(
-              displayIcon,
-              size: 48.w,
-              color: iconColor,
-            ),
+            Icon(displayIcon, size: 48.w, color: iconColor),
             Gap(16.h),
             Text(
               title.toUpperCase(),
@@ -122,7 +121,7 @@ class AppMessageDialog extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: colorScheme.onSurface,
                 fontFamily: AppConstants.fontFamily,
-                letterSpacing: 2,
+                letterSpacing: 1,
               ),
               textAlign: TextAlign.center,
             ),

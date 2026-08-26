@@ -1,6 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:max/core/constants/app_constants.dart';
+import 'package:max/data/models/product_image_model.dart';
 import 'package:max/data/models/product_model.dart';
+import 'package:max/data/models/product_size_model.dart';
+import 'package:max/data/models/product_translation_model.dart';
 import 'package:max/data/repositories/search/search_repository.dart';
 
 class SupabaseSearchRepository implements SearchRepository {
@@ -9,7 +12,23 @@ class SupabaseSearchRepository implements SearchRepository {
 
   final SupabaseClient _client;
 
+  static const _selectWithRelations =
+      'id, category_id, name, description, price, discount_price, '
+      'brand, thumbnail_url, is_featured, is_available, '
+      'product_images(id, product_id, image_url, sort_order), '
+      'product_sizes(product_id, size, stock), '
+      'product_translations(product_id, locale, name, description)';
+
   ProductModel _mapRowToModel(Map<String, dynamic> row) {
+    final images = (row['product_images'] as List?)
+            ?.map((e) => ProductImageModel.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    final sizes = (row['product_sizes'] as List?)
+            ?.map((e) => ProductSizeModel.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+
     return ProductModel(
       id: 'p${row['id']}',
       categoryId: row['category_id'] as int,
@@ -23,8 +42,10 @@ class SupabaseSearchRepository implements SearchRepository {
       thumbnailUrl: row['thumbnail_url'] as String? ?? '',
       isFeatured: row['is_featured'] as bool? ?? false,
       isAvailable: row['is_available'] as bool? ?? true,
-      productImages: const [],
-      productSizes: const [],
+      productImages: images,
+      productSizes: sizes,
+      translations:
+          ProductTranslationModel.listFromJson(row['product_translations']),
     );
   }
 
@@ -53,8 +74,25 @@ class SupabaseSearchRepository implements SearchRepository {
     }
 
     final totalCount = (rows.first as Map<String, dynamic>)['total_count'] as int;
-    final products = rows
-        .map((row) => _mapRowToModel(row as Map<String, dynamic>))
+
+    final productIds = rows
+        .map((row) => (row as Map<String, dynamic>)['id'] as int)
+        .toList();
+
+    final enrichedResponse = await _client
+        .from('products')
+        .select(_selectWithRelations)
+        .inFilter('id', productIds);
+
+    final enrichedRows = enrichedResponse as List;
+    final enrichedMap = <int, Map<String, dynamic>>{};
+    for (final row in enrichedRows) {
+      final r = row as Map<String, dynamic>;
+      enrichedMap[r['id'] as int] = r;
+    }
+
+    final products = productIds
+        .map((id) => _mapRowToModel(enrichedMap[id]!))
         .toList();
 
     return SearchResult(products: products, totalCount: totalCount);
@@ -64,8 +102,7 @@ class SupabaseSearchRepository implements SearchRepository {
   Future<List<ProductModel>> getPopularProducts() async {
     final response = await _client
         .from('products')
-        .select('id, category_id, name, description, price, discount_price, '
-            'brand, thumbnail_url, is_featured, is_available')
+        .select(_selectWithRelations)
         .eq('is_available', true)
         .eq('is_featured', true)
         .limit(4);
