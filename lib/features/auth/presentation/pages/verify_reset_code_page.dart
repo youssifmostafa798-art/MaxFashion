@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pinput/pinput.dart';
 
 import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/router/app_router.dart';
+import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/theme/app_text_styles.dart';
 import 'package:max/core/utils/haptic_utils.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -22,9 +23,8 @@ class VerifyResetCodePage extends ConsumerStatefulWidget {
 }
 
 class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
+  final TextEditingController _pinController = TextEditingController();
+  final FocusNode _pinFocusNode = FocusNode();
 
   int _resendSeconds = 60;
   Timer? _resendTimer;
@@ -38,12 +38,8 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
 
   @override
   void dispose() {
-    for (final c in _controllers) {
-      c.dispose();
-    }
-    for (final f in _focusNodes) {
-      f.dispose();
-    }
+    _pinController.dispose();
+    _pinFocusNode.dispose();
     _resendTimer?.cancel();
     super.dispose();
   }
@@ -67,8 +63,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
     });
   }
 
-  String get _enteredCode =>
-      _controllers.map((c) => c.text).join();
+  String get _enteredCode => _pinController.text;
 
   void _onVerify() {
     HapticUtils.light();
@@ -103,6 +98,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authStateProvider);
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     ref.read(authStateProvider.notifier).setLocalizations(l10n);
 
@@ -135,8 +131,47 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
       }
     });
 
+    final defaultPinTheme = PinTheme(
+      width: 48.w,
+      height: 56.h,
+      textStyle: TextStyle(
+        fontSize: AppTextStyles.fontSize18,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurface,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(
+          color: colorScheme.outline,
+          width: 1.w,
+        ),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(
+        color: colorScheme.onSurface,
+        width: 1.2.w,
+      ),
+    );
+
+    final submittedPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(
+        color: colorScheme.onSurface,
+        width: 1.2.w,
+      ),
+    );
+
+    final errorPinTheme = defaultPinTheme.copyDecorationWith(
+      border: Border.all(
+        color: AppColors.errorRed400,
+        width: 1.2.w,
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -154,7 +189,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                         ? Icons.arrow_forward
                         : Icons.arrow_back,
                     size: 24.w,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -164,7 +199,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize32,
                   fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: colorScheme.onSurface,
                   height: 1.2,
                 ),
               ),
@@ -174,76 +209,30 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                 style: TextStyle(
                   fontSize: AppTextStyles.fontSize14,
                   fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               SizedBox(height: 48.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) {
-                  return SizedBox(
-                    width: 48.w,
-                    height: 56.h,
-                    child: KeyboardListener(
-                      focusNode: FocusNode(),
-                      onKeyEvent: (event) {
-                        if (event is KeyDownEvent &&
-                            event.logicalKey ==
-                                LogicalKeyboardKey.backspace &&
-                            _controllers[index].text.isEmpty &&
-                            index > 0) {
-                          _controllers[index - 1].clear();
-                          _focusNodes[index - 1].requestFocus();
-                        }
-                      },
-                      child: TextFormField(
-                        controller: _controllers[index],
-                        focusNode: _focusNodes[index],
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        maxLength: 1,
-                        style: TextStyle(
-                          fontSize: AppTextStyles.fontSize18,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: InputDecoration(
-                          counterText: '',
-                          filled: true,
-                          fillColor:
-                              Theme.of(context).colorScheme.surfaceContainerHighest,
-                          contentPadding: EdgeInsets.zero,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                              width: 1.w,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.r),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              width: 1.2.w,
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.isNotEmpty && index < 5) {
-                            _focusNodes[index + 1].requestFocus();
-                          }
-                          if (value.isEmpty && index > 0) {
-                            _focusNodes[index - 1].requestFocus();
-                          }
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  );
-                }),
+              Center(
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Pinput(
+                    length: 6,
+                    controller: _pinController,
+                    focusNode: _pinFocusNode,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    defaultPinTheme: defaultPinTheme,
+                    focusedPinTheme: focusedPinTheme,
+                    submittedPinTheme: submittedPinTheme,
+                    errorPinTheme: errorPinTheme,
+                    showCursor: true,
+                    hapticFeedbackType: HapticFeedbackType.lightImpact,
+                    onCompleted: (_) {
+                      HapticUtils.light();
+                    },
+                  ),
+                ),
               ),
               SizedBox(height: 36.h),
               CustomAuthButton(
@@ -261,7 +250,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                           style: TextStyle(
                             fontSize: AppTextStyles.fontSize14,
                             fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.onSurface,
+                            color: colorScheme.onSurface,
                           ),
                         ),
                       )
@@ -270,8 +259,7 @@ class _VerifyResetCodePageState extends ConsumerState<VerifyResetCodePage> {
                         style: TextStyle(
                           fontSize: AppTextStyles.fontSize14,
                           fontWeight: FontWeight.w400,
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
               ),
