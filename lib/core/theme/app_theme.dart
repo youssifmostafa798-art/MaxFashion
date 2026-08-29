@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:max/core/theme/app_colors.dart';
 
 class AppTheme {
@@ -20,6 +21,12 @@ class AppTheme {
       backgroundColor: AppColors.white,
       elevation: 1,
       iconTheme: IconThemeData(color: AppColors.black),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        systemNavigationBarColor: AppColors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.white,
@@ -42,10 +49,16 @@ class AppTheme {
       surfaceContainerHigh: AppColors.darkSurface,
       surfaceContainerLow: Color(0xFF121212),
     ),
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: AppColors.darkSurface,
       elevation: 1,
-      iconTheme: IconThemeData(color: Colors.white),
+      iconTheme: const IconThemeData(color: Colors.white),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xFF121212),
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.darkSurface,

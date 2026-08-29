@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glass_bottom_navigation_bar/glass_bottom_navigation_bar.dart';
 import 'package:max/features/home/presentation/pages/home.dart';
@@ -116,31 +117,46 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     final bottomSafeArea = MediaQuery.of(context).padding.bottom;
     final contentBottomPadding = navBarHeight + navBarMarginBottom + bottomSafeArea;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBody: true,
-      body: Padding(
-        padding: EdgeInsets.only(bottom: contentBottomPadding),
-        child: IndexedStack(
-          index: _currentIndex,
-          children: [for (int i = 0; i < _tabCount; i++) _buildPage(i)],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: isDark
+          ? const SystemUiOverlayStyle(
+              systemNavigationBarColor: Color(0xFF121212),
+              systemNavigationBarIconBrightness: Brightness.light,
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.light,
+            )
+          : const SystemUiOverlayStyle(
+              systemNavigationBarColor: AppColors.white,
+              systemNavigationBarIconBrightness: Brightness.dark,
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+            ),
+      child: Scaffold(
+        backgroundColor: isDark ? Colors.transparent : Theme.of(context).scaffoldBackgroundColor,
+        extendBody: true,
+        body: Padding(
+          padding: EdgeInsets.only(bottom: contentBottomPadding),
+          child: IndexedStack(
+            index: _currentIndex,
+            children: [for (int i = 0; i < _tabCount; i++) _buildPage(i)],
+          ),
         ),
-      ),
-      bottomNavigationBar: Directionality(
-        textDirection: TextDirection.ltr,
-        child: GlassBottomNavigationBar(
-          currentIndex: displayIndex,
-          onTap: (packageIndex) {
-            final logicalIndex =
-                isRtl ? _tabCount - 1 - packageIndex : packageIndex;
-            _onTabTapped(logicalIndex);
-          },
-          items: navItems,
-          selectedItemColor: activeColor,
-          unselectedItemColor: inactiveColor,
-          height: navBarHeight,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          innerPadding: 16,
+        bottomNavigationBar: Directionality(
+          textDirection: TextDirection.ltr,
+          child: GlassBottomNavigationBar(
+            currentIndex: displayIndex,
+            onTap: (packageIndex) {
+              final logicalIndex =
+                  isRtl ? _tabCount - 1 - packageIndex : packageIndex;
+              _onTabTapped(logicalIndex);
+            },
+            items: navItems,
+            selectedItemColor: activeColor,
+            unselectedItemColor: inactiveColor,
+            height: navBarHeight,
+            margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            innerPadding: 16,
+          ),
         ),
       ),
     );
