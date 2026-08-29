@@ -1,6 +1,6 @@
 {
-    "name": "max",
-    "short_name": "max",
+    "name": "MaxFashion",
+    "short_name": "MaxFashion",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
