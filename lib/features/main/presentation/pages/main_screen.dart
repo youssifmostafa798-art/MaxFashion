@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:glass_bottom_navigation_bar/glass_bottom_navigation_bar.dart';
 import 'package:max/features/home/presentation/pages/home.dart';
 import 'package:max/features/menu/presentation/pages/categories_page.dart';
 import 'package:max/features/cart/presentation/pages/cart_page.dart';
@@ -12,15 +12,6 @@ import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/l10n/app_localizations.dart';
 
 const int _tabCount = 4;
-const double _indicatorWidth = 64.0;
-const double _indicatorHeight = 70.0;
-const double _indicatorRadius = 22.0;
-const double _barHeight = 58.0;
-const double _circleProtrusion = 14.0;
-const double _barTopRadius = 20.0;
-const double _barBottomRadius = 24.0;
-const double _horizontalPadding = 16.0;
-const Duration _animDuration = Duration(milliseconds: 350);
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key, this.initialTab = 0});
@@ -67,29 +58,34 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     final cartCount = ref.watch(
       cartItemsProvider.select((items) => items.length),
     );
     final wishlistCount = ref.watch(wishlistCountProvider);
 
-    final navItems = [
-      _NavItemData(
+    final activeColor = isDark ? AppColors.white : AppColors.black;
+    final inactiveColor = AppColors.grey500;
+
+    final allItems = [
+      _NavEntry(
         icon: Icons.home_outlined,
         activeIcon: Icons.home,
         label: l10n.homeNav,
       ),
-      _NavItemData(
+      _NavEntry(
         icon: Icons.menu_outlined,
         activeIcon: Icons.menu,
         label: l10n.menu,
       ),
-      _NavItemData(
+      _NavEntry(
         icon: Icons.shopping_bag_outlined,
         activeIcon: Icons.shopping_bag,
         label: l10n.cartNav,
         badgeCount: cartCount,
       ),
-      _NavItemData(
+      _NavEntry(
         icon: Icons.person_outline,
         activeIcon: Icons.person,
         label: l10n.profileNav,
@@ -97,30 +93,62 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       ),
     ];
 
-    final bottomInset = MediaQuery.of(context).padding.bottom;
-    final navBarTotalHeight =
-        bottomInset + 8.w + (_barHeight + _circleProtrusion).h;
+    final displayItems = isRtl ? allItems.reversed.toList() : allItems;
+    final displayIndex = isRtl ? _tabCount - 1 - _currentIndex : _currentIndex;
+
+    final navItems = [
+      for (int i = 0; i < displayItems.length; i++)
+        BottomNavigationBarItemData(
+          icon: _NavIconWidget(
+            icon: displayItems[i].icon,
+            activeIcon: displayItems[i].activeIcon,
+            isSelected: displayIndex == i,
+            activeColor: activeColor,
+            inactiveColor: inactiveColor,
+            badgeCount: displayItems[i].badgeCount,
+          ),
+          label: displayItems[i].label,
+        ),
+    ];
+
+    final navBarHeight = 70.0;
+    final navBarMarginBottom = 12.0;
+    final bottomSafeArea = MediaQuery.of(context).padding.bottom;
+    final contentBottomPadding = navBarHeight + navBarMarginBottom + bottomSafeArea;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBody: true,
       body: Padding(
-        padding: EdgeInsets.only(bottom: navBarTotalHeight),
+        padding: EdgeInsets.only(bottom: contentBottomPadding),
         child: IndexedStack(
           index: _currentIndex,
           children: [for (int i = 0; i < _tabCount; i++) _buildPage(i)],
         ),
       ),
-      bottomNavigationBar: _CustomBottomNavBar(
-        currentIndex: _currentIndex,
-        items: navItems,
-        onTap: _onTabTapped,
+      bottomNavigationBar: Directionality(
+        textDirection: TextDirection.ltr,
+        child: GlassBottomNavigationBar(
+          currentIndex: displayIndex,
+          onTap: (packageIndex) {
+            final logicalIndex =
+                isRtl ? _tabCount - 1 - packageIndex : packageIndex;
+            _onTabTapped(logicalIndex);
+          },
+          items: navItems,
+          selectedItemColor: activeColor,
+          unselectedItemColor: inactiveColor,
+          height: navBarHeight,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          innerPadding: 16,
+        ),
       ),
     );
   }
 }
 
-class _NavItemData {
-  const _NavItemData({
+class _NavEntry {
+  const _NavEntry({
     required this.icon,
     required this.activeIcon,
     required this.label,
@@ -133,162 +161,42 @@ class _NavItemData {
   final int badgeCount;
 }
 
-class _CustomBottomNavBar extends StatelessWidget {
-  const _CustomBottomNavBar({
-    required this.currentIndex,
-    required this.items,
-    required this.onTap,
+class _NavIconWidget extends StatelessWidget {
+  const _NavIconWidget({
+    required this.icon,
+    required this.activeIcon,
+    required this.isSelected,
+    required this.activeColor,
+    required this.inactiveColor,
+    this.badgeCount = 0,
   });
 
-  final int currentIndex;
-  final List<_NavItemData> items;
-  final ValueChanged<int> onTap;
+  final IconData icon;
+  final IconData activeIcon;
+  final bool isSelected;
+  final Color activeColor;
+  final Color inactiveColor;
+  final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final totalItemWidth = screenWidth - _horizontalPadding.w * 2;
-    final itemWidth = totalItemWidth / items.length;
-    // Distance from the directionality START edge to the center of the
-    // active item's slot. The items Row mirrors under RTL, and
-    // AnimatedPositionedDirectional mirrors with it, keeping the moving
-    // indicator locked to the tapped destination in both LTR and RTL.
-    final indicatorStartOffset =
-        itemWidth * currentIndex + itemWidth / 2 - _indicatorWidth.w / 2;
+    final currentIcon = isSelected ? activeIcon : icon;
+    final currentColor = isSelected ? activeColor : inactiveColor;
 
-    final barColor = (isDark ? AppColors.black : AppColors.white).withValues(
-      alpha: 0.82,
+    final iconWidget = Icon(
+      currentIcon,
+      size: 24,
+      color: currentColor,
     );
-    final circleColor = isDark ? AppColors.white : AppColors.black;
-    final activeIconColor = isDark ? AppColors.black : AppColors.white;
-    // Active items render on top of the full-height indicator pill
-    // (circleColor), so their label must use the same contrasting
-    // foreground as the active icon.
-    final activeLabelColor = isDark ? AppColors.black : AppColors.white;
-    final inactiveColor = AppColors.grey500;
 
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          _horizontalPadding.w,
-          0,
-          _horizontalPadding.w,
-          8.w,
-        ),
-        child: SizedBox(
-          height: (_barHeight + _circleProtrusion).h,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                top: _circleProtrusion.h,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: barColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(_barTopRadius.r),
-                      topRight: Radius.circular(_barTopRadius.r),
-                      bottomLeft: Radius.circular(_barBottomRadius.r),
-                      bottomRight: Radius.circular(_barBottomRadius.r),
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedPositionedDirectional(
-                duration: _animDuration,
-                curve: Curves.easeInOut,
-                start: indicatorStartOffset,
-                top: 0,
-                width: _indicatorWidth.w,
-                height: _indicatorHeight.h,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: circleColor,
-                    borderRadius: BorderRadius.circular(_indicatorRadius.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.15),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: _circleProtrusion.h,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Row(
-                  children: List.generate(items.length, (index) {
-                    final item = items[index];
-                    final bool isActive = index == currentIndex;
+    if (badgeCount > 0) {
+      return BadgeWidget(
+        count: badgeCount,
+        child: iconWidget,
+      );
+    }
 
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onTap(index),
-                      child: SizedBox(
-                        width: itemWidth,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 24.w,
-                              height: 24.w,
-                              child: item.badgeCount > 0
-                                  ? BadgeWidget(
-                                      count: item.badgeCount,
-                                      child: Icon(
-                                        isActive ? item.activeIcon : item.icon,
-                                        size: 24.w,
-                                        color: isActive
-                                            ? activeIconColor
-                                            : inactiveColor,
-                                      ),
-                                    )
-                                  : Icon(
-                                      isActive ? item.activeIcon : item.icon,
-                                      size: 24.w,
-                                      color: isActive
-                                          ? activeIconColor
-                                          : inactiveColor,
-                                    ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Flexible(
-                              child: Text(
-                                item.label,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 11.sp,
-                                  fontWeight: isActive
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
-                                  color: isActive
-                                      ? activeLabelColor
-                                      : inactiveColor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return iconWidget;
   }
 }
 

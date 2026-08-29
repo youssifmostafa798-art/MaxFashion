@@ -301,6 +301,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.4"
+  glass_bottom_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: glass_bottom_navigation_bar
+      sha256: "1ff4a54905177e5f5d6c00999700c10459368f7b08344278b455390c27277878"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   gotrue:
     dependency: transitive
     description:
