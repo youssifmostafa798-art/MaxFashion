@@ -7,6 +7,7 @@ import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/header.dart';
+import 'package:max/core/widgets/skeletons/addresses_skeleton.dart';
 import 'package:max/data/models/address_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/features/checkout/presentation/pages/add_address.dart';
@@ -69,9 +70,11 @@ class _AddressesPageState extends ConsumerState<AddressesPage> {
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
-      body: addresses.isEmpty
-          ? EmptyAddresses(onAdd: _addAddress)
-          : Column(
+      body: addressesState.isLoading
+          ? const AddressesSkeleton()
+          : addresses.isEmpty
+              ? EmptyAddresses(onAdd: _addAddress)
+              : Column(
               children: [
                 Header(title: l10n.addressesMenu),
                 Expanded(

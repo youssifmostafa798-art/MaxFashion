@@ -1,50 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gap/flutter_gap.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/constants/app_constants.dart';
 import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 
-class CollectionsCarouselSkeleton extends StatelessWidget {
-  const CollectionsCarouselSkeleton({super.key});
+class CollectionsGridSkeleton extends StatelessWidget {
+  const CollectionsGridSkeleton({super.key, this.itemCount = 6});
 
-  static const int _skeletonCardCount = 5;
+  final int itemCount;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Gap(16.h),
-        Center(
-          child: ShimmerEffect(
+    return ShimmerEffect(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             child: SkeletonBox(
-              width: 200.w,
-              height: 20.h,
+              width: 80.w,
+              height: 12.h,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-        ),
-        Gap(10.h),
-        Image.asset("assets/svgs/line.png", width: 190.w),
-        Gap(16.h),
-        SizedBox(
-          height: AppConstants.collectionCarouselHeight.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            itemCount: _skeletonCardCount,
-            separatorBuilder: (_, _) => Gap(12.w),
-            itemBuilder: (context, index) {
-              return ShimmerEffect(
-                child: Container(
-                  width: AppConstants.collectionCardWidth.w,
-                  height: AppConstants.collectionCardHeight.h,
+          Expanded(
+            child: GridView.builder(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: itemCount,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16.h,
+                crossAxisSpacing: 12.w,
+                childAspectRatio: 0.73,
+              ),
+              itemBuilder: (context, index) {
+                return Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context)
                         .colorScheme
                         .surfaceContainerHighest
-                        .withValues(alpha: 0.12),
+                        .withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(
                       AppConstants.collectionCardBorderRadius.r,
                     ),
@@ -78,12 +73,12 @@ class CollectionsCarouselSkeleton extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

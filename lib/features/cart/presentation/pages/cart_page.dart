@@ -8,6 +8,7 @@ import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
 
 import 'package:max/core/widgets/custom_button.dart';
+import 'package:max/core/widgets/skeletons/cart_skeleton.dart';
 import 'package:max/features/checkout/presentation/pages/place_order.dart';
 import 'package:max/features/main/presentation/pages/main_screen.dart';
 import 'package:max/core/utils/haptic_utils.dart';
@@ -94,38 +95,10 @@ class _CartPageState extends ConsumerState<CartPage> {
         ),
       ),
       body: cartState.isLoading
-          ? _CartLoading()
+          ? const CartSkeleton()
           : cartState.items.isEmpty
               ? _EmptyCart()
               : _CartContent(cartState: cartState),
-    );
-  }
-}
-
-class _CartLoading extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 40.w,
-            height: 40.w,
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          SizedBox(height: 16.h),
-          CustomText(
-            text: l10n.loadingBag,
-            size: 14,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ],
-      ),
     );
   }
 }

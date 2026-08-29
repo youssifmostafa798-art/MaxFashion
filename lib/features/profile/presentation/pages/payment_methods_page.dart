@@ -7,6 +7,7 @@ import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/header.dart';
+import 'package:max/core/widgets/skeletons/payment_methods_skeleton.dart';
 import 'package:max/data/models/payment_card_model.dart';
 import 'package:max/data/providers/payment_card_provider.dart';
 import 'package:max/features/checkout/presentation/pages/add_card.dart';
@@ -94,9 +95,11 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
 
     return Scaffold(
       appBar: const CustomAppbar(showSearchBar: false),
-      body: cards.isEmpty
-          ? _EmptyPaymentMethods(onAdd: _addCard)
-          : Column(
+      body: cardsState.isLoading
+          ? const PaymentMethodsSkeleton()
+          : cards.isEmpty
+              ? _EmptyPaymentMethods(onAdd: _addCard)
+              : Column(
               children: [
                 Header(title: l10n.paymentMethodsMenu),
                 Expanded(

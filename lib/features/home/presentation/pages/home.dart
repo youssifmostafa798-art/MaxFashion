@@ -9,8 +9,7 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/providers/collection_provider.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/data/providers/home_content_provider.dart';
-import 'package:max/core/widgets/skeletons/product_grid_skeleton.dart';
-import 'package:max/core/widgets/skeletons/collections_carousel_skeleton.dart';
+import 'package:max/core/widgets/skeletons/home_skeleton.dart';
 import 'package:max/features/home/presentation/widgets/home_cover.dart';
 import 'package:max/features/home/presentation/widgets/home_category_filter.dart';
 import 'package:max/features/home/presentation/widgets/home_product_grid.dart';
@@ -59,7 +58,12 @@ class _HomeState extends ConsumerState<Home> {
             right: 0,
             child: SvgPicture.asset("assets/texts/Collection.svg"),
           ),
-          SingleChildScrollView(
+          !isProductsLoaded
+              ? const SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: HomeSkeleton(),
+                )
+              : SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
@@ -72,11 +76,9 @@ class _HomeState extends ConsumerState<Home> {
                       Gap(20.h),
                       HomeCategoryFilter(categories: categories),
                       Gap(16.h),
-                      isProductsLoaded
-                          ? products.isEmpty
-                                ? const HomeEmptyProducts()
-                                : HomeProductGrid(products: products)
-                          : const ProductGridSkeleton(),
+                      products.isEmpty
+                          ? const HomeEmptyProducts()
+                          : HomeProductGrid(products: products),
                       Gap(5.h),
                       CustomText(
                         text: l10n.exploreCollections.toUpperCase(),
@@ -86,7 +88,7 @@ class _HomeState extends ConsumerState<Home> {
                       Image.asset("assets/svgs/line.png", width: 190.w),
                       Gap(20.h),
                       collectionsAsync.when(
-                        loading: () => const CollectionsCarouselSkeleton(),
+                        loading: () => const SizedBox.shrink(),
                         error: (_, _) => const SizedBox.shrink(),
                         data: (collections) {
                           if (collections.isEmpty) {

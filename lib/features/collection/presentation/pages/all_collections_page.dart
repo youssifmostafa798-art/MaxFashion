@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custom_text.dart';
-import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
+import 'package:max/core/widgets/skeletons/collections_grid_skeleton.dart';
 import 'package:max/data/models/collection_model.dart';
 import 'package:max/data/providers/collection_provider.dart';
 import 'package:max/features/collection/presentation/widgets/collection_card.dart';
@@ -46,15 +46,7 @@ class AllCollectionsPage extends ConsumerWidget {
   }
 
   Widget _buildLoading(BuildContext context) {
-    return Center(
-      child: ShimmerEffect(
-        child: SkeletonBox(
-          width: 100.w,
-          height: 20.h,
-          borderRadius: BorderRadius.circular(4),
-        ),
-      ),
-    );
+    return const CollectionsGridSkeleton();
   }
 
   Widget _buildError(BuildContext context) {

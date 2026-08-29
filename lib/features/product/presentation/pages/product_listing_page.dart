@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/skeletons/product_listing_skeleton.dart';
 import 'package:max/data/models/product_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/product/presentation/pages/product_detail_page.dart';
@@ -24,6 +25,7 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final productsState = ref.watch(productsProvider);
     final products = ref.watch(categoryProductsProvider(widget.category));
 
     return Scaffold(
@@ -40,9 +42,11 @@ class _ProductListingPageState extends ConsumerState<ProductListingPage> {
           weight: FontWeight.bold,
         ),
       ),
-      body: products.isEmpty
-          ? _EmptyCategory(category: widget.category)
-          : _ProductGrid(products: products),
+      body: productsState.isLoading
+          ? const ProductListingSkeleton()
+          : products.isEmpty
+              ? _EmptyCategory(category: widget.category)
+              : _ProductGrid(products: products),
     );
   }
 }

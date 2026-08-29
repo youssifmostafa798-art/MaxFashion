@@ -6,6 +6,7 @@ import 'package:max/core/router/app_router.dart';
 import 'package:max/core/utils/date_formatter.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/dialog/guest_prompt_dialog.dart';
+import 'package:max/core/widgets/skeletons/profile_skeleton.dart';
 import 'package:max/data/models/user_model.dart';
 import 'package:max/data/providers/address_provider.dart';
 import 'package:max/data/providers/auth_provider.dart';
@@ -47,7 +48,9 @@ class ProfilePage extends ConsumerWidget {
           weight: FontWeight.bold,
         ),
       ),
-      body: SingleChildScrollView(
+      body: authState.isLoading
+          ? const ProfileSkeleton()
+          : SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: Column(

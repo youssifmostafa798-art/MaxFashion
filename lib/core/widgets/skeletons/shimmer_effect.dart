@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShimmerEffect extends StatefulWidget {
   const ShimmerEffect({
@@ -89,6 +90,123 @@ class SkeletonBox extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: borderRadius ?? BorderRadius.circular(4),
+      ),
+    );
+  }
+}
+
+class SkeletonCircle extends StatelessWidget {
+  const SkeletonCircle({super.key, required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonBox(
+      width: size,
+      height: size,
+      borderRadius: BorderRadius.circular(size / 2),
+    );
+  }
+}
+
+class SkeletonText extends StatelessWidget {
+  const SkeletonText({
+    super.key,
+    this.width,
+    this.height,
+    this.borderRadius,
+  });
+
+  final double? width;
+  final double? height;
+  final BorderRadius? borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonBox(
+      width: width ?? double.infinity,
+      height: height ?? 12.h,
+      borderRadius: borderRadius ?? BorderRadius.circular(4.r),
+    );
+  }
+}
+
+class SkeletonCard extends StatelessWidget {
+  const SkeletonCard({
+    super.key,
+    this.child,
+    this.padding,
+    this.margin,
+    this.borderRadius,
+  });
+
+  final Widget? child;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final BorderRadius? borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: margin,
+      padding: padding ?? EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: borderRadius ?? BorderRadius.circular(12.r),
+        border: Border.all(color: colorScheme.outline),
+      ),
+      child: child,
+    );
+  }
+}
+
+class SkeletonButton extends StatelessWidget {
+  const SkeletonButton({
+    super.key,
+    this.width,
+    this.height,
+    this.borderRadius,
+  });
+
+  final double? width;
+  final double? height;
+  final BorderRadius? borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonBox(
+      width: width ?? double.infinity,
+      height: height ?? 50.h,
+      borderRadius: borderRadius ?? BorderRadius.circular(12.r),
+    );
+  }
+}
+
+class SkeletonContainer extends StatelessWidget {
+  const SkeletonContainer({
+    super.key,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.padding,
+  });
+
+  final double? width;
+  final double? height;
+  final BorderRadius? borderRadius;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: borderRadius ?? BorderRadius.circular(12.r),
       ),
     );
   }

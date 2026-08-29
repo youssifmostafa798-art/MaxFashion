@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/widgets/custom_text.dart';
+import 'package:max/core/widgets/skeletons/all_categories_skeleton.dart';
 import 'package:max/data/models/category_model.dart';
 import 'package:max/data/providers/product_provider.dart';
 import 'package:max/features/menu/presentation/widgets/category_item.dart';
@@ -15,6 +16,7 @@ class AllCategoriesPage extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final categories = ref.watch(categoriesProvider);
+    final productsState = ref.watch(productsProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -30,9 +32,11 @@ class AllCategoriesPage extends ConsumerWidget {
           weight: FontWeight.bold,
         ),
       ),
-      body: categories.isEmpty
-          ? _buildEmpty(context)
-          : _AllCategoriesGrid(categories: categories),
+      body: productsState.isLoading
+          ? const AllCategoriesSkeleton()
+          : categories.isEmpty
+              ? _buildEmpty(context)
+              : _AllCategoriesGrid(categories: categories),
     );
   }
 

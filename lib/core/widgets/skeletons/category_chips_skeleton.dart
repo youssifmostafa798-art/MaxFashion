@@ -1,31 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:max/core/widgets/category_chip_card.dart';
-import 'package:max/data/models/category_model.dart';
+import 'package:max/core/widgets/skeletons/shimmer_effect.dart';
 
 class CategoryChipsSkeleton extends StatelessWidget {
   const CategoryChipsSkeleton({super.key, this.itemCount = 5});
 
   final int itemCount;
 
-  static final List<CategoryModel> _skeletonCategories = List.generate(
-    5,
-    (index) => const CategoryModel(
-      id: 0,
-      name: 'Loading',
-      slug: '',
-      iconName: '',
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Skeletonizer(
-      enabled: true,
-      containersColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.12),
+    return ShimmerEffect(
       child: SizedBox(
         height: 90.h,
         child: ListView.separated(
@@ -34,9 +18,21 @@ class CategoryChipsSkeleton extends StatelessWidget {
           itemCount: itemCount,
           separatorBuilder: (_, _) => SizedBox(width: 16.w),
           itemBuilder: (context, index) {
-            return CategoryChipCard(
-              category: _skeletonCategories[index],
-              onTap: () {},
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SkeletonBox(
+                  width: 56.w,
+                  height: 56.w,
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                SizedBox(height: 6.h),
+                SkeletonBox(
+                  width: 40.w,
+                  height: 10.h,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              ],
             );
           },
         ),
