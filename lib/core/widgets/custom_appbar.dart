@@ -26,7 +26,12 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       toolbarHeight: _height,
-      backgroundColor: colorScheme.surfaceContainerHigh,
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Colors.black,
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      elevation: 0,
       automaticallyImplyLeading: false,
       leading: null,
       leadingWidth: 0,
