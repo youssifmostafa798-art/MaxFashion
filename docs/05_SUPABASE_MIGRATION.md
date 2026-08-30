@@ -1,7 +1,7 @@
 # 05 — Supabase Migration Status
 
 > **MaxFashion — Current Supabase Implementation & Migration Reference**
-> Last Updated: August 21, 2026
+> Last Updated: August 30, 2026
 
 ---
 
@@ -24,6 +24,7 @@
 | — | Full-Text Search | ✅ Completed | `020_full_text_search.sql` |
 | — | OTP Code Hashing | ✅ Completed | `021_otp_code_hashing.sql` |
 | — | Collections Feature | ✅ Completed | `022_collections_schema.sql`, `023_fix_watches_image_url.sql` |
+| — | Product Translations (reverted) | ⚠️ Historical | `024_product_translations.sql` (created), `025_restore_english_products.sql` (reverted) |
 
 ---
 
@@ -46,6 +47,7 @@
 | `password_reset_codes` | OTP codes for password reset (SHA-256 hashed) | ✅ Service-role only (no anon policies) | ✅ In use |
 | `collections` | Curated product collections | Public read (active only) | ✅ In use |
 | `collection_categories` | Collection-to-category junction | Public read | ✅ In use |
+| `product_translations` | Product content localization | ⚠️ Historical — created by 024, dropped by 025 | ❌ No longer in use |
 
 ### Table Schemas (Reference)
 
@@ -347,6 +349,8 @@ UNIQUE on (product_id, size).
 | 021 | `021_otp_code_hashing.sql` | SHA-256 hashed OTP codes (code_hash column, pgcrypto extension) |
 | 022 | `022_collections_schema.sql` | collections + collection_categories tables, collection-images bucket, seed data |
 | 023 | `023_fix_watches_image_url.sql` | Fix Watches collection image URL extension |
+| 024 | `024_product_translations.sql` | Product content localization — **historical, reverted by 025** |
+| 025 | `025_restore_english_products.sql` | Restore English products, drop product_translations |
 
 ---
 
@@ -364,11 +368,11 @@ UNIQUE on (product_id, size).
 
 | Item | Priority | Type | Notes |
 |------|----------|------|-------|
-| Fix Auth Interface | **HIGH** | Code Quality | `ensureProfileExists` accessed via `as dynamic` |
-| Add mounted check in logout | **HIGH** | Code Quality | Missing in auth_provider.dart logout method |
-| Fix OrderModel serialization | HIGH | Code Quality | Status as int, camelCase keys vs snake_case DB |
-| Fix PaymentCardModel serialization | HIGH | Code Quality | camelCase JSON keys vs snake_case DB columns |
-| Fix CartItemModel serialization | MEDIUM | Code Quality | Extra non-DB fields in toJson |
+| ~~Fix Auth Interface~~ | ~~HIGH~~ | ~~Code Quality~~ | ✅ Completed — methods are on `AuthRepositoryInterface` |
+| ~~Add mounted check in logout~~ | ~~HIGH~~ | ~~Code Quality~~ | ✅ Completed — mounted check present |
+| ~~Fix OrderModel serialization~~ | ~~HIGH~~ | ~~Code Quality~~ | ✅ Fixed — status serialized as string, fromJson handles both int and String |
+| ~~Fix PaymentCardModel serialization~~ | ~~HIGH~~ | ~~Code Quality~~ | ✅ Fixed — toJson uses snake_case matching DB columns |
+| Fix CartItemModel serialization | MEDIUM | Code Quality | Extra non-DB fields in toJson (model is UI-layer DTO) |
 | Fix ProductModel ID | HIGH | Code Quality | ID as String with 'p' prefix — DB is BIGINT |
 | Exception Cleanup | MEDIUM | Code Quality | 24 silently swallowed exceptions |
 | Product image gallery | High | Feature | Only single thumbnail displayed |

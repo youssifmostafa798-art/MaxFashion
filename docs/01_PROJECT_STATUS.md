@@ -1,8 +1,8 @@
 # 01 — Project Status
 
 > **MaxFashion — Current Application State**
-> Audit Date: August 21, 2026
-> Previous Audit: August 18, 2026
+> Audit Date: August 30, 2026
+> Previous Audit: August 21, 2026
 > Project Version: 1.0.0+1
 
 ---
@@ -44,6 +44,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | — | Data Isolation Audit & Fix | ✅ Completed |
 | — | Avatar Race Condition Fix | ✅ Completed |
 | — | Route-Level Auth Guards | ✅ Completed (`auth_guard.dart`) |
+| — | Product Translations (reverted) | ⚠️ Migrations 024-025 exist — 024 added `product_translations` table, 025 restored English content to `products` table and dropped translations. Product names/descriptions now stored directly in `products` table. Search operates on `products` directly. |
 
 ---
 
@@ -66,7 +67,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 | Collections | ✅ | ✅ collections + collection_categories tables | ❌ | ✅ Completed |
 | OTP Password Recovery | ✅ | ✅ password_reset_codes + 3 Edge Functions (OTP hashed) | ❌ | ✅ Completed |
 | Theme | ✅ | ❌ | ✅ SharedPreferences | ✅ Working (local is correct) |
-| Settings | ✅ | ❌ | N/A | ✅ Working |
+| Settings | ✅ | ❌ | N/A | ✅ Working — includes implemented language selector (Arabic/English) |
 
 ---
 
@@ -78,7 +79,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - Avatar upload/remove via Supabase Storage `avatars` bucket (migration 019)
 - Auth state listener for token refresh and sign-out events
 - `ensureProfileExists` creates profile if missing after auth
-- ⚠️ `ensureProfileExists` and `isEmailConfirmationPending` accessed via `as dynamic` casts (not on interface)
+- ✅ `ensureProfileExists` and `isEmailConfirmationPending` on `AuthRepositoryInterface` (no `as dynamic` casts)
 
 ### OTP Password Recovery
 - `sendResetCode()` — calls `send-reset-code` Edge Function (sends 6-digit OTP via Resend API)
@@ -95,7 +96,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - `SupabaseProductRepository` — fetches products with joined `product_images` and `product_sizes`
 - `categoriesProvider` — reads from Supabase `categories` table
 - Dynamic category resolution via `categoryNameById()` helper
-- 248 products, 22 categories in live Supabase (after migration 008 cleanup)
+- 244 products, 22 categories in live Supabase (after migration 008 cleanup)
 - Product images served from Supabase Storage `product-images` bucket
 - ⚠️ ProductModel `id` is String with `'p'` prefix — `toJson` sends invalid ID for DB writes
 
@@ -124,7 +125,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - `order_items` table with RLS policies (user-owned via orders)
 - Order creation from checkout with historical snapshot preservation
 - Auth-aware provider (watches `currentUserIdProvider`)
-- ⚠️ OrderModel status serialized as int index — DB uses TEXT
+- ✅ OrderModel status serialized as string (via `statusToString()`)
 
 ### Addresses
 - `SupabaseAddressRepository` — full CRUD (load, add, update, delete, setDefault)
@@ -138,7 +139,7 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 - Default card management with automatic reassignment on delete
 - Duplicate card detection
 - Auth-aware provider (watches `currentUserIdProvider`)
-- ⚠️ PaymentCardModel JSON keys are camelCase — DB columns are snake_case
+- ✅ PaymentCardModel `toJson` uses snake_case keys matching DB columns
 
 ### Collections
 - `SupabaseCollectionRepository` — fetches active collections with category mappings
@@ -227,6 +228,8 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 24. **Route-level auth guards implemented** — `AuthGuard` widget protects sensitive routes (placeOrder, addAddress, addCard, editProfile, addresses, paymentMethods).
 25. **Recent searches scoped per-user** — SharedPreferences key now includes userId, preventing cross-account search history leakage.
 26. **Collections feature implemented** — Full collection browsing with home carousel, all collections page, and collection-filtered product listing.
+27. **Product translations attempted and reverted** — Migration 024 created `product_translations` table with locale-aware search (pg_trgm, per-locale tsvector columns, locale-aware `search_products` RPC). Migration 025 restored original English product names/descriptions to the `products` table and dropped the `product_translations` infrastructure. Product content now lives directly in the `products` table. Search operates on the `products` table directly.
+28. **Language selector implemented** — Settings page includes a functional language picker (English/Arabic) that switches the app locale at runtime via `localeProvider`.
 
 ---
 
@@ -234,32 +237,31 @@ MaxFashion is a **substantially complete** Flutter e-commerce fashion app. The c
 
 | Issue | Severity | Status |
 |-------|----------|--------|
-| `ensureProfileExists` accessed via dynamic cast | Medium | Open |
-| `isEmailConfirmationPending` accessed via dynamic cast | Medium | Open |
-| Missing mounted check in logout | Medium | Open |
+| `ensureProfileExists` accessed via dynamic cast | Medium | ✅ Fixed — methods are on `AuthRepositoryInterface` |
+| `isEmailConfirmationPending` accessed via dynamic cast | Medium | ✅ Fixed — getter is on `AuthRepositoryInterface` |
+| Missing mounted check in logout | Medium | ✅ Fixed — `if (!mounted) return;` present after `signOut()` |
 | 24 silently swallowed exceptions (`catch (_) {}`) | Medium | Open |
-| OrderModel serialization: status as int, camelCase keys | High | Open |
-| PaymentCardModel serialization: camelCase keys vs snake_case DB | High | Open |
-| CartItemModel serialization: extra non-DB fields in toJson | High | Open |
-| ProductModel ID as String with 'p' prefix | High | Open |
+| OrderModel serialization | Low | ✅ Fixed — status serialized as string, fromJson handles both int and String |
+| PaymentCardModel serialization | Low | ✅ Fixed — toJson uses snake_case matching DB columns |
+| CartItemModel serialization | Medium | Open — toJson includes non-DB fields (`product_name`, `product_image`, etc.) — model is UI-layer DTO |
+| ProductModel ID as String with 'p' prefix | Medium | Open — `toJson` sends `rawId` (int) for DB writes |
 | Hardcoded Supabase URL in 3 files | Low | Open |
 | Promo code UI exists but non-functional | Low | Open |
 | "Shop By" menu items are static UI only | Low | Open |
-| 3 duplicate search implementations | Low | Open |
+| Menu categories loaded dynamically from Supabase | ✅ Verified | Categories page uses `CategoryGrid` which reads from `categoriesProvider` (Supabase) |
 
 ---
 
 ## Next Steps (Priority Order)
 
-1. **Fix Auth Interface** — Add methods to interface, remove `as dynamic` casts
-2. **Fix Model Serialization** — OrderModel, PaymentCardModel, CartItemModel, ProductModel
-3. **Fix Error Handling** — Wishlist, product providers
-4. **Remove Fake Loading Delays** — Use real AsyncValue states
-5. **Real Payment Gateway** — Credit card form exists but no payment processing
-6. **Order Cancellation UI** — No cancellation flow from user side
-7. **Product Image Gallery** — Only single thumbnail displayed
-8. **Remove Dead Code** — `collection` and `keywords` getters in ProductModel, consolidate search implementations
-9. **Testing** — Add unit and widget tests
+1. **Fix Model Serialization** — CartItemModel (extra non-DB fields in toJson), ProductModel (ID as String with 'p' prefix)
+2. **Fix Error Handling** — Wishlist, product providers
+3. **Remove Fake Loading Delays** — Use real AsyncValue states
+4. **Real Payment Gateway** — Credit card form exists but no payment processing
+5. **Order Cancellation UI** — No cancellation flow from user side
+6. **Product Image Gallery** — Only single thumbnail displayed
+7. **Remove Dead Code** — consolidate search implementations
+8. **Testing** — Add unit and widget tests
 
 ---
 

@@ -135,7 +135,7 @@ All screens → Header (shared page header)
 | `gap` | ^3.0.1 | Adds vertical/horizontal spacing between widgets |
 | `flutter_gap` | ^1.2.0 | Alternative spacing package (used alongside `gap`) |
 | `cupertino_icons` | ^1.0.8 | iOS-style icons (used for close icon in dialog) |
-| `flutter_launcher_icons` | ^0.14.4 | Generates custom launcher icon from `assets/logo/mylogo.png` |
+| `flutter_launcher_icons` | ^0.14.4 | Generates custom launcher icon from `assets/logo/new_logo.png` |
 
 **Note:** Both `gap` and `flutter_gap` are installed and used interchangeably. These serve the same purpose.
 

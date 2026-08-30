@@ -1,7 +1,7 @@
 # 03 — Features & Data
 
 > **MaxFashion — Feature-by-Feature Status & Data Architecture**
-> Last Updated: August 21, 2026
+> Last Updated: August 30, 2026
 
 ---
 
@@ -162,7 +162,7 @@ ResetPasswordPage → authStateProvider → AuthNotifier.resetPasswordWithCode()
 
 **Implementation:**
 - `SupabaseProductRepository` fetches products with joined images and sizes
-- 248 products, 22 categories in live Supabase (after migration 008 cleanup)
+- 244 products, 22 categories in live Supabase (after migration 008 cleanup)
 - Product detail page with size selection, quantity, add to cart
 - Product listing page with category filtering
 - Product grid card with hero animation, favorite button
@@ -468,7 +468,8 @@ Home → collectionsProvider → SupabaseCollectionRepository.getActiveCollectio
 
 **Implementation:**
 - Theme selector (Light / Dark / System) with persistence
-- Language, Privacy, Terms, Support placeholders
+- Language selector (English / Arabic) with runtime locale switching via `localeProvider`
+- Privacy, Terms, Support placeholders
 
 **Key Files:**
 - `lib/features/settings/presentation/pages/settings_page.dart`
@@ -721,23 +722,17 @@ Home → collectionsProvider → SupabaseCollectionRepository.getActiveCollectio
 
 ## Local Assets
 
-### Product Images
-- Path: `assets/products_supa/`
-- Structure: `{gender}/{category_type}/{subcategory}/{image}.jpg`
-- Note: These bundled images are legacy from the pre-Supabase era. Product images are now served from Supabase Storage via `Image.network()`. These assets may be removable to reduce APK size.
-
 ### Category Icons
 - Path: `assets/categories_icons/`
 - Used by: `CategoryModel.iconAssetPath` → `assets/categories_icons/{iconName}`
 - Referenced by categories table `icon_name` column
 
 ### Other Assets
-- `assets/cover/` — Cover images
-- `assets/logo/` — App logo
-- `assets/svgs/` — SVG graphics
-- `assets/texts/` — SVG text overlays
-- `assets/pop/` — Pop-up images
-- `assets/fonts/` — Tenor Sans font
+- `assets/logo/` — App logo (`new_logo.png`, `spalsh_logo_2.svg`, `spalsh_logo.png`)
+- `assets/svgs/` — SVG graphics (delivery, Mastercard, Visa, promo, shopping bag, plus, min, line)
+- `assets/texts/` — SVG text overlays (10.svg, Collection.svg, October.svg)
+- `assets/pop/` — Pop-up images (done.svg)
+- `assets/fonts/` — Tenor Sans and Noto Sans Arabic fonts
 
 ---
 

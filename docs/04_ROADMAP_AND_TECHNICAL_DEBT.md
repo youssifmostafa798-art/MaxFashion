@@ -1,7 +1,7 @@
 # 04 — Roadmap & Technical Debt
 
 > **MaxFashion — Remaining Work, Known Issues & Technical Debt**
-> Last Updated: August 21, 2026
+> Last Updated: August 30, 2026
 
 ---
 
@@ -27,15 +27,15 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Fix Dynamic Casts in Auth | ❌ Not Started | `ensureProfileExists` and `isEmailConfirmationPending` accessed via `as dynamic` |
-| Add mounted check in logout | ❌ Not Started | Missing in auth_provider.dart logout method |
+| ~~Fix Dynamic Casts in Auth~~ | ✅ Completed | `ensureProfileExists` and `isEmailConfirmationPending` are on `AuthRepositoryInterface` |
+| ~~Add mounted check in logout~~ | ✅ Completed | `if (!mounted) return;` present after `signOut()` |
 | Exception Cleanup | ❌ Not Started | 24 silently swallowed exceptions (`catch (_) {}`) |
 | Promo Code Logic | ⚠️ UI Only | Section exists but no input field or application logic |
 | "Shop By" Filtering | ⚠️ UI Only | New Arrivals, Trending, Best Sellers, Online Exclusive — static UI, no filtering |
 | Product Reviews/Ratings | ❌ Not Implemented | No code found |
 | Push Notifications | ❌ Not Implemented | No code found |
 | Consolidate Search Logic | ⚠️ Partial | Search is functional via Supabase RPC; duplicate implementations could be consolidated |
-| Menu Categories Dynamic Loading | ⚠️ Hardcoded | CategoriesPage has hardcoded items (should load from Supabase) |
+| ~~Menu Categories Dynamic Loading~~ | ✅ Completed | `CategoryGrid` reads from `categoriesProvider` which loads from Supabase `categories` table |
 
 ### Low Priority — Optional Polish
 
@@ -55,9 +55,9 @@
 
 | Issue | Affected Feature | Status | Notes |
 |-------|-----------------|--------|-------|
-| `ensureProfileExists` via dynamic cast | Authentication | Open | `lib/data/providers/auth_provider.dart` — accessed via `(_repository as dynamic)` — fragile but functional |
-| `isEmailConfirmationPending` via dynamic cast | Authentication | Open | Same file — not on `AuthRepositoryInterface` |
-| Missing mounted check in logout | Authentication | Open | `auth_provider.dart` — `state = const AuthState()` without `mounted` check after `signOut()` |
+| ~~`ensureProfileExists` via dynamic cast~~ | Authentication | ✅ Fixed | Methods are on `AuthRepositoryInterface` |
+| ~~`isEmailConfirmationPending` via dynamic cast~~ | Authentication | ✅ Fixed | Getter is on `AuthRepositoryInterface` |
+| ~~Missing mounted check in logout~~ | Authentication | ✅ Fixed | `auth_provider.dart` — `if (!mounted) return;` present after `signOut()` |
 | 24 silently swallowed exceptions | Multiple | Open | `catch (_) {}` in auth_provider, orders_provider, wishlist_provider, payment_card_provider, address_provider, supabase_product_repository, supabase_order_repository, supabase_auth_repository, place_order, edit_profile_provider |
 | Hardcoded Supabase URL | Products, Cart, Orders | Open | `_storageBaseUrl` hardcoded in ProductModel, SupabaseCartRepository, SupabaseOrderRepository instead of using .env config |
 
@@ -97,8 +97,8 @@ The following files have been **deleted** from the codebase but may still be ref
 
 | Issue | Location | Severity |
 |-------|----------|----------|
-| Dynamic cast for `ensureProfileExists` | `lib/data/providers/auth_provider.dart` | Medium |
-| Dynamic cast for `isEmailConfirmationPending` | `lib/data/providers/auth_provider.dart` | Medium |
+| ~~Dynamic cast for `ensureProfileExists`~~ | `lib/data/providers/auth_provider.dart` | ✅ Fixed |
+| ~~Dynamic cast for `isEmailConfirmationPending`~~ | `lib/data/providers/auth_provider.dart` | ✅ Fixed |
 | 24 silently swallowed exceptions | Multiple files (see Known Issues) | Medium |
 | Hardcoded Supabase storage URL | `lib/data/models/product_model.dart`, `lib/data/repositories/cart/supabase_cart_repository.dart`, `lib/data/repositories/orders/supabase_order_repository.dart` | Low |
 | Mixed navigation patterns (named routes vs Navigator.push) | Various | Low |
@@ -123,16 +123,13 @@ The following files have been **deleted** from the codebase but may still be ref
 
 ## Next Steps (Recommended Order)
 
-### 1. Fix Dynamic Casts & Exception Handling
+### 1. Fix Error Handling & Exception Cleanup
 
-**Why:** Type safety and debuggability.
+**Why:** 24 silently swallowed exceptions make debugging difficult.
 
 **Tasks:**
-1. Add `ensureProfileExists()` and `isEmailConfirmationPending` to `AuthRepositoryInterface`
-2. Remove `as dynamic` casts from `auth_provider.dart`
-3. Add `mounted` check in `logout()` method
-4. Audit 24 silently swallowed exceptions — at minimum add logging
-5. Consider adding a global error handler
+1. Audit 24 silently swallowed exceptions — at minimum add logging
+2. Consider adding a global error handler
 
 ### 2. Cleanup & Polish
 
@@ -140,7 +137,6 @@ The following files have been **deleted** from the codebase but may still be ref
 - Remove dead `collection` and `keywords` getters from ProductModel
 - Extract hardcoded Supabase URLs to configuration
 - Add named routes for all screens
-- Load menu categories from Supabase
 - Remove any remaining dead code
 
 ### 3. Real Payment Gateway

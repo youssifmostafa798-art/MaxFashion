@@ -41,30 +41,42 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           SizedBox(
             height: 40.h,
-            child: Row(
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
               children: [
-                if (canPop)
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: colorScheme.onSurface,
-                        size: 24.w,
+                Positioned(
+                  top: (40.h - 80) / 2,
+                  height: 80,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/logo/spalsh_logo_2.svg',
+                      width: 80,
+                      height: 80,
+                      colorFilter: ColorFilter.mode(
+                        colorScheme.onSurface,
+                        BlendMode.srcIn,
                       ),
                     ),
                   ),
-                const Spacer(),
-                SvgPicture.asset(
-                  'assets/logo/logo-bg.svg',
-                  colorFilter: ColorFilter.mode(
-                    colorScheme.onSurface,
-                    BlendMode.srcIn,
-                  ),
                 ),
-                const Spacer(),
-                if (canPop) SizedBox(width: 40.w),
+                if (canPop)
+                  PositionedDirectional(
+                    start: 0,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: colorScheme.onSurface,
+                          size: 24.w,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

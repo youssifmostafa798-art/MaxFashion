@@ -1,7 +1,7 @@
 # 02 — Architecture
 
 > **MaxFashion — System Architecture & Technical Design**
-> Last Updated: August 21, 2026
+> Last Updated: August 30, 2026
 
 ---
 
@@ -29,7 +29,7 @@ UI (Pages/Widgets)
 
 1. **Repository Pattern** — Abstract interfaces for all data access. Supabase implementations are wired via Riverpod providers.
 2. **Riverpod** — All state management uses `StateNotifierProvider`, `StateProvider`, or `Provider`.
-3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (27 named routes).
+3. **Navigator 1.0** — `onGenerateRoute` with custom slide/fade transitions (26 named routes).
 4. **ScreenUtil** — Design size 375x812, all sizing via `.w`, `.h`, `.r`, `.sp`.
 5. **Theme-aware** — `Theme.of(context).colorScheme` used throughout, no hardcoded colors.
 6. **Auth-Aware Providers** — All user-scoped providers watch `currentUserIdProvider` to auto-invalidate on login/logout, preventing cross-account data leakage.
@@ -170,7 +170,7 @@ PaymentMethodsPage → paymentCardProvider → PaymentCardNotifier.load()
 ### Search
 ```
 SearchScreen → searchProvider → SearchNotifier.onQueryChanged()
-  → (250ms debounce)
+  → (300ms debounce)
   → SupabaseSearchRepository.searchProducts()
   → Supabase RPC `search_products` (full-text search with trigram matching)
   → SearchState (results)
@@ -234,6 +234,7 @@ EditProfilePage → AuthNotifier.updateProfile()
 | `password_reset_codes` | OTP codes for password reset (SHA-256 hashed) | ✅ Service-role only (no anon policies) |
 | `collections` | Curated product collections | Public read (active only) |
 | `collection_categories` | Collection-to-category junction | Public read |
+| `product_translations` | Product content localization (created by 024, dropped by 025) | ⚠️ Historical — no longer in use |
 
 ### Storage
 
@@ -269,7 +270,9 @@ supabase/migrations/
 ├── 020_full_text_search.sql         — pg_trgm extension, search_vector column, search_products RPC function
 ├── 021_otp_code_hashing.sql         — SHA-256 hashed OTP codes (code_hash column, pgcrypto)
 ├── 022_collections_schema.sql       — collections + collection_categories tables, collection-images bucket, seed data
-└── 023_fix_watches_image_url.sql    — Fix Watches collection image URL extension
+├── 023_fix_watches_image_url.sql    — Fix Watches collection image URL extension
+├── 024_product_translations.sql     — Product content localization (product_translations table, locale-aware search)
+└── 025_restore_english_products.sql — Restore English products to products table, drop product_translations
 ```
 
 ### Edge Functions
@@ -360,7 +363,7 @@ All user-scoped providers (`cartProvider`, `wishlistProvider`, `ordersProvider`,
 | Cart | `CartPage` | Cart count |
 | You | `ProfilePage` | Wishlist count |
 
-### Named Routes (27)
+### Named Routes (26)
 `/splash`, `/auth`, `/login`, `/signup`, `/main`, `/search`, `/wishlist`, `/product-listing`, `/product-detail`, `/cart`, `/place-order`, `/add-address`, `/add-card`, `/orders`, `/order-details`, `/profile`, `/edit-profile`, `/addresses`, `/payment-methods`, `/settings`, `/categories`, `/forgot-password`, `/verify-reset-code`, `/reset-password`, `/collection-products`, `/all-collections`, `/all-categories`
 
 ---

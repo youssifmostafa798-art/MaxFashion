@@ -1,8 +1,8 @@
 # Supabase Remaining Work
 
-> **Generated:** Fri Aug 21 2026
+> **Generated:** Sat Aug 30 2026
 > **Audit scope:** Entire Flutter project — every file in lib/, supabase/, docs/
-> **Previous audit:** Aug 18, 2026
+> **Previous audit:** Aug 21, 2026
 > **Rule:** Code is truth. Documentation is secondary.
 
 ---
@@ -11,7 +11,7 @@
 
 The MaxFashion app has **~95% of Supabase migration completed**. All major features (auth, products, cart, wishlist, orders, addresses, payment cards, home content, collections, OTP password recovery) are connected to Supabase with working CRUD, RLS, and auth-aware providers. Migrations 018 (profiles), 019 (avatars storage), 020 (full-text search), 021 (OTP hashing), 022 (collections), and 023 (fix watches image) now exist. Three Edge Functions (`send-reset-code`, `verify-reset-code`, `reset-password`) are implemented with SHA-256 hashed OTP codes. Route-level auth guards protect sensitive routes. Recent searches are scoped per-user.
 
-Remaining work is primarily **code quality** (model serialization mismatches, `as dynamic` casts) and **UX improvements** (real payment gateway, order cancellation, product image gallery).
+Remaining work is primarily **code quality** (model serialization mismatches) and **UX improvements** (real payment gateway, order cancellation, product image gallery).
 
 ---
 
@@ -100,12 +100,52 @@ Remaining work is primarily **code quality** (model serialization mismatches, `a
 ### Route-Level Auth Guards
 - **What:** `AuthGuard` widget protects sensitive routes (checkout, profile editing, addresses, payment methods)
 - **Files:** `auth_guard.dart`, `app_router.dart`
-- **Status:** ✅ Verified — 5 routes protected: placeOrder, addAddress, addCard, editProfile, addresses, paymentMethods
+- **Status:** ✅ Verified — 6 routes protected: placeOrder, addAddress, addCard, editProfile, addresses, paymentMethods
 
 ### Recent Searches Scoped Per-User
 - **What:** Recent searches keyed by userId (`recent_searches_{userId}`), preventing cross-account history leakage
 - **Files:** `search_provider.dart`
 - **Status:** ✅ Verified — `_recentSearchesKey` returns `recent_searches_$userId` or `recent_searches_guest`
+
+### Auth Interface Fixed
+- **What:** `ensureProfileExists` and `isEmailConfirmationPending` are now on `AuthRepositoryInterface`. No more `as dynamic` casts needed.
+- **Files:** `auth_repository_interface.dart`, `auth_provider.dart`
+- **Status:** ✅ Verified — interface declares both methods
+
+### Mounted Check in Logout
+- **What:** `auth_provider.dart` logout method now has `if (!mounted) return;` after `signOut()`
+- **Files:** `auth_provider.dart`
+- **Status:** ✅ Verified — mounted check present
+
+### OrderModel Serialization Fixed
+- **What:** Status serialized as string (not int index). `fromJson` handles both int and String for backward compatibility.
+- **Files:** `order_model.dart`, `order_item_model.dart`, `supabase_order_repository.dart`
+- **Status:** ✅ Verified — `toJson()` uses `statusToString()` which returns string, repository uses `_statusToDb()` for DB writes
+
+### PaymentCardModel Serialization Fixed
+- **What:** `toJson()` uses snake_case keys matching DB columns. `fromJson` handles both camelCase and snake_case.
+- **Files:** `payment_card_model.dart`, `supabase_payment_card_repository.dart`
+- **Status:** ✅ Verified — `toJson()` produces `card_holder_name`, `last4_digits`, `expiry_month`, `expiry_year`, `card_brand`, `is_default`
+
+### Wishlist Error Handling Fixed
+- **What:** `addToWishlist`/`removeFromWishlist` now have proper error handling with rollback on failure
+- **Files:** `wishlist_provider.dart`
+- **Status:** ✅ Verified — optimistic UI with `.catchError` rollback
+
+### Product Translations (Historical)
+- **What:** Migration 024 created `product_translations` table for localization. Migration 025 reverted this approach, restoring English content to the `products` table.
+- **Files:** `024_product_translations.sql`, `025_restore_english_products.sql`
+- **Status:** ⚠️ Historical — migrations exist but approach was reverted
+
+### Language Selector Implemented
+- **What:** Settings page includes a functional language picker (English/Arabic) that switches the app locale at runtime
+- **Files:** `settings_page.dart`, `language_provider.dart`, `language_storage.dart`
+- **Status:** ✅ Verified — modal bottom sheet with locale switching
+
+### Menu Categories Loaded Dynamically
+- **What:** `CategoryGrid` reads from `categoriesProvider` which loads from Supabase `categories` table
+- **Files:** `category_grid.dart`, `product_provider.dart`
+- **Status:** ✅ Verified — categories are NOT hardcoded
 
 ---
 
@@ -117,11 +157,11 @@ Remaining work is primarily **code quality** (model serialization mismatches, `a
 - **Remaining:** Search is fully implemented. Recent searches are per-user scoped.
 - **Priority:** LOW (search is complete)
 
-### Auth Interface
-- **What:** `ensureProfileExists` and `isEmailConfirmationPending` implemented on `SupabaseAuthRepository` but **NOT declared on `AuthRepositoryInterface`**
-- **Files:** `auth_repository_interface.dart`, `supabase_auth_repository.dart:67`, `auth_provider.dart:98,194,212`
-- **Remaining:** Add methods to interface, remove `as dynamic` casts
-- **Priority:** HIGH
+### Product Translations (Reverted)
+- **What:** Migrations 024-025 attempted product content localization but were reverted. Migration 024 created `product_translations` with locale-aware search. Migration 025 restored English content to `products` table and dropped the translations infrastructure.
+- **Files:** `024_product_translations.sql`, `025_restore_english_products.sql`
+- **Remaining:** If localization is needed in the future, the approach from migration 024 can be re-implemented.
+- **Priority:** LOW (reverted, not blocking)
 
 ---
 
@@ -131,10 +171,10 @@ Remaining work is primarily **code quality** (model serialization mismatches, `a
 
 | Task | Description | Files | Status |
 |------|-------------|-------|--------|
-| Fix Auth interface | Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`. Remove 3 `as dynamic` casts. | `auth_repository_interface.dart`, `auth_provider.dart` | ❌ Not started |
-| Add mounted check in logout | `auth_provider.dart` — `state = const AuthState()` without `mounted` check after `signOut()`. | `auth_provider.dart` | ❌ Not started |
-| Fix OrderModel serialization | Status serialized as `int` (`.index`) but DB uses `TEXT`. `fromJson` uses camelCase keys but DB is snake_case. | `order_model.dart`, `order_item_model.dart` | ❌ Not started |
-| Fix PaymentCardModel serialization | All JSON keys camelCase (`cardHolderName`) but DB columns snake_case (`card_holder_name`). `fromJson`/`toJson` broken. | `payment_card_model.dart` | ❌ Not started |
+| ~~Fix Auth interface~~ | ~~Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`. Remove 3 `as dynamic` casts.~~ | ~~`auth_repository_interface.dart`, `auth_provider.dart`~~ | ✅ Completed |
+| ~~Add mounted check in logout~~ | ~~`auth_provider.dart` — `state = const AuthState()` without `mounted` check after `signOut()`.~~ | ~~`auth_provider.dart`~~ | ✅ Completed |
+| ~~Fix OrderModel serialization~~ | ~~Status serialized as `int` (`.index`) but DB uses `TEXT`. `fromJson` uses camelCase keys but DB is snake_case.~~ | ~~`order_model.dart`, `order_item_model.dart`~~ | ✅ Fixed |
+| ~~Fix PaymentCardModel serialization~~ | ~~All JSON keys camelCase (`cardHolderName`) but DB columns snake_case (`card_holder_name`). `fromJson`/`toJson` broken.~~ | ~~`payment_card_model.dart`~~ | ✅ Fixed |
 | Fix CartItemModel serialization | `toJson` sends non-DB columns (`product_name`, `product_image`, `selected_size`, `unit_price`). Model is UI-layer DTO. | `cart_item_model.dart` | ❌ Not started |
 | Fix ProductModel ID | `id` is `String` with `'p'` prefix (`'p123'`) but DB is `BIGINT`. `toJson` sends invalid ID. | `product_model.dart` + 6 consumers | ❌ Not started |
 
@@ -181,15 +221,20 @@ Remaining work is primarily **code quality** (model serialization mismatches, `a
 | "Profile table missing migration" | ✅ **RESOLVED** — `018_profiles_schema.sql` now exists |
 | "Avatars bucket missing migration" | ✅ **RESOLVED** — `019_avatars_storage.sql` now exists |
 | "Reset password RLS — removed anon policies" | ✅ **RESOLVED** — Migration 016 correctly has NO anon policies. Edge functions use service_role which bypasses RLS. |
-| "Implement router auth guards" | ✅ **RESOLVED** — `AuthGuard` protects 5 sensitive routes |
+| "Implement router auth guards" | ✅ **RESOLVED** — `AuthGuard` protects 6 sensitive routes |
 | "Scope recent searches by user" | ✅ **RESOLVED** — Keyed by userId in SharedPreferences |
 | "Hash OTP codes" | ✅ **RESOLVED** — Migration 021, SHA-256 hashed codes |
 | "Collections feature" | ✅ **RESOLVED** — Migrations 022-023, full implementation |
+| "Fix Auth interface" | ✅ **RESOLVED** — Methods are on `AuthRepositoryInterface`, no more `as dynamic` casts |
+| "Add mounted check in logout" | ✅ **RESOLVED** — `if (!mounted) return;` present after `signOut()` |
+| "Fix OrderModel serialization" | ✅ **RESOLVED** — Status serialized as string, fromJson handles both int and String |
+| "Fix PaymentCardModel serialization" | ✅ **RESOLVED** — toJson uses snake_case matching DB columns |
+| "Fix wishlist error handling" | ✅ **RESOLVED** — Optimistic UI with rollback on failure |
 | 5-day execution plan from Aug 17 | Superseded by this document |
 
 ---
 
-## Today — 2026-08-21
+## Today — 2026-08-30
 
 Based on the current codebase state, the following was verified as completed:
 
@@ -199,45 +244,47 @@ Based on the current codebase state, the following was verified as completed:
 4. **OTP code hashing migration** (`021_otp_code_hashing.sql`) — SHA-256 hashed codes with pgcrypto
 5. **Collections migration** (`022_collections_schema.sql`) — collections + collection_categories tables, collection-images bucket
 6. **Fix watches image migration** (`023_fix_watches_image_url.sql`) — corrects Watches collection image URL
-7. **Verify-reset-code Edge Function** (`verify-reset-code/index.ts`) — exists with attempt limiting (max 5)
-8. **All 23 SQL migrations** — present in `supabase/migrations/`
-9. **All 3 Edge Functions** — present in `supabase/functions/` with SHA-256 hashed OTP codes
-10. **All Supabase repositories** — implemented with user_id filters and auth checks
-11. **All auth-aware providers** — watch `currentUserIdProvider`
-12. **Data isolation audit fixes** — all mounted checks, lifecycle protections in place
-13. **Avatar race condition fix** — auth notifier captured before async gap
-14. **Password reset codes RLS** — verified CORRECTLY secured with NO anon policies (migration 016)
-15. **Search implementation** — verified using `search_products` RPC with full-text search
-16. **Recent searches scoped per-user** — keyed by userId in SharedPreferences
-17. **Route-level auth guards** — `AuthGuard` protects 5 sensitive routes
-18. **Collections feature** — fully implemented with Supabase backend
+7. **Product translations migration** (`024_product_translations.sql`) — created but **reverted by 025**
+8. **Restore English products migration** (`025_restore_english_products.sql`) — restored product content, dropped translations
+9. **Verify-reset-code Edge Function** (`verify-reset-code/index.ts`) — exists with attempt limiting (max 5)
+10. **All 25 SQL migrations** — present in `supabase/migrations/` (024-025 are historical/reverted)
+11. **All 3 Edge Functions** — present in `supabase/functions/` with SHA-256 hashed OTP codes
+12. **All Supabase repositories** — implemented with user_id filters and auth checks
+13. **All auth-aware providers** — watch `currentUserIdProvider`
+14. **Data isolation audit fixes** — all mounted checks, lifecycle protections in place
+15. **Avatar race condition fix** — auth notifier captured before async gap
+16. **Password reset codes RLS** — verified CORRECTLY secured with NO anon policies (migration 016)
+17. **Search implementation** — verified using `search_products` RPC with full-text search
+18. **Recent searches scoped per-user** — keyed by userId in SharedPreferences
+19. **Route-level auth guards** — `AuthGuard` protects 6 sensitive routes (placeOrder, addAddress, addCard, editProfile, addresses, paymentMethods)
+20. **Collections feature** — fully implemented with Supabase backend
+21. **Auth interface** — `ensureProfileExists` and `isEmailConfirmationPending` are on `AuthRepositoryInterface`
+22. **Mounted check in logout** — present after `signOut()`
+23. **OrderModel serialization** — status serialized as string, not int
+24. **PaymentCardModel serialization** — toJson uses snake_case matching DB
+25. **Wishlist error handling** — optimistic UI with rollback on failure
+26. **Language selector** — implemented in settings page with runtime locale switching
+27. **Menu categories** — loaded dynamically from Supabase, not hardcoded
 
 **No new code was written today.** This was a documentation synchronization audit.
 
 ---
 
-## Tomorrow — 2026-08-22
+## Remaining Work
 
-Recommended next work (ordered by priority and dependency):
+### 1. Fix CartItemModel Serialization (HIGH)
+- Add `toInsertJson()` for DB writes (exclude non-DB columns)
+- Files: `cart_item_model.dart`
 
-### 1. Fix Auth Interface (HIGH — unblocks clean auth)
-- Add `ensureProfileExists` + `isEmailConfirmationPending` to `AuthRepositoryInterface`
-- Remove 3 `as dynamic` casts from `auth_provider.dart`
-- Add `mounted` check in `logout()`
-- Files: `auth_repository_interface.dart`, `auth_provider.dart`
-
-### 2. Fix Model Serialization (HIGH — blocks correct DB writes)
-- Fix `OrderModel` — status as string, snake_case keys
-- Fix `PaymentCardModel` — add `@JsonKey` annotations
-- Fix `CartItemModel` — add `toInsertJson()` for DB writes
-- Fix `ProductModel` — change `id` from String to int
-- Files: 4 model files + consumers
+### 2. Fix ProductModel (HIGH)
+- Change `id` from String with 'p' prefix to int
+- Extract hardcoded Supabase URL
+- Files: `product_model.dart` + 6 consumers
 
 ### 3. Fix Error Handling (MEDIUM)
-- Fix wishlist error handling — add rollback on failure
-- Fix product provider error handling — add catchError on loadAll()
+- Add `catchError` on `loadAll()` in product provider
 - Remove fake loading delays — use real AsyncValue states
-- Files: wishlist_provider.dart, product_provider.dart, 4 page files
+- Files: `product_provider.dart`, 4 page files
 
 ### 4. Security Hardening (MEDIUM)
 - Tighten CORS in Edge Functions
@@ -250,28 +297,24 @@ Recommended next work (ordered by priority and dependency):
 
 ---
 
-## Recommended Execution Order
+## Recommended Execution Plan
 
 ```
-Day 1: Auth + Security
-  Morning:  Fix auth interface + mounted check + router auth guards
-  Afternoon: Scope recent searches by user
+Phase 1: Model Fixes (HIGH)
+  - Fix CartItemModel serialization (toInsertJson for DB writes)
+  - Fix ProductModel ID (String → int) + extract hardcoded URL
 
-Day 2: Model Serialization
-  Morning:  Fix OrderModel + OrderItemModel
-  Afternoon: Fix PaymentCardModel + CartItemModel + ProductModel
+Phase 2: Error Handling (MEDIUM)
+  - Add catchError on loadAll() in product provider
+  - Remove fake loading delays
 
-Day 3: Error Handling + Polish
-  Morning:  Fix wishlist + product provider error handling
-  Afternoon: Remove fake loading delays + extract hardcoded URLs
+Phase 3: Security Hardening (MEDIUM)
+  - Tighten CORS in Edge Functions
+  - Replace listUsers() with direct query
 
-Day 4: Security Hardening
-  Morning:  Hash OTP codes + replace listUsers() + tighten CORS
-  Afternoon: Add loading states to providers
-
-Day 5: Cleanup + Testing
-  Morning:  Delete dead code + standardize model patterns
-  Afternoon: Final review and testing
+Phase 4: Cleanup + Testing
+  - Delete dead code
+  - Final review and testing
 ```
 
 ---
@@ -304,6 +347,8 @@ Day 5: Cleanup + Testing
 | 021 | `021_otp_code_hashing.sql` | ✅ In use (SHA-256 hashed OTP codes) |
 | 022 | `022_collections_schema.sql` | ✅ In use (collections + collection_categories + collection-images bucket) |
 | 023 | `023_fix_watches_image_url.sql` | ✅ In use |
+| 024 | `024_product_translations.sql` | ⚠️ Historical (reverted by 025) |
+| 025 | `025_restore_english_products.sql` | ✅ In use (restored English products) |
 
 ### Edge Functions
 | Function | Status | Notes |
@@ -312,26 +357,21 @@ Day 5: Cleanup + Testing
 | `verify-reset-code` | ✅ In use | Verifies OTP hash without changing password |
 | `reset-password` | ✅ In use | Updates password via admin API, invalidates all sessions |
 
-### Models with Issues
+### Remaining Model Issues
 | File | Issue | Severity |
 |------|-------|----------|
 | `product_model.dart` | ID as String with 'p' prefix, hardcoded URL | HIGH |
-| `order_model.dart` | Status as int index, camelCase keys | HIGH |
-| `order_item_model.dart` | productId as String, camelCase keys | HIGH |
-| `payment_card_model.dart` | All JSON keys camelCase | HIGH |
 | `cart_item_model.dart` | Extra non-DB fields in toJson | HIGH |
 
-### Providers with Issues
+### Remaining Provider Issues
 | File | Issue | Severity |
 |------|-------|----------|
-| `auth_provider.dart` | 3 `as dynamic` casts, missing mounted check in logout | HIGH |
 | `wishlist_provider.dart` | Silent error swallowing on add/remove | MEDIUM |
 | `product_provider.dart` | No catchError on loadAll() | MEDIUM |
 
 ### Security Issues
 | File | Issue | Severity |
 |------|-------|----------|
-| `auth_provider.dart` | Missing mounted check in logout, 3 `as dynamic` casts | HIGH |
 | `send-reset-code/index.ts` | O(n) listUsers(), CORS * | MEDIUM |
 | `verify-reset-code/index.ts` | CORS * | MEDIUM |
 | `reset-password/index.ts` | O(n) listUsers(), CORS * | MEDIUM |

@@ -16,10 +16,13 @@ class SplashPage extends ConsumerStatefulWidget {
 
 class _SplashPageState extends ConsumerState<SplashPage>
     with TickerProviderStateMixin {
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
-  late AnimationController _scaleController;
-  late Animation<double> _scaleAnimation;
+  late final AnimationController _logoController;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<double> _scaleAnimation;
+
+  late final AnimationController _loaderController;
+  late final Animation<double> _loaderFadeAnimation;
+
   bool _navigated = false;
   bool _minDelayComplete = false;
   bool _safetyTimeoutHasFired = false;
@@ -29,25 +32,37 @@ class _SplashPageState extends ConsumerState<SplashPage>
   void initState() {
     super.initState();
 
-    _fadeController = AnimationController(
+    _logoController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 700),
     );
+
     _fadeAnimation = CurvedAnimation(
-      parent: _fadeController,
+      parent: _logoController,
+      curve: Curves.easeOutCubic,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.easeOutCubic),
+    );
+
+    _loaderController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    _loaderFadeAnimation = CurvedAnimation(
+      parent: _loaderController,
       curve: Curves.easeOut,
     );
 
-    _scaleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutBack),
-    );
+    _logoController.addStatusListener((status) {
+      if (status == AnimationStatus.completed && mounted) {
+        _loaderController.forward();
+      }
+    });
 
-    _fadeController.forward();
-    _scaleController.forward();
+    _logoController.forward();
 
     _startMinDelay();
     _safetyTimeout = Timer(const Duration(seconds: 10), _safetyTimeoutFired);
@@ -105,8 +120,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
   @override
   void dispose() {
     _safetyTimeout?.cancel();
-    _fadeController.dispose();
-    _scaleController.dispose();
+    _logoController.dispose();
+    _loaderController.dispose();
     super.dispose();
   }
 
@@ -118,28 +133,97 @@ class _SplashPageState extends ConsumerState<SplashPage>
       }
     });
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: colorScheme.surface,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  'assets/logo/logo.png',
+                  'assets/logo/spalsh_logo.png',
                   width: 120.w,
                   height: 120.w,
                   cacheWidth: 120,
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 28.h),
+                FadeTransition(
+                  opacity: _loaderFadeAnimation,
+                  child: _PulseLoader(color: colorScheme.onSurface),
+                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PulseLoader extends StatefulWidget {
+  const _PulseLoader({required this.color});
+
+  final Color color;
+
+  @override
+  State<_PulseLoader> createState() => _PulseLoaderState();
+}
+
+class _PulseLoaderState extends State<_PulseLoader>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (index) {
+            final delay = index * 0.15;
+            final value = (_controller.value - delay).clamp(0.0, 1.0);
+            final opacity = value < 0.5
+                ? (value / 0.5)
+                : (1.0 - (value - 0.5) / 0.5);
+
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: Opacity(
+                opacity: opacity.clamp(0.2, 1.0),
+                child: Container(
+                  width: 6.w,
+                  height: 6.w,
+                  decoration: BoxDecoration(
+                    color: widget.color.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }

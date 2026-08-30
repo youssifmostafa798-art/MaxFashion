@@ -1,7 +1,7 @@
 # 06 - Data Isolation Audit
 
 > **Date:** 2026-08-12
-> **Last Updated:** 2026-08-16 (Address & Payment Card migration to Supabase)
+> **Last Updated:** August 30, 2026 (code verification pass)
 > **Severity:** Critical (P0) - Cross-account data leakage
 > **Scope:** Orders, Wishlist, Cart, Addresses, Payment Cards
 
@@ -300,11 +300,13 @@ This provider derives the current user's ID from auth state. When the user logs 
 | Method | Await Points | Mounted Check | Status |
 |--------|-------------|---------------|--------|
 | `_loadCart()` | 1 (`loadCart()`) | Before state update + catch | **FIXED** |
-| `addItem()` | 1 (`addItem()`) | After await + catch | **FIXED** |
-| `removeItem()` | 1 (`removeItem()`) | After await + catch | **FIXED** |
-| `incrementQuantity()` | 1 (`updateQuantity()`) | After await + catch | **FIXED** |
-| `decrementQuantity()` | 1 (`updateQuantity()`) | After await + catch | **FIXED** |
-| `clear()` | 1 (`clearCart()`) | After await + catch | **FIXED** |
+| `addItem()` | 1 (`addItem()`) | Before initial update + after await + catch | **FIXED** |
+| `removeItem()` | 1 (`removeItem()`) | Before initial update + after await + catch | **FIXED** |
+| `incrementQuantity()` | 1 (`updateQuantity()`) | Before initial update + after await + catch | **FIXED** |
+| `decrementQuantity()` | 1 (`updateQuantity()`) | Before initial update + after await + catch | **FIXED** |
+| `clear()` | 1 (`clearCart()`) | Before initial update + after await + catch | **FIXED** |
+
+**Note:** `removeItem` takes `(int productId, String? color, String? size)` parameters, not a cart item ID directly. It looks up the matching item from the in-memory state.
 
 ### 8.4 AddressNotifier - Race Condition Analysis
 
