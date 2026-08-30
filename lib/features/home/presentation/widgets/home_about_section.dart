@@ -26,7 +26,10 @@ class HomeAboutSection extends StatelessWidget {
             Gap(30.w),
             GestureDetector(
               onTap: () => HapticUtils.light(),
-              child: Icon(Ionicons.logo_instagram, color: colorScheme.onSurface),
+              child: Icon(
+                Ionicons.logo_instagram,
+                color: colorScheme.onSurface,
+              ),
             ),
             Gap(30.w),
             GestureDetector(
@@ -40,13 +43,15 @@ class HomeAboutSection extends StatelessWidget {
         Gap(20.h),
         CustomText(
           height: 2.5,
-          text:
-              "youssifmostafa798@gmail.com \n       +201553178468\n17:00 - 22:00 - ${l10n.everyday}",
+          text: "maxfashion@gmail.com\n 17:00 - 22:00 - ${l10n.everyday}",
         ),
         Gap(20.h),
         Image.asset("assets/svgs/line.png", width: 190.w),
         Gap(20.h),
-        CustomText(height: 2.5, text: "${l10n.about}   ${l10n.contact}    ${l10n.blog}"),
+        CustomText(
+          height: 2.5,
+          text: "${l10n.about}   ${l10n.contact}    ${l10n.blog}",
+        ),
       ],
     );
   }
