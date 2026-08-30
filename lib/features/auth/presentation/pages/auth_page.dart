@@ -64,7 +64,7 @@ class _AuthPageState extends ConsumerState<AuthPage>
                 children: [
                   const Spacer(flex: 3),
                   Image.asset(
-                    'assets/logo/logo.png',
+                    'assets/logo/spalsh_logo.png',
                     width: 120.w,
                     height: 120.w,
                     cacheWidth: 120,
@@ -98,7 +98,9 @@ class _AuthPageState extends ConsumerState<AuthPage>
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         decoration: TextDecoration.underline,
-                        decorationColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                        decorationColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
