@@ -53,11 +53,12 @@ class _PlaceOrderState extends ConsumerState<PlaceOrder> {
     );
   }
 
-  void _openCard() async {
+  Future<void> _openCard() async {
     final cardData = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AddCard()),
     );
+    if (!mounted) return;
     if (cardData != null) {
       setState(() {
         savedCard = cardData;

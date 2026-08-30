@@ -56,7 +56,6 @@ flutter:
     - assets/texts/
     - assets/pop/
     - assets/categories_icons/
-    - assets/collections/
 
   fonts:
     - family: Tenor_Sans

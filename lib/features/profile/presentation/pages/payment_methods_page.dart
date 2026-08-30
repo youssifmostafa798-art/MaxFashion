@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:max/core/l10n/app_localizations.dart';
 import 'package:max/core/widgets/custom_appbar.dart';
 import 'package:max/core/widgets/custom_button.dart';
-import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/header.dart';
 import 'package:max/core/widgets/skeletons/payment_methods_skeleton.dart';
 import 'package:max/data/models/payment_card_model.dart';
@@ -13,8 +12,8 @@ import 'package:max/data/providers/payment_card_provider.dart';
 import 'package:max/features/checkout/presentation/pages/add_card.dart';
 import 'package:max/core/widgets/dialog/app_confirmation_dialog.dart';
 import 'package:max/core/utils/card_utils.dart';
-
 import 'package:max/features/profile/presentation/widgets/payment_card_tile.dart';
+import 'package:max/features/profile/presentation/widgets/empty_payment_methods.dart';
 
 class PaymentMethodsPage extends ConsumerStatefulWidget {
   const PaymentMethodsPage({super.key});
@@ -25,11 +24,12 @@ class PaymentMethodsPage extends ConsumerStatefulWidget {
 }
 
 class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
-  void _addCard() async {
+  Future<void> _addCard() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AddCard()),
     );
+    if (!mounted) return;
     if (result != null && result is Map<String, dynamic>) {
       final number = result['number'].toString();
       final last4 = number.length >= 4
@@ -98,7 +98,7 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
       body: cardsState.isLoading
           ? const PaymentMethodsSkeleton()
           : cards.isEmpty
-              ? _EmptyPaymentMethods(onAdd: _addCard)
+              ? EmptyPaymentMethods(onAdd: _addCard)
               : Column(
               children: [
                 Header(title: l10n.paymentMethodsMenu),
@@ -130,52 +130,6 @@ class _PaymentMethodsPageState extends ConsumerState<PaymentMethodsPage> {
                 ),
               ],
             ),
-    );
-  }
-}
-
-class _EmptyPaymentMethods extends StatelessWidget {
-  const _EmptyPaymentMethods({required this.onAdd});
-
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final l10n = AppLocalizations.of(context)!;
-
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '\ud83d\udcb3',
-              style: TextStyle(fontSize: 64.w),
-            ),
-            Gap(24.h),
-            CustomText(
-              text: l10n.noSavedCards,
-              size: 18,
-              weight: FontWeight.w700,
-              color: colorScheme.onSurface,
-            ),
-            Gap(10.h),
-            CustomText(
-              text: l10n.addFirstPaymentMethod,
-              size: 14,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            Gap(40.h),
-            CustomButton(
-              isSvg: false,
-              title: l10n.addCardButton,
-              onTap: onAdd,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

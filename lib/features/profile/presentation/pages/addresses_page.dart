@@ -22,21 +22,23 @@ class AddressesPage extends ConsumerStatefulWidget {
 }
 
 class _AddressesPageState extends ConsumerState<AddressesPage> {
-  void _addAddress() async {
+  Future<void> _addAddress() async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AddAddress()),
     );
+    if (!mounted) return;
     if (result != null && result is AddressModel) {
       ref.read(addressProvider.notifier).add(result);
     }
   }
 
-  void _editAddress(AddressModel address) async {
+  Future<void> _editAddress(AddressModel address) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => AddAddress(editAddress: address)),
     );
+    if (!mounted) return;
     if (result != null && result is AddressModel) {
       ref.read(addressProvider.notifier).update(result);
     }

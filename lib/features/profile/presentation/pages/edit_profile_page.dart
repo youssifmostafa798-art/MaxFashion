@@ -101,6 +101,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       lastDate: now,
     );
 
+    if (!mounted) return;
     if (picked != null) {
       notifier.updateDateOfBirth(picked);
       _updateDobController(picked);

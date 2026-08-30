@@ -9,6 +9,15 @@ import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/data/models/order_model.dart';
 import 'package:max/features/orders/presentation/widgets/order_status_chip.dart';
 import 'package:max/features/orders/presentation/widgets/order_timeline.dart';
+import 'package:max/features/orders/presentation/widgets/info_row.dart';
+
+String _formatPaymentMethod(String? paymentMethod, AppLocalizations l10n) {
+  if (paymentMethod == null || paymentMethod.isEmpty) return '';
+  final parsed = OrderModel.parsePaymentMethod(paymentMethod);
+  if (parsed == null) return paymentMethod;
+  final brandName = CardUtils.getCardBrandName(parsed.brand);
+  return l10n.cardEnding(brandName, parsed.last4);
+}
 
 class OrderDetailsPage extends StatelessWidget {
   const OrderDetailsPage({super.key, required this.order});
@@ -166,12 +175,12 @@ class OrderDetailsPage extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            _InfoRow(
+            InfoRow(
               label: l10n.deliveryAddressLabel,
               value: order.deliveryAddress,
             ),
             SizedBox(height: 16.h),
-            _InfoRow(
+            InfoRow(
               label: l10n.paymentMethodLabel,
               value: _formatPaymentMethod(order.paymentMethod, l10n),
             ),
@@ -182,52 +191,6 @@ class OrderDetailsPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-String _formatPaymentMethod(String? paymentMethod, AppLocalizations l10n) {
-  if (paymentMethod == null || paymentMethod.isEmpty) return '';
-  final parsed = OrderModel.parsePaymentMethod(paymentMethod);
-  if (parsed == null) return paymentMethod;
-  final brandName = CardUtils.getCardBrandName(parsed.brand);
-  return l10n.cardEnding(brandName, parsed.last4);
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-          text: label,
-          size: 12,
-          spacing: 2,
-          color: colorScheme.onSurfaceVariant,
-        ),
-        SizedBox(height: 8.h),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: CustomText(
-            text: value,
-            size: 14,
-            color: colorScheme.onSurface,
-          ),
-        ),
-      ],
     );
   }
 }

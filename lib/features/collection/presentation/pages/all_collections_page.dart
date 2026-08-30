@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:max/core/router/app_router.dart';
 import 'package:max/core/widgets/custom_text.dart';
 import 'package:max/core/widgets/skeletons/collections_grid_skeleton.dart';
-import 'package:max/data/models/collection_model.dart';
 import 'package:max/data/providers/collection_provider.dart';
-import 'package:max/features/collection/presentation/widgets/collection_card.dart';
+import 'package:max/features/collection/presentation/widgets/collections_grid.dart';
 import 'package:max/core/l10n/app_localizations.dart';
 
 class AllCollectionsPage extends ConsumerWidget {
@@ -33,20 +31,16 @@ class AllCollectionsPage extends ConsumerWidget {
         ),
       ),
       body: collectionsAsync.when(
-        loading: () => _buildLoading(context),
+        loading: () => const CollectionsGridSkeleton(),
         error: (_, _) => _buildError(context),
         data: (collections) {
           if (collections.isEmpty) {
             return _buildEmpty(context);
           }
-          return _CollectionsGrid(collections: collections);
+          return CollectionsGrid(collections: collections);
         },
       ),
     );
-  }
-
-  Widget _buildLoading(BuildContext context) {
-    return const CollectionsGridSkeleton();
   }
 
   Widget _buildError(BuildContext context) {
@@ -105,55 +99,6 @@ class AllCollectionsPage extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _CollectionsGrid extends StatelessWidget {
-  const _CollectionsGrid({required this.collections});
-  final List<CollectionModel> collections;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: CustomText(
-            text: l10n.collectionsCount(collections.length.toString()),
-            size: 13,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            itemCount: collections.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16.h,
-              crossAxisSpacing: 12.w,
-              childAspectRatio: 0.73,
-            ),
-            itemBuilder: (context, index) {
-              final collection = collections[index];
-              return CollectionCard(
-                collection: collection,
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRouter.collectionProducts,
-                    arguments: collection,
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }

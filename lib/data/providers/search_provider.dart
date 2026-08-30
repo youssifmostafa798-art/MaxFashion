@@ -207,7 +207,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
     return decoded;
   }
 
-  void _saveRecentSearches(List<String> searches) async {
+  Future<void> _saveRecentSearches(List<String> searches) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_recentSearchesKey, jsonEncode(searches));
   }

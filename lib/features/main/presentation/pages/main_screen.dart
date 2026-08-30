@@ -8,9 +8,10 @@ import 'package:max/features/cart/presentation/pages/cart_page.dart';
 import 'package:max/features/profile/presentation/pages/profile_page.dart';
 import 'package:max/data/providers/cart_provider.dart';
 import 'package:max/data/providers/wishlist_provider.dart';
-import 'package:max/core/widgets/badge_widget.dart';
 import 'package:max/core/theme/app_colors.dart';
 import 'package:max/core/l10n/app_localizations.dart';
+import 'package:max/features/main/presentation/widgets/nav_entry.dart';
+import 'package:max/features/main/presentation/widgets/nav_icon_widget.dart';
 
 const int _tabCount = 4;
 
@@ -38,19 +39,19 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     Widget page;
     switch (index) {
       case 0:
-        page = const _LazyHome();
+        page = const Home();
         break;
       case 1:
-        page = const _LazyCategories();
+        page = const CategoriesPage();
         break;
       case 2:
-        page = const _LazyCart();
+        page = const CartPage();
         break;
       case 3:
-        page = const _LazyProfile();
+        page = const ProfilePage();
         break;
       default:
-        page = const _LazyHome();
+        page = const Home();
     }
     _pagesCache[index] = page;
     return page;
@@ -70,23 +71,23 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     final inactiveColor = AppColors.grey500;
 
     final allItems = [
-      _NavEntry(
+      NavEntry(
         icon: Icons.home_outlined,
         activeIcon: Icons.home,
         label: l10n.homeNav,
       ),
-      _NavEntry(
+      NavEntry(
         icon: Icons.menu_outlined,
         activeIcon: Icons.menu,
         label: l10n.menu,
       ),
-      _NavEntry(
+      NavEntry(
         icon: Icons.shopping_bag_outlined,
         activeIcon: Icons.shopping_bag,
         label: l10n.cartNav,
         badgeCount: cartCount,
       ),
-      _NavEntry(
+      NavEntry(
         icon: Icons.person_outline,
         activeIcon: Icons.person,
         label: l10n.profileNav,
@@ -100,7 +101,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     final navItems = [
       for (int i = 0; i < displayItems.length; i++)
         BottomNavigationBarItemData(
-          icon: _NavIconWidget(
+          icon: NavIconWidget(
             icon: displayItems[i].icon,
             activeIcon: displayItems[i].activeIcon,
             isSelected: displayIndex == i,
@@ -160,90 +161,5 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         ),
       ),
     );
-  }
-}
-
-class _NavEntry {
-  const _NavEntry({
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-    this.badgeCount = 0,
-  });
-
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final int badgeCount;
-}
-
-class _NavIconWidget extends StatelessWidget {
-  const _NavIconWidget({
-    required this.icon,
-    required this.activeIcon,
-    required this.isSelected,
-    required this.activeColor,
-    required this.inactiveColor,
-    this.badgeCount = 0,
-  });
-
-  final IconData icon;
-  final IconData activeIcon;
-  final bool isSelected;
-  final Color activeColor;
-  final Color inactiveColor;
-  final int badgeCount;
-
-  @override
-  Widget build(BuildContext context) {
-    final currentIcon = isSelected ? activeIcon : icon;
-    final currentColor = isSelected ? activeColor : inactiveColor;
-
-    final iconWidget = Icon(
-      currentIcon,
-      size: 24,
-      color: currentColor,
-    );
-
-    if (badgeCount > 0) {
-      return BadgeWidget(
-        count: badgeCount,
-        child: iconWidget,
-      );
-    }
-
-    return iconWidget;
-  }
-}
-
-class _LazyHome extends StatelessWidget {
-  const _LazyHome();
-  @override
-  Widget build(BuildContext context) {
-    return const Home();
-  }
-}
-
-class _LazyCategories extends StatelessWidget {
-  const _LazyCategories();
-  @override
-  Widget build(BuildContext context) {
-    return const CategoriesPage();
-  }
-}
-
-class _LazyCart extends StatelessWidget {
-  const _LazyCart();
-  @override
-  Widget build(BuildContext context) {
-    return const CartPage();
-  }
-}
-
-class _LazyProfile extends StatelessWidget {
-  const _LazyProfile();
-  @override
-  Widget build(BuildContext context) {
-    return const ProfilePage();
   }
 }
